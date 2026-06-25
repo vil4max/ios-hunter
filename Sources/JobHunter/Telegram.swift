@@ -1,6 +1,7 @@
 import Foundation
 
 struct MonitorSummary: Sendable {
+    let newJobsCount: Int
     let openVacancyCount: Int
     let trackedVacancyCount: Int
     let sourceCount: Int
@@ -28,10 +29,20 @@ enum Telegram {
             sourcesLine = "Sources: \(healthySourceCount)/\(summary.sourceCount) OK (\(summary.failedSourceCount) failed)"
         }
 
+        let newJobsLine: String
+        switch summary.newJobsCount {
+        case 0:
+            newJobsLine = "No new iOS vacancies this run."
+        case 1:
+            newJobsLine = "1 new iOS vacancy this run."
+        default:
+            newJobsLine = "\(summary.newJobsCount) new iOS vacancies this run."
+        }
+
         let message = """
         ✅ iOS Hunter
 
-        No new iOS vacancies this run.
+        \(newJobsLine)
 
         Open roles now: \(summary.openVacancyCount)
         Tracking in total: \(summary.trackedVacancyCount)

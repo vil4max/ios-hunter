@@ -31,18 +31,17 @@ struct JobHunterCLI {
                 }
             }
 
-            if newJobsCount == 0 {
-                let summary = MonitorSummary(
-                    openVacancyCount: openVacancyCount,
-                    trackedVacancyCount: store.trackedVacancyCount(),
-                    sourceCount: sources.count,
-                    failedSourceCount: failedSourceCount
-                )
-                do {
-                    try await Telegram.notifyCheckComplete(summary: summary)
-                } catch {
-                    fputs("Telegram: \(error)\n", stderr)
-                }
+            let summary = MonitorSummary(
+                newJobsCount: newJobsCount,
+                openVacancyCount: openVacancyCount,
+                trackedVacancyCount: store.trackedVacancyCount(),
+                sourceCount: sources.count,
+                failedSourceCount: failedSourceCount
+            )
+            do {
+                try await Telegram.notifyCheckComplete(summary: summary)
+            } catch {
+                fputs("Telegram: \(error)\n", stderr)
             }
 
             fputs("Done. New jobs: \(newJobsCount)\n", stderr)

@@ -11,8 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Cache SQLite database
-        uses: actions/cache@v4
+      - name: Prepare data directory
+        run: mkdir -p data
+
+      - name: Restore SQLite database
+        uses: actions/cache/restore@v4
         with:
           path: data/jobs.sqlite
           key: jobs-sqlite-${{ github.repository }}
@@ -26,3 +29,10 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           JOBS_DB_PATH: data/jobs.sqlite
         run: swift run -c release JobHunter
+
+      - name: Save SQLite database
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: data/jobs.sqlite
+          key: jobs-sqlite-${{ github.repository }}
