@@ -10,10 +10,13 @@ struct JobHunterCLI {
             let http = HTTPClient()
             let sources = JobSources.all(http: http)
             var newJobsCount = 0
+            var openVacancyCount = 0
+            var failedSourceCount = 0
 
             for source in sources {
                 do {
                     let jobs = try await source.fetchJobs()
+                    openVacancyCount += jobs.count
                     fputs("[\(source.company)] \(jobs.count) iOS job(s)\n", stderr)
 
                     for job in jobs {
@@ -23,7 +26,22 @@ struct JobHunterCLI {
                         newJobsCount += 1
                     }
                 } catch {
+                    failedSourceCount += 1
                     fputs("[\(source.company)] error: \(error)\n", stderr)
+                }
+            }
+
+            if newJobsCount == 0 {
+                let summary = MonitorSummary(
+                    openVacancyCount: openVacancyCount,
+                    trackedVacancyCount: store.trackedVacancyCount(),
+                    sourceCount: sources.count,
+                    failedSourceCount: failedSourceCount
+                )
+                do {
+                    try await Telegram.notifyCheckComplete(summary: summary)
+                } catch {
+                    fputs("Telegram: \(error)\n", stderr)
                 }
             }
 

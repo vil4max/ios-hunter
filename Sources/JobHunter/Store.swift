@@ -54,6 +54,18 @@ final class Store: Sendable {
             throw StoreError.execFailed(String(cString: sqlite3_errmsg(db)))
         }
     }
+
+    func trackedVacancyCount() -> Int {
+        guard let db else { return 0 }
+        let sql = "SELECT COUNT(*) FROM seen_urls;"
+        var statement: OpaquePointer?
+        guard sqlite3_prepare_v2(db, sql, -1, &statement, nil) == SQLITE_OK else {
+            return 0
+        }
+        defer { sqlite3_finalize(statement) }
+        guard sqlite3_step(statement) == SQLITE_ROW else { return 0 }
+        return Int(sqlite3_column_int(statement, 0))
+    }
 }
 
 enum StoreError: Error, CustomStringConvertible {
