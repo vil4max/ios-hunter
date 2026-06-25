@@ -1,37 +1,40 @@
 import Foundation
 
-struct IntelliasSource: JobSource {
-    let company = "Intellias"
-    let tier: JobSourceTier = .tier1
+struct InnovecsSource: JobSource {
+    let company = "Innovecs"
+    let tier: JobSourceTier = .tier3
     private let http: HTTPClient
+
+    private let listURL = URL(string: "https://jobs.innovecs.com/")!
 
     init(http: HTTPClient) {
         self.http = http
     }
 
     func fetchJobs() async throws -> [Job] {
-        let baseURL = URL(string: "https://career.intellias.com/")!
-        let url = URL(string: "https://career.intellias.com/?s=iOS")!
-        let html = try await http.fetchString(from: url)
-        let pattern = #"<a[^>]+href="(https://career\.intellias\.com/vacancy/[^"]+)"[^>]*>([^<]{5,120})</a>"#
+        let html = try await http.fetchString(from: listURL)
+        let pattern = #"https://jobs\.innovecs\.com/vacancies/(\d+)-([a-z0-9-]+)/"#
 
         guard let regex = try? NSRegularExpression(pattern: pattern, options: [.caseInsensitive]) else {
             return []
         }
 
         let range = NSRange(html.startIndex..., in: html)
+        var seen = Set<String>()
         var jobs: [Job] = []
 
         regex.enumerateMatches(in: html, options: [], range: range) { match, _, _ in
             guard let match,
-                  let urlRange = Range(match.range(at: 1), in: html),
-                  let titleRange = Range(match.range(at: 2), in: html)
+                  let urlRange = Range(match.range, in: html),
+                  let slugRange = Range(match.range(at: 2), in: html)
             else { return }
 
             let jobURL = String(html[urlRange])
-            let title = String(html[titleRange]).trimmingCharacters(in: .whitespacesAndNewlines)
+            guard seen.insert(jobURL).inserted else { return }
+
+            let slug = String(html[slugRange])
+            let title = slug.replacingOccurrences(of: "-", with: " ")
             guard isIOSJob(title: title) else { return }
-            _ = baseURL
             jobs.append(Job(title: title, url: jobURL, company: company))
         }
 

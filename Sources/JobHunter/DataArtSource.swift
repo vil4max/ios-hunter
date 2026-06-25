@@ -2,6 +2,7 @@ import Foundation
 
 struct DataArtSource: JobSource {
     let company = "DataArt"
+    let tier: JobSourceTier = .legacy
     private let http: HTTPClient
 
     init(http: HTTPClient) {

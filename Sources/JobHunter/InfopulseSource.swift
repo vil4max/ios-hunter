@@ -2,6 +2,7 @@ import Foundation
 
 struct InfopulseSource: JobSource {
     let company = "Infopulse"
+    let tier: JobSourceTier = .tier3
     private let http: HTTPClient
 
     init(http: HTTPClient) {

@@ -2,6 +2,7 @@ import Foundation
 
 struct SoftServeSource: JobSource {
     let company = "SoftServe"
+    let tier: JobSourceTier = .legacy
     private let http: HTTPClient
 
     init(http: HTTPClient) {

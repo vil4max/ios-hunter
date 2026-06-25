@@ -3,6 +3,7 @@ import zlib
 
 struct EPAMSource: JobSource {
     let company = "EPAM"
+    let tier: JobSourceTier = .legacy
     private let http: HTTPClient
 
     private let listURL = "https://careers.epam.com/en/jobs?search=iOS&specialization=developer"

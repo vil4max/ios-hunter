@@ -2,6 +2,7 @@ import Foundation
 
 struct NixSource: JobSource {
     let company = "N-iX"
+    let tier: JobSourceTier = .tier1
     private let http: HTTPClient
 
     init(http: HTTPClient) {

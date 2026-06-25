@@ -2,6 +2,7 @@ import Foundation
 
 struct EleksSource: JobSource {
     let company = "Eleks"
+    let tier: JobSourceTier = .tier1
     private let http: HTTPClient
 
     init(http: HTTPClient) {

@@ -2,6 +2,7 @@ import Foundation
 
 struct IntellectsoftSource: JobSource {
     let company = "Intellectsoft"
+    let tier: JobSourceTier = .legacy
     private let http: HTTPClient
 
     init(http: HTTPClient) {

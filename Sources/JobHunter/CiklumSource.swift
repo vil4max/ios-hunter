@@ -2,6 +2,7 @@ import Foundation
 
 struct CiklumSource: JobSource {
     let company = "Ciklum"
+    let tier: JobSourceTier = .tier3
     private let http: HTTPClient
 
     init(http: HTTPClient) {

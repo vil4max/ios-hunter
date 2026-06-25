@@ -3,6 +3,7 @@ import SwiftSoup
 
 struct GlobalLogicSource: JobSource {
     let company = "GlobalLogic"
+    let tier: JobSourceTier = .legacy
     private let http: HTTPClient
 
     init(http: HTTPClient) {

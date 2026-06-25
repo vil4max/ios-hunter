@@ -3,6 +3,7 @@ import SwiftSoup
 
 struct SigmaSource: JobSource {
     let company = "Sigma Software"
+    let tier: JobSourceTier = .tier3
     private let http: HTTPClient
 
     private let ajaxURL = URL(string: "https://career.sigma.software/wp-admin/admin-ajax.php")!
