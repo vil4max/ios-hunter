@@ -42,6 +42,37 @@ struct HTTPClient: Sendable {
         }
         return data
     }
+
+    func postForm(
+        to url: URL,
+        fields: [String: String],
+        headers: [String: String] = [:]
+    ) async throws -> Data {
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue(
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            forHTTPHeaderField: "User-Agent"
+        )
+        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json, text/html, */*", forHTTPHeaderField: "Accept")
+        for (key, value) in headers {
+            request.setValue(value, forHTTPHeaderField: key)
+        }
+
+        var components = URLComponents()
+        components.queryItems = fields.map { URLQueryItem(name: $0.key, value: $0.value) }
+        request.httpBody = components.percentEncodedQuery?.data(using: .utf8)
+
+        let (data, response) = try await session.data(for: request)
+        guard let http = response as? HTTPURLResponse else {
+            throw HTTPClientError.invalidResponse
+        }
+        guard (200 ..< 300).contains(http.statusCode) else {
+            throw HTTPClientError.httpStatus(http.statusCode)
+        }
+        return data
+    }
 }
 
 enum HTTPClientError: Error, CustomStringConvertible {
