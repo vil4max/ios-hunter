@@ -39,6 +39,7 @@ enum JobSources {
             AshbyJobBoardSource(company: "Ajax Systems", tier: .product, boardSlug: "Ajax", http: http),
             WorkableWidgetSource(company: "BetterMe", tier: .product, accountSlug: "betterme", http: http),
             AshbyJobBoardSource(company: "Grammarly", tier: .product, boardSlug: "Superhuman", http: http),
+            AshbyJobBoardSource(company: "Solvd", tier: .tier3, boardSlug: "Solvd", http: http),
             DataArtSource(http: http),
             IntellectsoftSource(http: http),
             GlobalLogicSource(http: http),
