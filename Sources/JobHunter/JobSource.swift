@@ -44,6 +44,7 @@ enum JobSources {
             DataArtSource(http: http),
             IntellectsoftSource(http: http),
             GlobalLogicSource(http: http),
+            GridDynamicsSource(http: http),
             SoftServeSource(http: http),
             EPAMSource(http: http),
         ]
