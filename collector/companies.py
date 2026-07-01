@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from collector.types import SourceResult
+from integrations.http_client import open_url
 
 
 def load_swift_export(path: str | Path) -> list[dict[str, Any]]:
@@ -24,7 +25,7 @@ def fetch_json(url: str, timeout: int = 30) -> Any:
         url,
         headers={"User-Agent": "ios-hunter/2.0 (+https://github.com/)"},
     )
-    with urllib.request.urlopen(request, timeout=timeout) as response:
+    with open_url(request, timeout=timeout) as response:
         return json.loads(response.read().decode("utf-8"))
 
 

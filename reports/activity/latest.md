@@ -1,9 +1,9 @@
 Run Activity
 
-Actionable: 2
-New:        2
+Actionable: 0
+New:        0
 Updated:    0
 Closed:     0
 Reopened:   0
 
-2 new iOS vacancies
+Market unchanged this run

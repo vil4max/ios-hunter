@@ -1,6 +1,22 @@
 [
   {
     "job_id": "1cee9e9df25416dc777368887500fbebc957dfd238a9e2fdf9de4a41404015c4",
+    "changed_at": "2026-07-01T13:20:22+00:00",
+    "field": "closed",
+    "old_value": null,
+    "new_value": null,
+    "diff": null
+  },
+  {
+    "job_id": "ef7b0fa55033ab9a843744f14abad9f64ab20d0add8d959a27538b571e02e1a9",
+    "changed_at": "2026-07-01T13:20:22+00:00",
+    "field": "closed",
+    "old_value": null,
+    "new_value": null,
+    "diff": null
+  },
+  {
+    "job_id": "1cee9e9df25416dc777368887500fbebc957dfd238a9e2fdf9de4a41404015c4",
     "changed_at": "2026-07-01T13:08:06+00:00",
     "field": "created",
     "old_value": null,

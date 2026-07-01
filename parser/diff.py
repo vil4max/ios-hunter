@@ -23,7 +23,7 @@ def line_diff(old: str | None, new: str | None) -> str:
     new_lines = (new or "").splitlines()
     diff_lines = []
     for line in difflib.unified_diff(old_lines, new_lines, lineterm=""):
-        if line.startswith("+++") or line.startswith("---") or line.startswith("@@"):
+        if line.startswith(("+++", "---", "@@")):
             continue
         if line.startswith("+"):
             diff_lines.append(f"+ {line[1:]}")

@@ -4,6 +4,8 @@ import os
 from dataclasses import dataclass
 from typing import Protocol
 
+from integrations.http_client import post_json
+
 
 @dataclass
 class AnalysisResult:
@@ -27,12 +29,15 @@ class NoOpAnalyzer:
         return False
 
     def summarize_week(self, context: str) -> AnalysisResult:
+        _ = context
         return AnalysisResult(summary="")
 
     def match_job(self, resume: str, job_description: str) -> AnalysisResult:
+        _ = (resume, job_description)
         return AnalysisResult(summary="", match_score=None)
 
     def cover_letter(self, resume: str, job_title: str, company: str, description: str) -> AnalysisResult:
+        _ = (resume, job_title, company, description)
         return AnalysisResult(summary="", cover_letter=None)
 
 
@@ -74,25 +79,19 @@ class OpenAIAnalyzer:
         return AnalysisResult(summary=letter, cover_letter=letter)
 
     def _complete(self, prompt: str) -> str:
-        import json
-        import urllib.request
-
-        payload = {
-            "model": self.model,
-            "messages": [{"role": "user", "content": prompt}],
-            "temperature": 0.4,
-        }
-        request = urllib.request.Request(
+        data = post_json(
             "https://api.openai.com/v1/chat/completions",
-            data=json.dumps(payload).encode("utf-8"),
+            {
+                "model": self.model,
+                "messages": [{"role": "user", "content": prompt}],
+                "temperature": 0.4,
+            },
             headers={
                 "Authorization": f"Bearer {self.api_key}",
                 "Content-Type": "application/json",
             },
-            method="POST",
+            timeout=60,
         )
-        with urllib.request.urlopen(request, timeout=60) as response:
-            data = json.loads(response.read().decode("utf-8"))
         return data["choices"][0]["message"]["content"].strip()
 
 
@@ -134,22 +133,16 @@ class GeminiAnalyzer:
         return AnalysisResult(summary=letter, cover_letter=letter)
 
     def _complete(self, prompt: str) -> str:
-        import json
-        import urllib.request
-
-        url = (
-            f"https://generativelanguage.googleapis.com/v1beta/models/{self.model}:generateContent"
-            f"?key={self.api_key}"
-        )
-        payload = {"contents": [{"parts": [{"text": prompt}]}]}
-        request = urllib.request.Request(
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{self.model}:generateContent"
+        data = post_json(
             url,
-            data=json.dumps(payload).encode("utf-8"),
-            headers={"Content-Type": "application/json"},
-            method="POST",
+            {"contents": [{"parts": [{"text": prompt}]}]},
+            headers={
+                "Content-Type": "application/json",
+                "x-goog-api-key": self.api_key,
+            },
+            timeout=60,
         )
-        with urllib.request.urlopen(request, timeout=60) as response:
-            data = json.loads(response.read().decode("utf-8"))
         return data["candidates"][0]["content"]["parts"][0]["text"].strip()
 
 

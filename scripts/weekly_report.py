@@ -15,7 +15,7 @@ from integrations.public_reports import generate_companies_report, generate_week
 
 def main() -> int:
     db_path = Path(os.environ.get("JOBS_DB_PATH", "database/jobs.db"))
-    repo = JobRepository(db_path)
+    repo = JobRepository(db_path, base_dir=ROOT)
     try:
         weekly = generate_weekly_report(repo, ROOT)
         companies = generate_companies_report(repo, ROOT)

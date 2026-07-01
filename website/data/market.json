@@ -1,10 +1,10 @@
 {
-  "open_jobs": 4,
-  "remote": 3,
+  "open_jobs": 2,
+  "remote": 2,
   "hybrid": 0,
   "onsite": 0,
   "new_this_week": 5,
-  "closed_this_week": 1,
+  "closed_this_week": 3,
   "top_companies": [
     {
       "company": "MacPaw",
@@ -12,14 +12,6 @@
     },
     {
       "company": "LowPay Co",
-      "open_jobs": 1
-    },
-    {
-      "company": "Brocoders",
-      "open_jobs": 1
-    },
-    {
-      "company": "Airlab",
       "open_jobs": 1
     }
   ]

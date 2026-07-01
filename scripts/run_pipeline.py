@@ -52,7 +52,7 @@ def main() -> int:
     started = time.perf_counter()
     started_at = utc_now()
     db_path = Path(os.environ.get("JOBS_DB_PATH", "database/jobs.db"))
-    repo = JobRepository(db_path)
+    repo = JobRepository(db_path, base_dir=ROOT)
     profile = load_profile(ROOT / "config/profile.yaml")
     skills_map = load_skills(ROOT / "config/skills.yaml")
     run_id = repo.start_run_metrics(started_at)

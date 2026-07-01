@@ -16,6 +16,7 @@ def activity_emoji(activity_type: str) -> str:
 
 
 def build_application_pack(job: JobRecord, activity_type: str) -> tuple[MatchResult, str]:
+    _ = activity_type
     match = match_job(job)
     letter = render_cover_letter(job, match)
     return match, letter

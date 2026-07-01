@@ -7,6 +7,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from database.paths import resolve_db_path
+
+_SCHEMA_SQL = (Path(__file__).with_name("schema.sql")).read_text(encoding="utf-8")
+
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
@@ -31,17 +35,15 @@ class JobRecord:
 
 
 class JobRepository:
-    def __init__(self, db_path: str | Path) -> None:
-        self.db_path = Path(db_path)
-        self.db_path.parent.mkdir(parents=True, exist_ok=True)
+    def __init__(self, db_path: str | Path, base_dir: Path | None = None) -> None:
+        self.db_path = resolve_db_path(db_path, base_dir=base_dir)
         self._conn = sqlite3.connect(self.db_path)
         self._conn.row_factory = sqlite3.Row
         self._conn.execute("PRAGMA foreign_keys = ON")
         self._migrate()
 
     def _migrate(self) -> None:
-        schema = (Path(__file__).parent / "schema.sql").read_text(encoding="utf-8")
-        self._conn.executescript(schema)
+        self._conn.executescript(_SCHEMA_SQL)
         self._conn.commit()
 
     def close(self) -> None:
@@ -464,6 +466,20 @@ class JobRepository:
             LIMIT ?
             """,
             (f"-{days} days", limit),
+        ).fetchall()
+        return [dict(row) for row in rows]
+
+    def recent_actionable_activity(self, limit: int = 50) -> list[dict[str, Any]]:
+        rows = self._conn.execute(
+            """
+            SELECT j.company, j.title, j.url, ra.activity_type, ra.created_at
+            FROM run_activity ra
+            JOIN jobs j ON j.id = ra.job_id
+            WHERE ra.activity_type IN ('new', 'updated', 'reopened')
+            ORDER BY ra.created_at DESC
+            LIMIT ?
+            """,
+            (limit,),
         ).fetchall()
         return [dict(row) for row in rows]
 

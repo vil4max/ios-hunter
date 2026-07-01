@@ -96,16 +96,7 @@ def generate_rss(repo: JobRepository, output_path: Path, site_url: str = "https:
     SubElement(channel, "link").text = site_url
     SubElement(channel, "description").text = "Actionable iOS and Swift vacancies"
 
-    rows = repo._conn.execute(
-        """
-        SELECT j.company, j.title, j.url, ra.activity_type, ra.created_at
-        FROM run_activity ra
-        JOIN jobs j ON j.id = ra.job_id
-        WHERE ra.activity_type IN ('new', 'updated', 'reopened')
-        ORDER BY ra.created_at DESC
-        LIMIT 50
-        """
-    ).fetchall()
+    rows = repo.recent_actionable_activity(limit=50)
 
     for row in rows:
         item = SubElement(channel, "item")

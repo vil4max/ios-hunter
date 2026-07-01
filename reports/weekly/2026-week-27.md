@@ -2,11 +2,11 @@
 
 ## Summary
 - New jobs: 5
-- Closed jobs: 1
+- Closed jobs: 3
 - Reopened: 0
 - Updated: 0
-- Currently open: 4
-- Remote: 3 | Hybrid: 0 | Onsite: 0
+- Currently open: 2
+- Remote: 2 | Hybrid: 0 | Onsite: 0
 
 ## Top Hiring Companies
 
@@ -14,11 +14,11 @@
 | --- | ---: |
 | MacPaw | 1 |
 | LowPay Co | 1 |
-| Brocoders | 1 |
-| Airlab | 1 |
 
 ## Notable changes
 
+- Brocoders: closed — Senior iOS Developer (Swift) (2026-07-01)
+- Airlab: closed — IOS Swift Developer (full remote) (2026-07-01)
 - Brocoders: created — Senior iOS Developer (Swift) (2026-07-01)
 - Airlab: created — IOS Swift Developer (full remote) (2026-07-01)
 - LowPay Co: created — iOS Engineer (2026-07-01)
