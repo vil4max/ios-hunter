@@ -40,7 +40,7 @@ def format_pack_message(job: JobRecord, activity_type: str, match: MatchResult, 
 Match: {match.score}%
 
 Strong: {", ".join(match.strong) or "—"}
-Missing: {", ".join(match.missing) or "—"}
+Gap: {", ".join(match.missing) or "—"}
 {salary_line}{warning}
 Cover letter:
 {cover_letter}

@@ -1,6 +1,6 @@
 Hi,
 
-I'm an iOS engineer with strong experience in {strong_skills}. I noticed your {title} role at {company} and believe my background in {focus_area} is a strong fit.
+I'm Max Vilchevskiy, a Senior iOS engineer with {experience_years}+ years of experience. I noticed your {title} role at {company} and believe my background in {focus_area} is a strong fit.
 
 {highlight}
 

@@ -1,16 +1,45 @@
-name: "iOS Developer"
-portfolio_url: "https://example.com"
+name: "Max Vilchevskiy"
+portfolio_url: "https://vil4max.github.io"
+linkedin_url: "https://www.linkedin.com/in/vil4max"
 cv_urls:
-  fintech: "https://example.com/cv-fintech.pdf"
-  ai: "https://example.com/cv-ai.pdf"
-  sdk: "https://example.com/cv-sdk.pdf"
-  product: "https://example.com/cv-product.pdf"
+  default: "https://www.linkedin.com/in/vil4max"
+  ai: "https://www.linkedin.com/in/vil4max"
+  sdk: "https://www.linkedin.com/in/vil4max"
+  product: "https://www.linkedin.com/in/vil4max"
+
+experience_years: 12
+
+skills:
+  - SwiftUI
+  - UIKit
+  - Concurrency
+  - AI
+  - SDK
+  - watchOS
+  - Product
+
+skill_priority:
+  - SwiftUI
+  - UIKit
+  - Concurrency
+  - AI
+  - SDK
+  - watchOS
+  - Product
+
+resume_focus:
+  ai: "voice AI on Apple Watch and on-device conversational flows"
+  sdk: "SDK extraction and modular iOS architecture in loyalty platforms"
+  product: "marketplace, subscriptions, and end-to-end App Store delivery"
 
 salary:
   minimum_usd: 4500
   target_usd: 6000
   maximum_usd: 6000
   currency: USD
+
+cover_letter:
+  include_salary: false
 
 english:
   level: B1

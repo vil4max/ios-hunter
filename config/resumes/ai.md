@@ -1,3 +1,3 @@
-# AI CV
+# AI CV angle
 
-Focus: Core ML, Apple Intelligence, on-device ML, AI-powered product features.
+Focus: voice AI on Apple Watch, on-device flows, WatchConnectivity, conversational UX.

@@ -1,3 +1,3 @@
-# Product CV
+# Product CV angle
 
-Focus: product ownership, SwiftUI, user-facing features, cross-functional delivery.
+Focus: marketplace & subscription products, technical lead, App Store delivery, SwiftUI/UIKit.
