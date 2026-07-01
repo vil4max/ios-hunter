@@ -1,8 +1,8 @@
 Collector Health
 
-Sources:      3
-Healthy:      3
+Sources:      6
+Healthy:      6
 Failed:       0
 
 Duplicates removed: 0
-Average runtime:    0m 0s
+Average runtime:    0m 2s

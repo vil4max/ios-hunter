@@ -1,8 +1,2 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0">
-  <channel>
-    <title>iOS Hunter — Ukrainian iOS Jobs</title>
-    <link>https://vil4max.github.io/ios-hunter</link>
-    <description>Actionable iOS and Swift vacancies</description>
-  </channel>
-</rss>
+<rss version="2.0"><channel><title>iOS Hunter — Ukrainian iOS Jobs</title><link>https://vil4max.github.io/ios-hunter</link><description>Actionable iOS and Swift vacancies</description><item><title>New — Brocoders — Senior iOS Developer (Swift)</title><link>https://jobs.dou.ua/companies/brocoders/vacancies/362429/</link><guid>https://jobs.dou.ua/companies/brocoders/vacancies/362429/</guid><pubDate>2026-07-01T13:08:06+00:00</pubDate><description>new iOS vacancy at Brocoders</description></item><item><title>New — Airlab — IOS Swift Developer (full remote)</title><link>https://jobs.dou.ua/companies/airlab/vacancies/325551/</link><guid>https://jobs.dou.ua/companies/airlab/vacancies/325551/</guid><pubDate>2026-07-01T13:08:06+00:00</pubDate><description>new iOS vacancy at Airlab</description></item><item><title>New — LowPay Co — iOS Engineer</title><link>https://lowpay.com/ios</link><guid>https://lowpay.com/ios</guid><pubDate>2026-07-01T12:50:28+00:00</pubDate><description>new iOS vacancy at LowPay Co</description></item><item><title>New — MacPaw — Senior iOS Engineer</title><link>https://jobs.macpaw.com/senior-ios</link><guid>https://jobs.macpaw.com/senior-ios</guid><pubDate>2026-07-01T12:50:17+00:00</pubDate><description>new iOS vacancy at MacPaw</description></item><item><title>New — Playtech — iOS Developer</title><link>https://playtech.com/ios</link><guid>https://playtech.com/ios</guid><pubDate>2026-07-01T12:50:17+00:00</pubDate><description>new iOS vacancy at Playtech</description></item></channel></rss>

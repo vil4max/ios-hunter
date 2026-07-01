@@ -44,6 +44,6 @@ Remote iOS role with international team — **$4500–$6000** net (current Engli
 
 - Recruiter Watch
 - Interview Knowledge Base
-- [x] Djinni collector (Swift + Python)
+- DOU / Djinni — tracked manually via iPhone apps (not collected here)
 - [ ] LinkedIn collector (stub — deferred)
 - [ ] Full Python port of 52 Swift scrapers

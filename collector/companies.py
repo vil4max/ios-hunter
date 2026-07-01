@@ -6,8 +6,19 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
-from collector.dou import collect_djinni, collect_dou, collect_linkedin
 from collector.types import SourceResult
+
+
+def collect_linkedin() -> SourceResult:
+    return SourceResult(
+        source_id="linkedin",
+        source_name="LinkedIn",
+        source_url=None,
+        jobs=[],
+        status="healthy",
+        error="stub",
+        response_ms=0,
+    )
 
 
 def load_swift_export(path: str | Path) -> list[dict[str, Any]]:
@@ -92,7 +103,5 @@ def collect_all(swift_export_path: str | Path = "database/swift_export.json") ->
 
     results.append(collect_teamtailor("Levi9", "https://jobs.ua.levi9.com/jobs.json"))
     results.append(collect_teamtailor("Avenga", "https://career.avenga.com/jobs.json"))
-    results.append(collect_dou())
-    results.append(collect_djinni())
     results.append(collect_linkedin())
     return results
