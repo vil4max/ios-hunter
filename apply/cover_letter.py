@@ -13,9 +13,12 @@ def render_cover_letter(job: JobRecord, match: MatchResult, profile: dict | None
 
     strong = ", ".join(match.strong) if match.strong else "iOS development"
     focus_area = match.resume_version.replace("_", " ")
+    salary = profile.get("salary", {})
+    salary_min = salary.get("minimum_usd", 4500)
+    salary_max = salary.get("maximum_usd", salary.get("target_usd", 6000))
     highlight = (
         f"I have hands-on experience with {strong}, and I'm looking for remote roles "
-        f"around ${profile.get('salary', {}).get('target_usd', 5000)} net."
+        f"in the ${salary_min}–${salary_max} net range."
     )
 
     return template.format(

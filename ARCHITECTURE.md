@@ -46,4 +46,4 @@ GitHub Actions (hourly)
 - GitHub Actions only
 - SQLite as primary database
 - AI optional (rules-based matching first)
-- Salary floor: $4500 minimum, $5000 target
+- Salary range: $4500–$6000 net (B1); aspirational $7000–$8000 with English 7–8

@@ -13,10 +13,9 @@ iOS Hunter monitors the Ukrainian iOS job market and accelerates your response t
 
 Configured in [`config/profile.yaml`](config/profile.yaml):
 
-- Minimum: **$4500** net
-- Target: **$5000** net
-
-Jobs with detected salary below minimum are filtered out from application packs.
+- Range: **$4500–$6000** net (current English B1)
+- Below **$4500** detected salary → filtered out from application packs
+- With English 7–8 (B2–C1): raise to **$7000–$8000** in `config/profile.yaml`
 
 ## Stack
 
