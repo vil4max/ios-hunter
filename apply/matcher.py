@@ -97,16 +97,7 @@ def match_job(job: JobRecord, profile: dict | None = None, skills_map: dict[str,
     elif job.remote == "hybrid":
         score += 5
 
-    salary_min = int(profile.get("salary", {}).get("minimum_usd", 4500))
-    salary_target = int(profile.get("salary", {}).get("target_usd", 6000))
     salary_usd = extract_salary_usd(text)
-    salary_ok = True if salary_usd is None else salary_usd >= salary_min
-    if salary_usd and salary_usd >= salary_target:
-        score += 10
-    elif salary_ok:
-        score += 5
-    if not salary_ok:
-        score -= 25
 
     remote_pref = profile.get("remote_preference", "remote")
     remote_ok = job.remote in {remote_pref, "remote", "hybrid", "unknown"}
@@ -122,7 +113,7 @@ def match_job(job: JobRecord, profile: dict | None = None, skills_map: dict[str,
         strong=strong,
         missing=missing,
         salary_usd=salary_usd,
-        salary_ok=salary_ok,
+        salary_ok=True,
         remote_ok=remote_ok,
         resume_version=resume_version,
     )
