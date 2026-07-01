@@ -41,6 +41,17 @@ python scripts/run_pipeline.py
 | `JOBS_DB_PATH` | Python SQLite path (default: `database/jobs.db`) |
 | `SWIFT_EXPORT_PATH` | Swift JSON export (default: `database/swift_export.json`) |
 
+## CRM
+
+```bash
+python3 -m crm apply --company MacPaw --title "Senior iOS Engineer" --source company
+python3 -m crm list
+python3 -m crm followups
+python3 -m crm remind
+python3 -m crm stats
+python3 -m crm stage --id 1 --stage technical
+```
+
 ## Docs
 
 - [ARCHITECTURE.md](ARCHITECTURE.md)

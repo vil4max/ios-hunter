@@ -37,7 +37,14 @@ database/jobs.json
 database/swift_export.json
 reports/activity/latest.md
 reports/health/latest.md
+reports/market/snapshot.md
+reports/timeline/market-timeline.md
+reports/company_watch/latest.md
+reports/weekly/
 website/data/activity.json
+website/data/market.json
+website/data/jobs.json
+website/feed.xml
 __pycache__/
 *.pyc
 .venv/

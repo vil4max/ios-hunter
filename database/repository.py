@@ -322,6 +322,27 @@ class JobRepository:
         )
         self._conn.commit()
 
+    def record_company_watch_alert(self, company: str, when: str | None = None) -> None:
+        self._conn.execute(
+            """
+            INSERT INTO watch_alerts (company, alerted_at) VALUES (?, ?)
+            ON CONFLICT(company) DO UPDATE SET alerted_at = excluded.alerted_at
+            """,
+            (company, when or utc_now()),
+        )
+        self._conn.commit()
+
+    def company_watch_alerted_recently(self, company: str, days: int = 7) -> bool:
+        row = self._conn.execute(
+            """
+            SELECT 1 FROM watch_alerts
+            WHERE company = ? AND alerted_at >= datetime('now', ?)
+            LIMIT 1
+            """,
+            (company, f"-{days} days"),
+        ).fetchone()
+        return row is not None
+
     def export_jobs_json(self, output_path: str | Path) -> None:
         rows = self._conn.execute(
             "SELECT company, title, location, remote, url, source, status, first_seen, last_seen FROM jobs WHERE status = 'open'"

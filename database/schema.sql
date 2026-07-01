@@ -149,6 +149,11 @@ CREATE TABLE IF NOT EXISTS interview_notes (
     created_at TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS watch_alerts (
+    company TEXT PRIMARY KEY,
+    alerted_at TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS market_snapshots (
     period TEXT PRIMARY KEY,
     new_jobs INTEGER NOT NULL,
