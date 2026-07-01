@@ -379,6 +379,94 @@ class JobRepository:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
 
+    def weekly_activity_from_metrics(self) -> tuple[int, int, int, int] | None:
+        row = self._conn.execute(
+            """
+            SELECT
+                COALESCE(SUM(new_jobs), 0),
+                COALESCE(SUM(closed_jobs), 0),
+                COALESCE(SUM(reopened_jobs), 0),
+                COALESCE(SUM(updated_jobs), 0)
+            FROM run_metrics
+            WHERE finished_at >= datetime('now', '-7 days')
+            """
+        ).fetchone()
+        if not row:
+            return None
+        values = tuple(int(value) for value in row)
+        if sum(values) == 0:
+            return None
+        return values
+
+    def weekly_activity_from_history(self) -> tuple[int, int, int, int]:
+        mapping = {
+            "created": 0,
+            "closed": 1,
+            "reopened": 2,
+            "description_changed": 3,
+        }
+        counts = [0, 0, 0, 0]
+        rows = self.history_change_counts(days=7)
+        for row in rows:
+            change_type = row["change_type"]
+            if change_type in mapping:
+                counts[mapping[change_type]] += int(row["count"])
+        return tuple(counts)
+
+    def count_open_by_remote(self) -> dict[str, int]:
+        rows = self._conn.execute(
+            """
+            SELECT COALESCE(remote, 'unknown') AS remote, COUNT(*) AS count
+            FROM jobs WHERE status = 'open'
+            GROUP BY COALESCE(remote, 'unknown')
+            """
+        ).fetchall()
+        return {row["remote"]: int(row["count"]) for row in rows}
+
+    def top_open_companies(self, limit: int = 10) -> list[tuple[str, int]]:
+        rows = self._conn.execute(
+            """
+            SELECT company, COUNT(*) AS count
+            FROM jobs WHERE status = 'open'
+            GROUP BY company ORDER BY count DESC LIMIT ?
+            """,
+            (limit,),
+        ).fetchall()
+        return [(row["company"], int(row["count"])) for row in rows]
+
+    def company_lifetime_stats(self, limit: int = 20) -> list[dict[str, Any]]:
+        rows = self._conn.execute(
+            """
+            SELECT
+                company,
+                SUM(CASE WHEN first_seen >= date('now', 'start of year') THEN 1 ELSE 0 END) AS jobs_this_year,
+                SUM(CASE WHEN status = 'open' THEN 1 ELSE 0 END) AS open_jobs,
+                AVG(CASE WHEN status = 'closed' THEN julianday(last_seen) - julianday(first_seen) END) AS avg_lifetime_days
+            FROM jobs
+            GROUP BY company
+            HAVING open_jobs > 0
+            ORDER BY open_jobs DESC, jobs_this_year DESC
+            LIMIT ?
+            """,
+            (limit,),
+        ).fetchall()
+        return [dict(row) for row in rows]
+
+    def recent_notable_changes(self, days: int = 7, limit: int = 10) -> list[dict[str, Any]]:
+        rows = self._conn.execute(
+            """
+            SELECT h.change_type, h.date, j.company, j.title, j.url
+            FROM history h
+            JOIN jobs j ON j.id = h.job_id
+            WHERE h.date >= datetime('now', ?)
+              AND h.change_type IN ('reopened', 'closed', 'created')
+            ORDER BY h.date DESC
+            LIMIT ?
+            """,
+            (f"-{days} days", limit),
+        ).fetchall()
+        return [dict(row) for row in rows]
+
     @staticmethod
     def _row_to_job(row: sqlite3.Row) -> JobRecord:
         return JobRecord(

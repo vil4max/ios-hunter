@@ -31,7 +31,6 @@ playground.xcworkspace
 
 .build/
 
-database/swift.db
 database/jobs.db
 database/swift_export.json
 __pycache__/

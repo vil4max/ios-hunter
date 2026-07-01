@@ -18,7 +18,7 @@ from collector.description import fetch_description, should_fetch
 from collector.health import render_health_report
 from crm.followups import send_followup_reminders
 from database.repository import JobRepository, utc_now
-from integrations.public_reports import generate_rss, generate_weekly_report
+from integrations.public_reports import generate_companies_report, generate_rss, generate_weekly_report
 from integrations.telegram import send_message
 from parser.activity import ActivitySummary
 from parser.deduplicate import deduplicate
@@ -185,6 +185,7 @@ def main() -> int:
     write_report(ROOT / "reports/market/snapshot.md", render_market_summary(market_summary))
     write_report(ROOT / "reports/timeline/market-timeline.md", timeline_report)
     generate_weekly_report(repo, ROOT)
+    generate_companies_report(repo, ROOT)
     repo.export_jobs_json(ROOT / "database/jobs.json")
     repo.export_jobs_json(ROOT / "website/data/jobs.json")
     repo.export_history_json(ROOT / "database/history.json")

@@ -49,23 +49,23 @@
 1. Репозиторий → вкладка **Actions**
 2. Если видишь «Workflows disabled» — нажми **Enable Actions**
 3. Workflow **Collect iOS Jobs** запускается:
-   - **каждый час** автоматически
+   - **каждый час в рабочее время** (пн–пт, 08:00–18:00 по Киеву)
    - вручную: Actions → Collect iOS Jobs → **Run workflow**
 
 ### Что делает collect.yml
 
 ```
-Swift collector → Python pipeline → Telegram → commit reports → push в main
+Swift collector → swift_export.json → Python pipeline → jobs.db → Telegram → commit reports
 ```
+
+Одна база данных: **`database/jobs.db`** (хранится в cache Actions, не коммитится).
 
 После каждого успешного запуска в репозиторий коммитятся:
 
-- `reports/` — activity, health, market, timeline, weekly
+- `reports/` — activity, health, market, timeline, weekly, companies
 - `website/data/` — JSON для дашборда
 - `website/feed.xml` — RSS
-- `database/jobs.json` — открытые вакансии
-
-SQLite (`jobs.db`) **не** коммитится — хранится в cache Actions.
+- `database/jobs.json`, `database/history.json` — открытые вакансии и история
 
 ---
 

@@ -12,7 +12,7 @@ Remote iOS role with international team — **$4500–$6000** net (current Engli
 - [x] Rules-based match score with salary filter ($4500–$6000)
 - [x] Template cover letter + resume version picker
 - [x] Telegram application pack
-- [x] Every-6h GitHub Actions workflow
+- [x] Hourly weekday collect (08:00–18:00 Kyiv)
 - [x] Company Watch (3+ mobile roles alert)
 - [x] Description fetch for better matching (limited per run)
 

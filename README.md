@@ -4,10 +4,12 @@ iOS Hunter monitors the Ukrainian iOS job market and accelerates your response t
 
 ## What it does
 
-1. **Collects** iOS/Swift vacancies from company career pages (Swift collector, 52 sources)
+1. **Collects** iOS/Swift vacancies from company career pages (Swift, ~52 sources)
 2. **Detects changes** — New, Updated, Closed, Reopened
 3. **First-to-apply** — match score, cover letter, CV/portfolio links via Telegram
-4. **Tracks health** — per-source failures with HTTP codes and consecutive failure counts
+4. **Tracks health** — per-source failures with HTTP codes
+
+DOU and Djinni are **not** collected here — track them in your iPhone apps.
 
 ## Salary filter
 
@@ -19,17 +21,20 @@ Configured in [`config/profile.yaml`](config/profile.yaml):
 
 ## Stack
 
-Swift 6 (collector) · Python 3.12 (pipeline) · SQLite · GitHub Actions (every 6h) · Telegram
+Swift 6 (collector) · Python 3.12 (pipeline) · SQLite (`database/jobs.db`) · GitHub Actions · Telegram
 
 ## Run locally
 
 ```bash
-# Swift collector
+# 1. Swift collector → database/swift_export.json
 swift run -c release JobHunter
 
-# Python pipeline
+# 2. Python pipeline → database/jobs.db + reports + Telegram
 pip install -r requirements.txt
-python scripts/run_pipeline.py
+python3 scripts/run_pipeline.py
+
+# Weekly report only (from existing DB)
+python3 scripts/weekly_report.py
 ```
 
 ## Environment
@@ -38,12 +43,18 @@ python scripts/run_pipeline.py
 |----------|-------------|
 | `TELEGRAM_TOKEN` | Telegram bot token |
 | `TELEGRAM_CHAT_ID` | Chat ID for notifications |
-| `JOBS_DB_PATH` | Python SQLite path (default: `database/jobs.db`) |
+| `JOBS_DB_PATH` | SQLite path (default: `database/jobs.db`) |
 | `SWIFT_EXPORT_PATH` | Swift JSON export (default: `database/swift_export.json`) |
-| `JOBS_JSON_PATH` | Open jobs JSON export (default: `database/jobs.json`) |
-| `HISTORY_JSON_PATH` | History JSON export (default: `database/history.json`) |
 | `OPENAI_API_KEY` | Optional — enable AI weekly summary |
 | `GEMINI_API_KEY` | Optional — enable AI weekly summary (fallback) |
+
+## Schedule (GitHub Actions)
+
+| Workflow | When |
+|----------|------|
+| Collect iOS Jobs | Every hour, **Mon–Fri 08:00–18:00 Kyiv** |
+| Weekly iOS Market Report | Monday 09:00 Kyiv |
+| AI Analysis | Monday 09:30 Kyiv (optional, off without API key) |
 
 ## CRM
 
@@ -60,20 +71,8 @@ python3 -m crm stage --id 1 --stage technical
 
 One-time setup after merging the PR. Full guide (RU): **[docs/GITHUB_SETUP.md](docs/GITHUB_SETUP.md)**
 
-Quick checklist:
-
-1. **Merge PR** into `main`
-2. **Secrets** (Settings → Secrets and variables → Actions):
-   - `TELEGRAM_TOKEN` — from [@BotFather](https://t.me/BotFather)
-   - `TELEGRAM_CHAT_ID` — your Telegram chat id
-3. **Enable Actions** — repo → Actions tab
-4. **GitHub Pages** — Settings → Pages → Source: **GitHub Actions**
-5. Edit **`config/profile.yaml`** — your name, portfolio, CV URLs
-
-After setup, `collect.yml` runs every 6 hours, sends Telegram packs, and **auto-commits** reports to `main`.
-
 ## Docs
 
-- [docs/GITHUB_SETUP.md](docs/GITHUB_SETUP.md) — подробная настройка GitHub
+- [docs/GITHUB_SETUP.md](docs/GITHUB_SETUP.md) — настройка GitHub
 - [ARCHITECTURE.md](ARCHITECTURE.md)
 - [ROADMAP.md](ROADMAP.md)

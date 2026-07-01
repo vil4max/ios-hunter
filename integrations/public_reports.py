@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import re
 from datetime import datetime, timezone
-from html import escape
 from pathlib import Path
 from xml.etree.ElementTree import Element, SubElement, tostring
 
@@ -15,60 +14,77 @@ def _week_id(when: datetime | None = None) -> str:
     return f"{year}-week-{week:02d}"
 
 
+def _weekly_activity(repo: JobRepository) -> tuple[int, int, int, int]:
+    from_metrics = repo.weekly_activity_from_metrics()
+    if from_metrics is not None:
+        return from_metrics
+    return repo.weekly_activity_from_history()
+
+
 def generate_weekly_report(repo: JobRepository, root: Path) -> Path:
-    summary_rows = repo._conn.execute(
-        """
-        SELECT
-            COALESCE(SUM(new_jobs), 0),
-            COALESCE(SUM(closed_jobs), 0),
-            COALESCE(SUM(reopened_jobs), 0),
-            COALESCE(SUM(updated_jobs), 0)
-        FROM run_metrics
-        WHERE finished_at >= datetime('now', '-7 days')
-        """
-    ).fetchone()
-
-    open_jobs = repo._conn.execute(
-        "SELECT COUNT(*) FROM jobs WHERE status = 'open'"
-    ).fetchone()[0]
-    remote = repo._conn.execute(
-        "SELECT COUNT(*) FROM jobs WHERE status = 'open' AND remote = 'remote'"
-    ).fetchone()[0]
-    hybrid = repo._conn.execute(
-        "SELECT COUNT(*) FROM jobs WHERE status = 'open' AND remote = 'hybrid'"
-    ).fetchone()[0]
-    onsite = repo._conn.execute(
-        "SELECT COUNT(*) FROM jobs WHERE status = 'open' AND remote = 'onsite'"
-    ).fetchone()[0]
-
-    top_companies = repo._conn.execute(
-        """
-        SELECT company, COUNT(*) AS cnt
-        FROM jobs WHERE status = 'open'
-        GROUP BY company ORDER BY cnt DESC LIMIT 10
-        """
-    ).fetchall()
+    new_jobs, closed_jobs, reopened_jobs, updated_jobs = _weekly_activity(repo)
+    open_jobs = len(repo.list_open_jobs())
+    remote_counts = repo.count_open_by_remote()
+    remote = remote_counts.get("remote", 0)
+    hybrid = remote_counts.get("hybrid", 0)
+    onsite = remote_counts.get("onsite", 0)
+    top_companies = repo.top_open_companies(limit=10)
+    notable = repo.recent_notable_changes(days=7, limit=10)
 
     week = _week_id()
     lines = [
         f"# iOS Market Report — {week}",
         "",
         "## Summary",
-        f"- New jobs: {summary_rows[0]}",
-        f"- Closed jobs: {summary_rows[1]}",
-        f"- Reopened: {summary_rows[2]}",
-        f"- Updated: {summary_rows[3]}",
+        f"- New jobs: {new_jobs}",
+        f"- Closed jobs: {closed_jobs}",
+        f"- Reopened: {reopened_jobs}",
+        f"- Updated: {updated_jobs}",
         f"- Currently open: {open_jobs}",
         f"- Remote: {remote} | Hybrid: {hybrid} | Onsite: {onsite}",
         "",
         "## Top Hiring Companies",
         "",
+        "| Company | Open roles |",
+        "| --- | ---: |",
     ]
-    for row in top_companies:
-        lines.append(f"- {row['company']}: {row['cnt']} open")
+    for company, count in top_companies:
+        lines.append(f"| {company} | {count} |")
 
-    output = root / "reports" / "weekly" / f"{week}.md"
-    output.parent.mkdir(parents=True, exist_ok=True)
+    if notable:
+        lines.extend(["", "## Notable changes", ""])
+        for row in notable:
+            lines.append(
+                f"- {row['company']}: {row['change_type']} — {row['title']} ({row['date'][:10]})"
+            )
+
+    content = "\n".join(lines) + "\n"
+    weekly_dir = root / "reports" / "weekly"
+    weekly_dir.mkdir(parents=True, exist_ok=True)
+    output = weekly_dir / f"{week}.md"
+    latest = weekly_dir / "latest.md"
+    output.write_text(content, encoding="utf-8")
+    latest.write_text(content, encoding="utf-8")
+    return output
+
+
+def generate_companies_report(repo: JobRepository, root: Path) -> Path:
+    stats = repo.company_lifetime_stats(limit=20)
+    lines = [
+        "# Company Statistics",
+        "",
+        "| Company | Open | This year | Avg lifetime (days) |",
+        "| --- | ---: | ---: | ---: |",
+    ]
+    for row in stats:
+        avg_days = int(row["avg_lifetime_days"] or 0)
+        lines.append(
+            f"| {row['company']} | {row['open_jobs']} | {row['jobs_this_year']} | {avg_days} |"
+        )
+
+    output_dir = root / "reports" / "companies"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output = output_dir / "index.md"
     output.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return output
 
