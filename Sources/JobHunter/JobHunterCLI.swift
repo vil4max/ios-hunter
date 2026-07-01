@@ -4,6 +4,7 @@ import Foundation
 struct JobHunterCLI {
     static func main() async {
         let databasePath = ProcessInfo.processInfo.environment["JOBS_DB_PATH"] ?? "data/jobs.sqlite"
+        let exportPath = ProcessInfo.processInfo.environment["SWIFT_EXPORT_PATH"] ?? "database/swift_export.json"
 
         do {
             let store = try Store(path: databasePath)
@@ -12,17 +13,18 @@ struct JobHunterCLI {
             var newJobsCount = 0
             var openVacancyCount = 0
             var failedSourceCount = 0
+            var fetchedJobs: [Job] = []
 
             for source in sources {
                 do {
                     let jobs = try await source.fetchJobs()
+                    fetchedJobs.append(contentsOf: jobs)
                     openVacancyCount += jobs.count
                     fputs("[\(source.company)] \(jobs.count) iOS job(s)\n", stderr)
 
                     for job in jobs {
                         guard !store.contains(url: job.url) else { continue }
                         try store.insert(url: job.url)
-                        try await Telegram.notify(job: job)
                         newJobsCount += 1
                     }
                 } catch {
@@ -30,6 +32,9 @@ struct JobHunterCLI {
                     fputs("[\(source.company)] error: \(error)\n", stderr)
                 }
             }
+
+            try SwiftExport.write(jobs: fetchedJobs, to: exportPath)
+            fputs("Exported \(fetchedJobs.count) jobs to \(exportPath)\n", stderr)
 
             let summary = MonitorSummary(
                 newJobsCount: newJobsCount,

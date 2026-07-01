@@ -32,6 +32,15 @@ playground.xcworkspace
 .build/
 
 data/jobs.sqlite
+database/jobs.db
+database/jobs.json
+database/swift_export.json
+reports/activity/latest.md
+reports/health/latest.md
+website/data/activity.json
+__pycache__/
+*.pyc
+.venv/
 
 # CocoaPods
 #

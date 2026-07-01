@@ -1,7 +1,48 @@
 # ios-hunter
 
-A small macOS CLI that watches career pages of selected Ukrainian IT companies for new iOS vacancies, deduplicates them in SQLite, and sends Telegram alerts. It is a personal mini-helper for spotting opportunities locally without spending time checking each site by hand.
+iOS Hunter monitors the Ukrainian iOS job market and accelerates your response to actionable vacancies.
+
+## What it does
+
+1. **Collects** iOS/Swift vacancies from company career pages (Swift collector, 52 sources)
+2. **Detects changes** — New, Updated, Closed, Reopened
+3. **First-to-apply** — match score, cover letter, CV/portfolio links via Telegram
+4. **Tracks health** — per-source failures with HTTP codes and consecutive failure counts
+
+## Salary filter
+
+Configured in [`config/profile.yaml`](config/profile.yaml):
+
+- Minimum: **$4500** net
+- Target: **$5000** net
+
+Jobs with detected salary below minimum are filtered out from application packs.
 
 ## Stack
 
-macOS 13+ · Swift 6 · Swift Package Manager · SwiftSoup · SQLite · GitHub Actions (scheduled runs)
+Swift 6 (collector) · Python 3.12 (pipeline) · SQLite · GitHub Actions (hourly) · Telegram
+
+## Run locally
+
+```bash
+# Swift collector
+swift run -c release JobHunter
+
+# Python pipeline
+pip install -r requirements.txt
+python scripts/run_pipeline.py
+```
+
+## Environment
+
+| Variable | Description |
+|----------|-------------|
+| `TELEGRAM_TOKEN` | Telegram bot token |
+| `TELEGRAM_CHAT_ID` | Chat ID for notifications |
+| `JOBS_DB_PATH` | Python SQLite path (default: `database/jobs.db`) |
+| `SWIFT_EXPORT_PATH` | Swift JSON export (default: `database/swift_export.json`) |
+
+## Docs
+
+- [ARCHITECTURE.md](ARCHITECTURE.md)
+- [ROADMAP.md](ROADMAP.md)

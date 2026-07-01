@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iOS Hunter — Ukrainian iOS Market</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; background: #0d1117; color: #e6edf3; }
+    .card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1rem; margin: 1rem 0; }
+    .hero { font-size: 2rem; font-weight: 700; }
+    .metric { display: inline-block; margin-right: 1.5rem; }
+    .metric strong { font-size: 1.5rem; display: block; }
+  </style>
+</head>
+<body>
+  <div class="hero">iOS Hunter</div>
+  <p>Ukrainian iOS job market monitor — updated every hour.</p>
+  <div class="card" id="activity">
+    <p>Loading activity data…</p>
+  </div>
+  <div class="card">
+    <h2>Open Vacancies</h2>
+    <pre id="jobs">Loading…</pre>
+  </div>
+  <script>
+    async function load() {
+      try {
+        const activity = await fetch('data/activity.json').then(r => r.json());
+        document.getElementById('activity').innerHTML = `
+          <p><strong>${activity.headline}</strong></p>
+          <div class="metric"><strong>${activity.actionable}</strong>Actionable</div>
+          <div class="metric"><strong>${activity.new}</strong>New</div>
+          <div class="metric"><strong>${activity.updated}</strong>Updated</div>
+          <div class="metric"><strong>${activity.reopened}</strong>Reopened</div>
+          <div class="metric"><strong>${activity.closed}</strong>Closed</div>
+        `;
+        const jobs = await fetch('../../database/jobs.json').then(r => r.json()).catch(() => []);
+        document.getElementById('jobs').textContent = JSON.stringify(jobs, null, 2);
+      } catch (e) {
+        document.getElementById('activity').textContent = 'No data yet.';
+      }
+    }
+    load();
+  </script>
+</body>
+</html>

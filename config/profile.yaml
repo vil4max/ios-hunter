@@ -1,0 +1,18 @@
+name: "iOS Developer"
+portfolio_url: "https://example.com"
+cv_urls:
+  fintech: "https://example.com/cv-fintech.pdf"
+  ai: "https://example.com/cv-ai.pdf"
+  sdk: "https://example.com/cv-sdk.pdf"
+  product: "https://example.com/cv-product.pdf"
+
+salary:
+  minimum_usd: 4500
+  target_usd: 5000
+  currency: USD
+
+remote_preference: remote
+match_threshold: 60
+
+telegram:
+  enabled: true
