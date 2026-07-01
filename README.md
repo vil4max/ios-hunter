@@ -1,78 +1,105 @@
-# ios-hunter
+# iOS Hunter
 
-iOS Hunter monitors the Ukrainian iOS job market and accelerates your response to actionable vacancies.
+Поисковик iOS/Swift вакансий на украинском рынке. Работает **только на GitHub Actions** — локально ничего запускать не нужно.
 
-## What it does
+Каждый рабочий час бот обходит карьерные страницы компаний, сравнивает с прошлым состоянием и **присылает в Telegram новые и изменённые вакансии**, которые подходят под твой профиль.
 
-1. **Collects** iOS/Swift vacancies from company career pages (Swift, ~52 sources)
-2. **Detects changes** — New, Updated, Closed, Reopened
-3. **First-to-apply** — match score, cover letter, CV/portfolio links via Telegram
-4. **Tracks health** — per-source failures with HTTP codes
+DOU и Djinni здесь **не собираются** — ты смотришь их в приложениях на iPhone.
 
-DOU and Djinni are **not** collected here — track them in your iPhone apps.
+---
 
-## Salary filter
+## Что делает сейчас
 
-Configured in [`config/profile.yaml`](config/profile.yaml):
+### 1. Сбор вакансий
+- **~52 карьерных страницы** компаний (Swift-коллектор)
+- Дополнительно JSON-фиды Teamtailor (Levi9, Avenga)
+- Фильтр по заголовку: iOS / Swift
 
-- Range: **$4500–$6000** net (current English B1)
-- Below **$4500** detected salary → filtered out from application packs
-- With English 7–8 (B2–C1): raise to **$7000–$8000** in `config/profile.yaml`
+### 2. Отслеживание изменений
+Для каждой вакансии хранится история. На каждом прогоне определяется:
 
-## Stack
+| Событие | Что значит |
+|---------|------------|
+| **New** | Вакансия появилась впервые |
+| **Updated** | Изменилось описание или заголовок |
+| **Reopened** | Закрытая вакансия снова открылась |
+| **Closed** | Вакансии больше нет на сайте компании |
 
-Swift 6 (collector) · Python 3.12 (pipeline) · SQLite (`database/jobs.db`) · GitHub Actions · Telegram
+### 3. Уведомления в Telegram
+На **actionable** события (New + Updated + Reopened) с match score ≥ 60 приходит **application pack**:
 
-## Run locally
+- компания, должность, ссылка
+- match score и сильные/слабые стороны
+- черновик cover letter
+- ссылка на CV (подбирается по типу вакансии)
+- ссылка на portfolio
 
-```bash
-# 1. Swift collector → database/swift_export.json
-swift run -c release JobHunter
+**Фильтр зарплаты:** $4500–$6000 net — вакансии ниже порога не попадают в pack (настраивается в `config/profile.yaml`).
 
-# 2. Python pipeline → database/jobs.db + reports + Telegram
-pip install -r requirements.txt
-python3 scripts/run_pipeline.py
+### 4. Company Watch
+Если у компании **3+ открытых mobile/iOS ролей** — отдельный алерт в Telegram (не чаще 1 раза в неделю на компанию).
 
-# Weekly report only (from existing DB)
-python3 scripts/weekly_report.py
+### 5. Отчёты и публичные данные
+После каждого прогона в репозиторий коммитятся:
+
+- `reports/activity/` — что изменилось за run
+- `reports/health/` — состояние источников
+- `reports/market/`, `reports/timeline/` — снимок рынка
+- `reports/weekly/` — недельный отчёт
+- `website/` — дашборд и RSS для GitHub Pages
+
+База `database/jobs.db` хранится в cache Actions и **не коммитится**.
+
+### 6. CRM (опционально)
+Трекинг откликов и follow-up напоминания — CLI в репозитории, если понадобится вручную.
+
+---
+
+## Расписание (GitHub Actions)
+
+| Workflow | Когда |
+|----------|-------|
+| **Collect iOS Jobs** | Каждый час, **пн–пт 08:00–18:00 по Киеву** |
+| **Weekly iOS Market Report** | Понедельник 09:00 Киев |
+| **AI Analysis** | Понедельник 09:30 (только если задан `OPENAI_API_KEY` или `GEMINI_API_KEY`) |
+
+Ручной запуск: **Actions → Collect iOS Jobs → Run workflow**.
+
+---
+
+## Как это устроено
+
+```
+GitHub Actions (macOS + Ubuntu)
+        │
+   Swift — собирает вакансии с career pages
+        │ swift_export.json
+   Python — дедуп, diff, база, Telegram, отчёты
+        │
+   database/jobs.db (cache)  →  Telegram тебе
+        │
+   auto-commit reports + website → main
 ```
 
-## Environment
+Стек: Swift 6 · Python 3.12 · SQLite · Telegram Bot API · GitHub Pages
 
-| Variable | Description |
-|----------|-------------|
-| `TELEGRAM_TOKEN` | Telegram bot token |
-| `TELEGRAM_CHAT_ID` | Chat ID for notifications |
-| `JOBS_DB_PATH` | SQLite path (default: `database/jobs.db`) |
-| `SWIFT_EXPORT_PATH` | Swift JSON export (default: `database/swift_export.json`) |
-| `OPENAI_API_KEY` | Optional — enable AI weekly summary |
-| `GEMINI_API_KEY` | Optional — enable AI weekly summary (fallback) |
+---
 
-## Schedule (GitHub Actions)
+## Настройка (один раз)
 
-| Workflow | When |
-|----------|------|
-| Collect iOS Jobs | Every hour, **Mon–Fri 08:00–18:00 Kyiv** |
-| Weekly iOS Market Report | Monday 09:00 Kyiv |
-| AI Analysis | Monday 09:30 Kyiv (optional, off without API key) |
+Подробная инструкция: **[docs/GITHUB_SETUP.md](docs/GITHUB_SETUP.md)**
 
-## CRM
+Кратко:
 
-```bash
-python3 -m crm apply --company MacPaw --title "Senior iOS Engineer" --source company
-python3 -m crm list
-python3 -m crm followups
-python3 -m crm remind
-python3 -m crm stats
-python3 -m crm stage --id 1 --stage technical
-```
+1. Merge PR в `main`
+2. Secrets: `TELEGRAM_TOKEN`, `TELEGRAM_CHAT_ID`
+3. Enable Actions + GitHub Pages
+4. Отредактировать `config/profile.yaml` — имя, portfolio, ссылки на CV
 
-## GitHub setup
+---
 
-One-time setup after merging the PR. Full guide (RU): **[docs/GITHUB_SETUP.md](docs/GITHUB_SETUP.md)**
-
-## Docs
+## Документация
 
 - [docs/GITHUB_SETUP.md](docs/GITHUB_SETUP.md) — настройка GitHub
-- [ARCHITECTURE.md](ARCHITECTURE.md)
-- [ROADMAP.md](ROADMAP.md)
+- [ARCHITECTURE.md](ARCHITECTURE.md) — архитектура
+- [ROADMAP.md](ROADMAP.md) — планы развития
