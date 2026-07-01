@@ -159,6 +159,7 @@ enum JobSources {
             GridDynamicsSource(http: http),
             SoftServeSource(http: http),
             EPAMSource(http: http),
+            RBISource(http: http),
         ]
     }
 }
