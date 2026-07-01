@@ -29,12 +29,11 @@ DOU и Djinni здесь **не собираются** — ты смотришь
 На **actionable** события (New + Updated + Reopened) с match score ≥ 60 приходит **application pack**:
 
 - компания, должность, ссылка
-- match score и сильные/слабые стороны
+- match score, Strong / Gap
 - черновик cover letter
-- ссылка на CV (подбирается по типу вакансии)
-- ссылка на portfolio
+- portfolio и CV: [vil4max.github.io](https://vil4max.github.io)
 
-**Фильтр зарплаты:** $4500–$6000 net — вакансии ниже порога не попадают в pack (настраивается в `config/profile.yaml`).
+Зарплата из текста вакансии показывается **информативно**, если найдена. **Фильтра по ЗП нет** — решение за тобой.
 
 ### 4. Company Watch
 Если у компании **3+ открытых mobile/iOS ролей** — отдельный алерт в Telegram (не чаще 1 раза в неделю на компанию).

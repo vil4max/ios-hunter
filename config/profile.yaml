@@ -1,22 +1,50 @@
-name: "iOS Developer"
-portfolio_url: "https://example.com"
-cv_urls:
-  fintech: "https://example.com/cv-fintech.pdf"
-  ai: "https://example.com/cv-ai.pdf"
-  sdk: "https://example.com/cv-sdk.pdf"
-  product: "https://example.com/cv-product.pdf"
+name: "Max Vilchevskiy"
+headline: "Senior iOS Engineer — marketplace, loyalty, voice AI on Apple Watch"
+portfolio_url: "https://vil4max.github.io"
+linkedin_url: "https://www.linkedin.com/in/vil4max"
+github_url: "https://github.com/vil4max"
 
-salary:
-  minimum_usd: 4500
-  target_usd: 6000
-  maximum_usd: 6000
-  currency: USD
+cv_urls:
+  default: "https://vil4max.github.io"
+  ai: "https://vil4max.github.io"
+  sdk: "https://vil4max.github.io"
+  product: "https://vil4max.github.io"
+
+experience_years: 12
+
+skills:
+  - SwiftUI
+  - UIKit
+  - Concurrency
+  - AI
+  - SDK
+  - watchOS
+  - Product
+
+skill_priority:
+  - SwiftUI
+  - UIKit
+  - Concurrency
+  - AI
+  - SDK
+  - watchOS
+  - Product
+
+resume_focus:
+  ai: "voice AI on Apple Watch and hands-free conversational flows"
+  sdk: "SDK module extraction and modular iOS architecture in loyalty platforms"
+  product: "marketplace commerce, Premium Subscription, and App Store delivery"
+
+# Personal notes only — not used to filter vacancies
+salary_notes:
+  target_net_usd: "5000-6000"
+  english_level: B1
+
+cover_letter:
+  include_salary: false
 
 english:
   level: B1
-  aspirational_minimum_usd: 7000
-  aspirational_target_usd: 8000
-  note: "Raise salary targets when English reaches upper-intermediate (7-8 / B2-C1)."
 
 remote_preference: remote
 match_threshold: 60

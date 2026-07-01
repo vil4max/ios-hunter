@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from apply.matcher import MatchResult, load_profile
+from apply.matcher import MatchResult, load_profile, user_skills
 from database.repository import JobRecord
 
 
@@ -11,21 +11,27 @@ def render_cover_letter(job: JobRecord, match: MatchResult, profile: dict | None
     template_path = Path("config/cover_letter_template.md")
     template = template_path.read_text(encoding="utf-8")
 
-    strong = ", ".join(match.strong) if match.strong else "iOS development"
-    focus_area = match.resume_version.replace("_", " ")
-    salary = profile.get("salary", {})
-    salary_min = salary.get("minimum_usd", 4500)
-    salary_max = salary.get("maximum_usd", salary.get("target_usd", 6000))
+    focus_labels = profile.get("resume_focus", {})
+    focus_area = focus_labels.get(match.resume_version, "iOS product development")
+
+    claimed = ", ".join(match.strong) if match.strong else ", ".join(user_skills(profile)[:4])
     highlight = (
-        f"I have hands-on experience with {strong}, and I'm looking for remote roles "
-        f"in the ${salary_min}–${salary_max} net range."
+        f"Recent work includes {focus_area}. "
+        f"Relevant strengths for this role: {claimed}."
     )
 
+    cover_letter_cfg = profile.get("cover_letter", {})
+    if cover_letter_cfg.get("include_salary", False):
+        salary = profile.get("salary", {})
+        salary_min = salary.get("minimum_usd", 4500)
+        salary_max = salary.get("maximum_usd", salary.get("target_usd", 6000))
+        highlight += f" I'm targeting remote roles in the ${salary_min}–${salary_max} net range."
+
     return template.format(
-        name=profile.get("name", "iOS Developer"),
+        name=profile.get("name", "Max Vilchevskiy"),
         company=job.company,
         title=job.title,
-        strong_skills=strong,
+        experience_years=profile.get("experience_years", 12),
         focus_area=focus_area,
         highlight=highlight,
     ).strip()

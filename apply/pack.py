@@ -23,10 +23,8 @@ def build_application_pack(job: JobRecord, activity_type: str) -> tuple[MatchRes
 
 
 def format_pack_message(job: JobRecord, activity_type: str, match: MatchResult, cover_letter: str) -> str:
-    salary_line = f"Salary detected: ~${match.salary_usd}/mo\n" if match.salary_usd else ""
+    salary_line = f"Salary in posting: ~${match.salary_usd}/mo\n" if match.salary_usd else ""
     warning = ""
-    if not match.salary_ok and match.salary_usd:
-        warning = f"⚠️ Below minimum salary (${match.salary_usd})\n"
     if not match.remote_ok:
         warning += "⚠️ Remote preference mismatch\n"
 
@@ -40,7 +38,7 @@ def format_pack_message(job: JobRecord, activity_type: str, match: MatchResult, 
 Match: {match.score}%
 
 Strong: {", ".join(match.strong) or "—"}
-Missing: {", ".join(match.missing) or "—"}
+Gap: {", ".join(match.missing) or "—"}
 {salary_line}{warning}
 Cover letter:
 {cover_letter}
@@ -62,8 +60,6 @@ def process_actionable(
     match, cover_letter = build_application_pack(job, activity_type)
 
     if match.score < threshold:
-        return False
-    if not match.salary_ok and match.salary_usd is not None:
         return False
 
     pack_ready_at = utc_now()

@@ -1,3 +1,3 @@
-# SDK CV
+# SDK CV angle
 
-Focus: frameworks, SDK design, developer tools, API design.
+Focus: loyalty SDK extraction, modular iOS architecture, SPM, multi-host-app integration.
