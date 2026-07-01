@@ -12,7 +12,7 @@ Remote iOS role with international team — **$4500–$6000** net (current Engli
 - [x] Rules-based match score with salary filter ($4500–$6000)
 - [x] Template cover letter + resume version picker
 - [x] Telegram application pack
-- [x] Hourly GitHub Actions workflow
+- [x] Every-6h GitHub Actions workflow
 - [x] Company Watch (3+ mobile roles alert)
 - [x] Description fetch for better matching (limited per run)
 
@@ -34,6 +34,8 @@ Remote iOS role with international team — **$4500–$6000** net (current Engli
 
 ### P4 — AI (optional)
 
+- [x] AI provider abstraction (`ai/engine.py`) — NoOp by default
+- [x] Optional OpenAI / Gemini weekly summary (`ai-analysis.yml`)
 - [ ] Semantic match score with OpenAI/Gemini API key
 - [ ] Personalized cover letters
 - [ ] Resume gap analysis
@@ -42,5 +44,6 @@ Remote iOS role with international team — **$4500–$6000** net (current Engli
 
 - Recruiter Watch
 - Interview Knowledge Base
-- Djinni / LinkedIn collectors
-- Full Python port of 52 Swift scrapers
+- [x] Djinni collector (Swift + Python)
+- [ ] LinkedIn collector (stub — deferred)
+- [ ] Full Python port of 52 Swift scrapers

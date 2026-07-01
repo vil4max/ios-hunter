@@ -3,7 +3,7 @@ name: Collect iOS Jobs
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 * * * *"
+    - cron: "0 */6 * * *"
 
 permissions:
   contents: write
@@ -15,15 +15,15 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Prepare directories
-        run: mkdir -p data database reports/activity reports/health reports/market reports/timeline reports/company_watch reports/weekly website/data
+        run: mkdir -p database reports/activity reports/health reports/market reports/timeline reports/company_watch reports/weekly reports/companies website/data
 
       - name: Restore SQLite databases
         uses: actions/cache/restore@v4
         with:
           path: |
-            data/jobs.sqlite
+            database/swift.db
             database/jobs.db
-          key: ios-hunter-db-${{ github.repository }}-${{ hashFiles('database/jobs.db', 'data/jobs.sqlite') }}
+          key: ios-hunter-db-${{ github.repository }}-${{ hashFiles('database/jobs.db', 'database/swift.db') }}
           restore-keys: |
             ios-hunter-db-${{ github.repository }}-
 
@@ -32,8 +32,12 @@ jobs:
 
       - name: Run Swift collector
         env:
-          JOBS_DB_PATH: data/jobs.sqlite
+          JOBS_DB_PATH: database/swift.db
           SWIFT_EXPORT_PATH: database/swift_export.json
+          JOBS_JSON_PATH: database/jobs.json
+          HISTORY_JSON_PATH: database/history.json
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: swift run -c release JobHunter
 
       - name: Set up Python
@@ -57,6 +61,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add \
             database/jobs.json \
+            database/history.json \
             website/data/ \
             website/feed.xml \
             reports/activity/ \
@@ -64,7 +69,8 @@ jobs:
             reports/market/ \
             reports/timeline/ \
             reports/company_watch/ \
-            reports/weekly/
+            reports/weekly/ \
+            reports/companies/
           if git diff --staged --quiet; then
             echo "No report changes to commit."
           else
@@ -77,6 +83,6 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: |
-            data/jobs.sqlite
+            database/swift.db
             database/jobs.db
-          key: ios-hunter-db-${{ github.repository }}-${{ hashFiles('database/jobs.db', 'data/jobs.sqlite') }}
+          key: ios-hunter-db-${{ github.repository }}-${{ hashFiles('database/jobs.db', 'database/swift.db') }}

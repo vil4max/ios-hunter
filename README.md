@@ -19,7 +19,7 @@ Configured in [`config/profile.yaml`](config/profile.yaml):
 
 ## Stack
 
-Swift 6 (collector) · Python 3.12 (pipeline) · SQLite · GitHub Actions (hourly) · Telegram
+Swift 6 (collector) · Python 3.12 (pipeline) · SQLite · GitHub Actions (every 6h) · Telegram
 
 ## Run locally
 
@@ -40,6 +40,10 @@ python scripts/run_pipeline.py
 | `TELEGRAM_CHAT_ID` | Chat ID for notifications |
 | `JOBS_DB_PATH` | Python SQLite path (default: `database/jobs.db`) |
 | `SWIFT_EXPORT_PATH` | Swift JSON export (default: `database/swift_export.json`) |
+| `JOBS_JSON_PATH` | Open jobs JSON export (default: `database/jobs.json`) |
+| `HISTORY_JSON_PATH` | History JSON export (default: `database/history.json`) |
+| `OPENAI_API_KEY` | Optional — enable AI weekly summary |
+| `GEMINI_API_KEY` | Optional — enable AI weekly summary (fallback) |
 
 ## CRM
 
@@ -66,7 +70,7 @@ Quick checklist:
 4. **GitHub Pages** — Settings → Pages → Source: **GitHub Actions**
 5. Edit **`config/profile.yaml`** — your name, portfolio, CV URLs
 
-After setup, `collect.yml` runs hourly, sends Telegram packs, and **auto-commits** reports to `main`.
+After setup, `collect.yml` runs every 6 hours, sends Telegram packs, and **auto-commits** reports to `main`.
 
 ## Docs
 

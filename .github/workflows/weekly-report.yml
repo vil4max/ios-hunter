@@ -30,7 +30,7 @@ jobs:
       - name: Generate weekly report
         env:
           JOBS_DB_PATH: database/jobs.db
-        run: python scripts/run_pipeline.py
+        run: python3 scripts/run_pipeline.py
 
       - name: Save database cache
         if: always()

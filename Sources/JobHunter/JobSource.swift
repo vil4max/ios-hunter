@@ -9,6 +9,9 @@ protocol JobSource: Sendable {
 enum JobSources {
     static func all(http: HTTPClient) -> [any JobSource] {
         [
+            DOUSource(http: http),
+            DjinniSource(http: http),
+            LinkedInSource(http: http),
             LeobitSource(http: http),
             AndersenSource(http: http),
             NixSource(http: http),

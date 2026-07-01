@@ -1,9 +1,10 @@
-name: Monitor iOS Jobs
+# Deprecated — use "Collect iOS Jobs" (collect.yml) instead.
+# Kept for manual workflow_dispatch only.
+
+name: Monitor iOS Jobs (legacy)
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 * * * *"
 
 jobs:
   monitor:
@@ -12,15 +13,15 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Prepare data directory
-        run: mkdir -p data
+        run: mkdir -p database
 
       - name: Restore SQLite database
         uses: actions/cache/restore@v4
         with:
-          path: data/jobs.sqlite
-          key: jobs-sqlite-${{ github.repository }}-${{ hashFiles('data/jobs.sqlite') }}
+          path: database/swift.db
+          key: ios-hunter-db-${{ github.repository }}-${{ hashFiles('database/swift.db') }}
           restore-keys: |
-            jobs-sqlite-${{ github.repository }}-
+            ios-hunter-db-${{ github.repository }}-
 
       - name: Build
         run: swift build -c release
@@ -29,12 +30,12 @@ jobs:
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          JOBS_DB_PATH: data/jobs.sqlite
+          JOBS_DB_PATH: database/swift.db
         run: swift run -c release JobHunter
 
       - name: Save SQLite database
         if: always()
         uses: actions/cache/save@v4
         with:
-          path: data/jobs.sqlite
-          key: jobs-sqlite-${{ github.repository }}-${{ hashFiles('data/jobs.sqlite') }}
+          path: database/swift.db
+          key: ios-hunter-db-${{ github.repository }}-${{ hashFiles('database/swift.db') }}

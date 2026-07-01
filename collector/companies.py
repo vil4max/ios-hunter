@@ -3,23 +3,14 @@ from __future__ import annotations
 import json
 import time
 import urllib.request
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-
-@dataclass
-class SourceResult:
-    source_id: str
-    source_name: str
-    source_url: str | None
-    jobs: list[dict[str, Any]]
-    status: str
-    error: str | None
-    response_ms: int
+from collector.dou import collect_djinni, collect_dou, collect_linkedin
+from collector.types import SourceResult
 
 
-def load_swift_export(path: str | Path = "database/swift_export.json") -> list[dict[str, Any]]:
+def load_swift_export(path: str | Path) -> list[dict[str, Any]]:
     export_path = Path(path)
     if not export_path.exists():
         return []
@@ -99,10 +90,9 @@ def collect_all(swift_export_path: str | Path = "database/swift_export.json") ->
             )
         )
 
-    results.append(
-        collect_teamtailor("Levi9", "https://jobs.ua.levi9.com/jobs.json")
-    )
-    results.append(
-        collect_teamtailor("Avenga", "https://career.avenga.com/jobs.json")
-    )
+    results.append(collect_teamtailor("Levi9", "https://jobs.ua.levi9.com/jobs.json"))
+    results.append(collect_teamtailor("Avenga", "https://career.avenga.com/jobs.json"))
+    results.append(collect_dou())
+    results.append(collect_djinni())
+    results.append(collect_linkedin())
     return results

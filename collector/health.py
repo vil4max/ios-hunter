@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collector.companies import SourceResult
+from collector.types import SourceResult
 
 
 def render_health_report(results: list[SourceResult], runtime_seconds: float, duplicates_removed: int) -> str:

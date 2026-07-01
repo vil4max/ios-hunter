@@ -2,10 +2,17 @@ import Foundation
 
 struct MonitorSummary: Sendable {
     let newJobsCount: Int
+    let updatedJobsCount: Int
+    let reopenedJobsCount: Int
+    let closedJobsCount: Int
     let openVacancyCount: Int
     let trackedVacancyCount: Int
     let sourceCount: Int
     let failedSourceCount: Int
+
+    var actionableCount: Int {
+        newJobsCount + updatedJobsCount + reopenedJobsCount
+    }
 }
 
 enum Telegram {
@@ -29,20 +36,28 @@ enum Telegram {
             sourcesLine = "Sources: \(healthySourceCount)/\(summary.sourceCount) OK (\(summary.failedSourceCount) failed)"
         }
 
-        let newJobsLine: String
-        switch summary.newJobsCount {
-        case 0:
-            newJobsLine = "No new iOS vacancies this run."
-        case 1:
-            newJobsLine = "1 new iOS vacancy this run."
-        default:
-            newJobsLine = "\(summary.newJobsCount) new iOS vacancies this run."
+        let headline: String
+        if summary.newJobsCount > 0 {
+            headline = "\(summary.newJobsCount) new iOS vacancies"
+        } else if summary.actionableCount > 0 {
+            headline = "\(summary.actionableCount) actionable opportunities (\(summary.updatedJobsCount) updated, \(summary.reopenedJobsCount) reopened)"
+        } else if summary.closedJobsCount > 0 {
+            headline = "No new opportunities; \(summary.closedJobsCount) closed"
+        } else {
+            headline = "Market unchanged this run"
         }
 
         let message = """
         ✅ iOS Hunter
 
-        \(newJobsLine)
+        Run Activity
+        Actionable: \(summary.actionableCount)
+        New: \(summary.newJobsCount)
+        Updated: \(summary.updatedJobsCount)
+        Reopened: \(summary.reopenedJobsCount)
+        Closed: \(summary.closedJobsCount)
+
+        \(headline)
 
         Open roles now: \(summary.openVacancyCount)
         Tracking in total: \(summary.trackedVacancyCount)

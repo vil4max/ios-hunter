@@ -345,7 +345,34 @@ class JobRepository:
 
     def export_jobs_json(self, output_path: str | Path) -> None:
         rows = self._conn.execute(
-            "SELECT company, title, location, remote, url, source, status, first_seen, last_seen FROM jobs WHERE status = 'open'"
+            "SELECT company, title, location, remote, url, source, status, first_seen, last_seen, description FROM jobs WHERE status = 'open'"
+        ).fetchall()
+        payload = [dict(row) for row in rows]
+        path = Path(output_path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
+
+    def history_change_counts(self, days: int = 7) -> list[dict[str, Any]]:
+        rows = self._conn.execute(
+            """
+            SELECT change_type, COUNT(*) AS count
+            FROM history
+            WHERE date >= datetime('now', ?)
+            GROUP BY change_type
+            """,
+            (f"-{days} days",),
+        ).fetchall()
+        return [dict(row) for row in rows]
+
+    def export_history_json(self, output_path: str | Path, days: int = 30) -> None:
+        rows = self._conn.execute(
+            """
+            SELECT job_id, date AS changed_at, change_type AS field, old_value, new_value, diff
+            FROM history
+            WHERE date >= datetime('now', ?)
+            ORDER BY date DESC
+            """,
+            (f"-{days} days",),
         ).fetchall()
         payload = [dict(row) for row in rows]
         path = Path(output_path)

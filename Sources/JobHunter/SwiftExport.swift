@@ -10,12 +10,16 @@ enum SwiftExport {
             )
         }
 
-        let payload: [[String: String]] = jobs.map { job in
+        let payload: [[String: String?]] = jobs.map { job in
             [
                 "company": job.company,
                 "title": job.title,
                 "url": job.url,
-                "source": "company",
+                "source": job.source.rawValue,
+                "location": job.location,
+                "remote": job.remote?.rawValue,
+                "description": job.description,
+                "hash": job.hash,
             ]
         }
 

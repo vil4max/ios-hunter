@@ -187,6 +187,7 @@ def main() -> int:
     generate_weekly_report(repo, ROOT)
     repo.export_jobs_json(ROOT / "database/jobs.json")
     repo.export_jobs_json(ROOT / "website/data/jobs.json")
+    repo.export_history_json(ROOT / "database/history.json")
     generate_rss(repo, ROOT / "website/feed.xml")
 
     write_report(
