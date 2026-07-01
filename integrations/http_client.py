@@ -1,39 +1,26 @@
 from __future__ import annotations
 
-import json
-import ssl
-import urllib.error
-import urllib.request
 from typing import Any
 
-
-def open_url(request: urllib.request.Request, timeout: int = 30) -> Any:
-    context = ssl.create_default_context()
-    return urllib.request.urlopen(request, timeout=timeout, context=context)
+import requests
 
 
 def post_json(url: str, payload: dict[str, Any], headers: dict[str, str], timeout: int = 30) -> dict[str, Any]:
-    request = urllib.request.Request(
-        url,
-        data=json.dumps(payload).encode("utf-8"),
-        headers=headers,
-        method="POST",
-    )
-    with open_url(request, timeout=timeout) as response:
-        return json.loads(response.read().decode("utf-8"))
+    response = requests.post(url, json=payload, headers=headers, timeout=timeout)
+    response.raise_for_status()
+    return response.json()
 
 
 def post_form(url: str, form: dict[str, str], timeout: int = 30) -> None:
-    import urllib.parse
+    response = requests.post(url, data=form, timeout=timeout)
+    response.raise_for_status()
 
-    request = urllib.request.Request(
+
+def fetch_json(url: str, timeout: int = 30) -> Any:
+    response = requests.get(
         url,
-        data=urllib.parse.urlencode(form).encode("utf-8"),
-        method="POST",
+        headers={"User-Agent": "ios-hunter/2.0 (+https://github.com/)"},
+        timeout=timeout,
     )
-    try:
-        with open_url(request, timeout=timeout) as response:
-            if response.status >= 300:
-                raise RuntimeError(f"HTTP {response.status}")
-    except urllib.error.URLError as error:
-        raise RuntimeError(f"HTTP request failed: {error}") from error
+    response.raise_for_status()
+    return response.json()

@@ -2,12 +2,11 @@ from __future__ import annotations
 
 import json
 import time
-import urllib.request
 from pathlib import Path
 from typing import Any
 
 from collector.types import SourceResult
-from integrations.http_client import open_url
+from integrations.http_client import fetch_json
 
 
 def load_swift_export(path: str | Path) -> list[dict[str, Any]]:
@@ -18,15 +17,6 @@ def load_swift_export(path: str | Path) -> list[dict[str, Any]]:
     if isinstance(data, list):
         return data
     return data.get("jobs", [])
-
-
-def fetch_json(url: str, timeout: int = 30) -> Any:
-    request = urllib.request.Request(
-        url,
-        headers={"User-Agent": "ios-hunter/2.0 (+https://github.com/)"},
-    )
-    with open_url(request, timeout=timeout) as response:
-        return json.loads(response.read().decode("utf-8"))
 
 
 def collect_teamtailor(company: str, feed_url: str) -> SourceResult:

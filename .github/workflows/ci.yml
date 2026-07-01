@@ -28,4 +28,4 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Verify imports
-        run: python3 -c "from collector.companies import collect_all; from ai.engine import create_analyzer"
+        run: python3 -c "from collector.companies import collect_all; from ai.engine import create_analyzer; from parser.pipeline_steps import apply_job_change"

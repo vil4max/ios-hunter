@@ -39,54 +39,52 @@ def summarize_diff(diff: str) -> str:
     return ", ".join(added[:3])
 
 
-def detect_salary_change(old: str | None, new: str | None) -> bool:
-    pattern = r"(\$|€|usd|eur|грн|uah)\s*\d"
-    old_match = bool(re.search(pattern, (old or "").lower()))
-    new_match = bool(re.search(pattern, (new or "").lower()))
-    return old_match != new_match or (old or "") != (new or "")
+def _record_from_vacancy(incoming: Vacancy, now: str, job_id: str, status: str = "open") -> JobRecord:
+    return JobRecord(
+        id=job_id,
+        company=incoming.company,
+        title=incoming.title,
+        location=incoming.location,
+        remote=incoming.remote,
+        url=incoming.url,
+        source=incoming.source,
+        published_at=incoming.published_at.isoformat() if incoming.published_at else None,
+        updated_at=now,
+        first_seen=now,
+        last_seen=now,
+        status=status,
+        description=incoming.description,
+        hash=incoming.hash,
+    )
 
 
-def compare_job(existing: JobRecord | None, incoming: Vacancy, now: str) -> tuple[JobRecord, JobChange]:
-    job_id = existing.id if existing else incoming.hash
+def _compare_new(incoming: Vacancy, now: str) -> tuple[JobRecord, JobChange]:
+    job_id = incoming.hash
+    record = _record_from_vacancy(incoming, now, job_id)
+    return record, JobChange(job_id=job_id, change_type="new")
 
-    if existing is None:
-        record = JobRecord(
-            id=job_id,
-            company=incoming.company,
-            title=incoming.title,
-            location=incoming.location,
-            remote=incoming.remote,
-            url=incoming.url,
-            source=incoming.source,
-            published_at=incoming.published_at.isoformat() if incoming.published_at else None,
-            updated_at=now,
-            first_seen=now,
-            last_seen=now,
-            status="open",
-            description=incoming.description,
-            hash=incoming.hash,
-        )
-        return record, JobChange(job_id=job_id, change_type="new")
 
-    if existing.status == "closed":
-        record = JobRecord(
-            id=existing.id,
-            company=incoming.company,
-            title=incoming.title,
-            location=incoming.location,
-            remote=incoming.remote,
-            url=incoming.url,
-            source=incoming.source,
-            published_at=existing.published_at,
-            updated_at=now,
-            first_seen=existing.first_seen,
-            last_seen=now,
-            status="open",
-            description=incoming.description or existing.description,
-            hash=existing.hash,
-        )
-        return record, JobChange(job_id=job_id, change_type="reopened")
+def _compare_reopened(existing: JobRecord, incoming: Vacancy, now: str) -> tuple[JobRecord, JobChange]:
+    record = JobRecord(
+        id=existing.id,
+        company=incoming.company,
+        title=incoming.title,
+        location=incoming.location,
+        remote=incoming.remote,
+        url=incoming.url,
+        source=incoming.source,
+        published_at=existing.published_at,
+        updated_at=now,
+        first_seen=existing.first_seen,
+        last_seen=now,
+        status="open",
+        description=incoming.description or existing.description,
+        hash=existing.hash,
+    )
+    return record, JobChange(job_id=existing.id, change_type="reopened")
 
+
+def _compare_existing(existing: JobRecord, incoming: Vacancy, now: str) -> tuple[JobRecord, JobChange]:
     description_changed = (existing.description or "") != (incoming.description or "")
     title_changed = existing.title != incoming.title
     remote_changed = (existing.remote or "") != (incoming.remote or "")
@@ -119,10 +117,18 @@ def compare_job(existing: JobRecord | None, incoming: Vacancy, now: str) -> tupl
         hash=existing.hash,
     )
     return record, JobChange(
-        job_id=job_id,
+        job_id=existing.id,
         change_type=change_type,
         change_summary=summary,
         diff=diff,
         old_description=existing.description,
         new_description=incoming.description,
     )
+
+
+def compare_job(existing: JobRecord | None, incoming: Vacancy, now: str) -> tuple[JobRecord, JobChange]:
+    if existing is None:
+        return _compare_new(incoming, now)
+    if existing.status == "closed":
+        return _compare_reopened(existing, incoming, now)
+    return _compare_existing(existing, incoming, now)

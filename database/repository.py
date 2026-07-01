@@ -12,6 +12,41 @@ from database.paths import resolve_db_path
 _SCHEMA_SQL = (Path(__file__).with_name("schema.sql")).read_text(encoding="utf-8")
 
 
+@dataclass
+class SourceHealthUpdate:
+    consecutive: int
+    avg_jobs: float
+    avg_ms: int
+    last_success: str | None
+    last_failure: str | None
+
+
+def _compute_source_health_update(
+    row: sqlite3.Row | None,
+    status: str,
+    response_ms: int | None,
+    jobs_count: int,
+    now: str,
+) -> SourceHealthUpdate:
+    if row:
+        consecutive = 0 if status == "healthy" else int(row["consecutive_failures"]) + 1
+        prev_avg_jobs = row["avg_jobs_count"] or 0.0
+        prev_avg_ms = row["avg_response_ms"] or (response_ms or 0)
+        avg_jobs = (prev_avg_jobs * 0.8) + (jobs_count * 0.2)
+        avg_ms = int((prev_avg_ms * 0.8) + ((response_ms or prev_avg_ms) * 0.2))
+        last_success = now if status == "healthy" else row["last_success_at"]
+        last_failure = now if status != "healthy" else row["last_failure_at"]
+        return SourceHealthUpdate(consecutive, avg_jobs, avg_ms, last_success, last_failure)
+
+    return SourceHealthUpdate(
+        consecutive=0 if status == "healthy" else 1,
+        avg_jobs=float(jobs_count),
+        avg_ms=response_ms or 0,
+        last_success=now if status == "healthy" else None,
+        last_failure=now if status != "healthy" else None,
+    )
+
+
 def utc_now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
@@ -235,20 +270,7 @@ class JobRepository:
             (source_id,),
         ).fetchone()
 
-        if row:
-            consecutive = 0 if status == "healthy" else int(row["consecutive_failures"]) + 1
-            prev_avg_jobs = row["avg_jobs_count"] or 0.0
-            prev_avg_ms = row["avg_response_ms"] or (response_ms or 0)
-            avg_jobs = (prev_avg_jobs * 0.8) + (jobs_count * 0.2)
-            avg_ms = int((prev_avg_ms * 0.8) + ((response_ms or prev_avg_ms) * 0.2))
-            last_success = now if status == "healthy" else row["last_success_at"]
-            last_failure = now if status != "healthy" else row["last_failure_at"]
-        else:
-            consecutive = 0 if status == "healthy" else 1
-            avg_jobs = float(jobs_count)
-            avg_ms = response_ms or 0
-            last_success = now if status == "healthy" else None
-            last_failure = now if status != "healthy" else None
+        metrics = _compute_source_health_update(row, status, response_ms, jobs_count, now)
 
         self._conn.execute(
             """
@@ -273,12 +295,12 @@ class JobRepository:
                 source_name,
                 source_url,
                 status,
-                last_success,
-                last_failure,
+                metrics.last_success,
+                metrics.last_failure,
                 error,
-                consecutive,
-                avg_ms,
-                avg_jobs,
+                metrics.consecutive,
+                metrics.avg_ms,
+                metrics.avg_jobs,
                 now,
             ),
         )

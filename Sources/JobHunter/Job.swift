@@ -48,30 +48,6 @@ struct Job: Hashable, Sendable {
         self.description = details.description
     }
 
-    init(
-        title: String,
-        url: String,
-        company: String,
-        location: String? = nil,
-        remote: RemoteType? = nil,
-        published: Date? = nil,
-        source: JobSourceKind = .company,
-        description: String? = nil
-    ) {
-        self.init(
-            title: title,
-            url: url,
-            company: company,
-            details: JobDetails(
-                location: location,
-                remote: remote,
-                published: published,
-                source: source,
-                description: description
-            )
-        )
-    }
-
     var hash: String {
         JobHash.compute(company: company, title: title, location: location)
     }
