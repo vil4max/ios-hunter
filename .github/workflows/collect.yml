@@ -1,0 +1,81 @@
+name: Collect iOS Jobs
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 08:00–18:00 Europe/Kyiv, Mon–Fri (EEST = UTC+3 → 05:00–15:00 UTC)
+    # In winter (EET, UTC+2) local runs shift +1h: 09:00–19:00 Kyiv
+    - cron: "0 5-15 * * 1-5"
+
+permissions:
+  contents: write
+
+jobs:
+  collect:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare directories
+        run: mkdir -p database reports/activity reports/health reports/market reports/timeline reports/company_watch reports/weekly reports/companies website/data
+
+      - name: Restore SQLite database
+        uses: actions/cache/restore@v4
+        with:
+          path: database/jobs.db
+          key: ios-hunter-db-${{ github.repository }}-${{ hashFiles('database/jobs.db') }}
+          restore-keys: |
+            ios-hunter-db-${{ github.repository }}-
+
+      - name: Build Swift collector
+        run: swift build -c release
+
+      - name: Run Swift collector
+        env:
+          SWIFT_EXPORT_PATH: database/swift_export.json
+        run: swift run -c release JobHunter
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Python pipeline
+        env:
+          JOBS_DB_PATH: database/jobs.db
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python3 scripts/run_pipeline.py
+
+      - name: Commit reports and public data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            database/jobs.json \
+            database/history.json \
+            website/data/ \
+            website/feed.xml \
+            reports/activity/ \
+            reports/health/ \
+            reports/market/ \
+            reports/timeline/ \
+            reports/company_watch/ \
+            reports/weekly/ \
+            reports/companies/
+          if git diff --staged --quiet; then
+            echo "No report changes to commit."
+          else
+            git commit -m "chore(data): update market reports and public data"
+            git push
+          fi
+
+      - name: Save SQLite database
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: database/jobs.db
+          key: ios-hunter-db-${{ github.repository }}-${{ hashFiles('database/jobs.db') }}

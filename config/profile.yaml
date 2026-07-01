@@ -1,0 +1,25 @@
+name: "iOS Developer"
+portfolio_url: "https://example.com"
+cv_urls:
+  fintech: "https://example.com/cv-fintech.pdf"
+  ai: "https://example.com/cv-ai.pdf"
+  sdk: "https://example.com/cv-sdk.pdf"
+  product: "https://example.com/cv-product.pdf"
+
+salary:
+  minimum_usd: 4500
+  target_usd: 6000
+  maximum_usd: 6000
+  currency: USD
+
+english:
+  level: B1
+  aspirational_minimum_usd: 7000
+  aspirational_target_usd: 8000
+  note: "Raise salary targets when English reaches upper-intermediate (7-8 / B2-C1)."
+
+remote_preference: remote
+match_threshold: 60
+
+telegram:
+  enabled: true

@@ -1,0 +1,26 @@
+[
+  {
+    "company": "MacPaw",
+    "title": "Senior iOS Engineer",
+    "location": null,
+    "remote": "remote",
+    "url": "https://jobs.macpaw.com/senior-ios",
+    "source": "company",
+    "status": "open",
+    "first_seen": "2026-07-01T12:50:17+00:00",
+    "last_seen": "2026-07-01T13:40:36+00:00",
+    "description": "SwiftUI UIKit remote salary 5000 USD"
+  },
+  {
+    "company": "LowPay Co",
+    "title": "iOS Engineer",
+    "location": null,
+    "remote": "remote",
+    "url": "https://lowpay.com/ios",
+    "source": "company",
+    "status": "open",
+    "first_seen": "2026-07-01T12:50:28+00:00",
+    "last_seen": "2026-07-01T13:40:36+00:00",
+    "description": "SwiftUI salary 3000 USD remote"
+  }
+]
