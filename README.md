@@ -52,7 +52,24 @@ python3 -m crm stats
 python3 -m crm stage --id 1 --stage technical
 ```
 
+## GitHub setup
+
+One-time setup after merging the PR. Full guide (RU): **[docs/GITHUB_SETUP.md](docs/GITHUB_SETUP.md)**
+
+Quick checklist:
+
+1. **Merge PR** into `main`
+2. **Secrets** (Settings → Secrets and variables → Actions):
+   - `TELEGRAM_TOKEN` — from [@BotFather](https://t.me/BotFather)
+   - `TELEGRAM_CHAT_ID` — your Telegram chat id
+3. **Enable Actions** — repo → Actions tab
+4. **GitHub Pages** — Settings → Pages → Source: **GitHub Actions**
+5. Edit **`config/profile.yaml`** — your name, portfolio, CV URLs
+
+After setup, `collect.yml` runs hourly, sends Telegram packs, and **auto-commits** reports to `main`.
+
 ## Docs
 
+- [docs/GITHUB_SETUP.md](docs/GITHUB_SETUP.md) — подробная настройка GitHub
 - [ARCHITECTURE.md](ARCHITECTURE.md)
 - [ROADMAP.md](ROADMAP.md)

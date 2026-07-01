@@ -29,7 +29,8 @@ Remote iOS role with international team — **$4500–$6000** net (current Engli
 - [x] RSS feed for actionable vacancies (`website/feed.xml`)
 - [x] Weekly iOS Market Report (`reports/weekly/`)
 - [x] Market Timeline snapshots (`reports/timeline/`)
-- [ ] Deploy GitHub Pages workflow
+- [x] Auto-commit reports and public data after each run
+- [x] Deploy GitHub Pages workflow
 
 ### P4 — AI (optional)
 
