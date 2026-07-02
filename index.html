@@ -36,20 +36,22 @@
   <div class="card">
     <h2>Links</h2>
     <ul class="list">
-      <li><a href="feed.xml">RSS feed</a> — actionable iOS and Swift vacancies</li>
+      <li><a href="website/feed.xml">RSS feed</a> — actionable vacancies</li>
       <li><a href="https://github.com/vil4max/ios-hunter">GitHub repository</a></li>
     </ul>
   </div>
 
   <script>
+    const dataBase = "website/data/";
+
     function metric(label, value) {
       return `<div class="metric"><strong>${value}</strong>${label}</div>`;
     }
 
     async function load() {
       const [activity, market] = await Promise.all([
-        fetch('data/activity.json').then(r => r.ok ? r.json() : null).catch(() => null),
-        fetch('data/market.json').then(r => r.ok ? r.json() : null).catch(() => null),
+        fetch(`${dataBase}activity.json`).then(r => r.ok ? r.json() : null).catch(() => null),
+        fetch(`${dataBase}market.json`).then(r => r.ok ? r.json() : null).catch(() => null),
       ]);
 
       if (activity) {
@@ -61,6 +63,8 @@
           metric('Reopened', activity.reopened),
           metric('Closed', activity.closed),
         ].join('');
+      } else {
+        document.getElementById('headline').textContent = 'No activity data yet';
       }
 
       if (market) {
