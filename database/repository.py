@@ -149,7 +149,7 @@ class JobRepository:
     def mark_closed(self, job_id: str, when: str | None = None) -> None:
         when = when or utc_now()
         self._conn.execute(
-            "UPDATE jobs SET status = 'closed', updated_at = ?, last_seen = ? WHERE id = ?",
+            "UPDATE jobs SET status = 'closed', updated_at = ?, last_seen = ?, description = NULL WHERE id = ?",
             (when, when, job_id),
         )
         self._conn.commit()
@@ -369,12 +369,42 @@ class JobRepository:
 
     def export_jobs_json(self, output_path: str | Path) -> None:
         rows = self._conn.execute(
-            "SELECT company, title, location, remote, url, source, status, first_seen, last_seen, description FROM jobs WHERE status = 'open'"
+            "SELECT company, title, location, remote, url, source, status, first_seen, last_seen FROM jobs WHERE status = 'open'"
         ).fetchall()
         payload = [dict(row) for row in rows]
         path = Path(output_path)
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
+
+    def prune_jobs_older_than(self, days: int = 45) -> int:
+        """
+        Prune old jobs and related rows to keep the SQLite cache bounded.
+
+        Notes:
+        - We prune by `last_seen` (not `published_at`) because many sources do not expose publish dates.
+        - We do not delete jobs referenced by CRM `applications` to avoid breaking that workflow.
+        """
+        job_rows = self._conn.execute(
+            """
+            SELECT id FROM jobs
+            WHERE last_seen < datetime('now', ?)
+              AND id NOT IN (SELECT job_id FROM applications WHERE job_id IS NOT NULL)
+            """,
+            (f"-{days} days",),
+        ).fetchall()
+        job_ids = [row["id"] for row in job_rows]
+        if not job_ids:
+            return 0
+
+        placeholders = ",".join("?" for _ in job_ids)
+        self._conn.execute(f"DELETE FROM skills WHERE job_id IN ({placeholders})", job_ids)
+        self._conn.execute(f"DELETE FROM job_sources WHERE job_id IN ({placeholders})", job_ids)
+        self._conn.execute(f"DELETE FROM history WHERE job_id IN ({placeholders})", job_ids)
+        self._conn.execute(f"DELETE FROM run_activity WHERE job_id IN ({placeholders})", job_ids)
+        self._conn.execute(f"DELETE FROM application_packs WHERE job_id IN ({placeholders})", job_ids)
+        self._conn.execute(f"DELETE FROM jobs WHERE id IN ({placeholders})", job_ids)
+        self._conn.commit()
+        return len(job_ids)
 
     def history_change_counts(self, days: int = 7) -> list[dict[str, Any]]:
         rows = self._conn.execute(

@@ -48,6 +48,7 @@ After each run, the repository is updated with:
 - `website/` — dashboard and RSS (GitHub Pages)
 
 The SQLite DB (`database/jobs.db`) is stored in GitHub Actions cache and **not committed**.
+To keep the cache bounded, the pipeline prunes jobs not seen for **45 days** (configurable via `JOBS_RETENTION_DAYS`).
 
 ### 6. CRM (optional)
 Track applications and follow-up reminders via CLI (optional).

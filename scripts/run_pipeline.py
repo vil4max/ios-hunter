@@ -161,6 +161,8 @@ def main() -> int:
     company_watch_alerts = send_company_watch_alerts(repo, ROOT)
     followups_sent = send_followup_reminders(repo)
 
+    pruned_jobs = repo.prune_jobs_older_than(days=int(os.environ.get("JOBS_RETENTION_DAYS", "45")))
+
     runtime = time.perf_counter() - started
     failed_sources = sum(1 for result in source_results if result.status == "failed")
     repo.finish_run_metrics(
@@ -194,7 +196,8 @@ def main() -> int:
         f"{activity_report}\n\n{health_report}\n\n"
         f"Application packs sent: {packs_sent}\n"
         f"Company Watch alerts: {company_watch_alerts}\n"
-        f"CRM follow-ups sent: {followups_sent}"
+        f"CRM follow-ups sent: {followups_sent}\n"
+        f"Pruned jobs (retention): {pruned_jobs}"
     )
     repo.close()
     return 0
