@@ -25,7 +25,10 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Run unit tests
+        run: python3 -m pytest -q
 
       - name: Verify imports
         run: python3 -c "from collector.companies import collect_all; from ai.engine import create_analyzer; from parser.pipeline_steps import apply_job_change"
