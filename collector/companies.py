@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 import json
+import re
 import time
 from pathlib import Path
 from typing import Any
+
+import requests
 
 from collector.types import SourceResult
 from integrations.http_client import fetch_json
@@ -214,6 +217,76 @@ def collect_lever(company: str, board_slug: str) -> SourceResult:
         )
 
 
+def collect_workable_jobs_md(company: str, account_slug: str) -> SourceResult:
+    """
+    Workable public markdown export.
+    Endpoint: https://apply.workable.com/{slug}/jobs.md
+    """
+    started = time.perf_counter()
+    url = f"https://apply.workable.com/{account_slug}/jobs.md"
+    try:
+        response = requests.get(
+            url,
+            headers={"User-Agent": "ios-hunter/2.0 (+https://github.com/)"},
+            timeout=30,
+        )
+        response.raise_for_status()
+        text = response.text
+
+        jobs: list[dict[str, Any]] = []
+        for line in text.splitlines():
+            if not line.startswith("| "):
+                continue
+            if " Title " in line or line.startswith("|-------"):
+                continue
+
+            # | Title | Department | Location | Type | Salary | Posted | Details |
+            parts = [part.strip() for part in line.strip().strip("|").split("|")]
+            if len(parts) < 7:
+                continue
+
+            title = parts[0]
+            if not _is_ios_title(title):
+                continue
+
+            location = parts[2]
+            details = parts[6]
+            match = re.search(r"\((https?://[^)]+)\)", details)
+            job_url = match.group(1) if match else ""
+
+            jobs.append(
+                {
+                    "company": company,
+                    "title": title,
+                    "url": job_url,
+                    "source": "company",
+                    "location": location,
+                }
+            )
+
+        elapsed = int((time.perf_counter() - started) * 1000)
+        return SourceResult(
+            source_id=f"company:{company.lower()}",
+            source_name=company,
+            source_url=url,
+            jobs=jobs,
+            status="healthy",
+            error=None,
+            response_ms=elapsed,
+        )
+    except Exception as error:  # noqa: BLE001
+        elapsed = int((time.perf_counter() - started) * 1000)
+        return SourceResult(
+            source_id=f"company:{company.lower()}",
+            source_name=company,
+            source_url=url,
+            jobs=[],
+            status="failed",
+            error=str(error),
+            response_ms=elapsed,
+        )
+
+
 def collect_all(swift_export_path: str | Path = "database/swift_export.json") -> list[SourceResult]:
     results: list[SourceResult] = []
 
@@ -237,4 +310,9 @@ def collect_all(swift_export_path: str | Path = "database/swift_export.json") ->
     results.append(collect_ashby("Preply", "preply"))
     results.append(collect_greenhouse("N-iX", "nix"))
     results.append(collect_lever("ELEKS", "eleks"))
+    results.append(collect_workable_jobs_md("Globaldev Group", "globaldevgroup"))
+    results.append(collect_workable_jobs_md("Intetics", "intetics-2"))
+    results.append(collect_workable_jobs_md("Intersog", "intersog-na"))
+    results.append(collect_workable_jobs_md("Romexsoft", "romexsoft"))
+    results.append(collect_workable_jobs_md("SupportYourApp", "supportyourapp"))
     return results
