@@ -1,12 +1,12 @@
 # iOS Market Report — 2026-week-27
 
 ## Summary
-- New jobs: 19
+- New jobs: 20
 - Closed jobs: 0
 - Reopened: 0
 - Updated: 0
-- Currently open: 19
-- Remote: 0 | Hybrid: 0 | Onsite: 0
+- Currently open: 20
+- Remote: 1 | Hybrid: 0 | Onsite: 0
 
 ## Top Hiring Companies
 
@@ -18,12 +18,14 @@
 | Andersen | 2 |
 | Solvd | 1 |
 | Onix Systems | 1 |
+| N-iX | 1 |
 | Levi9 | 1 |
 | KissMyApps | 1 |
 | Grid Dynamics | 1 |
 
 ## Notable changes
 
+- N-iX: created — Lead iOS Engineer (2026-07-02)
 - EPAM: created — Senior Software Engineer Swift (2026-07-01)
 - EPAM: created — Senior Ios Mobile Engineer Native App Development (2026-07-01)
 - EPAM: created — Software Engineer Ios (2026-07-01)
@@ -33,4 +35,3 @@
 - Solvd: created — Test Automation Engineer (iOS) (2026-07-01)
 - KissMyApps: created — iOS Engineer (2026-07-01)
 - DataArt: created — iOS Developer, Mobile Ticketing Platform (2026-07-01)
-- DataArt: created — Senior iOS Developer, Mobile Banking (2026-07-01)

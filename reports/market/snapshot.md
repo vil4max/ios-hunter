@@ -1,9 +1,9 @@
 # iOS Market Snapshot
 
-- Open jobs: 19
-- New this week: 19
+- Open jobs: 20
+- New this week: 20
 - Closed this week: 0
-- Remote: 0 | Hybrid: 0 | Onsite: 0
+- Remote: 1 | Hybrid: 0 | Onsite: 0
 
 ## Top Hiring Companies
 
@@ -16,3 +16,4 @@
 - Solvd: 1 open
 - KissMyApps: 1 open
 - Grid Dynamics: 1 open
+- N-iX: 1 open

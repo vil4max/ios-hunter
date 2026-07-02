@@ -1,8 +1,10 @@
 Collector Health
 
-Sources:      12
-Healthy:      12
-Failed:       0
+Companies:    52/53 OK
+Direct feeds: 11/11 OK
+
+Failed companies:
+- JetSoftPro
 
 Duplicates removed: 0
-Average runtime:    0m 28s
+Average runtime:    0m 22s

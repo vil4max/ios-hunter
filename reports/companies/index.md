@@ -9,5 +9,6 @@
 | Grid Dynamics | 1 | 1 | 0 |
 | KissMyApps | 1 | 1 | 0 |
 | Levi9 | 1 | 1 | 0 |
+| N-iX | 1 | 1 | 0 |
 | Onix Systems | 1 | 1 | 0 |
 | Solvd | 1 | 1 | 0 |

@@ -1,4 +1,4 @@
 # Market Timeline
 
 July 2026
-████████████████████ 19 vacancies
+████████████████████ 20 vacancies
