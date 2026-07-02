@@ -9,6 +9,7 @@ struct JobHunterCLI {
         let sources = JobSources.all(http: http)
         var fetchedJobs: [Job] = []
         var failedSourceCount = 0
+        var failedCompanies: [String] = []
 
         for source in sources {
             do {
@@ -17,6 +18,7 @@ struct JobHunterCLI {
                 fputs("[\(source.company)] \(jobs.count) iOS job(s)\n", stderr)
             } catch {
                 failedSourceCount += 1
+                failedCompanies.append(source.company)
                 fputs("[\(source.company)] error: \(error)\n", stderr)
             }
         }
@@ -29,7 +31,15 @@ struct JobHunterCLI {
         fputs("Sources OK: \(sources.count - failedSourceCount)/\(sources.count)\n", stderr)
 
         do {
-            try SwiftExport.write(jobs: uniqueJobs, to: exportPath)
+            try SwiftExport.write(
+                jobs: uniqueJobs,
+                meta: SwiftExport.Meta(
+                    sourcesTotal: sources.count,
+                    sourcesFailed: failedSourceCount,
+                    failedCompanies: failedCompanies
+                ),
+                to: exportPath
+            )
             fputs("Exported to \(exportPath)\n", stderr)
         } catch {
             fputs("Fatal error: \(error)\n", stderr)

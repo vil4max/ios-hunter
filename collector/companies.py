@@ -8,7 +8,7 @@ from typing import Any
 
 import requests
 
-from collector.types import SourceResult
+from collector.types import CollectResult, SourceResult, SwiftCollectorMeta
 from integrations.http_client import fetch_json
 
 
@@ -20,6 +20,26 @@ def load_swift_export(path: str | Path) -> list[dict[str, Any]]:
     if isinstance(data, list):
         return data
     return data.get("jobs", [])
+
+
+def load_swift_collector_meta(path: str | Path) -> SwiftCollectorMeta | None:
+    export_path = Path(path)
+    if not export_path.exists():
+        return None
+    data = json.loads(export_path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        return None
+    meta = data.get("meta")
+    if not isinstance(meta, dict):
+        return None
+    failed_companies = meta.get("failed_companies", [])
+    if not isinstance(failed_companies, list):
+        failed_companies = []
+    return SwiftCollectorMeta(
+        sources_total=int(meta.get("sources_total", 0)),
+        sources_failed=int(meta.get("sources_failed", 0)),
+        failed_companies=[str(name) for name in failed_companies],
+    )
 
 
 def _is_ios_title(title: str) -> bool:
@@ -223,8 +243,9 @@ def collect_workable_jobs_md(company: str, account_slug: str) -> SourceResult:
         return _source_failed(company, url, error, started)
 
 
-def collect_all(swift_export_path: str | Path = "database/swift_export.json") -> list[SourceResult]:
+def collect_all(swift_export_path: str | Path = "database/swift_export.json") -> CollectResult:
     results: list[SourceResult] = []
+    swift_meta = load_swift_collector_meta(swift_export_path)
 
     swift_jobs = load_swift_export(swift_export_path)
     if swift_jobs:
@@ -251,4 +272,4 @@ def collect_all(swift_export_path: str | Path = "database/swift_export.json") ->
     results.append(collect_workable_jobs_md("Intersog", "intersog-na"))
     results.append(collect_workable_jobs_md("Romexsoft", "romexsoft"))
     results.append(collect_workable_jobs_md("SupportYourApp", "supportyourapp"))
-    return results
+    return CollectResult(source_results=results, swift_meta=swift_meta)

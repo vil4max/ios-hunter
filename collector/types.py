@@ -13,3 +13,20 @@ class SourceResult:
     status: str
     error: str | None
     response_ms: int
+
+
+@dataclass
+class SwiftCollectorMeta:
+    sources_total: int
+    sources_failed: int
+    failed_companies: list[str]
+
+    @property
+    def sources_ok(self) -> int:
+        return self.sources_total - self.sources_failed
+
+
+@dataclass
+class CollectResult:
+    source_results: list[SourceResult]
+    swift_meta: SwiftCollectorMeta | None
