@@ -54,10 +54,25 @@ def make_job_record(vacancy: Vacancy, now: str = "2026-07-02T10:00:00+00:00", **
 @pytest.fixture
 def sample_profile() -> dict:
     return {
+        "name": "Max Vilchevskiy",
+        "portfolio_url": "https://vil4max.github.io",
+        "cv_urls": {
+            "default": "https://vil4max.github.io/cv/default",
+            "ai": "https://vil4max.github.io/cv/ai",
+            "sdk": "https://vil4max.github.io/cv/sdk",
+            "product": "https://vil4max.github.io/cv/product",
+        },
+        "resume_focus": {
+            "ai": "voice AI on Apple Watch and hands-free conversational flows",
+            "sdk": "SDK module extraction and modular iOS architecture",
+            "product": "marketplace commerce and App Store delivery",
+        },
         "skills": ["SwiftUI", "UIKit", "Concurrency", "AI"],
         "skill_priority": ["SwiftUI", "UIKit", "Concurrency", "AI"],
         "remote_preference": "remote",
         "match_threshold": 60,
+        "experience_years": 12,
+        "cover_letter": {"include_salary": False},
         "telegram": {"enabled": True},
     }
 
