@@ -18,6 +18,7 @@ from collector.description import fetch_description, should_fetch
 from collector.health import render_health_report
 from crm.followups import send_followup_reminders
 from database.repository import JobRepository, utc_now
+from integrations.monitor_digest import send_monitor_digest
 from integrations.public_reports import generate_companies_report, generate_rss, generate_weekly_report
 from parser.activity import ActivitySummary
 from parser.deduplicate import deduplicate
@@ -191,12 +192,14 @@ def main() -> int:
     write_report(ROOT / "reports/activity/latest.md", activity_report)
     write_report(ROOT / "reports/health/latest.md", health_report)
     write_public_artifacts(repo, ROOT, activity, market_summary, packs_sent, company_watch_alerts)
+    monitor_digest_sent = send_monitor_digest(repo, activity, source_results, profile)
 
     print(
         f"{activity_report}\n\n{health_report}\n\n"
         f"Application packs sent: {packs_sent}\n"
         f"Company Watch alerts: {company_watch_alerts}\n"
         f"CRM follow-ups sent: {followups_sent}\n"
+        f"Monitor digest sent: {monitor_digest_sent}\n"
         f"Pruned jobs (retention): {pruned_jobs}"
     )
     repo.close()

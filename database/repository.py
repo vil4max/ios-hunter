@@ -467,6 +467,16 @@ class JobRepository:
                 counts[mapping[change_type]] += int(row["count"])
         return tuple(counts)
 
+    def count_open_jobs(self) -> int:
+        row = self._conn.execute(
+            "SELECT COUNT(*) AS count FROM jobs WHERE status = 'open'"
+        ).fetchone()
+        return int(row["count"])
+
+    def count_tracked_jobs(self) -> int:
+        row = self._conn.execute("SELECT COUNT(*) AS count FROM jobs").fetchone()
+        return int(row["count"])
+
     def count_open_by_remote(self) -> dict[str, int]:
         rows = self._conn.execute(
             """
