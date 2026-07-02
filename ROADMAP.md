@@ -9,7 +9,7 @@ Remote iOS role with international team — **$4500–$6000** net (current Engli
 ### P1 — First-to-apply
 
 - [x] Python pipeline with actionable events (New/Updated/Closed/Reopened)
-- [x] Rules-based match score with salary filter ($4500–$6000)
+- [x] Rules-based match score (threshold 60; salary shown in pack, no salary filter)
 - [x] Template cover letter + resume version picker
 - [x] Telegram application pack
 - [x] Hourly weekday collect (08:00–18:00 Kyiv)
