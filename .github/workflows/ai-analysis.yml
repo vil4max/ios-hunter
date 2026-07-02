@@ -15,7 +15,7 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: database/jobs.db
-          key: ios-hunter-db-${{ github.repository }}-${{ hashFiles('database/jobs.db') }}
+          key: ios-hunter-db-${{ github.repository }}
           restore-keys: |
             ios-hunter-db-${{ github.repository }}-
 
