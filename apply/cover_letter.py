@@ -22,10 +22,7 @@ def render_cover_letter(job: JobRecord, match: MatchResult, profile: dict | None
 
     cover_letter_cfg = profile.get("cover_letter", {})
     if cover_letter_cfg.get("include_salary", False):
-        salary = profile.get("salary", {})
-        salary_min = salary.get("minimum_usd", 4500)
-        salary_max = salary.get("maximum_usd", salary.get("target_usd", 6000))
-        highlight += f" I'm targeting remote roles in the ${salary_min}–${salary_max} net range."
+        highlight += " I'm targeting remote roles with market-competitive compensation."
 
     return template.format(
         name=profile.get("name", "Max Vilchevskiy"),

@@ -63,4 +63,4 @@ GitHub Actions cron uses UTC. Collect workflow uses `0 5-15 * * 1-5` (EEST, UTC+
 - One SQLite database
 - DOU/Djinni tracked manually via iPhone apps (not collected here)
 - AI optional (rules-based matching first)
-- Salary range: $4500–$6000 net (B1); aspirational $7000–$8000 with English 7–8
+- Compensation preferences are kept private and are not part of the public repository or vacancy filtering
