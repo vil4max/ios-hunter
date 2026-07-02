@@ -33,6 +33,10 @@ playground.xcworkspace
 
 database/jobs.db
 database/swift_export.json
+
+# Local/runtime SQLite (canonical CI path: database/jobs.db)
+data/
+*.sqlite
 __pycache__/
 *.pyc
 .venv/
