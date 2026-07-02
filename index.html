@@ -3,84 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>iOS Hunter — Ukrainian iOS Market</title>
-  <style>
-    :root { color-scheme: dark; }
-    body { font-family: Inter, system-ui, sans-serif; max-width: 960px; margin: 2rem auto; padding: 0 1rem; background: #0d1117; color: #e6edf3; line-height: 1.5; }
-    h1, h2 { margin-bottom: 0.5rem; }
-    .card { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 1.25rem; margin: 1rem 0; }
-    .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; }
-    .metric strong { display: block; font-size: 1.75rem; color: #79c0ff; }
-    .list { margin: 0; padding-left: 1.2rem; }
-    a { color: #79c0ff; }
-    .muted { color: #8b949e; }
-  </style>
+  <title>iOS Hunter — Dashboard</title>
+  <meta http-equiv="refresh" content="0; url=website/">
+  <link rel="canonical" href="website/">
 </head>
 <body>
-  <h1>iOS Hunter</h1>
-  <p class="muted">Ukrainian iOS job market monitor — updated on weekdays 08:00–18:00 Kyiv.</p>
-
-  <div class="card">
-    <h2>Run Activity</h2>
-    <p id="headline">Loading…</p>
-    <div class="metrics" id="activity-metrics"></div>
-  </div>
-
-  <div class="card">
-    <h2>Market Snapshot</h2>
-    <div class="metrics" id="market-metrics"></div>
-    <h3>Top Hiring Companies</h3>
-    <ul class="list" id="top-companies"></ul>
-  </div>
-
-  <div class="card">
-    <h2>Links</h2>
-    <ul class="list">
-      <li><a href="website/feed.xml">RSS feed</a> — actionable vacancies</li>
-      <li><a href="https://github.com/vil4max/ios-hunter">GitHub repository</a></li>
-    </ul>
-  </div>
-
-  <script>
-    const dataBase = "website/data/";
-
-    function metric(label, value) {
-      return `<div class="metric"><strong>${value}</strong>${label}</div>`;
-    }
-
-    async function load() {
-      const [activity, market] = await Promise.all([
-        fetch(`${dataBase}activity.json`).then(r => r.ok ? r.json() : null).catch(() => null),
-        fetch(`${dataBase}market.json`).then(r => r.ok ? r.json() : null).catch(() => null),
-      ]);
-
-      if (activity) {
-        document.getElementById('headline').textContent = activity.headline;
-        document.getElementById('activity-metrics').innerHTML = [
-          metric('Actionable', activity.actionable),
-          metric('New', activity.new),
-          metric('Updated', activity.updated),
-          metric('Reopened', activity.reopened),
-          metric('Closed', activity.closed),
-        ].join('');
-      } else {
-        document.getElementById('headline').textContent = 'No activity data yet';
-      }
-
-      if (market) {
-        document.getElementById('market-metrics').innerHTML = [
-          metric('Open', market.open_jobs),
-          metric('Remote', market.remote),
-          metric('New / week', market.new_this_week),
-          metric('Closed / week', market.closed_this_week),
-        ].join('');
-        document.getElementById('top-companies').innerHTML = (market.top_companies || [])
-          .map(item => `<li>${item.company}: ${item.open_jobs} open</li>`)
-          .join('') || '<li class="muted">No data yet</li>';
-      }
-    }
-
-    load();
-  </script>
+  <p>Redirecting to the iOS Hunter dashboard at <a href="website/">/website/</a>…</p>
 </body>
 </html>
