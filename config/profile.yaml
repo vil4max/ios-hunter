@@ -35,11 +35,6 @@ resume_focus:
   sdk: "SDK module extraction and modular iOS architecture in loyalty platforms"
   product: "marketplace commerce, Premium Subscription, and App Store delivery"
 
-# Personal notes only — not used to filter vacancies
-salary_notes:
-  target_net_usd: "5000-6000"
-  english_level: B1
-
 cover_letter:
   include_salary: false
 

@@ -86,19 +86,15 @@ GitHub Actions (macOS + Ubuntu)
 
 ## Настройка (один раз)
 
-Подробная инструкция: **[docs/GITHUB_SETUP.md](docs/GITHUB_SETUP.md)**
-
 Кратко:
 
-1. Merge PR в `main`
-2. Secrets: `TELEGRAM_TOKEN`, `TELEGRAM_CHAT_ID`
-3. Enable Actions + GitHub Pages
-4. Отредактировать `config/profile.yaml` — имя, portfolio, ссылки на CV
+1. Secrets: `TELEGRAM_TOKEN`, `TELEGRAM_CHAT_ID`
+2. Enable Actions + GitHub Pages
+3. Отредактировать `config/profile.yaml` — имя, portfolio, ссылки на CV
 
 ---
 
 ## Документация
 
-- [docs/GITHUB_SETUP.md](docs/GITHUB_SETUP.md) — настройка GitHub
 - [ARCHITECTURE.md](ARCHITECTURE.md) — архитектура
 - [ROADMAP.md](ROADMAP.md) — планы развития

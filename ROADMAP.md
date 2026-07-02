@@ -2,14 +2,14 @@
 
 ## Goal
 
-Remote iOS role with international team — **$4500–$6000** net (current English B1). Raise to **$7000–$8000** when English reaches 7–8 (B2–C1).
+Remote iOS role with an international team (current English B1). Raise target level when English reaches 7–8 (B2–C1).
 
 ## Priority Stack
 
 ### P1 — First-to-apply
 
 - [x] Python pipeline with actionable events (New/Updated/Closed/Reopened)
-- [x] Rules-based match score with salary filter ($4500–$6000)
+- [x] Rules-based match score (threshold-based)
 - [x] Template cover letter + resume version picker
 - [x] Telegram application pack
 - [x] Hourly weekday collect (08:00–18:00 Kyiv)
