@@ -45,11 +45,11 @@ def is_ios_job(title: str, description: str | None = None) -> bool:
 
 def infer_remote(title: str, location: str | None, description: str | None) -> str:
     text = f"{title} {location or ''} {description or ''}".lower()
-    if any(word in text for word in ("remote", "remotely", "віддалено", "удаленно")):
+    if any(word in text for word in ("remote", "remotely")):
         return "remote"
-    if any(word in text for word in ("hybrid", "гібрид")):
+    if "hybrid" in text:
         return "hybrid"
-    if any(word in text for word in ("onsite", "office", "офіс", "офис")):
+    if any(word in text for word in ("onsite", "office")):
         return "onsite"
     return "unknown"
 
