@@ -35,7 +35,7 @@ database/jobs.db
 database/swift_export.json
 
 # Local/runtime SQLite (canonical CI path: database/jobs.db)
-data/
+/data/
 *.sqlite
 __pycache__/
 *.pyc
