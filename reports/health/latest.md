@@ -5,4 +5,4 @@ Healthy:      3
 Failed:       0
 
 Duplicates removed: 0
-Average runtime:    0m 36s
+Average runtime:    0m 30s
