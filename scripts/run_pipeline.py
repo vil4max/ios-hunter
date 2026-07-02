@@ -139,7 +139,9 @@ def main() -> int:
     skills_map = load_skills(ROOT / "config/skills.yaml")
     run_id = repo.start_run_metrics(started_at)
 
-    source_results = collect_all(ROOT / "database/swift_export.json")
+    collect_result = collect_all(ROOT / "database/swift_export.json")
+    source_results = collect_result.source_results
+    swift_meta = collect_result.swift_meta
     raw_jobs: list[dict] = []
     for result in source_results:
         repo.upsert_source_health(
@@ -187,12 +189,12 @@ def main() -> int:
     upsert_current_month_snapshot(repo)
     market_summary = compute_market_summary(repo)
     activity_report = activity.render()
-    health_report = render_health_report(source_results, runtime, duplicates_removed)
+    health_report = render_health_report(source_results, runtime, duplicates_removed, swift_meta)
 
     write_report(ROOT / "reports/activity/latest.md", activity_report)
     write_report(ROOT / "reports/health/latest.md", health_report)
     write_public_artifacts(repo, ROOT, activity, market_summary, packs_sent, company_watch_alerts)
-    monitor_digest_sent = send_monitor_digest(repo, activity, source_results, profile)
+    monitor_digest_sent = send_monitor_digest(repo, activity, source_results, profile, swift_meta)
 
     print(
         f"{activity_report}\n\n{health_report}\n\n"

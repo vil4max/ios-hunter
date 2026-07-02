@@ -1,7 +1,13 @@
 import Foundation
 
 enum SwiftExport {
-    static func write(jobs: [Job], to path: String) throws {
+    struct Meta: Sendable {
+        let sourcesTotal: Int
+        let sourcesFailed: Int
+        let failedCompanies: [String]
+    }
+
+    static func write(jobs: [Job], meta: Meta, to path: String) throws {
         let directory = (path as NSString).deletingLastPathComponent
         if !directory.isEmpty {
             try FileManager.default.createDirectory(
@@ -10,7 +16,7 @@ enum SwiftExport {
             )
         }
 
-        let payload: [[String: String?]] = jobs.map { job in
+        let jobPayload: [[String: String?]] = jobs.map { job in
             [
                 "company": job.company,
                 "title": job.title,
@@ -22,6 +28,15 @@ enum SwiftExport {
                 "hash": job.hash,
             ]
         }
+
+        let payload: [String: Any] = [
+            "meta": [
+                "sources_total": meta.sourcesTotal,
+                "sources_failed": meta.sourcesFailed,
+                "failed_companies": meta.failedCompanies,
+            ],
+            "jobs": jobPayload,
+        ]
 
         let data = try JSONSerialization.data(withJSONObject: payload, options: [.prettyPrinted, .sortedKeys])
         let url = URL(fileURLWithPath: path)
