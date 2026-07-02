@@ -19,6 +19,11 @@ def load_swift_export(path: str | Path) -> list[dict[str, Any]]:
     return data.get("jobs", [])
 
 
+def _is_ios_title(title: str) -> bool:
+    lowered = title.lower()
+    return "ios" in lowered or "swift" in lowered
+
+
 def collect_teamtailor(company: str, feed_url: str) -> SourceResult:
     started = time.perf_counter()
     try:
@@ -26,7 +31,7 @@ def collect_teamtailor(company: str, feed_url: str) -> SourceResult:
         jobs = []
         for item in payload.get("jobs", payload if isinstance(payload, list) else []):
             title = str(item.get("title", ""))
-            if "ios" not in title.lower() and "swift" not in title.lower():
+            if not _is_ios_title(title):
                 continue
             jobs.append(
                 {
@@ -63,6 +68,103 @@ def collect_teamtailor(company: str, feed_url: str) -> SourceResult:
         )
 
 
+def collect_greenhouse(company: str, board_slug: str) -> SourceResult:
+    """
+    Greenhouse public boards API.
+    Endpoint: https://boards-api.greenhouse.io/v1/boards/{slug}/jobs?content=true
+    """
+    started = time.perf_counter()
+    url = f"https://boards-api.greenhouse.io/v1/boards/{board_slug}/jobs?content=true"
+    try:
+        payload = fetch_json(url)
+        jobs: list[dict[str, Any]] = []
+        for item in payload.get("jobs", []):
+            title = str(item.get("title", ""))
+            if not _is_ios_title(title):
+                continue
+            jobs.append(
+                {
+                    "company": company,
+                    "title": title,
+                    "url": item.get("absolute_url") or item.get("url") or "",
+                    "source": "company",
+                    "description": item.get("content"),
+                    "location": (item.get("location") or {}).get("name")
+                    if isinstance(item.get("location"), dict)
+                    else item.get("location"),
+                    "updated_at": item.get("updated_at"),
+                }
+            )
+        elapsed = int((time.perf_counter() - started) * 1000)
+        return SourceResult(
+            source_id=f"company:{company.lower()}",
+            source_name=company,
+            source_url=url,
+            jobs=jobs,
+            status="healthy",
+            error=None,
+            response_ms=elapsed,
+        )
+    except Exception as error:  # noqa: BLE001
+        elapsed = int((time.perf_counter() - started) * 1000)
+        return SourceResult(
+            source_id=f"company:{company.lower()}",
+            source_name=company,
+            source_url=url,
+            jobs=[],
+            status="failed",
+            error=str(error),
+            response_ms=elapsed,
+        )
+
+
+def collect_ashby(company: str, board_slug: str) -> SourceResult:
+    """
+    Ashby public posting API.
+    Endpoint: https://api.ashbyhq.com/posting-api/job-board/{slug}
+    """
+    started = time.perf_counter()
+    url = f"https://api.ashbyhq.com/posting-api/job-board/{board_slug}"
+    try:
+        payload = fetch_json(url)
+        jobs: list[dict[str, Any]] = []
+        for item in payload.get("jobs", []):
+            title = str(item.get("title", ""))
+            if not _is_ios_title(title):
+                continue
+            jobs.append(
+                {
+                    "company": company,
+                    "title": title,
+                    "url": item.get("jobUrl") or item.get("applyUrl") or "",
+                    "source": "company",
+                    "description": item.get("descriptionPlain") or item.get("descriptionHtml"),
+                    "location": item.get("location"),
+                }
+            )
+        elapsed = int((time.perf_counter() - started) * 1000)
+        return SourceResult(
+            source_id=f"company:{company.lower()}",
+            source_name=company,
+            source_url=url,
+            jobs=jobs,
+            status="healthy",
+            error=None,
+            response_ms=elapsed,
+        )
+    except Exception as error:  # noqa: BLE001
+        elapsed = int((time.perf_counter() - started) * 1000)
+        return SourceResult(
+            source_id=f"company:{company.lower()}",
+            source_name=company,
+            source_url=url,
+            jobs=[],
+            status="failed",
+            error=str(error),
+            response_ms=elapsed,
+        )
+
+
 def collect_all(swift_export_path: str | Path = "database/swift_export.json") -> list[SourceResult]:
     results: list[SourceResult] = []
 
@@ -82,4 +184,6 @@ def collect_all(swift_export_path: str | Path = "database/swift_export.json") ->
 
     results.append(collect_teamtailor("Levi9", "https://jobs.ua.levi9.com/jobs.json"))
     results.append(collect_teamtailor("Avenga", "https://career.avenga.com/jobs.json"))
+    results.append(collect_greenhouse("Readdle", "readdle70"))
+    results.append(collect_ashby("Preply", "preply"))
     return results
