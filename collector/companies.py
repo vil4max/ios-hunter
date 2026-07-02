@@ -27,6 +27,32 @@ def _is_ios_title(title: str) -> bool:
     return "ios" in lowered or "swift" in lowered
 
 
+def _source_ok(company: str, source_url: str, jobs: list[dict[str, Any]], started: float) -> SourceResult:
+    elapsed = int((time.perf_counter() - started) * 1000)
+    return SourceResult(
+        source_id=f"company:{company.lower()}",
+        source_name=company,
+        source_url=source_url,
+        jobs=jobs,
+        status="healthy",
+        error=None,
+        response_ms=elapsed,
+    )
+
+
+def _source_failed(company: str, source_url: str, error: Exception, started: float) -> SourceResult:
+    elapsed = int((time.perf_counter() - started) * 1000)
+    return SourceResult(
+        source_id=f"company:{company.lower()}",
+        source_name=company,
+        source_url=source_url,
+        jobs=[],
+        status="failed",
+        error=str(error),
+        response_ms=elapsed,
+    )
+
+
 def collect_teamtailor(company: str, feed_url: str) -> SourceResult:
     started = time.perf_counter()
     try:
@@ -48,27 +74,9 @@ def collect_teamtailor(company: str, feed_url: str) -> SourceResult:
                     else item.get("location"),
                 }
             )
-        elapsed = int((time.perf_counter() - started) * 1000)
-        return SourceResult(
-            source_id=f"company:{company.lower()}",
-            source_name=company,
-            source_url=feed_url,
-            jobs=jobs,
-            status="healthy",
-            error=None,
-            response_ms=elapsed,
-        )
+        return _source_ok(company, feed_url, jobs, started)
     except Exception as error:  # noqa: BLE001
-        elapsed = int((time.perf_counter() - started) * 1000)
-        return SourceResult(
-            source_id=f"company:{company.lower()}",
-            source_name=company,
-            source_url=feed_url,
-            jobs=[],
-            status="failed",
-            error=str(error),
-            response_ms=elapsed,
-        )
+        return _source_failed(company, feed_url, error, started)
 
 
 def collect_greenhouse(company: str, board_slug: str) -> SourceResult:
@@ -98,27 +106,9 @@ def collect_greenhouse(company: str, board_slug: str) -> SourceResult:
                     "updated_at": item.get("updated_at"),
                 }
             )
-        elapsed = int((time.perf_counter() - started) * 1000)
-        return SourceResult(
-            source_id=f"company:{company.lower()}",
-            source_name=company,
-            source_url=url,
-            jobs=jobs,
-            status="healthy",
-            error=None,
-            response_ms=elapsed,
-        )
+        return _source_ok(company, url, jobs, started)
     except Exception as error:  # noqa: BLE001
-        elapsed = int((time.perf_counter() - started) * 1000)
-        return SourceResult(
-            source_id=f"company:{company.lower()}",
-            source_name=company,
-            source_url=url,
-            jobs=[],
-            status="failed",
-            error=str(error),
-            response_ms=elapsed,
-        )
+        return _source_failed(company, url, error, started)
 
 
 def collect_ashby(company: str, board_slug: str) -> SourceResult:
@@ -145,27 +135,9 @@ def collect_ashby(company: str, board_slug: str) -> SourceResult:
                     "location": item.get("location"),
                 }
             )
-        elapsed = int((time.perf_counter() - started) * 1000)
-        return SourceResult(
-            source_id=f"company:{company.lower()}",
-            source_name=company,
-            source_url=url,
-            jobs=jobs,
-            status="healthy",
-            error=None,
-            response_ms=elapsed,
-        )
+        return _source_ok(company, url, jobs, started)
     except Exception as error:  # noqa: BLE001
-        elapsed = int((time.perf_counter() - started) * 1000)
-        return SourceResult(
-            source_id=f"company:{company.lower()}",
-            source_name=company,
-            source_url=url,
-            jobs=[],
-            status="failed",
-            error=str(error),
-            response_ms=elapsed,
-        )
+        return _source_failed(company, url, error, started)
 
 
 def collect_lever(company: str, board_slug: str) -> SourceResult:
@@ -194,27 +166,9 @@ def collect_lever(company: str, board_slug: str) -> SourceResult:
                     "updated_at": item.get("createdAt"),
                 }
             )
-        elapsed = int((time.perf_counter() - started) * 1000)
-        return SourceResult(
-            source_id=f"company:{company.lower()}",
-            source_name=company,
-            source_url=url,
-            jobs=jobs,
-            status="healthy",
-            error=None,
-            response_ms=elapsed,
-        )
+        return _source_ok(company, url, jobs, started)
     except Exception as error:  # noqa: BLE001
-        elapsed = int((time.perf_counter() - started) * 1000)
-        return SourceResult(
-            source_id=f"company:{company.lower()}",
-            source_name=company,
-            source_url=url,
-            jobs=[],
-            status="failed",
-            error=str(error),
-            response_ms=elapsed,
-        )
+        return _source_failed(company, url, error, started)
 
 
 def collect_workable_jobs_md(company: str, account_slug: str) -> SourceResult:
@@ -264,27 +218,9 @@ def collect_workable_jobs_md(company: str, account_slug: str) -> SourceResult:
                 }
             )
 
-        elapsed = int((time.perf_counter() - started) * 1000)
-        return SourceResult(
-            source_id=f"company:{company.lower()}",
-            source_name=company,
-            source_url=url,
-            jobs=jobs,
-            status="healthy",
-            error=None,
-            response_ms=elapsed,
-        )
+        return _source_ok(company, url, jobs, started)
     except Exception as error:  # noqa: BLE001
-        elapsed = int((time.perf_counter() - started) * 1000)
-        return SourceResult(
-            source_id=f"company:{company.lower()}",
-            source_name=company,
-            source_url=url,
-            jobs=[],
-            status="failed",
-            error=str(error),
-            response_ms=elapsed,
-        )
+        return _source_failed(company, url, error, started)
 
 
 def collect_all(swift_export_path: str | Path = "database/swift_export.json") -> list[SourceResult]:
