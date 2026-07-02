@@ -14,8 +14,6 @@ class MatchResult:
     score: int
     strong: list[str]
     missing: list[str]
-    salary_usd: int | None
-    salary_ok: bool
     remote_ok: bool
     resume_version: str
 
@@ -31,29 +29,6 @@ def load_profile(config_path: str | Path = "config/profile.yaml") -> dict:
 
 def user_skills(profile: dict) -> list[str]:
     return [str(skill) for skill in profile.get("skills", [])]
-
-
-def extract_salary_usd(text: str) -> int | None:
-    lowered = text.lower()
-    patterns = [
-        r"\$\s*(\d[\d,]*)\s*(?:k|000)?",
-        r"(\d[\d,]*)\s*(?:usd|\$)",
-        r"(\d[\d,]*)\s*(?:грн|uah)",
-    ]
-    values: list[int] = []
-    for pattern in patterns:
-        for match in re.finditer(pattern, lowered):
-            raw = match.group(1).replace(",", "")
-            try:
-                value = int(raw)
-            except ValueError:
-                continue
-            if "грн" in match.group(0) or "uah" in match.group(0):
-                value = int(value / 41)
-            elif value < 1000:
-                value *= 1000
-            values.append(value)
-    return max(values) if values else None
 
 
 def detect_skills(text: str, skills_map: dict[str, list[str]]) -> list[str]:
@@ -97,8 +72,6 @@ def match_job(job: JobRecord, profile: dict | None = None, skills_map: dict[str,
     elif job.remote == "hybrid":
         score += 5
 
-    salary_usd = extract_salary_usd(text)
-
     remote_pref = profile.get("remote_preference", "remote")
     remote_ok = job.remote in {remote_pref, "remote", "hybrid", "unknown"}
     if remote_pref == "remote" and job.remote == "onsite":
@@ -112,8 +85,6 @@ def match_job(job: JobRecord, profile: dict | None = None, skills_map: dict[str,
         score=score,
         strong=strong,
         missing=missing,
-        salary_usd=salary_usd,
-        salary_ok=True,
         remote_ok=remote_ok,
         resume_version=resume_version,
     )

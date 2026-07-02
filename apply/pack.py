@@ -23,7 +23,6 @@ def build_application_pack(job: JobRecord, activity_type: str) -> tuple[MatchRes
 
 
 def format_pack_message(job: JobRecord, activity_type: str, match: MatchResult, cover_letter: str) -> str:
-    salary_line = f"Salary in posting: ~${match.salary_usd}/mo\n" if match.salary_usd else ""
     warning = ""
     if not match.remote_ok:
         warning += "⚠️ Remote preference mismatch\n"
@@ -39,7 +38,7 @@ Match: {match.score}%
 
 Strong: {", ".join(match.strong) or "—"}
 Gap: {", ".join(match.missing) or "—"}
-{salary_line}{warning}
+{warning}
 Cover letter:
 {cover_letter}
 

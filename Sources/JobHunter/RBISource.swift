@@ -96,7 +96,7 @@ struct RBISource: JobSource {
 
     private func cleanTitle(_ title: String) -> String {
         title
-            .replacingOccurrences(of: #"^(Vacancy|Вакансія)\s+"#, with: "", options: .regularExpression)
+            .replacingOccurrences(of: #"^Vacancy\s+"#, with: "", options: .regularExpression)
             .replacingOccurrences(of: #"\s+—\s+RBI Retail Innovation\s*$"#, with: "", options: .regularExpression)
             .replacingOccurrences(of: #"&#039;"#, with: "'")
             .trimmingCharacters(in: .whitespacesAndNewlines)
