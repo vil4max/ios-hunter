@@ -165,6 +165,55 @@ def collect_ashby(company: str, board_slug: str) -> SourceResult:
         )
 
 
+def collect_lever(company: str, board_slug: str) -> SourceResult:
+    """
+    Lever public postings API.
+    Endpoint: https://api.lever.co/v0/postings/{slug}?mode=json
+    """
+    started = time.perf_counter()
+    url = f"https://api.lever.co/v0/postings/{board_slug}?mode=json"
+    try:
+        payload = fetch_json(url)
+        items = payload if isinstance(payload, list) else []
+        jobs: list[dict[str, Any]] = []
+        for item in items:
+            title = str(item.get("text", ""))
+            if not _is_ios_title(title):
+                continue
+            jobs.append(
+                {
+                    "company": company,
+                    "title": title,
+                    "url": item.get("hostedUrl") or item.get("applyUrl") or "",
+                    "source": "company",
+                    "description": item.get("descriptionPlain") or item.get("description"),
+                    "location": item.get("categories", {}).get("location"),
+                    "updated_at": item.get("createdAt"),
+                }
+            )
+        elapsed = int((time.perf_counter() - started) * 1000)
+        return SourceResult(
+            source_id=f"company:{company.lower()}",
+            source_name=company,
+            source_url=url,
+            jobs=jobs,
+            status="healthy",
+            error=None,
+            response_ms=elapsed,
+        )
+    except Exception as error:  # noqa: BLE001
+        elapsed = int((time.perf_counter() - started) * 1000)
+        return SourceResult(
+            source_id=f"company:{company.lower()}",
+            source_name=company,
+            source_url=url,
+            jobs=[],
+            status="failed",
+            error=str(error),
+            response_ms=elapsed,
+        )
+
+
 def collect_all(swift_export_path: str | Path = "database/swift_export.json") -> list[SourceResult]:
     results: list[SourceResult] = []
 
@@ -186,4 +235,6 @@ def collect_all(swift_export_path: str | Path = "database/swift_export.json") ->
     results.append(collect_teamtailor("Avenga", "https://career.avenga.com/jobs.json"))
     results.append(collect_greenhouse("Readdle", "readdle70"))
     results.append(collect_ashby("Preply", "preply"))
+    results.append(collect_greenhouse("N-iX", "nix"))
+    results.append(collect_lever("ELEKS", "eleks"))
     return results
