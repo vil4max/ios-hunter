@@ -1,9 +1,9 @@
 Run Activity
 
-Actionable: 3
-New:        3
+Actionable: 2
+New:        2
 Updated:    0
 Closed:     0
 Reopened:   0
 
-3 new iOS vacancies
+2 new iOS vacancies

@@ -1,9 +1,9 @@
 {
-  "open_jobs": 22,
+  "open_jobs": 21,
   "remote": 1,
   "hybrid": 0,
   "onsite": 0,
-  "new_this_week": 22,
+  "new_this_week": 21,
   "closed_this_week": 0,
   "top_companies": [
     {
@@ -20,10 +20,6 @@
     },
     {
       "company": "DataArt",
-      "open_jobs": 2
-    },
-    {
-      "company": "N-iX",
       "open_jobs": 2
     },
     {
@@ -44,6 +40,10 @@
     },
     {
       "company": "Grid Dynamics",
+      "open_jobs": 1
+    },
+    {
+      "company": "N-iX",
       "open_jobs": 1
     }
   ]
