@@ -23,11 +23,20 @@ class Vacancy:
         self.hash = compute_hash(self.company, self.title, self.location)
 
 
+def normalize_title(title: str) -> str:
+    without_ref = re.sub(r"\s*\(#\d+\)\s*$", "", title.strip())
+    return re.sub(r"\s+", " ", without_ref).lower()
+
+
+def role_key(company: str, title: str) -> tuple[str, str]:
+    return normalize_token(company), normalize_title(title)
+
+
 def compute_hash(company: str, title: str, location: str | None) -> str:
     raw = "|".join(
         [
             normalize_token(company),
-            normalize_token(title),
+            normalize_title(title),
             normalize_token(location or ""),
         ]
     )

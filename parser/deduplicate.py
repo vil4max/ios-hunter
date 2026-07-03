@@ -1,18 +1,40 @@
 from __future__ import annotations
 
-from parser.normalize import Vacancy, compute_hash
+from parser.normalize import Vacancy, role_key
+
+
+def _richness_score(vacancy: Vacancy) -> int:
+    score = 0
+    if vacancy.description:
+        score += len(vacancy.description)
+    if vacancy.location:
+        score += 10
+    if vacancy.published_at:
+        score += 5
+    if "?" not in vacancy.url:
+        score += 1
+    return score
+
+
+def _pick_richer(first: Vacancy, second: Vacancy) -> Vacancy:
+    first_score = _richness_score(first)
+    second_score = _richness_score(second)
+    if second_score > first_score:
+        return second
+    return first
 
 
 def deduplicate(vacancies: list[Vacancy]) -> tuple[list[Vacancy], int]:
-    seen_hashes: set[str] = set()
-    unique: list[Vacancy] = []
+    by_role: dict[tuple[str, str], Vacancy] = {}
     removed = 0
 
     for vacancy in vacancies:
-        if vacancy.hash in seen_hashes:
-            removed += 1
+        key = role_key(vacancy.company, vacancy.title)
+        existing = by_role.get(key)
+        if existing is None:
+            by_role[key] = vacancy
             continue
-        seen_hashes.add(vacancy.hash)
-        unique.append(vacancy)
+        by_role[key] = _pick_richer(existing, vacancy)
+        removed += 1
 
-    return unique, removed
+    return list(by_role.values()), removed

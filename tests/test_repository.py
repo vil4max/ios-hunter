@@ -105,3 +105,20 @@ def test_prune_jobs_older_than_removes_stale_jobs(repo) -> None:
     assert removed == 1
     assert repo.get_job_by_id(stale.id) is None
     assert repo.get_job_by_id(fresh.id) is not None
+
+
+def test_get_job_by_company_title_matches_normalized_role(repo) -> None:
+    stored = make_job_record(
+        make_vacancy(
+            company="N-iX",
+            title="Lead iOS Engineer (#5458)",
+            url="https://careers.n-ix.com/jobs/4494044101-ios-leader/",
+        ),
+        now=NOW,
+    )
+    repo.upsert_job(stored)
+
+    found = repo.get_job_by_company_title("N-iX", "Lead iOS Engineer")
+
+    assert found is not None
+    assert found.id == stored.id

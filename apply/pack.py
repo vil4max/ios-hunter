@@ -61,6 +61,9 @@ def process_actionable(
     if match.score < threshold:
         return False
 
+    if activity_type == "new" and repo.was_notified_for_role(job.company, job.title, "new"):
+        return False
+
     pack_ready_at = utc_now()
     message = format_pack_message(job, activity_type, match, cover_letter)
 

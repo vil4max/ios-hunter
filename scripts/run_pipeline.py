@@ -62,6 +62,8 @@ def process_vacancies(
 
     for vacancy in vacancies:
         existing = repo.get_job_by_hash(vacancy.hash)
+        if existing is None:
+            existing = repo.get_job_by_company_title(vacancy.company, vacancy.title)
         record, change = compare_job(existing, vacancy, now)
         repo.upsert_job(record)
         seen_ids.add(record.id)

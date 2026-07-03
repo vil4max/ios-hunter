@@ -199,3 +199,49 @@ def test_process_actionable_respects_disabled_telegram(repo, monkeypatch) -> Non
 
     row = repo._conn.execute("SELECT COUNT(*) AS count FROM application_packs").fetchone()
     assert row["count"] == 1
+
+
+def test_process_actionable_skips_when_role_already_notified(repo, monkeypatch) -> None:
+    sent: list[str] = []
+    monkeypatch.setattr(pack_module, "send_message", lambda text: sent.append(text))
+    monkeypatch.setattr(
+        pack_module,
+        "build_application_pack",
+        lambda job, activity_type: (_high_match(), "Strong match letter"),
+    )
+
+    first = make_job_record(
+        make_vacancy(
+            company="N-iX",
+            title="Lead iOS Engineer (#5458)",
+            url="https://careers.n-ix.com/jobs/4494044101-ios-leader/",
+        )
+    )
+    repo.upsert_job(first)
+    process_actionable(
+        repo,
+        first,
+        "new",
+        {"match_threshold": 60, "telegram": {"enabled": True}},
+        NOW,
+    )
+
+    second = make_job_record(
+        make_vacancy(
+            company="N-iX",
+            title="Lead iOS Engineer",
+            url="https://careers.n-ix.com/jobs/4912838101?gh_jid=4912838101",
+        )
+    )
+    repo.upsert_job(second)
+
+    sent_pack = process_actionable(
+        repo,
+        second,
+        "new",
+        {"match_threshold": 60, "telegram": {"enabled": True}},
+        NOW,
+    )
+
+    assert sent_pack is False
+    assert len(sent) == 1

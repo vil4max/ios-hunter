@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from database.paths import resolve_db_path
+from parser.normalize import role_key
 
 _SCHEMA_SQL = (Path(__file__).with_name("schema.sql")).read_text(encoding="utf-8")
 
@@ -87,6 +88,33 @@ class JobRepository:
     def get_job_by_hash(self, job_hash: str) -> JobRecord | None:
         row = self._conn.execute("SELECT * FROM jobs WHERE hash = ?", (job_hash,)).fetchone()
         return self._row_to_job(row) if row else None
+
+    def get_job_by_company_title(self, company: str, title: str) -> JobRecord | None:
+        target = role_key(company, title)
+        rows = self._conn.execute(
+            "SELECT * FROM jobs WHERE lower(company) = ?",
+            (target[0],),
+        ).fetchall()
+        for row in rows:
+            if role_key(row["company"], row["title"]) == target:
+                return self._row_to_job(row)
+        return None
+
+    def was_notified_for_role(self, company: str, title: str, activity_type: str = "new") -> bool:
+        target = role_key(company, title)
+        rows = self._conn.execute(
+            """
+            SELECT j.company, j.title
+            FROM application_packs ap
+            JOIN jobs j ON j.id = ap.job_id
+            WHERE ap.activity_type = ?
+            """,
+            (activity_type,),
+        ).fetchall()
+        for row in rows:
+            if role_key(row["company"], row["title"]) == target:
+                return True
+        return False
 
     def get_job_by_id(self, job_id: str) -> JobRecord | None:
         row = self._conn.execute("SELECT * FROM jobs WHERE id = ?", (job_id,)).fetchone()

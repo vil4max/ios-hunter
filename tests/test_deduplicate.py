@@ -1,7 +1,17 @@
 from __future__ import annotations
 
 from parser.deduplicate import deduplicate
+from parser.normalize import normalize_title, role_key
 from tests.conftest import make_vacancy
+
+
+def test_normalize_title_strips_reference_suffix() -> None:
+    assert normalize_title("Lead iOS Engineer (#5458)") == "lead ios engineer"
+    assert normalize_title("Senior iOS Developer") == "senior ios developer"
+
+
+def test_role_key_ignores_reference_suffix() -> None:
+    assert role_key("N-iX", "Lead iOS Engineer (#5458)") == role_key("N-iX", "Lead iOS Engineer")
 
 
 def test_deduplicate_removes_same_hash_vacancies() -> None:
@@ -15,6 +25,29 @@ def test_deduplicate_removes_same_hash_vacancies() -> None:
     assert len(unique) == 2
     assert unique[0] is first
     assert unique[1] is other
+
+
+def test_deduplicate_merges_same_role_from_multiple_sources() -> None:
+    swift = make_vacancy(
+        company="N-iX",
+        title="Lead iOS Engineer (#5458)",
+        url="https://careers.n-ix.com/jobs/4494044101-ios-leader/",
+        location=None,
+        description=None,
+    )
+    greenhouse = make_vacancy(
+        company="N-iX",
+        title="Lead iOS Engineer",
+        url="https://careers.n-ix.com/jobs/4912838101?gh_jid=4912838101",
+        location="Ukraine",
+        description="SwiftUI, UIKit, and leadership experience required",
+    )
+
+    unique, removed = deduplicate([swift, greenhouse])
+
+    assert removed == 1
+    assert len(unique) == 1
+    assert unique[0] is greenhouse
 
 
 def test_deduplicate_keeps_unique_vacancies() -> None:
