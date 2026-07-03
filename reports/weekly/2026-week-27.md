@@ -25,8 +25,8 @@
 
 ## Notable changes
 
-- N-iX: created — Lead iOS Engineer (2026-07-03)
 - Ciklum: created — Senior iOS Engineer (2026-07-03)
+- N-iX: created — Lead iOS Engineer (2026-07-03)
 - EPAM: created — Senior Software Engineer Swift (2026-07-01)
 - EPAM: created — Senior Ios Mobile Engineer Native App Development (2026-07-01)
 - EPAM: created — Software Engineer Ios (2026-07-01)
