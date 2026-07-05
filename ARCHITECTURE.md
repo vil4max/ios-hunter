@@ -63,3 +63,12 @@ GitHub Actions cron uses UTC. Collect: `0 15-18 * * 0` (Sun EEST) and `0 5-15 * 
 - DOU/Djinni tracked manually via iPhone apps (not collected here)
 - AI optional (rules-based matching first)
 - Compensation preferences are kept private and are not part of vacancy filtering
+
+## Operations (private repo)
+
+- **State:** `jobs.db` only in Actions cache; reports in git are derived snapshots, not source of truth.
+- **Secrets:** `TELEGRAM_*` required; `GEMINI_API_KEY` for Job Intelligence in collect workflow (`AI_PROVIDER=gemini`, `AI_MODEL=gemini-2.0-flash`).
+- **Manual collect:** Actions → **Collect iOS Jobs** → Run workflow.
+- **Config changes:** edit `config/profile.yaml` / `career_facts.yaml` → push → run Collect manually once.
+- **Matcher thresholds** (`profile.yaml`): `prefilter_threshold: 45` (LLM gate), `match_threshold: 60` (Telegram notify).
+- **Pages / RSS:** removed; no public artifacts.
