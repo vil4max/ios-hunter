@@ -59,7 +59,7 @@ Track applications and follow-up reminders via CLI (optional).
 
 | Workflow | When |
 |----------|-------|
-| **Collect iOS Jobs** | Hourly, **Mon–Fri 08:00–18:00 Kyiv** |
+| **Collect iOS Jobs** | Sun **18:00–21:00** + Mon–Fri **08:00–18:00** Kyiv (hourly) |
 | **Weekly iOS Market Report** | Monday 09:00 Kyiv |
 | **AI Analysis** | Monday 09:30 (only if `OPENAI_API_KEY` or `GEMINI_API_KEY` is set) |
 

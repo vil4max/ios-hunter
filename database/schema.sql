@@ -94,6 +94,25 @@ CREATE TABLE IF NOT EXISTS run_activity (
     created_at TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS job_analysis (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    job_id TEXT NOT NULL REFERENCES jobs(id),
+    fit_score INTEGER NOT NULL,
+    apply_priority TEXT NOT NULL,
+    recommended_resume TEXT,
+    prefilter_score INTEGER,
+    analysis_json TEXT NOT NULL,
+    job_content_hash TEXT NOT NULL,
+    candidate_profile_hash TEXT NOT NULL,
+    prompt_version TEXT NOT NULL,
+    provider TEXT NOT NULL,
+    model TEXT NOT NULL,
+    input_tokens INTEGER,
+    output_tokens INTEGER,
+    analyzed_at TEXT NOT NULL,
+    UNIQUE(job_id, job_content_hash, candidate_profile_hash, prompt_version, model)
+);
+
 CREATE TABLE IF NOT EXISTS application_packs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     job_id TEXT REFERENCES jobs(id),
@@ -103,6 +122,7 @@ CREATE TABLE IF NOT EXISTS application_packs (
     match_missing TEXT,
     resume_version TEXT,
     cover_letter TEXT,
+    job_analysis_id INTEGER REFERENCES job_analysis(id),
     detected_at TEXT NOT NULL,
     pack_ready_at TEXT NOT NULL,
     time_to_ready_seconds REAL,

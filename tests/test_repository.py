@@ -1,8 +1,66 @@
 from __future__ import annotations
 
+from ai.models import JobAnalysisOutput, JobAnalysisRecord, PROMPT_VERSION
 from tests.conftest import make_job_record, make_vacancy
 
 NOW = "2026-07-02T10:00:00+00:00"
+
+
+def _sample_analysis(job_id: str) -> JobAnalysisRecord:
+    output = JobAnalysisOutput.model_validate(
+        {
+            "fit_score": 80,
+            "apply_priority": "high",
+            "confidence": "high",
+            "seniority_match": "strong",
+            "role_type": "platform",
+            "domain_match": "strong",
+            "architecture_match": "medium",
+            "employment_type": "remote",
+            "location_compatibility": "compatible",
+            "language_risk": "none",
+            "strong_matches": ["SDK"],
+            "must_have_gaps": [],
+            "nice_to_have_gaps": [],
+            "risk_factors": [],
+            "recommended_resume": "sdk",
+            "referenced_fact_ids": ["pasha_premium_sdk"],
+            "reason": "Good fit.",
+        }
+    )
+    return JobAnalysisRecord(
+        job_id=job_id,
+        output=output,
+        prefilter_score=70,
+        job_content_hash="hash-job",
+        candidate_profile_hash="hash-profile",
+        prompt_version=PROMPT_VERSION,
+        provider="fake",
+        model="fake-model",
+        analyzed_at=NOW,
+    )
+
+
+def test_save_and_get_cached_job_analysis(repo) -> None:
+    job = make_job_record(make_vacancy(), now=NOW)
+    repo.upsert_job(job)
+    record = _sample_analysis(job.id)
+
+    saved = repo.save_job_analysis(record)
+
+    assert saved.id is not None
+    cached = repo.get_cached_job_analysis(
+        job_id=job.id,
+        job_content_hash=record.job_content_hash,
+        candidate_profile_hash=record.candidate_profile_hash,
+        prompt_version=PROMPT_VERSION,
+        model="fake-model",
+    )
+
+    assert cached is not None
+    assert cached.id == saved.id
+    assert cached.output.fit_score == 80
+    assert cached.output.recommended_resume == "sdk"
 
 
 def test_upsert_and_fetch_job_by_hash(repo) -> None:

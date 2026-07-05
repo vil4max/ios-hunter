@@ -70,6 +70,25 @@ class JobRecord:
     hash: str
 
 
+@dataclass
+class StoredJobAnalysis:
+    id: int
+    job_id: str
+    fit_score: int
+    apply_priority: str
+    recommended_resume: str | None
+    prefilter_score: int | None
+    analysis_json: str
+    job_content_hash: str
+    candidate_profile_hash: str
+    prompt_version: str
+    provider: str
+    model: str
+    input_tokens: int | None
+    output_tokens: int | None
+    analyzed_at: str
+
+
 class JobRepository:
     def __init__(self, db_path: str | Path, base_dir: Path | None = None) -> None:
         self.db_path = resolve_db_path(db_path, base_dir=base_dir)
@@ -80,6 +99,11 @@ class JobRepository:
 
     def _migrate(self) -> None:
         self._conn.executescript(_SCHEMA_SQL)
+        pack_columns = {row[1] for row in self._conn.execute("PRAGMA table_info(application_packs)")}
+        if "job_analysis_id" not in pack_columns:
+            self._conn.execute(
+                "ALTER TABLE application_packs ADD COLUMN job_analysis_id INTEGER REFERENCES job_analysis(id)"
+            )
         self._conn.commit()
 
     def close(self) -> None:
@@ -334,6 +358,143 @@ class JobRepository:
         )
         self._conn.commit()
 
+    def get_cached_job_analysis(
+        self,
+        job_id: str,
+        job_content_hash: str,
+        candidate_profile_hash: str,
+        prompt_version: str,
+        model: str,
+    ) -> "JobAnalysisRecord | None":
+        from ai.models import JobAnalysisOutput, JobAnalysisRecord
+
+        row = self._conn.execute(
+            """
+            SELECT * FROM job_analysis
+            WHERE job_id = ?
+              AND job_content_hash = ?
+              AND candidate_profile_hash = ?
+              AND prompt_version = ?
+              AND model = ?
+            ORDER BY analyzed_at DESC
+            LIMIT 1
+            """,
+            (job_id, job_content_hash, candidate_profile_hash, prompt_version, model),
+        ).fetchone()
+        if row is None:
+            return None
+        stored = self._row_to_stored_analysis(row)
+        return JobAnalysisRecord(
+            id=stored.id,
+            job_id=stored.job_id,
+            output=JobAnalysisOutput.model_validate_json(stored.analysis_json),
+            prefilter_score=stored.prefilter_score or 0,
+            job_content_hash=stored.job_content_hash,
+            candidate_profile_hash=stored.candidate_profile_hash,
+            prompt_version=stored.prompt_version,
+            provider=stored.provider,
+            model=stored.model,
+            input_tokens=stored.input_tokens,
+            output_tokens=stored.output_tokens,
+            analyzed_at=stored.analyzed_at,
+        )
+
+    def save_job_analysis(self, record: "JobAnalysisRecord") -> "JobAnalysisRecord":
+        from ai.models import JobAnalysisRecord
+
+        payload = record.output.model_dump_json()
+        cursor = self._conn.execute(
+            """
+            INSERT INTO job_analysis (
+                job_id, fit_score, apply_priority, recommended_resume, prefilter_score,
+                analysis_json, job_content_hash, candidate_profile_hash,
+                prompt_version, provider, model, input_tokens, output_tokens, analyzed_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(job_id, job_content_hash, candidate_profile_hash, prompt_version, model)
+            DO UPDATE SET
+                fit_score = excluded.fit_score,
+                apply_priority = excluded.apply_priority,
+                recommended_resume = excluded.recommended_resume,
+                prefilter_score = excluded.prefilter_score,
+                analysis_json = excluded.analysis_json,
+                provider = excluded.provider,
+                input_tokens = excluded.input_tokens,
+                output_tokens = excluded.output_tokens,
+                analyzed_at = excluded.analyzed_at
+            """,
+            (
+                record.job_id,
+                record.output.fit_score,
+                record.output.apply_priority,
+                record.output.recommended_resume,
+                record.prefilter_score,
+                payload,
+                record.job_content_hash,
+                record.candidate_profile_hash,
+                record.prompt_version,
+                record.provider,
+                record.model,
+                record.input_tokens,
+                record.output_tokens,
+                record.analyzed_at,
+            ),
+        )
+        self._conn.commit()
+        analysis_id = int(cursor.lastrowid)
+        if analysis_id == 0:
+            row = self._conn.execute(
+                """
+                SELECT id FROM job_analysis
+                WHERE job_id = ?
+                  AND job_content_hash = ?
+                  AND candidate_profile_hash = ?
+                  AND prompt_version = ?
+                  AND model = ?
+                """,
+                (
+                    record.job_id,
+                    record.job_content_hash,
+                    record.candidate_profile_hash,
+                    record.prompt_version,
+                    record.model,
+                ),
+            ).fetchone()
+            analysis_id = int(row["id"])
+        return JobAnalysisRecord(
+            id=analysis_id,
+            job_id=record.job_id,
+            output=record.output,
+            prefilter_score=record.prefilter_score,
+            job_content_hash=record.job_content_hash,
+            candidate_profile_hash=record.candidate_profile_hash,
+            prompt_version=record.prompt_version,
+            provider=record.provider,
+            model=record.model,
+            input_tokens=record.input_tokens,
+            output_tokens=record.output_tokens,
+            analyzed_at=record.analyzed_at,
+        )
+
+    @staticmethod
+    def _row_to_stored_analysis(row: sqlite3.Row) -> StoredJobAnalysis:
+        return StoredJobAnalysis(
+            id=int(row["id"]),
+            job_id=row["job_id"],
+            fit_score=int(row["fit_score"]),
+            apply_priority=row["apply_priority"],
+            recommended_resume=row["recommended_resume"],
+            prefilter_score=row["prefilter_score"],
+            analysis_json=row["analysis_json"],
+            job_content_hash=row["job_content_hash"],
+            candidate_profile_hash=row["candidate_profile_hash"],
+            prompt_version=row["prompt_version"],
+            provider=row["provider"],
+            model=row["model"],
+            input_tokens=row["input_tokens"],
+            output_tokens=row["output_tokens"],
+            analyzed_at=row["analyzed_at"],
+        )
+
     def save_application_pack(
         self,
         job_id: str,
@@ -346,6 +507,7 @@ class JobRepository:
         detected_at: str,
         pack_ready_at: str,
         notified_at: str | None = None,
+        job_analysis_id: int | None = None,
     ) -> None:
         elapsed = (
             datetime.fromisoformat(pack_ready_at) - datetime.fromisoformat(detected_at)
@@ -354,9 +516,9 @@ class JobRepository:
             """
             INSERT INTO application_packs (
                 job_id, activity_type, match_score, match_strong, match_missing,
-                resume_version, cover_letter, detected_at, pack_ready_at,
+                resume_version, cover_letter, job_analysis_id, detected_at, pack_ready_at,
                 time_to_ready_seconds, notified_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 job_id,
@@ -366,6 +528,7 @@ class JobRepository:
                 json.dumps(match_missing),
                 resume_version,
                 cover_letter,
+                job_analysis_id,
                 detected_at,
                 pack_ready_at,
                 elapsed,
@@ -430,6 +593,7 @@ class JobRepository:
         self._conn.execute(f"DELETE FROM history WHERE job_id IN ({placeholders})", job_ids)
         self._conn.execute(f"DELETE FROM run_activity WHERE job_id IN ({placeholders})", job_ids)
         self._conn.execute(f"DELETE FROM application_packs WHERE job_id IN ({placeholders})", job_ids)
+        self._conn.execute(f"DELETE FROM job_analysis WHERE job_id IN ({placeholders})", job_ids)
         self._conn.execute(f"DELETE FROM jobs WHERE id IN ({placeholders})", job_ids)
         self._conn.commit()
         return len(job_ids)

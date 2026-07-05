@@ -3,7 +3,7 @@
 ## Overview
 
 ```
-GitHub Actions (hourly, Mon–Fri 08:00–18:00 Kyiv)
+GitHub Actions (hourly Sun 18:00–21:00 + Mon–Fri 08:00–18:00 Kyiv)
         │
    Swift Collector (~52 company sources)
         │ database/swift_export.json
@@ -36,11 +36,11 @@ SQLite is cached in GitHub Actions (not committed). JSON exports (`database/jobs
 
 ## Schedule
 
-- **Collect:** every hour, Monday–Friday, 08:00–18:00 Europe/Kyiv
+- **Collect:** Sunday 18:00–21:00 + Monday–Friday 08:00–18:00 Europe/Kyiv
 - **Weekly report:** Monday 09:00 Europe/Kyiv
 - **AI summary (optional):** Monday 09:30, only if `OPENAI_API_KEY` or `GEMINI_API_KEY` is set
 
-GitHub Actions cron uses UTC. Collect workflow uses `0 5-15 * * 1-5` (EEST, UTC+3). In winter (EET) local times shift by +1 hour.
+GitHub Actions cron uses UTC. Collect: `0 15-18 * * 0` (Sun EEST) and `0 5-15 * * 1-5` (weekdays). In winter (EET) local times shift by +1 hour.
 
 ## Modules
 

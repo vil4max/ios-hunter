@@ -39,9 +39,10 @@ cover_letter:
   include_salary: false
 
 english:
-  level: B1
+  level: intermediate
 
 remote_preference: remote
+prefilter_threshold: 45
 match_threshold: 60
 
 telegram:

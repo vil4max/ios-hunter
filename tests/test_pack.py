@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from apply.cover_letter import render_cover_letter
-from apply.matcher import MatchResult, load_profile
+from apply.matcher import MatchResult, load_profile, match_job
 from apply.pack import (
     activity_emoji,
     build_application_pack,
@@ -116,22 +116,75 @@ def test_build_application_pack_returns_match_and_letter() -> None:
     assert job.company in letter
 
 
+def test_format_intelligence_message_is_compact(sample_profile) -> None:
+    from ai.models import JobAnalysisOutput, JobAnalysisRecord
+    from apply.intelligence import format_intelligence_message
+    from apply.matcher import MatchResult
+
+    job = make_job_record(make_vacancy())
+    match = MatchResult(
+        score=75,
+        strong=["SDK"],
+        missing=[],
+        remote_ok=True,
+        resume_version="sdk",
+    )
+    output = JobAnalysisOutput.model_validate(
+        {
+            "fit_score": 82,
+            "apply_priority": "high",
+            "confidence": "high",
+            "seniority_match": "strong",
+            "role_type": "platform",
+            "domain_match": "strong",
+            "architecture_match": "medium",
+            "employment_type": "remote",
+            "location_compatibility": "compatible",
+            "language_risk": "none",
+            "strong_matches": ["SDK cross-app integration"],
+            "must_have_gaps": [],
+            "nice_to_have_gaps": ["TCA"],
+            "risk_factors": ["Travel requirement unclear"],
+            "recommended_resume": "sdk",
+            "referenced_fact_ids": ["pasha_premium_sdk"],
+            "reason": "Strong platform SDK role.",
+        }
+    )
+    analysis = JobAnalysisRecord(
+        job_id=job.id,
+        output=output,
+        prefilter_score=75,
+        job_content_hash="abc",
+        candidate_profile_hash="def",
+        prompt_version="job_analysis_v1",
+        provider="gemini",
+        model="gemini-2.0-flash",
+        analyzed_at=NOW,
+    )
+
+    message = format_intelligence_message(job, "new", match, analysis, sample_profile)
+
+    assert "82 HIGH" in message
+    assert "Strong platform SDK role." in message
+    assert "Cover letter:" not in message
+    assert "TCA (nice-to-have)" in message
+    assert "Apply: https://example.com/job/1" in message
+
+
 def test_process_actionable_skips_below_threshold(repo, monkeypatch) -> None:
     sent: list[str] = []
     monkeypatch.setattr(pack_module, "send_message", lambda text: sent.append(text))
     monkeypatch.setattr(
-        pack_module,
-        "build_application_pack",
-        lambda job, activity_type: (
-            MatchResult(score=50, strong=[], missing=[], remote_ok=True, resume_version="product"),
-            "Low match letter",
+        "apply.intelligence.match_job",
+        lambda job, profile=None, skills_map=None: MatchResult(
+            score=50, strong=[], missing=[], remote_ok=True, resume_version="product"
         ),
     )
 
     job = make_job_record(make_vacancy())
     repo.upsert_job(job)
 
-    sent_pack = process_actionable(repo, job, "new", {"match_threshold": 60}, NOW)
+    sent_pack = process_actionable(repo, job, "new", {"match_threshold": 60, "prefilter_threshold": 45}, NOW)
 
     assert sent_pack is False
     assert sent == []
@@ -143,10 +196,15 @@ def test_process_actionable_sends_and_persists_pack(repo, monkeypatch) -> None:
     sent: list[str] = []
     monkeypatch.setattr(pack_module, "send_message", lambda text: sent.append(text))
     monkeypatch.setattr(
-        pack_module,
-        "build_application_pack",
-        lambda job, activity_type: (_high_match(), "Strong match letter"),
+        "apply.intelligence.match_job",
+        lambda job, profile=None, skills_map=None: _high_match(),
     )
+
+    class DisabledAnalyzer:
+        def enabled(self) -> bool:
+            return False
+
+    monkeypatch.setattr("apply.intelligence.JobAnalyzer", lambda base_dir=None: DisabledAnalyzer())
 
     job = make_job_record(make_vacancy())
     repo.upsert_job(job)
@@ -155,7 +213,7 @@ def test_process_actionable_sends_and_persists_pack(repo, monkeypatch) -> None:
         repo,
         job,
         "updated",
-        {"match_threshold": 60, "telegram": {"enabled": True}},
+        {"match_threshold": 60, "telegram": {"enabled": True}, "prefilter_threshold": 45},
         NOW,
     )
 
@@ -170,7 +228,7 @@ def test_process_actionable_sends_and_persists_pack(repo, monkeypatch) -> None:
 
     assert row["activity_type"] == "updated"
     assert row["match_score"] == 85
-    assert row["cover_letter"] == "Strong match letter"
+    assert "Max Vilchevskiy" in row["cover_letter"]
     assert row["notified_at"] is not None
 
 
@@ -178,10 +236,15 @@ def test_process_actionable_respects_disabled_telegram(repo, monkeypatch) -> Non
     sent: list[str] = []
     monkeypatch.setattr(pack_module, "send_message", lambda text: sent.append(text))
     monkeypatch.setattr(
-        pack_module,
-        "build_application_pack",
-        lambda job, activity_type: (_high_match(), "Strong match letter"),
+        "apply.intelligence.match_job",
+        lambda job, profile=None, skills_map=None: _high_match(),
     )
+
+    class DisabledAnalyzer:
+        def enabled(self) -> bool:
+            return False
+
+    monkeypatch.setattr("apply.intelligence.JobAnalyzer", lambda base_dir=None: DisabledAnalyzer())
 
     job = make_job_record(make_vacancy())
     repo.upsert_job(job)
@@ -190,7 +253,7 @@ def test_process_actionable_respects_disabled_telegram(repo, monkeypatch) -> Non
         repo,
         job,
         "new",
-        {"match_threshold": 60, "telegram": {"enabled": False}},
+        {"match_threshold": 60, "telegram": {"enabled": False}, "prefilter_threshold": 45},
         NOW,
     )
 
@@ -205,10 +268,15 @@ def test_process_actionable_skips_when_role_already_notified(repo, monkeypatch) 
     sent: list[str] = []
     monkeypatch.setattr(pack_module, "send_message", lambda text: sent.append(text))
     monkeypatch.setattr(
-        pack_module,
-        "build_application_pack",
-        lambda job, activity_type: (_high_match(), "Strong match letter"),
+        "apply.intelligence.match_job",
+        lambda job, profile=None, skills_map=None: _high_match(),
     )
+
+    class DisabledAnalyzer:
+        def enabled(self) -> bool:
+            return False
+
+    monkeypatch.setattr("apply.intelligence.JobAnalyzer", lambda base_dir=None: DisabledAnalyzer())
 
     first = make_job_record(
         make_vacancy(
@@ -222,7 +290,7 @@ def test_process_actionable_skips_when_role_already_notified(repo, monkeypatch) 
         repo,
         first,
         "new",
-        {"match_threshold": 60, "telegram": {"enabled": True}},
+        {"match_threshold": 60, "telegram": {"enabled": True}, "prefilter_threshold": 45},
         NOW,
     )
 
@@ -239,7 +307,7 @@ def test_process_actionable_skips_when_role_already_notified(repo, monkeypatch) 
         repo,
         second,
         "new",
-        {"match_threshold": 60, "telegram": {"enabled": True}},
+        {"match_threshold": 60, "telegram": {"enabled": True}, "prefilter_threshold": 45},
         NOW,
     )
 

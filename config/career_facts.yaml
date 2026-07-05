@@ -1,0 +1,76 @@
+facts:
+  - id: globallogic_watch_ai
+    employer: GlobalLogic
+    tags: [ai, watchos, concurrency, product]
+    technologies: [Swift, watchOS, SwiftUI, WatchKit, WatchConnectivity, AVFoundation, Swift Concurrency]
+    facts:
+      - Apple Watch Voice AI R&D with on-device conversation flows
+      - iPhone relay for WebSocket and audio because Watch has no direct WebSocket path
+      - TestFlight delivery under watchOS background, audio, and connectivity constraints
+      - Beta-tested VelocityAI sample product cycle from idea to release
+    approved_wording:
+      - watchOS voice AI with on-device conversation flows.
+      - No WebSocket on Watch — iPhone relay for audio and server sync; dedup with URLSessionWebSocketTask.
+      - Split Watch/iPhone work around platform limits; TestFlight under watchOS constraints (background, audio, connectivity).
+      - Beta-tested VelocityAI — ran a sample product cycle from idea to release.
+
+  - id: pasha_birmarket_commerce
+    employer: PASHA Holding
+    tags: [product, marketplace]
+    technologies: [Swift, SwiftUI, UIKit, SPM, Swift Concurrency, Combine]
+    facts:
+      - Birmarket marketplace commerce for 500,000+ SKUs and 900+ pickup points
+      - Multiple App Store releases from catalog through orders
+      - National-scale marketplace and loyalty product in Azerbaijan
+    approved_wording:
+      - Catalog through orders for 500,000+ SKUs and 900+ pickup points — multiple App Store releases.
+      - Marketplace commerce — 500,000+ SKUs, 900+ pickup points, catalog through orders.
+
+  - id: pasha_premium_sdk
+    employer: PASHA Holding
+    tags: [sdk, marketplace, loyalty, product]
+    technologies: [Swift, SwiftUI, UIKit, SPM]
+    facts:
+      - Owned Premium Subscription UI, checkout wiring, and subscription status on feature side
+      - Extracted Premium Subscription into a shared loyalty SDK with per-host configuration
+      - Shared loyalty SDK embedded in multiple host applications
+    approved_wording:
+      - Owned Premium Subscription — UI, checkout wiring, subscription status on the feature side.
+      - Pulled Premium Subscription into a shared SDK with per-host configuration.
+      - Shared loyalty SDK embedded in multiple host apps.
+
+  - id: pasha_analytics_module
+    employer: PASHA Holding
+    tags: [sdk, analytics]
+    technologies: [Swift, SPM, Firebase, Amplitude, Mixpanel]
+    facts:
+      - Analytics module in loyalty SDK with one API for multiple telemetry providers
+      - Routes events to Amplitude, Mixpanel, AppsFlyer, Firebase, PostHog, and Sentry
+      - Feature modules do not call telemetry SDKs directly
+    approved_wording:
+      - Analytics module in loyalty SDK — one API for Amplitude, Mixpanel, AppsFlyer, Firebase, PostHog, Sentry.
+      - Analytics in loyalty SDK — one API; features don't touch telemetry SDKs directly.
+
+  - id: dodo_drinkit
+    employer: Dodo Brands
+    tags: [product]
+    technologies: [Swift, UIKit, SPM, Apple Pay, PassKit, AVFoundation]
+    facts:
+      - Drinkit iOS MVP to App Store on a three-person team at a test flagship café
+      - Brand grew to 215+ shops in 5 countries after initial release
+      - Pre-order, customization, Apple Pay with loyalty, and slot pickup tracking
+    approved_wording:
+      - Built Drinkit at a test flagship café on a three-person team — MVP to App Store with pre-order and customization; brand now has 215+ shops in 5 countries.
+      - Menu video (Reels-style), Apple Pay with loyalty, live tracking for slot pickup.
+
+  - id: ios_platform
+    employer: career
+    tags: [swiftui, uikit, concurrency]
+    technologies: [Swift, SwiftUI, UIKit, SPM, Swift Concurrency, async/await, Combine]
+    facts:
+      - 12+ years iOS from indie apps through national-scale marketplaces
+      - Production SwiftUI, UIKit, and Swift Concurrency in shipping App Store apps
+      - MVVM and modular architecture with SPM module boundaries
+    approved_wording:
+      - Senior iOS Engineer with 12+ years building consumer and marketplace apps — from first commit to App Store.
+      - Shipped production iOS apps with SwiftUI, UIKit, and Swift Concurrency.

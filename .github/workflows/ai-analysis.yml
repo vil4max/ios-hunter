@@ -30,6 +30,8 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          AI_PROVIDER: gemini
+          AI_MODEL: gemini-2.0-flash
         run: python3 scripts/ai_analysis.py --weekly
 
       - name: Commit AI report updates

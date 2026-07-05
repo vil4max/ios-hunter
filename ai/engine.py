@@ -147,12 +147,18 @@ class GeminiAnalyzer:
 
 
 def create_analyzer() -> AIAnalyzer:
+    provider = os.environ.get("AI_PROVIDER", "").strip().lower()
+    model = os.environ.get("AI_MODEL", "").strip()
     openai_key = os.environ.get("OPENAI_API_KEY", "").strip()
-    if openai_key:
-        return OpenAIAnalyzer(openai_key)
-
     gemini_key = os.environ.get("GEMINI_API_KEY", "").strip()
+
+    if provider == "gemini" and gemini_key:
+        return GeminiAnalyzer(gemini_key, model or "gemini-2.0-flash")
+    if provider == "openai" and openai_key:
+        return OpenAIAnalyzer(openai_key, model or "gpt-4o-mini")
+    if openai_key and provider != "gemini":
+        return OpenAIAnalyzer(openai_key, model or "gpt-4o-mini")
     if gemini_key:
-        return GeminiAnalyzer(gemini_key)
+        return GeminiAnalyzer(gemini_key, model or "gemini-2.0-flash")
 
     return NoOpAnalyzer()
