@@ -23,14 +23,13 @@ Remote iOS role with an international team (current English B1). Raise target le
 - [x] Conversion stats by source and resume version
 - [ ] Interview notes CLI
 
-### P3 — Public Market Intelligence
+### P3 — Market intelligence (private)
 
-- [x] GitHub Pages dashboard scaffold
-- [x] RSS feed for actionable vacancies (`website/feed.xml`)
 - [x] Weekly iOS Market Report (`reports/weekly/`)
 - [x] Market Timeline snapshots (`reports/timeline/`)
-- [x] Auto-commit reports and public data after each run
-- [x] Deploy GitHub Pages workflow
+- [x] Auto-commit reports after each run (private repo)
+- [x] ~~GitHub Pages dashboard~~ — removed (Telegram-only)
+- [x] ~~RSS feed~~ — removed
 
 ### P4 — AI (optional)
 

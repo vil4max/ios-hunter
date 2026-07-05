@@ -33,6 +33,8 @@ playground.xcworkspace
 
 database/jobs.db
 database/swift_export.json
+database/jobs.json
+database/history.json
 
 # Local/runtime SQLite (canonical CI path: database/jobs.db)
 /data/

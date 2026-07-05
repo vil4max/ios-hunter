@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-import re
 from datetime import datetime, timezone
 from pathlib import Path
-from xml.etree.ElementTree import Element, SubElement, tostring
 
 from database.repository import JobRepository
 
@@ -87,31 +85,3 @@ def generate_companies_report(repo: JobRepository, root: Path) -> Path:
     output = output_dir / "index.md"
     output.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return output
-
-
-def generate_rss(repo: JobRepository, output_path: Path, site_url: str = "https://vil4max.github.io/ios-hunter") -> None:
-    rss = Element("rss", version="2.0")
-    channel = SubElement(rss, "channel")
-    SubElement(channel, "title").text = "iOS Hunter — Ukrainian iOS Jobs"
-    SubElement(channel, "link").text = site_url
-    SubElement(channel, "description").text = "Actionable iOS and Swift vacancies"
-
-    rows = repo.recent_actionable_activity(limit=50)
-
-    for row in rows:
-        item = SubElement(channel, "item")
-        SubElement(item, "title").text = f"{row['activity_type'].title()} — {row['company']} — {row['title']}"
-        SubElement(item, "link").text = row["url"]
-        SubElement(item, "guid").text = row["url"]
-        SubElement(item, "pubDate").text = row["created_at"]
-        SubElement(item, "description").text = f"{row['activity_type']} iOS vacancy at {row['company']}"
-
-    xml = '<?xml version="1.0" encoding="UTF-8"?>\n' + tostring(rss, encoding="unicode")
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(xml, encoding="utf-8")
-
-
-def slugify(value: str) -> str:
-    value = value.lower().strip()
-    value = re.sub(r"[^a-z0-9]+", "-", value)
-    return value.strip("-")

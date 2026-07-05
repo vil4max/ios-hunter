@@ -1,8 +1,8 @@
 # iOS Hunter
 
-An iOS/Swift vacancy monitor for the Ukrainian market. It runs **only on GitHub Actions** — no local setup required.
+Personal iOS/Swift vacancy monitor for the Ukrainian market. It runs **only on GitHub Actions** — local clone is optional.
 
-On weekdays, the bot scans company career pages, detects changes, and sends **new/updated/reopened vacancies** to Telegram when they match your profile.
+The bot scans company career pages, detects changes, and sends **new / updated / reopened** vacancies to **Telegram** when they match your profile.
 
 DOU and Djinni are intentionally **not collected** — use their native apps instead.
 
@@ -26,26 +26,25 @@ Each vacancy has a history. On each run we detect:
 | **Closed** | No longer present on the website |
 
 ### 3. Telegram notifications
-For **actionable** events (New / Updated / Reopened) with match score ≥ 60 you receive an **application pack**:
+For **actionable** events (New / Updated / Reopened) with match score ≥ 60 you receive a job intelligence message:
 
 - company, title, link
-- match score, Strong / Gap
-- cover letter draft
+- match score, strong skills / gaps
+- apply priority and recommendation (when Gemini is configured)
 - portfolio and CV links
 
-There is no salary-based filtering in the public pipeline.
+Without an LLM API key, rules-based matching sends a cover letter draft instead.
 
 ### 4. Company Watch
 If a company has **3+ open mobile/iOS roles**, you get a separate Telegram alert (max once per week per company).
 
-### 5. Reports and public artifacts
-After each run, the repository is updated with:
+### 5. Private reports (optional)
+After each run, markdown reports are committed to the **private** repository:
 
 - `reports/activity/` — per-run activity
 - `reports/health/` — source health
 - `reports/market/`, `reports/timeline/` — market snapshot
 - `reports/weekly/` — weekly report
-- `website/` — dashboard and RSS (GitHub Pages)
 
 The SQLite DB (`database/jobs.db`) is stored in GitHub Actions cache and **not committed**.
 To keep the cache bounded, the pipeline prunes jobs not seen for **45 days** (configurable via `JOBS_RETENTION_DAYS`).
@@ -78,18 +77,19 @@ GitHub Actions (macOS + Ubuntu)
         │
    database/jobs.db (cache)  →  Telegram
         │
-   auto-commit reports + website → main
+   auto-commit reports → main (private repo)
 ```
 
-Stack: Swift 6 · Python 3.12 · SQLite · Telegram Bot API · GitHub Pages
+Stack: Swift 6 · Python 3.12 · SQLite · Telegram Bot API · Gemini (optional)
 
 ---
 
 ## Setup (one-time)
 
 1. Add secrets: `TELEGRAM_TOKEN`, `TELEGRAM_CHAT_ID`
-2. Enable GitHub Actions + GitHub Pages
-3. Edit `config/profile.yaml` (name, portfolio, CV links)
+2. Optional: `GEMINI_API_KEY` (or `OPENAI_API_KEY`) for Job Intelligence
+3. Enable GitHub Actions
+4. Edit `config/profile.yaml` (name, portfolio, CV links)
 
 ---
 

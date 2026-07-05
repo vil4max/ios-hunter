@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-import json
 import os
 import sys
 import time
@@ -19,7 +18,7 @@ from collector.health import render_health_report
 from crm.followups import send_followup_reminders
 from database.repository import JobRepository, utc_now
 from integrations.monitor_digest import send_monitor_digest
-from integrations.public_reports import generate_companies_report, generate_rss, generate_weekly_report
+from integrations.public_reports import generate_companies_report, generate_weekly_report
 from parser.activity import ActivitySummary
 from parser.deduplicate import deduplicate
 from parser.diff import compare_job
@@ -79,58 +78,11 @@ def process_vacancies(
     return activity, seen_ids, packs_sent
 
 
-def write_public_artifacts(
-    repo: JobRepository,
-    root: Path,
-    activity: ActivitySummary,
-    market_summary: Any,
-    packs_sent: int,
-    company_watch_alerts: int,
-) -> None:
+def write_run_reports(repo: JobRepository, root: Path, market_summary: Any) -> None:
     write_report(root / "reports/market/snapshot.md", render_market_summary(market_summary))
     write_report(root / "reports/timeline/market-timeline.md", render_timeline_report(repo))
     generate_weekly_report(repo, root)
     generate_companies_report(repo, root)
-    repo.export_jobs_json(root / "database/jobs.json")
-    repo.export_jobs_json(root / "website/data/jobs.json")
-    repo.export_history_json(root / "database/history.json")
-    generate_rss(repo, root / "website/feed.xml")
-
-    write_report(
-        root / "website/data/activity.json",
-        json.dumps(
-            {
-                "headline": activity.headline(),
-                "new": activity.new,
-                "updated": activity.updated,
-                "closed": activity.closed,
-                "reopened": activity.reopened,
-                "actionable": activity.actionable,
-                "packs_sent": packs_sent,
-                "company_watch_alerts": company_watch_alerts,
-            },
-            indent=2,
-        ),
-    )
-
-    write_report(
-        root / "website/data/market.json",
-        json.dumps(
-            {
-                "open_jobs": market_summary.open_jobs,
-                "remote": market_summary.remote,
-                "hybrid": market_summary.hybrid,
-                "onsite": market_summary.onsite,
-                "new_this_week": market_summary.new_this_week,
-                "closed_this_week": market_summary.closed_this_week,
-                "top_companies": [
-                    {"company": company, "open_jobs": count}
-                    for company, count in market_summary.top_companies
-                ],
-            },
-            indent=2,
-        ),
-    )
 
 
 def main() -> int:
@@ -195,7 +147,7 @@ def main() -> int:
 
     write_report(ROOT / "reports/activity/latest.md", activity_report)
     write_report(ROOT / "reports/health/latest.md", health_report)
-    write_public_artifacts(repo, ROOT, activity, market_summary, packs_sent, company_watch_alerts)
+    write_run_reports(repo, ROOT, market_summary)
     monitor_digest_sent = send_monitor_digest(repo, activity, source_results, profile, swift_meta)
 
     print(
