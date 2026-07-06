@@ -10,6 +10,7 @@ from ai.models import PROMPT_VERSION, JobAnalysisOutput, JobAnalysisRecord
 from ai.providers import LLMProvider, NoOpProvider, create_llm_provider
 from apply.matcher import MatchResult, load_profile
 from database.repository import JobRecord, JobRepository, utc_now
+from integrations.template_render import render_named_template
 
 
 def load_career_facts(config_path: str | Path = "config/career_facts.yaml") -> dict:
@@ -43,18 +44,21 @@ def build_analysis_prompt(
     template_path: Path,
 ) -> str:
     template = template_path.read_text(encoding="utf-8")
-    return template.format(
-        profile_summary=build_profile_summary(profile),
-        career_facts=yaml.safe_dump(career_facts, sort_keys=False).strip(),
-        prefilter_score=match.score,
-        strong_skills=", ".join(match.strong) or "—",
-        missing_skills=", ".join(match.missing) or "—",
-        remote_ok=match.remote_ok,
-        company=job.company,
-        title=job.title,
-        location=job.location or "unknown",
-        remote=job.remote or "unknown",
-        description=(job.description or job.title)[:6000],
+    return render_named_template(
+        template,
+        {
+            "profile_summary": build_profile_summary(profile),
+            "career_facts": yaml.safe_dump(career_facts, sort_keys=False).strip(),
+            "prefilter_score": str(match.score),
+            "strong_skills": ", ".join(match.strong) or "—",
+            "missing_skills": ", ".join(match.missing) or "—",
+            "remote_ok": str(match.remote_ok),
+            "company": job.company,
+            "title": job.title,
+            "location": job.location or "unknown",
+            "remote": job.remote or "unknown",
+            "description": (job.description or job.title)[:6000],
+        },
     )
 
 

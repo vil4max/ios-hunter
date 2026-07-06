@@ -587,14 +587,46 @@ class JobRepository:
         if not job_ids:
             return 0
 
-        placeholders = ",".join("?" for _ in job_ids)
-        self._conn.execute(f"DELETE FROM skills WHERE job_id IN ({placeholders})", job_ids)
-        self._conn.execute(f"DELETE FROM job_sources WHERE job_id IN ({placeholders})", job_ids)
-        self._conn.execute(f"DELETE FROM history WHERE job_id IN ({placeholders})", job_ids)
-        self._conn.execute(f"DELETE FROM run_activity WHERE job_id IN ({placeholders})", job_ids)
-        self._conn.execute(f"DELETE FROM application_packs WHERE job_id IN ({placeholders})", job_ids)
-        self._conn.execute(f"DELETE FROM job_analysis WHERE job_id IN ({placeholders})", job_ids)
-        self._conn.execute(f"DELETE FROM jobs WHERE id IN ({placeholders})", job_ids)
+        cutoff = f"-{days} days"
+        stale_job_ids = """
+            job_id IN (
+                SELECT id FROM jobs
+                WHERE last_seen < datetime('now', ?)
+                  AND id NOT IN (SELECT job_id FROM applications WHERE job_id IS NOT NULL)
+            )
+        """
+        self._conn.execute(
+            f"DELETE FROM skills WHERE {stale_job_ids}",
+            (cutoff,),
+        )
+        self._conn.execute(
+            f"DELETE FROM job_sources WHERE {stale_job_ids}",
+            (cutoff,),
+        )
+        self._conn.execute(
+            f"DELETE FROM history WHERE {stale_job_ids}",
+            (cutoff,),
+        )
+        self._conn.execute(
+            f"DELETE FROM run_activity WHERE {stale_job_ids}",
+            (cutoff,),
+        )
+        self._conn.execute(
+            f"DELETE FROM application_packs WHERE {stale_job_ids}",
+            (cutoff,),
+        )
+        self._conn.execute(
+            f"DELETE FROM job_analysis WHERE {stale_job_ids}",
+            (cutoff,),
+        )
+        self._conn.execute(
+            """
+            DELETE FROM jobs
+            WHERE last_seen < datetime('now', ?)
+              AND id NOT IN (SELECT job_id FROM applications WHERE job_id IS NOT NULL)
+            """,
+            (cutoff,),
+        )
         self._conn.commit()
         return len(job_ids)
 

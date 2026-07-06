@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import requests
+
 from ai.job_analyzer import JobAnalyzer
 from ai.models import JobAnalysisRecord
 from apply.matcher import MatchResult, match_job
@@ -115,7 +117,13 @@ def process_actionable_job(
     if not analyzer.enabled():
         return process_rules_actionable(repo, job, activity_type, profile, detected_at, match)
 
-    analysis = analyzer.analyze_job(repo, job, match, profile=profile)
+    try:
+        analysis = analyzer.analyze_job(repo, job, match, profile=profile)
+    except requests.HTTPError as error:
+        status = error.response.status_code if error.response is not None else None
+        if status not in {429, 500, 502, 503, 504}:
+            raise
+        return process_rules_actionable(repo, job, activity_type, profile, detected_at, match)
     if analysis is None or not should_notify(analysis, profile):
         return False
 

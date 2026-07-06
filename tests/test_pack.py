@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import requests
+
 from apply.cover_letter import render_cover_letter
 from apply.matcher import MatchResult, load_profile, match_job
 from apply.pack import (
@@ -230,6 +232,41 @@ def test_process_actionable_sends_and_persists_pack(repo, monkeypatch) -> None:
     assert row["match_score"] == 85
     assert "Max Vilchevskiy" in row["cover_letter"]
     assert row["notified_at"] is not None
+
+
+def test_process_actionable_falls_back_to_rules_on_gemini_rate_limit(repo, monkeypatch) -> None:
+    sent: list[str] = []
+    monkeypatch.setattr(pack_module, "send_message", lambda text: sent.append(text))
+    monkeypatch.setattr(
+        "apply.intelligence.match_job",
+        lambda job, profile=None, skills_map=None: _high_match(),
+    )
+
+    class RateLimitedAnalyzer:
+        def enabled(self) -> bool:
+            return True
+
+        def analyze_job(self, repo, job, match, profile=None):
+            response = requests.Response()
+            response.status_code = 429
+            raise requests.HTTPError("429 Too Many Requests", response=response)
+
+    monkeypatch.setattr("apply.intelligence.JobAnalyzer", lambda base_dir=None: RateLimitedAnalyzer())
+
+    job = make_job_record(make_vacancy())
+    repo.upsert_job(job)
+
+    sent_pack = process_actionable(
+        repo,
+        job,
+        "new",
+        {"match_threshold": 60, "telegram": {"enabled": True}, "prefilter_threshold": 45},
+        NOW,
+    )
+
+    assert sent_pack is True
+    assert len(sent) == 1
+    assert "Max Vilchevskiy" in sent[0]
 
 
 def test_process_actionable_respects_disabled_telegram(repo, monkeypatch) -> None:

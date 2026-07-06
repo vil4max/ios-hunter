@@ -4,6 +4,7 @@ from pathlib import Path
 
 from apply.matcher import MatchResult, load_profile, user_skills
 from database.repository import JobRecord
+from integrations.template_render import render_named_template
 
 
 def render_cover_letter(job: JobRecord, match: MatchResult, profile: dict | None = None) -> str:
@@ -24,11 +25,14 @@ def render_cover_letter(job: JobRecord, match: MatchResult, profile: dict | None
     if cover_letter_cfg.get("include_salary", False):
         highlight += " I'm targeting remote roles with market-competitive compensation."
 
-    return template.format(
-        name=profile.get("name", "Max Vilchevskiy"),
-        company=job.company,
-        title=job.title,
-        experience_years=profile.get("experience_years", 12),
-        focus_area=focus_area,
-        highlight=highlight,
+    return render_named_template(
+        template,
+        {
+            "name": profile.get("name", "Max Vilchevskiy"),
+            "company": job.company,
+            "title": job.title,
+            "experience_years": str(profile.get("experience_years", 12)),
+            "focus_area": focus_area,
+            "highlight": highlight,
+        },
     ).strip()

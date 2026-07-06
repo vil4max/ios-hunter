@@ -6,6 +6,7 @@ import re
 import time
 from typing import Protocol, TypeVar
 
+import requests
 from pydantic import BaseModel, ValidationError
 
 from integrations.http_client import post_json
@@ -131,7 +132,11 @@ class OpenAIProvider:
             except Exception as error:  # noqa: BLE001
                 last_error = error
                 if attempt < 2:
-                    time.sleep(2**attempt)
+                    delay = 2**attempt
+                    if isinstance(error, requests.HTTPError) and error.response is not None:
+                        if error.response.status_code == 429:
+                            delay = 15 * (attempt + 1)
+                    time.sleep(delay)
         raise last_error or RuntimeError("OpenAI request failed")
 
 
@@ -192,7 +197,11 @@ class GeminiProvider:
             except Exception as error:  # noqa: BLE001
                 last_error = error
                 if attempt < 2:
-                    time.sleep(2**attempt)
+                    delay = 2**attempt
+                    if isinstance(error, requests.HTTPError) and error.response is not None:
+                        if error.response.status_code == 429:
+                            delay = 15 * (attempt + 1)
+                    time.sleep(delay)
         raise last_error or RuntimeError("Gemini request failed")
 
 

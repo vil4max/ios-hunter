@@ -12,7 +12,7 @@ Public profile for recruiters: [vil4max.github.io](https://vil4max.github.io). T
 |--------|----------|---------|
 | `TELEGRAM_TOKEN` | yes | Bot API |
 | `TELEGRAM_CHAT_ID` | yes | Your private chat |
-| `GEMINI_API_KEY` | recommended | Job Intelligence (fit, gaps, APPLY/CHECK/SKIP) |
+| `GEMINI_API_KEY` | yes | Job Intelligence (fit, gaps, APPLY/CHECK/SKIP) |
 | `OPENAI_API_KEY` | optional | Fallback LLM if you change `AI_PROVIDER` |
 
 Repo: **private**. GitHub Pages: **off** (no public site/RSS).
