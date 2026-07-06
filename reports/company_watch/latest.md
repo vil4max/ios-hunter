@@ -14,14 +14,4 @@ Companies with 3+ open mobile/iOS roles:
   - iOS Developer with Android
     https://www.globallogic.com/ua/careers/ios-developer-with-android-irc296867/
 
-• EPAM — 4 roles
-  - Senior Ios Developer
-    https://careers.epam.com/en/vacancy/senior-ios-developer-blt7rnc5o2hvnrsiz9x_en
-  - Senior Ios Mobile Engineer Native App Development
-    https://careers.epam.com/en/vacancy/senior-ios-mobile-engineer-native-app-development-bltd2c4o1ed8vat2sbk_en
-  - Senior Software Engineer Ios
-    https://careers.epam.com/en/vacancy/senior-software-engineer-ios-bltx9m8apcjok2305z6_en
-  - Senior Software Engineer Swift
-    https://careers.epam.com/en/vacancy/senior-software-engineer-swift-bltvfqex9xns76i2k0k_en
-
 Consider reaching out to a recruiter directly.

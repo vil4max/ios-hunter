@@ -3,7 +3,7 @@
 | Company | Open | This year | Avg lifetime (days) |
 | --- | ---: | ---: | ---: |
 | GlobalLogic | 5 | 5 | 0 |
-| EPAM | 4 | 5 | 5 |
+| EPAM | 2 | 5 | 5 |
 | Andersen | 2 | 2 | 0 |
 | DataArt | 2 | 2 | 0 |
 | Grid Dynamics | 2 | 2 | 0 |
