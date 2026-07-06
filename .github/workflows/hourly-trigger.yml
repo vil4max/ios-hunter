@@ -1,0 +1,24 @@
+name: Hourly Collect Trigger
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Every hour UTC — dispatches Collect iOS Jobs (macos) reliably via ubuntu runner.
+    - cron: "0 * * * *"
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: hourly-collect-trigger-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Collect iOS Jobs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run "Collect iOS Jobs" --repo "${{ github.repository }}" --ref main

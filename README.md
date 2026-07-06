@@ -35,6 +35,7 @@ Config you edit in git:
 | Workflow | When to run manually |
 |----------|-------------------|
 | **Collect iOS Jobs** | Main run: collect, diff, Telegram, reports. Use after config changes or when you want a fresh scan outside the schedule. |
+| **Hourly Collect Trigger** | Fires **Collect iOS Jobs** every hour (ubuntu cron → `workflow_dispatch`). |
 | **Weekly iOS Market Report** | Regenerate `reports/weekly/` if the DB cache exists but Monday cron missed. |
 | **AI Analysis** | Append AI text to weekly report (needs `GEMINI_API_KEY` or `OPENAI_API_KEY`). |
 | **CI** | Runs on push/PR automatically — Swift build + pytest. |
@@ -47,13 +48,13 @@ After **Collect**, check:
 
 ### Automatic schedule (Europe/Kyiv)
 
-Cron is UTC in workflow files; local times below are **summer (EEST, UTC+3)**. In winter (EET) add **+1 hour**.
+| Workflow | Schedule | Notes |
+|----------|----------|-------|
+| **Hourly Collect Trigger** | Every hour (`0 * * * *` UTC) | Dispatches **Collect iOS Jobs**; monitor digest in Telegram after each successful collect |
+| Weekly report | Mon 09:00 Kyiv (EEST) | `0 6 * * 1` UTC |
+| AI summary | Mon 12:30 Kyiv (EEST) | `30 9 * * 1` UTC |
 
-| Workflow | Local time | UTC cron |
-|----------|------------|----------|
-| Collect | Sun 18:00–21:00, Mon–Fri 08:00–18:00 (hourly) | `0 15-18 * * 0`, `0 5-15 * * 1-5` |
-| Weekly report | Mon 09:00 | `0 6 * * 1` |
-| AI summary | Mon 12:30 | `30 9 * * 1` |
+Collect runs on `macos-latest` (Swift). The hourly trigger uses `ubuntu-latest` because GitHub cron is more reliable there than on macOS runners.
 
 ---
 
@@ -138,7 +139,8 @@ Use SSH, GitHub Desktop, or `gh auth login` with workflow permission.
 
 | Symptom | Check |
 |---------|--------|
-| No Telegram | Secrets; `config/profile.yaml` → `telegram.enabled: true`; workflow log for errors |
+| No Telegram | Secrets; `config/profile.yaml` → `telegram.enabled: true`; workflow log for `Monitor digest sent: True` |
+| No hourly digest | **Hourly Collect Trigger** workflow must be enabled; check Actions tab for skipped macOS runs |
 | No LLM block in message | `GEMINI_API_KEY` in secrets; collect workflow sets `AI_PROVIDER=gemini` |
 | Duplicate “new” alerts | Cache miss — normal after first run on fresh cache |
 | Collect fails on Swift | `reports/health/latest.md`; source may be down or HTML changed |

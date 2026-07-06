@@ -4,6 +4,7 @@ from __future__ import annotations
 import os
 import sys
 import time
+import traceback
 from pathlib import Path
 from typing import Any
 
@@ -15,6 +16,7 @@ from apply.matcher import load_profile
 from collector.companies import collect_all
 from collector.description import fetch_description, should_fetch
 from collector.health import render_health_report
+from collector.types import SourceResult, SwiftCollectorMeta
 from crm.followups import send_followup_reminders
 from database.repository import JobRepository, utc_now
 from integrations.monitor_digest import send_monitor_digest
@@ -71,8 +73,14 @@ def process_vacancies(
             sync_job_skills(repo, record.id, f"{record.title} {record.description}", skills_map)
 
         if change.change_type in {"new", "reopened", "updated"}:
-            if apply_job_change(repo, run_id, record, change, profile, now, activity):
-                packs_sent += 1
+            try:
+                if apply_job_change(repo, run_id, record, change, profile, now, activity):
+                    packs_sent += 1
+            except Exception as error:
+                print(
+                    f"Actionable processing failed for {vacancy.company} / {vacancy.title}: {error}",
+                    file=sys.stderr,
+                )
 
     close_missing_jobs(repo, run_id, seen_ids, now, activity)
     return activity, seen_ids, packs_sent
@@ -85,42 +93,20 @@ def write_run_reports(repo: JobRepository, root: Path, market_summary: Any) -> N
     generate_companies_report(repo, root)
 
 
-def main() -> int:
-    started = time.perf_counter()
-    started_at = utc_now()
-    repo = JobRepository(Path(os.environ.get("JOBS_DB_PATH", "database/jobs.db")), base_dir=ROOT)
-    profile = load_profile(ROOT / "config/profile.yaml")
-    skills_map = load_skills(ROOT / "config/skills.yaml")
-    run_id = repo.start_run_metrics(started_at)
-
-    collect_result = collect_all(ROOT / "database/swift_export.json")
-    source_results = collect_result.source_results
-    swift_meta = collect_result.swift_meta
-    raw_jobs: list[dict] = []
-    for result in source_results:
-        repo.upsert_source_health(
-            source_id=result.source_id,
-            source_name=result.source_name,
-            source_url=result.source_url,
-            status=result.status,
-            error=result.error,
-            response_ms=result.response_ms,
-            jobs_count=len(result.jobs),
-        )
-        raw_jobs.extend(result.jobs)
-
-    vacancies = normalize_many(raw_jobs)
-    enrich_descriptions(vacancies)
-    vacancies, duplicates_removed = deduplicate(vacancies)
-    now = utc_now()
-
-    activity, _, packs_sent = process_vacancies(repo, run_id, vacancies, profile, skills_map, now)
-    company_watch_alerts = send_company_watch_alerts(repo, ROOT)
-    followups_sent = send_followup_reminders(repo)
-
-    pruned_jobs = repo.prune_jobs_older_than(days=int(os.environ.get("JOBS_RETENTION_DAYS", "45")))
-
-    runtime = time.perf_counter() - started
+def finalize_run(
+    repo: JobRepository,
+    run_id: int,
+    activity: ActivitySummary,
+    source_results: list[SourceResult],
+    swift_meta: SwiftCollectorMeta | None,
+    profile: dict,
+    duplicates_removed: int,
+    runtime: float,
+    packs_sent: int,
+    company_watch_alerts: int,
+    followups_sent: int,
+    pruned_jobs: int,
+) -> bool:
     failed_sources = sum(1 for result in source_results if result.status == "failed")
     repo.finish_run_metrics(
         run_id,
@@ -158,7 +144,77 @@ def main() -> int:
         f"Monitor digest sent: {monitor_digest_sent}\n"
         f"Pruned jobs (retention): {pruned_jobs}"
     )
-    repo.close()
+    return monitor_digest_sent
+
+
+def main() -> int:
+    started = time.perf_counter()
+    started_at = utc_now()
+    repo = JobRepository(Path(os.environ.get("JOBS_DB_PATH", "database/jobs.db")), base_dir=ROOT)
+    profile = load_profile(ROOT / "config/profile.yaml")
+    skills_map = load_skills(ROOT / "config/skills.yaml")
+    run_id = repo.start_run_metrics(started_at)
+
+    activity = ActivitySummary()
+    source_results: list[SourceResult] = []
+    swift_meta: SwiftCollectorMeta | None = None
+    duplicates_removed = 0
+    packs_sent = 0
+    company_watch_alerts = 0
+    followups_sent = 0
+    pruned_jobs = 0
+    pipeline_error: Exception | None = None
+
+    try:
+        collect_result = collect_all(ROOT / "database/swift_export.json")
+        source_results = collect_result.source_results
+        swift_meta = collect_result.swift_meta
+        raw_jobs: list[dict] = []
+        for result in source_results:
+            repo.upsert_source_health(
+                source_id=result.source_id,
+                source_name=result.source_name,
+                source_url=result.source_url,
+                status=result.status,
+                error=result.error,
+                response_ms=result.response_ms,
+                jobs_count=len(result.jobs),
+            )
+            raw_jobs.extend(result.jobs)
+
+        vacancies = normalize_many(raw_jobs)
+        enrich_descriptions(vacancies)
+        vacancies, duplicates_removed = deduplicate(vacancies)
+        now = utc_now()
+
+        activity, _, packs_sent = process_vacancies(repo, run_id, vacancies, profile, skills_map, now)
+        company_watch_alerts = send_company_watch_alerts(repo, ROOT)
+        followups_sent = send_followup_reminders(repo)
+        pruned_jobs = repo.prune_jobs_older_than(days=int(os.environ.get("JOBS_RETENTION_DAYS", "45")))
+    except Exception as error:
+        pipeline_error = error
+        traceback.print_exc()
+    finally:
+        runtime = time.perf_counter() - started
+        if source_results:
+            finalize_run(
+                repo,
+                run_id,
+                activity,
+                source_results,
+                swift_meta,
+                profile,
+                duplicates_removed,
+                runtime,
+                packs_sent,
+                company_watch_alerts,
+                followups_sent,
+                pruned_jobs,
+            )
+        repo.close()
+
+    if pipeline_error is not None:
+        return 1
     return 0
 
 
