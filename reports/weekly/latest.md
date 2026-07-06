@@ -4,7 +4,7 @@
 - New jobs: 22
 - Closed jobs: 3
 - Reopened: 0
-- Updated: 1
+- Updated: 0
 - Currently open: 19
 - Remote: 1 | Hybrid: 0 | Onsite: 0
 
