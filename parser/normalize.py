@@ -2,9 +2,73 @@ from __future__ import annotations
 
 import hashlib
 import re
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any
+
+
+_TRACKING_QUERY_KEYS = {
+    "ref",
+    "source",
+    "gh_src",
+    "utm_source",
+    "utm_medium",
+    "utm_campaign",
+    "utm_term",
+    "utm_content",
+    "utm_id",
+    "utm_reader",
+}
+
+
+def canonicalize_url(raw: str) -> str:
+    raw = (raw or "").strip()
+    if not raw:
+        return ""
+
+    split = urlsplit(raw)
+    scheme = (split.scheme or "https").lower()
+    host = (split.hostname or "").lower()
+    netloc = host
+    if split.port and ((scheme == "http" and split.port != 80) or (scheme == "https" and split.port != 443)):
+        netloc = f"{host}:{split.port}"
+
+    path = split.path or "/"
+    if path != "/":
+        path = path.rstrip("/")
+
+    query_items: list[tuple[str, str]] = []
+    for key, value in parse_qsl(split.query, keep_blank_values=True):
+        lowered_key = key.lower()
+        if lowered_key.startswith("utm_"):
+            continue
+        if lowered_key in _TRACKING_QUERY_KEYS:
+            continue
+        query_items.append((key, value))
+
+    query_items.sort(key=lambda kv: (kv[0], kv[1]))
+    query = urlencode(query_items, doseq=True)
+    return urlunsplit((scheme, netloc, path, query, ""))
+
+
+def compute_identity_key(
+    *,
+    company: str,
+    canonical_url: str,
+    source: str,
+    source_job_id: str | None,
+) -> tuple[str, str]:
+    normalized_company = normalize_token(company)
+    normalized_source = normalize_token(source)
+    if source_job_id:
+        raw = f"provider|{normalized_company}|{normalized_source}|{source_job_id.strip()}"
+        return hashlib.sha256(raw.encode("utf-8")).hexdigest(), "source_job_id"
+    if canonical_url:
+        raw = f"url|{normalized_company}|{canonical_url}"
+        return hashlib.sha256(raw.encode("utf-8")).hexdigest(), "canonical_url"
+    raw = f"fallback|{normalized_company}|{normalize_token(canonical_url)}"
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest(), "fallback"
 
 
 @dataclass
@@ -17,10 +81,22 @@ class Vacancy:
     remote: str | None = None
     published_at: datetime | None = None
     description: str | None = None
+    canonical_url: str = ""
+    source_job_id: str | None = None
+    identity_key: str = ""
+    identity_strategy: str = ""
     hash: str = field(default="", init=False)
 
     def __post_init__(self) -> None:
-        self.hash = compute_hash(self.company, self.title, self.location)
+        self.canonical_url = self.canonical_url or canonicalize_url(self.url)
+        if not self.identity_key:
+            self.identity_key, self.identity_strategy = compute_identity_key(
+                company=self.company,
+                canonical_url=self.canonical_url,
+                source=self.source,
+                source_job_id=self.source_job_id,
+            )
+        self.hash = self.identity_key or compute_hash(self.company, self.title, self.location)
 
 
 def normalize_title(title: str) -> str:
@@ -88,6 +164,11 @@ def normalize_raw(raw: dict[str, Any]) -> Vacancy | None:
         except ValueError:
             published_at = None
 
+    source_job_id: str | None = None
+    raw_source_job_id = raw.get("source_job_id") or raw.get("job_id") or raw.get("id")
+    if raw_source_job_id is not None:
+        source_job_id = str(raw_source_job_id).strip() or None
+
     return Vacancy(
         company=company,
         title=title,
@@ -97,6 +178,7 @@ def normalize_raw(raw: dict[str, Any]) -> Vacancy | None:
         remote=str(remote),
         published_at=published_at,
         description=description,
+        source_job_id=source_job_id,
     )
 
 

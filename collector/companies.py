@@ -88,6 +88,7 @@ def collect_teamtailor(company: str, feed_url: str) -> SourceResult:
                     "title": title,
                     "url": item.get("url") or item.get("links", {}).get("careersite-job-url", ""),
                     "source": "company",
+                    "source_job_id": item.get("id") or item.get("job_id"),
                     "description": item.get("body") or item.get("description"),
                     "location": (item.get("location") or {}).get("city")
                     if isinstance(item.get("location"), dict)
@@ -119,6 +120,7 @@ def collect_greenhouse(company: str, board_slug: str) -> SourceResult:
                     "title": title,
                     "url": item.get("absolute_url") or item.get("url") or "",
                     "source": "company",
+                    "source_job_id": item.get("id"),
                     "description": item.get("content"),
                     "location": (item.get("location") or {}).get("name")
                     if isinstance(item.get("location"), dict)
@@ -151,6 +153,7 @@ def collect_ashby(company: str, board_slug: str) -> SourceResult:
                     "title": title,
                     "url": item.get("jobUrl") or item.get("applyUrl") or "",
                     "source": "company",
+                    "source_job_id": item.get("id") or item.get("jobId"),
                     "description": item.get("descriptionPlain") or item.get("descriptionHtml"),
                     "location": item.get("location"),
                 }
@@ -181,6 +184,7 @@ def collect_lever(company: str, board_slug: str) -> SourceResult:
                     "title": title,
                     "url": item.get("hostedUrl") or item.get("applyUrl") or "",
                     "source": "company",
+                    "source_job_id": item.get("id"),
                     "description": item.get("descriptionPlain") or item.get("description"),
                     "location": item.get("categories", {}).get("location"),
                     "updated_at": item.get("createdAt"),

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 from pathlib import Path
 
 from apply.cover_letter import render_cover_letter
@@ -71,8 +72,19 @@ def save_pack(
 ) -> bool:
     pack_ready_at = utc_now()
 
-    if profile.get("telegram", {}).get("enabled", True):
+    content_hash = hashlib.sha256(message.encode("utf-8")).hexdigest()
+    event_key = hashlib.sha256(f"{job.id}|{activity_type}|{content_hash}".encode("utf-8")).hexdigest()
+    should_send = repo.reserve_notification_event(
+        event_key=event_key,
+        job_id=job.id,
+        event_type=activity_type,
+        content_hash=content_hash,
+        now=pack_ready_at,
+    )
+
+    if should_send and profile.get("telegram", {}).get("enabled", True):
         send_message(message)
+        repo.mark_notification_event_sent(event_key=event_key, now=pack_ready_at)
 
     repo.save_application_pack(
         job_id=job.id,
@@ -84,7 +96,7 @@ def save_pack(
         cover_letter=cover_letter,
         detected_at=detected_at,
         pack_ready_at=pack_ready_at,
-        notified_at=pack_ready_at,
+        notified_at=pack_ready_at if should_send else None,
         job_analysis_id=job_analysis_id,
     )
     return True

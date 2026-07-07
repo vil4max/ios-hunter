@@ -2,12 +2,14 @@ from __future__ import annotations
 
 import json
 import sqlite3
+import hashlib
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Any
 
 from database.paths import resolve_db_path
+from parser.normalize import canonicalize_url
 from parser.normalize import role_key
 
 _SCHEMA_SQL = (Path(__file__).with_name("schema.sql")).read_text(encoding="utf-8")
@@ -60,7 +62,11 @@ class JobRecord:
     location: str | None
     remote: str | None
     url: str
+    canonical_url: str
     source: str
+    source_job_id: str | None
+    identity_strategy: str
+    identity_key: str
     published_at: str | None
     updated_at: str
     first_seen: str
@@ -99,18 +105,100 @@ class JobRepository:
 
     def _migrate(self) -> None:
         self._conn.executescript(_SCHEMA_SQL)
+        job_columns = {row[1] for row in self._conn.execute("PRAGMA table_info(jobs)")}
+        if "canonical_url" not in job_columns:
+            self._conn.execute("ALTER TABLE jobs ADD COLUMN canonical_url TEXT NOT NULL DEFAULT ''")
+        if "source_job_id" not in job_columns:
+            self._conn.execute("ALTER TABLE jobs ADD COLUMN source_job_id TEXT")
+        if "identity_strategy" not in job_columns:
+            self._conn.execute("ALTER TABLE jobs ADD COLUMN identity_strategy TEXT NOT NULL DEFAULT 'legacy'")
+        if "identity_key" not in job_columns:
+            self._conn.execute("ALTER TABLE jobs ADD COLUMN identity_key TEXT NOT NULL DEFAULT ''")
+
+        self._conn.execute(
+            "CREATE UNIQUE INDEX IF NOT EXISTS idx_jobs_identity_key ON jobs(identity_key)"
+        )
+
         pack_columns = {row[1] for row in self._conn.execute("PRAGMA table_info(application_packs)")}
         if "job_analysis_id" not in pack_columns:
             self._conn.execute(
                 "ALTER TABLE application_packs ADD COLUMN job_analysis_id INTEGER REFERENCES job_analysis(id)"
             )
+        self._migrate_job_identity()
         self._conn.commit()
+
+    def _migrate_job_identity(self) -> None:
+        rows = self._conn.execute(
+            "SELECT id, company, url, canonical_url, identity_key FROM jobs"
+        ).fetchall()
+        if not rows:
+            return
+
+        updates: list[tuple[str, str, str]] = []
+        for row in rows:
+            current_id = str(row["id"])
+            company = str(row["company"] or "")
+            url = str(row["url"] or "")
+            canon = str(row["canonical_url"] or "") or canonicalize_url(url)
+            desired_key = str(row["identity_key"] or "").strip()
+            if not desired_key:
+                desired_key = (
+                    hashlib.sha256(f"url|{company.strip().lower()}|{canon}".encode("utf-8")).hexdigest()
+                    if canon
+                    else current_id
+                )
+            updates.append((canon, desired_key, current_id))
+
+        self._conn.executemany(
+            "UPDATE jobs SET canonical_url = ?, identity_key = ? WHERE id = ?",
+            updates,
+        )
+
+        id_map_rows = self._conn.execute(
+            "SELECT id, identity_key FROM jobs WHERE identity_key != ''"
+        ).fetchall()
+        remaps = [(str(r["id"]), str(r["identity_key"])) for r in id_map_rows if str(r["id"]) != str(r["identity_key"])]
+        if not remaps:
+            return
+
+        by_new: dict[str, list[str]] = {}
+        for old_id, new_id in remaps:
+            by_new.setdefault(new_id, []).append(old_id)
+
+        def rewrite_refs(old: str, new: str) -> None:
+            tables = [
+                ("history", "job_id"),
+                ("skills", "job_id"),
+                ("job_sources", "job_id"),
+                ("run_activity", "job_id"),
+                ("application_packs", "job_id"),
+                ("applications", "job_id"),
+                ("job_analysis", "job_id"),
+            ]
+            for table, col in tables:
+                self._conn.execute(f"UPDATE {table} SET {col} = ? WHERE {col} = ?", (new, old))
+
+        for new_id, old_ids in by_new.items():
+            keeper_old = old_ids[0]
+            for other_old in old_ids[1:]:
+                rewrite_refs(other_old, new_id)
+                self._conn.execute("DELETE FROM jobs WHERE id = ?", (other_old,))
+
+            rewrite_refs(keeper_old, new_id)
+            self._conn.execute("UPDATE jobs SET id = ? WHERE id = ?", (new_id, keeper_old))
 
     def close(self) -> None:
         self._conn.close()
 
     def get_job_by_hash(self, job_hash: str) -> JobRecord | None:
         row = self._conn.execute("SELECT * FROM jobs WHERE hash = ?", (job_hash,)).fetchone()
+        return self._row_to_job(row) if row else None
+
+    def get_job_by_identity_key(self, identity_key: str) -> JobRecord | None:
+        row = self._conn.execute(
+            "SELECT * FROM jobs WHERE id = ? OR identity_key = ? LIMIT 1",
+            (identity_key, identity_key),
+        ).fetchone()
         return self._row_to_job(row) if row else None
 
     def get_job_by_company_title(self, company: str, title: str) -> JobRecord | None:
@@ -163,15 +251,20 @@ class JobRepository:
         self._conn.execute(
             """
             INSERT INTO jobs (
-                id, company_id, company, title, location, remote, url, source,
+                id, company_id, company, title, location, remote, url, canonical_url, source,
+                source_job_id, identity_strategy, identity_key,
                 published_at, updated_at, first_seen, last_seen, status, description, hash
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(id) DO UPDATE SET
                 title = excluded.title,
                 location = excluded.location,
                 remote = excluded.remote,
                 url = excluded.url,
+                canonical_url = excluded.canonical_url,
                 source = excluded.source,
+                source_job_id = excluded.source_job_id,
+                identity_strategy = excluded.identity_strategy,
+                identity_key = excluded.identity_key,
                 published_at = excluded.published_at,
                 updated_at = excluded.updated_at,
                 last_seen = excluded.last_seen,
@@ -186,7 +279,11 @@ class JobRepository:
                 job.location,
                 job.remote,
                 job.url,
+                job.canonical_url,
                 job.source,
+                job.source_job_id,
+                job.identity_strategy,
+                job.identity_key,
                 job.published_at,
                 job.updated_at,
                 job.first_seen,
@@ -547,6 +644,61 @@ class JobRepository:
         )
         self._conn.commit()
 
+    def reserve_notification_event(
+        self,
+        *,
+        event_key: str,
+        job_id: str,
+        event_type: str,
+        content_hash: str,
+        now: str | None = None,
+        lock_ttl_minutes: int = 10,
+    ) -> bool:
+        now = now or utc_now()
+        cutoff = (
+            datetime.fromisoformat(now) - timedelta(minutes=lock_ttl_minutes)
+        ).replace(microsecond=0).isoformat()
+        self._conn.execute("BEGIN IMMEDIATE")
+        self._conn.execute(
+            """
+            INSERT INTO notification_events (event_key, job_id, event_type, content_hash, created_at)
+            VALUES (?, ?, ?, ?, ?)
+            ON CONFLICT(event_key) DO NOTHING
+            """,
+            (event_key, job_id, event_type, content_hash, now),
+        )
+        row = self._conn.execute(
+            "SELECT locked_at, sent_at FROM notification_events WHERE event_key = ?",
+            (event_key,),
+        ).fetchone()
+        if row is None:
+            self._conn.commit()
+            return False
+        if row["sent_at"]:
+            self._conn.commit()
+            return False
+
+        cursor = self._conn.execute(
+            """
+            UPDATE notification_events
+            SET locked_at = ?
+            WHERE event_key = ?
+              AND sent_at IS NULL
+              AND (locked_at IS NULL OR locked_at < ?)
+            """,
+            (now, event_key, cutoff),
+        )
+        self._conn.commit()
+        return cursor.rowcount == 1
+
+    def mark_notification_event_sent(self, *, event_key: str, now: str | None = None) -> None:
+        now = now or utc_now()
+        self._conn.execute(
+            "UPDATE notification_events SET sent_at = ? WHERE event_key = ?",
+            (now, event_key),
+        )
+        self._conn.commit()
+
     def company_watch_alerted_recently(self, company: str, days: int = 7) -> bool:
         row = self._conn.execute(
             """
@@ -778,7 +930,11 @@ class JobRepository:
             location=row["location"],
             remote=row["remote"],
             url=row["url"],
+            canonical_url=row["canonical_url"],
             source=row["source"],
+            source_job_id=row["source_job_id"],
+            identity_strategy=row["identity_strategy"],
+            identity_key=row["identity_key"],
             published_at=row["published_at"],
             updated_at=row["updated_at"],
             first_seen=row["first_seen"],

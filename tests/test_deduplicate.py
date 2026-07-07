@@ -14,9 +14,9 @@ def test_role_key_ignores_reference_suffix() -> None:
     assert role_key("N-iX", "Lead iOS Engineer (#5458)") == role_key("N-iX", "Lead iOS Engineer")
 
 
-def test_deduplicate_removes_same_hash_vacancies() -> None:
+def test_deduplicate_removes_same_identity_vacancies() -> None:
     first = make_vacancy(url="https://example.com/job/1")
-    duplicate = make_vacancy(url="https://example.com/job/2")
+    duplicate = make_vacancy(url="https://example.com/job/1/?utm_source=telegram&utm_medium=bot")
     other = make_vacancy(title="Staff iOS Engineer", url="https://example.com/job/3")
 
     unique, removed = deduplicate([first, duplicate, other])
@@ -32,29 +32,33 @@ def test_deduplicate_merges_same_role_from_multiple_sources() -> None:
         company="N-iX",
         title="Lead iOS Engineer (#5458)",
         url="https://careers.n-ix.com/jobs/4494044101-ios-leader/",
-        location=None,
-        description=None,
+        source="company",
+        source_job_id="4912838101",
+        location="Ukraine",
+        description="SwiftUI, UIKit, and leadership experience required",
     )
     greenhouse = make_vacancy(
         company="N-iX",
         title="Lead iOS Engineer",
         url="https://careers.n-ix.com/jobs/4912838101?gh_jid=4912838101",
-        location="Ukraine",
-        description="SwiftUI, UIKit, and leadership experience required",
+        source="company",
+        source_job_id="4912838101",
+        location=None,
+        description=None,
     )
 
     unique, removed = deduplicate([swift, greenhouse])
 
     assert removed == 1
     assert len(unique) == 1
-    assert unique[0] is greenhouse
+    assert unique[0] is swift
 
 
 def test_deduplicate_keeps_unique_vacancies() -> None:
     vacancies = [
-        make_vacancy(title="Senior iOS Developer"),
-        make_vacancy(title="Lead iOS Engineer"),
-        make_vacancy(title="Principal iOS Engineer"),
+        make_vacancy(title="Senior iOS Developer", url="https://example.com/job/1"),
+        make_vacancy(title="Lead iOS Engineer", url="https://example.com/job/2"),
+        make_vacancy(title="Principal iOS Engineer", url="https://example.com/job/3"),
     ]
 
     unique, removed = deduplicate(vacancies)

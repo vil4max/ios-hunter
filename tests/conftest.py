@@ -31,13 +31,17 @@ def make_vacancy(**overrides) -> Vacancy:
 
 def make_job_record(vacancy: Vacancy, now: str = "2026-07-02T10:00:00+00:00", **overrides) -> JobRecord:
     record = JobRecord(
-        id=vacancy.hash,
+        id=vacancy.identity_key,
         company=vacancy.company,
         title=vacancy.title,
         location=vacancy.location,
         remote=vacancy.remote,
         url=vacancy.url,
+        canonical_url=vacancy.canonical_url,
         source=vacancy.source,
+        source_job_id=vacancy.source_job_id,
+        identity_strategy=vacancy.identity_strategy or "unknown",
+        identity_key=vacancy.identity_key,
         published_at=None,
         updated_at=now,
         first_seen=now,

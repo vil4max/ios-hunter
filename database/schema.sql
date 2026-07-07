@@ -15,7 +15,11 @@ CREATE TABLE IF NOT EXISTS jobs (
     location TEXT,
     remote TEXT,
     url TEXT NOT NULL,
+    canonical_url TEXT NOT NULL,
     source TEXT NOT NULL,
+    source_job_id TEXT,
+    identity_strategy TEXT NOT NULL,
+    identity_key TEXT NOT NULL UNIQUE,
     published_at TEXT,
     updated_at TEXT NOT NULL,
     first_seen TEXT NOT NULL,
@@ -188,3 +192,15 @@ CREATE TABLE IF NOT EXISTS market_snapshots (
     skill_trends_json TEXT,
     created_at TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS notification_events (
+    event_key TEXT PRIMARY KEY,
+    job_id TEXT NOT NULL REFERENCES jobs(id),
+    event_type TEXT NOT NULL,
+    content_hash TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    locked_at TEXT,
+    sent_at TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_notification_events_job ON notification_events(job_id);

@@ -47,7 +47,11 @@ def _record_from_vacancy(incoming: Vacancy, now: str, job_id: str, status: str =
         location=incoming.location,
         remote=incoming.remote,
         url=incoming.url,
+        canonical_url=incoming.canonical_url,
         source=incoming.source,
+        source_job_id=incoming.source_job_id,
+        identity_strategy=incoming.identity_strategy or "unknown",
+        identity_key=incoming.identity_key or job_id,
         published_at=incoming.published_at.isoformat() if incoming.published_at else None,
         updated_at=now,
         first_seen=now,
@@ -59,7 +63,7 @@ def _record_from_vacancy(incoming: Vacancy, now: str, job_id: str, status: str =
 
 
 def _compare_new(incoming: Vacancy, now: str) -> tuple[JobRecord, JobChange]:
-    job_id = incoming.hash
+    job_id = incoming.identity_key or incoming.hash
     record = _record_from_vacancy(incoming, now, job_id)
     return record, JobChange(job_id=job_id, change_type="new")
 
@@ -72,7 +76,11 @@ def _compare_reopened(existing: JobRecord, incoming: Vacancy, now: str) -> tuple
         location=incoming.location,
         remote=incoming.remote,
         url=incoming.url,
+        canonical_url=incoming.canonical_url,
         source=incoming.source,
+        source_job_id=incoming.source_job_id,
+        identity_strategy=existing.identity_strategy,
+        identity_key=existing.identity_key,
         published_at=existing.published_at,
         updated_at=now,
         first_seen=existing.first_seen,
@@ -107,7 +115,11 @@ def _compare_existing(existing: JobRecord, incoming: Vacancy, now: str) -> tuple
         location=incoming.location or existing.location,
         remote=incoming.remote or existing.remote,
         url=incoming.url,
+        canonical_url=incoming.canonical_url,
         source=incoming.source,
+        source_job_id=incoming.source_job_id or existing.source_job_id,
+        identity_strategy=existing.identity_strategy,
+        identity_key=existing.identity_key,
         published_at=existing.published_at,
         updated_at=now,
         first_seen=existing.first_seen,

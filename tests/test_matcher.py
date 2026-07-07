@@ -1,28 +1,12 @@
 from __future__ import annotations
 
 from apply.matcher import detect_skills, match_job, pick_resume_version
-from database.repository import JobRecord
-from tests.conftest import make_vacancy
+from tests.conftest import make_job_record, make_vacancy
 
 
 def test_match_job_scores_strong_ios_overlap(sample_profile, sample_skills_map) -> None:
     vacancy = make_vacancy(description="SwiftUI, UIKit, async/await, and AI experience")
-    job = JobRecord(
-        id=vacancy.hash,
-        company=vacancy.company,
-        title=vacancy.title,
-        location=vacancy.location,
-        remote=vacancy.remote,
-        url=vacancy.url,
-        source=vacancy.source,
-        published_at=None,
-        updated_at="2026-07-02T10:00:00+00:00",
-        first_seen="2026-07-02T10:00:00+00:00",
-        last_seen="2026-07-02T10:00:00+00:00",
-        status="open",
-        description=vacancy.description,
-        hash=vacancy.hash,
-    )
+    job = make_job_record(vacancy)
 
     result = match_job(job, profile=sample_profile, skills_map=sample_skills_map)
 
@@ -34,22 +18,7 @@ def test_match_job_scores_strong_ios_overlap(sample_profile, sample_skills_map) 
 
 def test_match_job_penalizes_onsite_for_remote_preference(sample_profile, sample_skills_map) -> None:
     vacancy = make_vacancy(remote="onsite", description="SwiftUI and UIKit")
-    job = JobRecord(
-        id=vacancy.hash,
-        company=vacancy.company,
-        title=vacancy.title,
-        location=vacancy.location,
-        remote=vacancy.remote,
-        url=vacancy.url,
-        source=vacancy.source,
-        published_at=None,
-        updated_at="2026-07-02T10:00:00+00:00",
-        first_seen="2026-07-02T10:00:00+00:00",
-        last_seen="2026-07-02T10:00:00+00:00",
-        status="open",
-        description=vacancy.description,
-        hash=vacancy.hash,
-    )
+    job = make_job_record(vacancy)
 
     result = match_job(job, profile=sample_profile, skills_map=sample_skills_map)
 

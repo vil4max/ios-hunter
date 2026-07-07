@@ -12,7 +12,7 @@ def test_compare_job_detects_new_vacancy() -> None:
     record, change = compare_job(None, vacancy, NOW)
 
     assert change.change_type == "new"
-    assert record.id == vacancy.hash
+    assert record.id == vacancy.identity_key
     assert record.status == "open"
 
 
@@ -54,7 +54,7 @@ def test_compare_job_detects_title_update() -> None:
     incoming = make_vacancy(title="Lead iOS Engineer")
     existing = make_job_record(
         make_vacancy(title="Senior iOS Developer"),
-        id=incoming.hash,
+        id=incoming.identity_key,
     )
 
     _, change = compare_job(existing, incoming, NOW)

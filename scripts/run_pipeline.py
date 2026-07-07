@@ -22,7 +22,9 @@ from database.repository import JobRepository, utc_now
 from integrations.monitor_digest import send_monitor_digest
 from integrations.public_reports import generate_companies_report, generate_weekly_report
 from parser.activity import ActivitySummary
-from parser.deduplicate import deduplicate
+import json
+
+from parser.deduplicate import deduplicate_with_report
 from parser.diff import compare_job
 from parser.normalize import Vacancy, normalize_many
 from parser.pipeline_steps import apply_job_change, close_missing_jobs, send_company_watch_alerts
@@ -62,9 +64,9 @@ def process_vacancies(
     packs_sent = 0
 
     for vacancy in vacancies:
-        existing = repo.get_job_by_hash(vacancy.hash)
+        existing = repo.get_job_by_identity_key(vacancy.identity_key)
         if existing is None:
-            existing = repo.get_job_by_company_title(vacancy.company, vacancy.title)
+            existing = repo.get_job_by_hash(vacancy.hash) or repo.get_job_by_company_title(vacancy.company, vacancy.title)
         record, change = compare_job(existing, vacancy, now)
         repo.upsert_job(record)
         seen_ids.add(record.id)
@@ -184,7 +186,14 @@ def main() -> int:
 
         vacancies = normalize_many(raw_jobs)
         enrich_descriptions(vacancies)
-        vacancies, duplicates_removed = deduplicate(vacancies)
+        vacancies, duplicates_removed, dedupe_report = deduplicate_with_report(vacancies)
+        print(
+            json.dumps(
+                {"dedupe": dedupe_report},
+                ensure_ascii=False,
+                sort_keys=True,
+            )
+        )
         now = utc_now()
 
         activity, _, packs_sent = process_vacancies(repo, run_id, vacancies, profile, skills_map, now)
