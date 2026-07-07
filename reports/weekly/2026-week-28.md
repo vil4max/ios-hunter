@@ -25,12 +25,12 @@
 
 ## Notable changes
 
-- EPAM: closed — Software Engineer Ios (2026-07-06)
-- EPAM: closed — Senior Software Engineer Swift (2026-07-06)
-- EPAM: closed — Senior Ios Mobile Engineer Native App Development (2026-07-06)
-- Ciklum: created — Senior iOS Engineer (2026-07-06)
-- Grid Dynamics: created — Mobile Automation QA Engineer (iOS & Android) (2026-07-06)
-- N-iX: created — Lead iOS Engineer (2026-07-06)
+- EPAM: closed — Software Engineer Ios (2026-07-07)
+- EPAM: closed — Senior Software Engineer Swift (2026-07-07)
+- EPAM: closed — Senior Ios Mobile Engineer Native App Development (2026-07-07)
+- Ciklum: created — Senior iOS Engineer (2026-07-07)
+- Grid Dynamics: created — Mobile Automation QA Engineer (iOS & Android) (2026-07-07)
+- N-iX: created — Lead iOS Engineer (2026-07-07)
 - EPAM: created — Senior Software Engineer Swift (2026-07-01)
 - EPAM: created — Senior Ios Mobile Engineer Native App Development (2026-07-01)
 - EPAM: created — Software Engineer Ios (2026-07-01)
