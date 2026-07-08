@@ -10,6 +10,8 @@ from urllib.parse import urljoin, urlparse
 
 import requests
 
+from parser.normalize import is_ios_job
+
 COMPANY_SITE_PATTERN = re.compile(
     r'<div class="site">\s*<a href="([^"]+)" target="_blank" rel="nofollow">',
     re.IGNORECASE | re.DOTALL,
@@ -22,11 +24,6 @@ GREENHOUSE_BOARD_PATTERN = re.compile(
     r"boards-api\.greenhouse\.io/v1/boards/([^/\"']+)/jobs",
     re.IGNORECASE,
 )
-
-
-def _is_ios_title(title: str) -> bool:
-    lowered = title.lower()
-    return "ios" in lowered or "swift" in lowered
 
 
 def extract_company_site_url(profile_html: str) -> str | None:
@@ -71,7 +68,7 @@ def _try_teamtailor_jobs(company: str, site_url: str, session: requests.Session)
         if not isinstance(item, dict):
             continue
         title = str(item.get("title", "")).strip()
-        if not _is_ios_title(title):
+        if not is_ios_job(title):
             continue
         job_url = item.get("url") or (item.get("links") or {}).get("careersite-job-url") or ""
         if not job_url:
@@ -103,7 +100,7 @@ def _try_greenhouse_jobs(company: str, page_html: str, session: requests.Session
     jobs: list[dict[str, Any]] = []
     for item in payload.get("jobs", []):
         title = str(item.get("title", "")).strip()
-        if not _is_ios_title(title):
+        if not is_ios_job(title):
             continue
         job_url = item.get("absolute_url") or item.get("url") or ""
         if not job_url:
@@ -122,7 +119,7 @@ def _scrape_generic_careers(company: str, site_url: str, page_html: str) -> list
         title = unescape(match.group(2).strip())
         if not title:
             continue
-        if not _is_ios_title(title) and not _is_ios_title(href):
+        if not is_ios_job(title) and not is_ios_job(href):
             continue
 
         absolute = urljoin(base_url, href)

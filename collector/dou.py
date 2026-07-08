@@ -11,6 +11,8 @@ from urllib.parse import quote
 
 import requests
 
+from parser.normalize import is_ios_job
+
 from collector.dou_careers import (
     collect_jobs_from_career_site,
     extract_company_site_url,
@@ -18,9 +20,8 @@ from collector.dou_careers import (
 )
 from collector.types import SourceResult
 
-TOP50_PAGE_URL = "https://jobs.dou.ua/top50/"
-TOP50_CSV_BASE_URL = "https://s.dou.ua/files/top50/"
 TOP50_LIST_URL = "https://jobs.dou.ua/top50/"
+TOP50_CSV_BASE_URL = "https://s.dou.ua/files/top50/"
 IOS_FEED_URL = "https://jobs.dou.ua/vacancies/feeds/?search=iOS"
 SWIFT_FEED_URL = "https://jobs.dou.ua/vacancies/feeds/?search=Swift"
 USER_AGENT = "ios-hunter/2.0 (+https://github.com/)"
@@ -88,11 +89,6 @@ SLUG_OVERRIDES: dict[str, str] = {
 }
 
 
-def _is_ios_title(title: str) -> bool:
-    lowered = title.lower()
-    return "ios" in lowered or "swift" in lowered
-
-
 def _normalize_name(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "", value.lower())
 
@@ -109,7 +105,7 @@ def _fetch_text(url: str, session: requests.Session) -> str:
 
 
 def discover_top50_csv_filename(session: requests.Session) -> str:
-    page = _fetch_text(TOP50_PAGE_URL, session)
+    page = _fetch_text(TOP50_LIST_URL, session)
     scripts = re.findall(r"built\.v\d+\.[a-f0-9]+\.js", page)
     for script in reversed(scripts):
         bundle = _fetch_text(f"https://s.dou.ua/build/{script}", session)
@@ -179,7 +175,7 @@ def _parse_company_vacancies(html: str, company: str) -> list[dict[str, Any]]:
     jobs: list[dict[str, Any]] = []
     for match in VACANCY_LINK_PATTERN.finditer(html):
         url, vacancy_id, title = match.group(1), match.group(2), unescape(match.group(3).strip())
-        if not _is_ios_title(title):
+        if not is_ios_job(title):
             continue
         jobs.append(
             {
@@ -201,7 +197,7 @@ def _parse_rss_items(xml_text: str, matchers: list[tuple[str, str]]) -> list[dic
         link = (item.findtext("link") or "").strip()
         if not title or not link:
             continue
-        if not _is_ios_title(title):
+        if not is_ios_job(title):
             continue
         company_match = COMPANY_FROM_TITLE_PATTERN.search(title)
         if not company_match:

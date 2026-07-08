@@ -8,6 +8,8 @@ from typing import Any
 
 import requests
 
+from parser.normalize import is_ios_job
+
 from collector.dou import collect_dou_top50
 from collector.types import CollectResult, SourceResult, SwiftCollectorMeta
 from integrations.http_client import fetch_json
@@ -43,11 +45,6 @@ def load_swift_collector_meta(path: str | Path) -> SwiftCollectorMeta | None:
     )
 
 
-def _is_ios_title(title: str) -> bool:
-    lowered = title.lower()
-    return "ios" in lowered or "swift" in lowered
-
-
 def _source_ok(company: str, source_url: str, jobs: list[dict[str, Any]], started: float) -> SourceResult:
     elapsed = int((time.perf_counter() - started) * 1000)
     return SourceResult(
@@ -81,7 +78,7 @@ def collect_teamtailor(company: str, feed_url: str) -> SourceResult:
         jobs = []
         for item in payload.get("jobs", payload if isinstance(payload, list) else []):
             title = str(item.get("title", ""))
-            if not _is_ios_title(title):
+            if not is_ios_job(title):
                 continue
             jobs.append(
                 {
@@ -113,7 +110,7 @@ def collect_greenhouse(company: str, board_slug: str) -> SourceResult:
         jobs: list[dict[str, Any]] = []
         for item in payload.get("jobs", []):
             title = str(item.get("title", ""))
-            if not _is_ios_title(title):
+            if not is_ios_job(title):
                 continue
             jobs.append(
                 {
@@ -146,7 +143,7 @@ def collect_ashby(company: str, board_slug: str) -> SourceResult:
         jobs: list[dict[str, Any]] = []
         for item in payload.get("jobs", []):
             title = str(item.get("title", ""))
-            if not _is_ios_title(title):
+            if not is_ios_job(title):
                 continue
             jobs.append(
                 {
@@ -177,7 +174,7 @@ def collect_lever(company: str, board_slug: str) -> SourceResult:
         jobs: list[dict[str, Any]] = []
         for item in items:
             title = str(item.get("text", ""))
-            if not _is_ios_title(title):
+            if not is_ios_job(title):
                 continue
             jobs.append(
                 {
@@ -225,7 +222,7 @@ def collect_workable_jobs_md(company: str, account_slug: str) -> SourceResult:
                 continue
 
             title = parts[0]
-            if not _is_ios_title(title):
+            if not is_ios_job(title):
                 continue
 
             location = parts[2]
