@@ -7,4 +7,4 @@ Failed companies:
 - JetSoftPro
 
 Duplicates removed: 2
-Average runtime:    6m 1s
+Average runtime:    6m 29s

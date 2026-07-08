@@ -1,11 +1,11 @@
 # iOS Market Report — 2026-week-28
 
 ## Summary
-- New jobs: 27
+- New jobs: 26
 - Closed jobs: 5
 - Reopened: 0
-- Updated: 0
-- Currently open: 22
+- Updated: 1
+- Currently open: 21
 - Remote: 2 | Hybrid: 0 | Onsite: 0
 
 ## Top Hiring Companies
@@ -34,4 +34,4 @@
 - Uklon: created — iOS Engineer Senior (Rider Team) (2026-07-08)
 - Playtech: created — iOS Developer (2026-07-08)
 - Grid Dynamics: created — Mobile Automation QA Engineer (iOS & Android) (2026-07-08)
-- Ciklum: created — Senior iOS Engineer (2026-07-08)
+- Genesis: created — IOS Developer (2026-07-08)
