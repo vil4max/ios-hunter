@@ -10,6 +10,7 @@
 | Andersen | 1 | 2 | 6 |
 | DataArt | 1 | 2 | 6 |
 | Genesis | 1 | 1 | 0 |
+| Intellias | 1 | 1 | 0 |
 | KissMyApps | 1 | 1 | 0 |
 | Levi9 | 1 | 1 | 0 |
 | Onix Systems | 1 | 1 | 0 |

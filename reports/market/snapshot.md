@@ -1,7 +1,7 @@
 # iOS Market Snapshot
 
-- Open jobs: 21
-- New this week: 26
+- Open jobs: 22
+- New this week: 27
 - Closed this week: 5
 - Remote: 2 | Hybrid: 0 | Onsite: 0
 

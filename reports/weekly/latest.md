@@ -1,11 +1,11 @@
 # iOS Market Report — 2026-week-28
 
 ## Summary
-- New jobs: 26
+- New jobs: 27
 - Closed jobs: 5
 - Reopened: 0
-- Updated: 1
-- Currently open: 21
+- Updated: 0
+- Currently open: 22
 - Remote: 2 | Hybrid: 0 | Onsite: 0
 
 ## Top Hiring Companies
@@ -25,13 +25,13 @@
 
 ## Notable changes
 
+- Uklon: created — iOS Engineer Senior (Rider Team) (2026-07-08)
 - Uklon: created — iOS Engineer Senior (Finance Team) (2026-07-08)
 - Andersen: closed — iOS Developer (2026-07-08)
 - DataArt: closed — Senior iOS Developer, Mobile Banking (2026-07-08)
 - EPAM: closed — Software Engineer Ios (2026-07-08)
 - EPAM: closed — Senior Software Engineer Swift (2026-07-08)
 - EPAM: closed — Senior Ios Mobile Engineer Native App Development (2026-07-08)
-- Uklon: created — iOS Engineer Senior (Rider Team) (2026-07-08)
 - Playtech: created — iOS Developer (2026-07-08)
 - Grid Dynamics: created — Mobile Automation QA Engineer (iOS & Android) (2026-07-08)
 - Genesis: created — IOS Developer (2026-07-08)
