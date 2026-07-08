@@ -8,6 +8,7 @@ from typing import Any
 
 import requests
 
+from collector.dou import collect_dou_top50
 from collector.types import CollectResult, SourceResult, SwiftCollectorMeta
 from integrations.http_client import fetch_json
 
@@ -276,4 +277,5 @@ def collect_all(swift_export_path: str | Path = "database/swift_export.json") ->
     results.append(collect_workable_jobs_md("Intersog", "intersog-na"))
     results.append(collect_workable_jobs_md("Romexsoft", "romexsoft"))
     results.append(collect_workable_jobs_md("SupportYourApp", "supportyourapp"))
+    results.append(collect_dou_top50())
     return CollectResult(source_results=results, swift_meta=swift_meta)

@@ -54,6 +54,31 @@ def test_deduplicate_merges_same_role_from_multiple_sources() -> None:
     assert unique[0] is swift
 
 
+def test_deduplicate_merges_same_role_without_shared_source_job_id() -> None:
+    swift = make_vacancy(
+        company="N-iX",
+        title="Lead iOS Engineer (#5458)",
+        url="https://careers.n-ix.com/jobs/4494044101-ios-leader/",
+        source="company",
+        location="Ukraine",
+        description="SwiftUI, UIKit, and leadership experience required",
+    )
+    greenhouse = make_vacancy(
+        company="N-iX",
+        title="Lead iOS Engineer",
+        url="https://careers.n-ix.com/jobs/4912838101?gh_jid=4912838101",
+        source="company",
+        source_job_id="4912838101",
+        description="Greenhouse description",
+    )
+
+    unique, removed = deduplicate([swift, greenhouse])
+
+    assert removed == 1
+    assert len(unique) == 1
+    assert unique[0].title.startswith("Lead iOS Engineer")
+
+
 def test_deduplicate_keeps_unique_vacancies() -> None:
     vacancies = [
         make_vacancy(title="Senior iOS Developer", url="https://example.com/job/1"),
