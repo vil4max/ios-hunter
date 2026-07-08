@@ -103,6 +103,23 @@ class JobRepository:
         self._conn.execute("PRAGMA foreign_keys = ON")
         self._migrate()
 
+    def _repair_identity_key_uniqueness(self) -> None:
+        self._conn.execute("UPDATE jobs SET identity_key = id WHERE identity_key IS NULL OR identity_key = ''")
+        self._conn.execute(
+            """
+            WITH dupes AS (
+                SELECT identity_key
+                FROM jobs
+                WHERE identity_key != ''
+                GROUP BY identity_key
+                HAVING COUNT(*) > 1
+            )
+            UPDATE jobs
+            SET identity_key = id
+            WHERE identity_key IN (SELECT identity_key FROM dupes)
+            """
+        )
+
     def _migrate(self) -> None:
         self._conn.executescript(_SCHEMA_SQL)
         job_columns = {row[1] for row in self._conn.execute("PRAGMA table_info(jobs)")}
@@ -115,16 +132,16 @@ class JobRepository:
         if "identity_key" not in job_columns:
             self._conn.execute("ALTER TABLE jobs ADD COLUMN identity_key TEXT NOT NULL DEFAULT ''")
 
-        self._conn.execute(
-            "CREATE UNIQUE INDEX IF NOT EXISTS idx_jobs_identity_key ON jobs(identity_key)"
-        )
-
         pack_columns = {row[1] for row in self._conn.execute("PRAGMA table_info(application_packs)")}
         if "job_analysis_id" not in pack_columns:
             self._conn.execute(
                 "ALTER TABLE application_packs ADD COLUMN job_analysis_id INTEGER REFERENCES job_analysis(id)"
             )
         self._migrate_job_identity()
+        self._repair_identity_key_uniqueness()
+        self._conn.execute(
+            "CREATE UNIQUE INDEX IF NOT EXISTS idx_jobs_identity_key ON jobs(identity_key)"
+        )
         self._conn.commit()
 
     def _migrate_job_identity(self) -> None:
