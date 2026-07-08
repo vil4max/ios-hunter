@@ -171,39 +171,6 @@ class JobRepository:
             updates,
         )
 
-        id_map_rows = self._conn.execute(
-            "SELECT id, identity_key FROM jobs WHERE identity_key != ''"
-        ).fetchall()
-        remaps = [(str(r["id"]), str(r["identity_key"])) for r in id_map_rows if str(r["id"]) != str(r["identity_key"])]
-        if not remaps:
-            return
-
-        by_new: dict[str, list[str]] = {}
-        for old_id, new_id in remaps:
-            by_new.setdefault(new_id, []).append(old_id)
-
-        def rewrite_refs(old: str, new: str) -> None:
-            tables = [
-                ("history", "job_id"),
-                ("skills", "job_id"),
-                ("job_sources", "job_id"),
-                ("run_activity", "job_id"),
-                ("application_packs", "job_id"),
-                ("applications", "job_id"),
-                ("job_analysis", "job_id"),
-            ]
-            for table, col in tables:
-                self._conn.execute(f"UPDATE {table} SET {col} = ? WHERE {col} = ?", (new, old))
-
-        for new_id, old_ids in by_new.items():
-            keeper_old = old_ids[0]
-            for other_old in old_ids[1:]:
-                rewrite_refs(other_old, new_id)
-                self._conn.execute("DELETE FROM jobs WHERE id = ?", (other_old,))
-
-            rewrite_refs(keeper_old, new_id)
-            self._conn.execute("UPDATE jobs SET id = ? WHERE id = ?", (new_id, keeper_old))
-
     def close(self) -> None:
         self._conn.close()
 
