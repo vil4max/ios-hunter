@@ -1,11 +1,10 @@
 Collector Health
 
-Companies:    51/53 OK
-Direct feeds: 11/11 OK
+Companies:    54/55 OK
+Direct feeds: 12/12 OK
 
 Failed companies:
 - JetSoftPro
-- Sombra
 
-Duplicates removed: 1
-Average runtime:    1m 55s
+Duplicates removed: 3
+Average runtime:    5m 49s
