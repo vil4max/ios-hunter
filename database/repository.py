@@ -105,18 +105,21 @@ class JobRepository:
 
     def _repair_identity_key_uniqueness(self) -> None:
         self._conn.execute("UPDATE jobs SET identity_key = id WHERE identity_key IS NULL OR identity_key = ''")
+        # Keep one "canonical" row per identity_key (so future incoming jobs still match by identity_key),
+        # and only rewrite the extra duplicates to unique per-row keys.
         self._conn.execute(
             """
-            WITH dupes AS (
-                SELECT identity_key
+            WITH ranked AS (
+                SELECT
+                    id,
+                    identity_key,
+                    ROW_NUMBER() OVER (PARTITION BY identity_key ORDER BY id) AS rn
                 FROM jobs
                 WHERE identity_key != ''
-                GROUP BY identity_key
-                HAVING COUNT(*) > 1
             )
             UPDATE jobs
             SET identity_key = id
-            WHERE identity_key IN (SELECT identity_key FROM dupes)
+            WHERE id IN (SELECT id FROM ranked WHERE rn > 1)
             """
         )
 
