@@ -132,6 +132,14 @@ enum JobSources {
             WorkableWidgetSource(company: "Geniusee", tier: .product, accountSlug: "geniusee", http: http),
             YalantisSource(http: http),
             HTMLRegexJobSource(
+                company: "Xenoss",
+                tier: .tier3,
+                listURL: URL(string: "https://xenoss.io/careers")!,
+                baseURL: URL(string: "https://xenoss.io/")!,
+                pattern: #"https://xenoss\.io/careers/([a-z0-9-]+)/?"#,
+                http: http
+            ),
+            HTMLRegexJobSource(
                 company: "Inverita",
                 tier: .tier3,
                 listURL: URL(string: "https://inveritasoft.com/vacancies")!,
@@ -146,6 +154,7 @@ enum JobSources {
             SigmaSource(http: http),
             InfopulseSource(http: http),
             AshbyJobBoardSource(company: "Genesis", tier: .product, boardSlug: "Genesis", http: http),
+            BreezyHRSource(company: "Genesis", tier: .product, portalHost: "gen-tech.breezy.hr", http: http),
             AshbyJobBoardSource(company: "SKELAR", tier: .product, boardSlug: "SKELAR", http: http),
             MacPawSource(http: http),
             AshbyJobBoardSource(company: "Ajax Systems", tier: .product, boardSlug: "Ajax", http: http),
