@@ -25,13 +25,13 @@
 
 ## Notable changes
 
-- Uklon: created — iOS Engineer Senior (Rider Team) (2026-07-08)
 - Uklon: created — iOS Engineer Senior (Finance Team) (2026-07-08)
 - Andersen: closed — iOS Developer (2026-07-08)
 - DataArt: closed — Senior iOS Developer, Mobile Banking (2026-07-08)
 - EPAM: closed — Software Engineer Ios (2026-07-08)
 - EPAM: closed — Senior Software Engineer Swift (2026-07-08)
 - EPAM: closed — Senior Ios Mobile Engineer Native App Development (2026-07-08)
+- Uklon: created — iOS Engineer Senior (Rider Team) (2026-07-08)
 - Playtech: created — iOS Developer (2026-07-08)
 - Grid Dynamics: created — Mobile Automation QA Engineer (iOS & Android) (2026-07-08)
 - Ciklum: created — Senior iOS Engineer (2026-07-08)
