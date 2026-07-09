@@ -110,7 +110,7 @@ def process_actionable_job(
     if match.score < prefilter_threshold:
         return False
 
-    if activity_type == "new" and repo.was_notified_for_role(job.company, job.title, "new"):
+    if repo.was_ever_notified_for_role(job.company, job.title):
         return False
 
     analyzer = JobAnalyzer(base_dir=root)

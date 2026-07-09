@@ -117,7 +117,7 @@ def process_rules_actionable(
     if match.score < threshold:
         return False
 
-    if activity_type == "new" and repo.was_notified_for_role(job.company, job.title, "new"):
+    if repo.was_ever_notified_for_role(job.company, job.title):
         return False
 
     message = format_rules_pack_message(job, activity_type, match, cover_letter)

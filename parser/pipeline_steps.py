@@ -88,14 +88,13 @@ def send_company_watch_alerts(repo: JobRepository, root: Path) -> int:
     report_path.parent.mkdir(parents=True, exist_ok=True)
     report_path.write_text(company_watch_report + "\n", encoding="utf-8")
 
-    if not (os.environ.get("TELEGRAM_TOKEN") and os.environ.get("TELEGRAM_CHAT_ID")):
-        return len(company_alerts)
-
+    telegram_ready = bool(os.environ.get("TELEGRAM_TOKEN") and os.environ.get("TELEGRAM_CHAT_ID"))
     sent = 0
     for alert in company_alerts:
-        if repo.company_watch_alerted_recently(alert.company):
+        if repo.company_watch_alerted_before(alert.company):
             continue
-        send_message(render_company_watch([alert]))
+        if telegram_ready:
+            send_message(render_company_watch([alert]))
         repo.record_company_watch_alert(alert.company)
         sent += 1
     return sent

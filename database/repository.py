@@ -207,16 +207,36 @@ class JobRepository:
             FROM application_packs ap
             JOIN jobs j ON j.id = ap.job_id
             WHERE ap.activity_type = ?
-
-            UNION ALL
-
-            SELECT company, title
-            FROM run_activity
-            WHERE activity_type = ?
             """,
-            (activity_type, activity_type),
+            (activity_type,),
         ).fetchall()
         return any(role_key(row["company"], row["title"]) == target for row in rows)
+
+    def was_ever_notified_for_role(self, company: str, title: str) -> bool:
+        target = role_key(company, title)
+        rows = self._conn.execute(
+            """
+            SELECT j.company AS company, j.title AS title
+            FROM application_packs ap
+            JOIN jobs j ON j.id = ap.job_id
+            WHERE ap.notified_at IS NOT NULL
+
+            UNION
+
+            SELECT j.company AS company, j.title AS title
+            FROM notification_events ne
+            JOIN jobs j ON j.id = ne.job_id
+            WHERE ne.sent_at IS NOT NULL
+            """
+        ).fetchall()
+        return any(role_key(row["company"], row["title"]) == target for row in rows)
+
+    def company_watch_alerted_before(self, company: str) -> bool:
+        row = self._conn.execute(
+            "SELECT 1 FROM watch_alerts WHERE company = ? LIMIT 1",
+            (company,),
+        ).fetchone()
+        return row is not None
 
     def get_job_by_id(self, job_id: str) -> JobRecord | None:
         row = self._conn.execute("SELECT * FROM jobs WHERE id = ?", (job_id,)).fetchone()
