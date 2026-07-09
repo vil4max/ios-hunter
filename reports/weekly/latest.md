@@ -25,13 +25,13 @@
 
 ## Notable changes
 
-- N-iX: created — Middle iOS Engineer (2026-07-09)
-- N-iX: created — Lead iOS Engineer (2026-07-09)
-- Intellias: created — Senior IOS Engineer (2026-07-09)
-- Genesis: created — IOS Developer (2026-07-09)
-- Grid Dynamics: created — Mobile Automation QA Engineer (iOS & Android) (2026-07-09)
 - Uklon: created — iOS Engineer Senior (Rider Team) (2026-07-09)
 - Andersen: closed — iOS Developer (2026-07-09)
 - DataArt: closed — Senior iOS Developer, Mobile Banking (2026-07-09)
 - EPAM: closed — Software Engineer Ios (2026-07-09)
 - EPAM: closed — Senior Software Engineer Swift (2026-07-09)
+- EPAM: closed — Senior Ios Mobile Engineer Native App Development (2026-07-09)
+- Grid Dynamics: created — Mobile Automation QA Engineer (iOS & Android) (2026-07-09)
+- Genesis: created — IOS Developer (2026-07-09)
+- Intellias: created — Senior IOS Engineer (2026-07-09)
+- N-iX: created — Lead iOS Engineer (2026-07-09)
