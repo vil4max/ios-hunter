@@ -203,17 +203,20 @@ class JobRepository:
         target = role_key(company, title)
         rows = self._conn.execute(
             """
-            SELECT j.company, j.title
+            SELECT j.company AS company, j.title AS title
             FROM application_packs ap
             JOIN jobs j ON j.id = ap.job_id
             WHERE ap.activity_type = ?
+
+            UNION ALL
+
+            SELECT company, title
+            FROM run_activity
+            WHERE activity_type = ?
             """,
-            (activity_type,),
+            (activity_type, activity_type),
         ).fetchall()
-        for row in rows:
-            if role_key(row["company"], row["title"]) == target:
-                return True
-        return False
+        return any(role_key(row["company"], row["title"]) == target for row in rows)
 
     def get_job_by_id(self, job_id: str) -> JobRecord | None:
         row = self._conn.execute("SELECT * FROM jobs WHERE id = ?", (job_id,)).fetchone()
