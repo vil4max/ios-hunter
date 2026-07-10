@@ -6,5 +6,5 @@ Direct feeds: 12/12 OK
 Failed companies:
 - JetSoftPro
 
-Duplicates removed: 2
-Average runtime:    6m 26s
+Duplicates removed: 3
+Average runtime:    5m 32s

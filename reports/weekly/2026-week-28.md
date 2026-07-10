@@ -25,12 +25,12 @@
 
 ## Notable changes
 
+- Uklon: created — iOS Engineer Senior (Rider Team) (2026-07-10)
 - Andersen: closed — iOS Developer (2026-07-10)
 - DataArt: closed — Senior iOS Developer, Mobile Banking (2026-07-10)
 - EPAM: closed — Software Engineer Ios (2026-07-10)
 - EPAM: closed — Senior Software Engineer Swift (2026-07-10)
 - EPAM: closed — Senior Ios Mobile Engineer Native App Development (2026-07-10)
-- Uklon: created — iOS Engineer Senior (Rider Team) (2026-07-10)
 - Grid Dynamics: created — Mobile Automation QA Engineer (iOS & Android) (2026-07-10)
 - Genesis: created — IOS Developer (2026-07-10)
 - Intellias: created — Senior IOS Engineer (2026-07-10)
