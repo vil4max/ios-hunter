@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from integrations.notify import format_vacancies_message, resolve_source
+from integrations.notify import format_empty_report, format_vacancies_message, resolve_source
 from tests.conftest import make_vacancy
 
 _KYIV = ZoneInfo("Europe/Kyiv")
@@ -20,6 +20,14 @@ def test_format_header_count_and_kyiv_time() -> None:
     message = format_vacancies_message([vacancy], now=now)
     assert message is not None
     assert message.startswith("Вакансий 1 · 2026-07-10 11:47")
+
+
+def test_format_empty_report_kyiv_time_and_checked() -> None:
+    now = datetime(2026, 7, 10, 18, 0, tzinfo=_KYIV)
+    assert format_empty_report(checked=21, now=now) == (
+        "Новых вакансий нет · 2026-07-10 18:00\n"
+        "Проверено: 21"
+    )
 
 
 def test_format_includes_title_company_source_url() -> None:

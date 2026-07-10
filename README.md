@@ -22,7 +22,14 @@ One Telegram message per collect run with all newly detected vacancies:
    https://careers.epam.com/en/vacancy/ios-1
 ```
 
-Nothing else is sent. No match scores, cover letters, AI summaries, or market reports. If there are no new vacancies, nothing is sent.
+If there are no new vacancies, a short report is still sent:
+
+```
+Новых вакансий нет · 2026-07-10 18:00
+Проверено: 21
+```
+
+Nothing else is sent. No match scores, cover letters, AI summaries, or market reports.
 
 DOU and Djinni board browsing stays in their native apps. This repo watches company career pages (and related DOU Top 50 career-site discovery).
 
@@ -50,7 +57,7 @@ Python sources (boards / DOU careers)
         ↓
 Normalize + iOS/Swift filter → Deduplicate
         ↓
-Seen store (database/seen.json) → Telegram (new URLs only)
+Seen store (database/seen.json) → Telegram (new URLs, or empty report)
 ```
 
 Seen state is committed to git after each collect so Actions cache loss cannot resend every vacancy.

@@ -94,9 +94,21 @@ def format_vacancies_message(
     return "\n\n".join(blocks)
 
 
+def format_empty_report(*, checked: int, now: datetime | None = None) -> str:
+    stamp = (now or datetime.now(_KYIV)).astimezone(_KYIV)
+    return (
+        f"Новых вакансий нет · {stamp.strftime('%Y-%m-%d %H:%M')}\n"
+        f"Проверено: {checked}"
+    )
+
+
 def notify_new_vacancies(vacancies: list[Vacancy], *, now: datetime | None = None) -> int:
     message = format_vacancies_message(vacancies, now=now)
     if message is None:
         return 0
     send_message(message)
     return len(_dedupe_vacancies(vacancies))
+
+
+def notify_empty_report(*, checked: int, now: datetime | None = None) -> None:
+    send_message(format_empty_report(checked=checked, now=now))

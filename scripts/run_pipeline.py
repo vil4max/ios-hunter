@@ -21,7 +21,7 @@ from database.seen import (
     seen_key,
     utc_now,
 )
-from integrations.notify import notify_new_vacancies
+from integrations.notify import notify_empty_report, notify_new_vacancies
 from parser.deduplicate import deduplicate_with_report
 from parser.normalize import Vacancy, normalize_many
 
@@ -57,9 +57,17 @@ def process_new_vacancies(
         fresh.append(vacancy)
 
     sent = 0
-    if fresh and not seed_only:
+    if seed_only:
+        pass
+    elif fresh:
         try:
             sent = notify_new_vacancies(fresh)
+        except Exception as error:
+            print(f"Telegram send failed: {error}", file=sys.stderr)
+            return 0, 0
+    else:
+        try:
+            notify_empty_report(checked=len(vacancies))
         except Exception as error:
             print(f"Telegram send failed: {error}", file=sys.stderr)
             return 0, 0
