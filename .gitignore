@@ -31,12 +31,12 @@ playground.xcworkspace
 
 .build/
 
-database/jobs.db
 database/swift_export.json
+database/jobs.db
 database/jobs.json
 database/history.json
 
-# Local/runtime SQLite (canonical CI path: database/jobs.db)
+# Legacy local SQLite
 /data/
 *.sqlite
 __pycache__/

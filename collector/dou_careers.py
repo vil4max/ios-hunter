@@ -4,7 +4,6 @@ import html
 import json
 import re
 from html import unescape
-from pathlib import Path
 from typing import Any
 from urllib.parse import urljoin, urlparse
 
@@ -163,28 +162,3 @@ def collect_jobs_from_career_site(
 
     return list(jobs_by_url.values())
 
-
-def render_career_sites_report(sites: list[dict[str, str]]) -> str:
-    lines = [
-        "# DOU Top 50 — Career Sites",
-        "",
-        "Official career URLs discovered from DOU company profile pages.",
-        "",
-        "| Company | DOU profile | Career site |",
-        "| --- | --- | --- |",
-    ]
-    for row in sites:
-        lines.append(
-            f"| {row['company']} | {row['dou_url']} | {row['career_url']} |"
-        )
-    if not sites:
-        lines.append("| — | — | — |")
-    return "\n".join(lines) + "\n"
-
-
-def write_career_sites_report(sites: list[dict[str, str]], root: Path | None = None) -> Path:
-    repo_root = root or Path(__file__).resolve().parents[1]
-    output = repo_root / "reports/companies/dou-careers.md"
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(render_career_sites_report(sites), encoding="utf-8")
-    return output

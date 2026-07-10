@@ -115,8 +115,7 @@ def test_collect_dou_top50_merges_company_pages_and_feeds() -> None:
     with patch("collector.dou.requests.Session", return_value=FakeSession()):
         with patch("collector.dou.load_top50_companies", return_value=companies):
             with patch("collector.dou._fetch_text", return_value=rss_xml):
-                with patch("collector.dou.write_career_sites_report"):
-                    result = collect_dou_top50()
+                result = collect_dou_top50()
 
     assert result.status == "healthy"
     assert result.source_id == "dou-top50"

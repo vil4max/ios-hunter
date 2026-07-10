@@ -3,72 +3,66 @@
 ## Overview
 
 ```
-GitHub Actions (hourly Sun 18:00–21:00 + Mon–Fri 08:00–18:00 Kyiv)
+GitHub Actions (hourly)
         │
-   Swift Collector (~52 company sources)
+   Swift Collector (company career pages)
         │ database/swift_export.json
    Python Pipeline
         │
-   ┌────┴────┬──────────┬────────────┐
-   │         │          │            │
- jobs.db  Activity   Health    Application Pack
-   │         │          │            │
- Reports  Markdown   Markdown    Telegram
+   Normalize → Deduplicate → Seen store → Telegram
 ```
-
-## Single database
-
-**`database/jobs.db`** is the only source of truth. Swift does not write to SQLite — it only exports raw vacancies to `database/swift_export.json`. Python normalizes, deduplicates, stores history, and generates reports.
-
-SQLite is cached in GitHub Actions (not committed). Job data and history stay in the cache only.
 
 ## Pipeline
 
-1. Swift collector fetches iOS vacancies from company career pages
-2. Export deduplicated jobs to `database/swift_export.json`
-3. Python reads Swift export + Teamtailor JSON feeds
-4. Python upserts into `database/jobs.db`, detects New/Updated/Closed/Reopened
-5. For actionable jobs above match threshold: Job Intelligence (or rules fallback) → Telegram
-6. Write Run Activity, Health, Market, Weekly, and Company reports
-7. Auto-commit reports to `main` (private repository)
+1. Swift scrapers fetch iOS / Swift vacancies from company career pages and write `database/swift_export.json`.
+2. Python loads the Swift export plus additional Python sources (job boards, DOU Top 50 career-site discovery).
+3. Vacancies are normalized and filtered to iOS / Swift titles (or descriptions).
+4. In-run deduplication collapses identical identity keys and same company+title roles.
+5. Each vacancy’s canonical URL is checked against `database/seen.json`.
+6. Unseen vacancies are sent to Telegram as `title` + newline + `url`, then recorded in the seen store.
+7. Collect workflow commits `database/seen.json` when it changes (`[skip ci]`).
 
-## Schedule
+## State
 
-- **Collect:** Sunday 18:00–21:00 + Monday–Friday 08:00–18:00 Europe/Kyiv
-- **Weekly report:** Monday 09:00 Europe/Kyiv
-- **AI summary (optional):** Monday 09:30, only if `OPENAI_API_KEY` or `GEMINI_API_KEY` is set
+**`database/seen.json`** is the durable seen-vacancy store (committed to git).
 
-GitHub Actions cron uses UTC. Collect: `0 15-18 * * 0` (Sun EEST) and `0 5-15 * * 1-5` (weekdays). In winter (EET) local times shift by +1 hour.
+```json
+{
+  "https://example.com/jobs/123": {
+    "title": "Senior iOS Engineer",
+    "company": "Acme",
+    "first_seen": "2026-07-10T10:00:00+00:00"
+  }
+}
+```
+
+There is no SQLite database. Identity is the canonical vacancy URL.
+
+Bootstrap options:
+
+- Migrate URLs from a leftover `database/jobs.db` on first empty seen load.
+- Or run with `SEED_SEEN_ONLY=1` / `--seed-only` to mark the current market as seen without Telegram.
 
 ## Modules
 
 | Module | Role |
 |--------|------|
 | `Sources/JobHunter/` | Swift scrapers → `swift_export.json` |
-| `collector/` | Python adapters (Swift export + Teamtailor feeds) |
-| `parser/` | Normalize, dedup, diff, activity summary |
-| `apply/` | Match score, Job Intelligence, application pack |
-| `database/` | SQLite schema and repository (`jobs.db`) |
-| `integrations/` | Telegram, weekly/companies reports |
-| `crm/` | Application tracking |
-| `statistics/` | Market intelligence |
-| `ai/` | Optional AI weekly summary and Job Intelligence |
+| `collector/` | Python adapters (Swift export, boards, DOU careers) |
+| `parser/` | Normalize, iOS filter, dedupe |
+| `database/seen.py` | Load / save / migrate seen store |
+| `integrations/` | Telegram send + message format |
+| `scripts/run_pipeline.py` | Collect → notify new vacancies |
 
-## Design Principles
+## Design principles
 
 - Zero-cost hosting (GitHub Actions + private repo)
-- No backend server
-- One SQLite database
-- Telegram as the primary output channel
-- DOU/Djinni tracked manually via iPhone apps (not collected here)
-- AI optional (rules-based matching first)
-- Compensation preferences are kept private and are not part of vacancy filtering
+- No backend server, no LLM
+- Telegram as the only output channel
+- Minimal durable state: have I already sent this URL?
+- Hourly trigger on ubuntu dispatches macOS Collect (macOS cron is unreliable)
 
-## Operations (private repo)
+## Schedule
 
-- **State:** `jobs.db` only in Actions cache; reports in git are derived snapshots, not source of truth.
-- **Secrets:** `TELEGRAM_*` required; `GEMINI_API_KEY` for Job Intelligence in collect workflow (`AI_PROVIDER=gemini`, `AI_MODEL=gemini-2.0-flash`).
-- **Manual collect:** Actions → **Collect iOS Jobs** → Run workflow.
-- **Config changes:** edit `config/profile.yaml` / `career_facts.yaml` → push → run Collect manually once.
-- **Matcher thresholds** (`profile.yaml`): `prefilter_threshold: 45` (LLM gate), `match_threshold: 60` (Telegram notify).
-- **Pages / RSS:** removed; no public artifacts.
+- **Collect:** every hour via `hourly-trigger.yml` → `workflow_dispatch` of Collect
+- **CI:** on push/PR to `main`

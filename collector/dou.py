@@ -13,11 +13,7 @@ import requests
 
 from parser.normalize import is_ios_job
 
-from collector.dou_careers import (
-    collect_jobs_from_career_site,
-    extract_company_site_url,
-    write_career_sites_report,
-)
+from collector.dou_careers import collect_jobs_from_career_site, extract_company_site_url
 from collector.types import SourceResult
 
 TOP50_LIST_URL = "https://jobs.dou.ua/top50/"
@@ -227,7 +223,6 @@ def collect_dou_top50() -> SourceResult:
         companies = load_top50_companies(session)
         matchers = _build_company_matchers(companies)
         jobs_by_url: dict[str, dict[str, Any]] = {}
-        career_sites: list[dict[str, str]] = []
 
         for company in companies:
             slug = resolve_company_slug(company, session)
@@ -239,13 +234,6 @@ def collect_dou_top50() -> SourceResult:
             if profile_response.status_code == 200:
                 career_url = extract_company_site_url(profile_response.text)
                 if career_url:
-                    career_sites.append(
-                        {
-                            "company": company,
-                            "dou_url": profile_url,
-                            "career_url": career_url,
-                        }
-                    )
                     for job in collect_jobs_from_career_site(company, career_url, session):
                         jobs_by_url[job["url"]] = job
 
@@ -255,8 +243,6 @@ def collect_dou_top50() -> SourceResult:
                 continue
             for job in _parse_company_vacancies(response.text, company):
                 jobs_by_url[job["url"]] = job
-
-        write_career_sites_report(career_sites)
 
         for feed_url in (IOS_FEED_URL, SWIFT_FEED_URL):
             feed_text = _fetch_text(feed_url, session)

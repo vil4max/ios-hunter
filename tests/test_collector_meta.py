@@ -3,8 +3,6 @@ from __future__ import annotations
 import json
 
 from collector.companies import collect_all, load_swift_collector_meta, load_swift_export
-from collector.health import render_health_report
-from collector.types import SourceResult
 
 
 def test_load_swift_collector_meta_reads_meta_block(tmp_path) -> None:
@@ -50,21 +48,3 @@ def test_collect_all_returns_swift_meta(tmp_path) -> None:
     assert result.swift_meta is not None
     assert result.swift_meta.sources_total == 2
     assert any(source.source_id == "swift-export" for source in result.source_results)
-
-
-def test_render_health_report_includes_company_coverage() -> None:
-    results = [
-        SourceResult("swift-export", "Swift Collector", None, [], "healthy", None, 0),
-        SourceResult("a", "Alpha", "https://a", [], "healthy", None, 100),
-    ]
-    from collector.types import SwiftCollectorMeta
-
-    report = render_health_report(
-        results,
-        runtime_seconds=28.4,
-        duplicates_removed=0,
-        swift_meta=SwiftCollectorMeta(sources_total=53, sources_failed=0, failed_companies=[]),
-    )
-
-    assert "Companies:    53/53 OK" in report
-    assert "Direct feeds: 1/1 OK" in report

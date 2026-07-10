@@ -1,10 +1,6 @@
 from __future__ import annotations
 
-from collector.dou_careers import (
-    collect_jobs_from_career_site,
-    extract_company_site_url,
-    render_career_sites_report,
-)
+from collector.dou_careers import collect_jobs_from_career_site, extract_company_site_url
 
 
 def test_extract_company_site_url_reads_div_site_link() -> None:
@@ -62,19 +58,3 @@ def test_collect_jobs_from_career_site_scrapes_generic_ios_links() -> None:
     assert jobs[0]["title"] == "Senior iOS Engineer"
     assert jobs[0]["url"] == "https://career.softserveinc.com/en-us/vacancies/senior-ios-engineer-123"
     assert jobs[0]["source"] == "company"
-
-
-def test_render_career_sites_report_lists_discovered_urls() -> None:
-    report = render_career_sites_report(
-        [
-            {
-                "company": "EPAM Ukraine",
-                "dou_url": "https://jobs.dou.ua/companies/epam-systems/",
-                "career_url": "https://careers.epam.ua/",
-            }
-        ]
-    )
-
-    assert "EPAM Ukraine" in report
-    assert "https://careers.epam.ua/" in report
-    assert "https://jobs.dou.ua/companies/epam-systems/" in report

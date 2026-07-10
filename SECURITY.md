@@ -25,4 +25,3 @@ Include:
 This repo uses GitHub Actions secrets for runtime credentials:
 
 - `TELEGRAM_TOKEN`, `TELEGRAM_CHAT_ID`
-- Optional AI: `OPENAI_API_KEY` or `GEMINI_API_KEY`

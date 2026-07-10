@@ -1,154 +1,71 @@
 # iOS Hunter
 
-Private personal job monitor. **Production runs on GitHub Actions only** — Telegram is the main output. Local clone is for config edits, CRM, and optional debugging.
+iOS Hunter monitors company career pages and sends newly discovered iOS / Swift vacancies to Telegram.
 
-Public profile for recruiters: [vil4max.github.io](https://vil4max.github.io). This repo is not published anywhere.
+Production runs on GitHub Actions. Telegram is the only output channel.
 
----
+## What you get
 
-## Quick start (already set up)
+For every newly detected vacancy, one Telegram message:
+
+```
+Senior iOS Engineer
+https://company.com/jobs/123
+```
+
+Nothing else is sent. No match scores, cover letters, AI summaries, or market reports.
+
+DOU and Djinni board browsing stays in their native apps. This repo watches company career pages (and related DOU Top 50 career-site discovery).
+
+## Secrets
 
 | Secret | Required | Purpose |
 |--------|----------|---------|
 | `TELEGRAM_TOKEN` | yes | Bot API |
 | `TELEGRAM_CHAT_ID` | yes | Your private chat |
-| `GEMINI_API_KEY` | yes | Job Intelligence (fit, gaps, APPLY/CHECK/SKIP) |
-| `OPENAI_API_KEY` | optional | Fallback LLM if you change `AI_PROVIDER` |
 
-Repo: **private**. GitHub Pages: **off** (no public site/RSS).
+Remove unused repo secrets if present: `GEMINI_API_KEY`, `OPENAI_API_KEY`.
 
-Config you edit in git:
+Optional repository variable for cutover:
 
-| File | What |
-|------|------|
-| `config/profile.yaml` | Name, links, skills, thresholds, Telegram toggle |
-| `config/career_facts.yaml` | Grounded facts for Gemini (employers, projects) |
-| `config/skills.yaml` | Skill aliases for matcher |
-| `config/cover_letter_template.md` | Rules fallback only (when no LLM key) |
+| Variable | Purpose |
+|----------|---------|
+| `SEED_SEEN_ONLY` | Set to `1` for the first collect after deploy to mark all current vacancies as seen without Telegram. Clear it afterward. |
 
----
-
-## Manual runs (GitHub)
-
-**Actions** tab → pick workflow → **Run workflow** → branch `main` → **Run workflow**.
-
-| Workflow | When to run manually |
-|----------|-------------------|
-| **Collect iOS Jobs** | Main run: collect, diff, Telegram, reports. Use after config changes or when you want a fresh scan outside the schedule. |
-| **Hourly Collect Trigger** | Fires **Collect iOS Jobs** every hour (ubuntu cron → `workflow_dispatch`). |
-| **Weekly iOS Market Report** | Regenerate `reports/weekly/` if the DB cache exists but Monday cron missed. |
-| **AI Analysis** | Append AI text to weekly report (needs `GEMINI_API_KEY` or `OPENAI_API_KEY`). |
-| **CI** | Runs on push/PR automatically — Swift build + pytest. |
-
-After **Collect**, check:
-
-1. Workflow log — `Application packs sent: N`
-2. Telegram — actionable jobs (new / updated / reopened)
-3. `reports/activity/latest.md` in repo — last run summary
-
-### Automatic schedule (Europe/Kyiv)
-
-| Workflow | Schedule | Notes |
-|----------|----------|-------|
-| **Hourly Collect Trigger** | Every hour (`0 * * * *` UTC) | Dispatches **Collect iOS Jobs**; monitor digest in Telegram after each successful collect |
-| Weekly report | Mon 09:00 Kyiv (EEST) | `0 6 * * 1` UTC |
-| AI summary | Mon 12:30 Kyiv (EEST) | `30 9 * * 1` UTC |
-
-Collect runs on `macos-latest` (Swift). The hourly trigger uses `ubuntu-latest` because GitHub cron is more reliable there than on macOS runners.
-
----
-
-## What you get in Telegram
-
-**Actionable event** = job is new, updated, or reopened.
-
-| Path | When | Message |
-|------|------|---------|
-| **Gemini** (`GEMINI_API_KEY` set) | prefilter ≥ 45, notify if fit ≥ 60 and priority medium/high | Compact intelligence: score, gaps, recommendation, links. No cover letter. |
-| **Rules fallback** (no LLM key) | match ≥ 60 | Older format with cover letter draft. |
-
-Also: **Company Watch** (3+ iOS/mobile roles at one company, max once/week) and **CRM follow-ups** (if configured in pipeline).
-
-DOU / Djinni are **not** scraped — use their apps.
-
----
-
-## Data & storage
+## Pipeline
 
 ```
-Swift collector → swift_export.json
-       ↓
-Python pipeline → jobs.db (SQLite)
-       ↓
-Telegram + reports/*.md (committed to private main)
+Swift collectors → swift_export.json
+        ↓
+Python sources (boards / DOU careers)
+        ↓
+Normalize + iOS/Swift filter → Deduplicate
+        ↓
+Seen store (database/seen.json) → Telegram (new URLs only)
 ```
 
-| Data | Where | In git? |
-|------|-------|---------|
-| Job history, descriptions, analysis cache | `database/jobs.db` | **No** — GHA cache key `ios-hunter-db-<repo>` |
-| Run reports | `reports/` | Yes (private repo only) |
-| Profile / career facts | `config/` | Yes (private repo only) |
+Seen state is committed to git after each collect so Actions cache loss cannot resend every vacancy.
 
-Retention: jobs not seen for **45 days** are pruned (`JOBS_RETENTION_DAYS` env).
+## Workflows
 
-**Important:** If cache is lost (repo rename, cache expiry, long idle), the next collect treats vacancies as **new** — possible duplicate Telegram alerts until state rebuilds.
+| Workflow | When |
+|----------|------|
+| **Collect iOS Jobs** | Manual or via hourly trigger — collect and notify |
+| **Hourly Collect Trigger** | Every hour UTC — dispatches Collect on macOS |
+| **CI** | Push / PR — Swift build + pytest |
 
----
-
-## Local clone (optional)
-
-Production DB lives in **Actions cache**, not in the clone. Local run starts with an empty or stale `database/jobs.db` unless you copy a DB file yourself.
+## Local debug
 
 ```bash
-# macOS — full pipeline (same as CI collect job)
 swift build -c release
 SWIFT_EXPORT_PATH=database/swift_export.json swift run -c release JobHunter
 pip install -r requirements.txt
-export TELEGRAM_TOKEN=... TELEGRAM_CHAT_ID=... GEMINI_API_KEY=...
-export JOBS_DB_PATH=database/jobs.db
-python3 scripts/run_pipeline.py
+SEED_SEEN_ONLY=1 python3 scripts/run_pipeline.py   # first run: seed only
+python3 scripts/run_pipeline.py                    # notify new vacancies
 ```
 
-```bash
-# Tests
-pip install -r requirements.txt -r requirements-dev.txt
-python3 -m pytest -q
-```
+Without Telegram secrets, messages print to stdout.
 
-**CRM** (needs local `jobs.db` with application data):
+## Identity
 
-```bash
-python3 -m crm apply --company "Acme" --title "Senior iOS"
-python3 -m crm list
-python3 -m crm stage --id 1 --stage hr_screen
-python3 -m crm stats
-python3 -m crm remind   # needs TELEGRAM_* env
-```
-
----
-
-## Git push from your machine
-
-Workflow file changes require a token/remote with **`workflow` scope`. OAuth without it rejects pushes that touch `.github/workflows/*`.
-
-Use SSH, GitHub Desktop, or `gh auth login` with workflow permission.
-
----
-
-## Troubleshooting
-
-| Symptom | Check |
-|---------|--------|
-| No Telegram | Secrets; `config/profile.yaml` → `telegram.enabled: true`; workflow log for `Monitor digest sent: True` |
-| No hourly digest | **Hourly Collect Trigger** workflow must be enabled; check Actions tab for skipped macOS runs |
-| No LLM block in message | `GEMINI_API_KEY` in secrets; collect workflow sets `AI_PROVIDER=gemini` |
-| Duplicate “new” alerts | Cache miss — normal after first run on fresh cache |
-| Collect fails on Swift | `reports/health/latest.md`; source may be down or HTML changed |
-| Push rejected (workflow scope) | Re-auth with workflow scope or use SSH |
-
----
-
-## Docs
-
-- [ARCHITECTURE.md](ARCHITECTURE.md) — modules and pipeline steps
-- [ROADMAP.md](ROADMAP.md) — feature backlog
+Vacancies are keyed by canonical URL (tracking query params stripped). The same URL is never sent twice. Description changes and reopenings do not create another message.
