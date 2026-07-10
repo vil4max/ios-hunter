@@ -21,7 +21,7 @@ from database.seen import (
     seen_key,
     utc_now,
 )
-from integrations.notify import notify_vacancy
+from integrations.notify import notify_new_vacancies
 from parser.deduplicate import deduplicate_with_report
 from parser.normalize import Vacancy, normalize_many
 
@@ -33,7 +33,7 @@ def collect_vacancies(swift_export_path: Path) -> tuple[list[Vacancy], int, int]
     for source in collect_result.source_results:
         if source.status == "failed":
             failed_sources += 1
-            print(f"Source failed: {source.company}: {source.error}", file=sys.stderr)
+            print(f"Source failed: {source.source_name}: {source.error}", file=sys.stderr)
             continue
         raw_jobs.extend(source.jobs)
 
@@ -48,26 +48,27 @@ def process_new_vacancies(
     *,
     seed_only: bool,
 ) -> tuple[int, int]:
-    sent = 0
-    marked = 0
     now = utc_now()
-
+    fresh: list[Vacancy] = []
     for vacancy in vacancies:
         key = seen_key(vacancy)
         if not key or key in seen:
             continue
-        if not seed_only:
-            try:
-                notify_vacancy(vacancy)
-                sent += 1
-            except Exception as error:
-                print(
-                    f"Telegram send failed for {vacancy.company} / {vacancy.title}: {error}",
-                    file=sys.stderr,
-                )
-                continue
-        if mark_seen(seen, vacancy, first_seen=now):
-            marked += 1
+        fresh.append(vacancy)
+
+    sent = 0
+    if fresh and not seed_only:
+        try:
+            sent = notify_new_vacancies(fresh)
+        except Exception as error:
+            print(f"Telegram send failed: {error}", file=sys.stderr)
+            return 0, 0
+
+    marked = 0
+    if seed_only or sent:
+        for vacancy in fresh:
+            if mark_seen(seen, vacancy, first_seen=now):
+                marked += 1
 
     return sent, marked
 

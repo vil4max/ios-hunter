@@ -6,14 +6,23 @@ Production runs on GitHub Actions. Telegram is the only output channel.
 
 ## What you get
 
-For every newly detected vacancy, one Telegram message:
+One Telegram message per collect run with all newly detected vacancies:
 
 ```
-Senior iOS Engineer
-https://company.com/jobs/123
+Вакансий 2 · 2026-07-10 11:47
+
+1. Senior iOS Engineer
+   Acme
+   Ashby
+   https://jobs.ashbyhq.com/acme/123
+
+2. Swift Developer
+   EPAM
+   EPAM careers
+   https://careers.epam.com/en/vacancy/ios-1
 ```
 
-Nothing else is sent. No match scores, cover letters, AI summaries, or market reports.
+Nothing else is sent. No match scores, cover letters, AI summaries, or market reports. If there are no new vacancies, nothing is sent.
 
 DOU and Djinni board browsing stays in their native apps. This repo watches company career pages (and related DOU Top 50 career-site discovery).
 

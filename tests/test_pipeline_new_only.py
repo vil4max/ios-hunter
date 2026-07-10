@@ -9,8 +9,13 @@ from tests.conftest import make_vacancy
 
 
 def test_second_identical_run_sends_nothing(tmp_path: Path, monkeypatch) -> None:
-    sent: list[str] = []
-    monkeypatch.setattr("scripts.run_pipeline.notify_vacancy", lambda vacancy: sent.append(vacancy.url))
+    batches: list[list[str]] = []
+
+    def fake_notify(vacancies, *, now=None):
+        batches.append([v.url for v in vacancies])
+        return len(vacancies)
+
+    monkeypatch.setattr("scripts.run_pipeline.notify_new_vacancies", fake_notify)
 
     vacancies = normalize_many(
         [
@@ -27,17 +32,22 @@ def test_second_identical_run_sends_nothing(tmp_path: Path, monkeypatch) -> None
     sent_count, marked = process_new_vacancies(vacancies, seen, seed_only=False)
     assert sent_count == 1
     assert marked == 1
-    assert len(sent) == 1
+    assert batches == [["https://example.com/jobs/1"]]
 
     sent_count_2, marked_2 = process_new_vacancies(vacancies, seen, seed_only=False)
     assert sent_count_2 == 0
     assert marked_2 == 0
-    assert len(sent) == 1
+    assert len(batches) == 1
 
 
 def test_seed_only_marks_without_sending(monkeypatch) -> None:
-    sent: list[str] = []
-    monkeypatch.setattr("scripts.run_pipeline.notify_vacancy", lambda vacancy: sent.append(vacancy.url))
+    batches: list[list[str]] = []
+
+    def fake_notify(vacancies, *, now=None):
+        batches.append([v.url for v in vacancies])
+        return len(vacancies)
+
+    monkeypatch.setattr("scripts.run_pipeline.notify_new_vacancies", fake_notify)
 
     vacancies = [make_vacancy(url="https://example.com/jobs/seed")]
     seen: dict = {}
@@ -45,13 +55,18 @@ def test_seed_only_marks_without_sending(monkeypatch) -> None:
     sent_count, marked = process_new_vacancies(vacancies, seen, seed_only=True)
     assert sent_count == 0
     assert marked == 1
-    assert sent == []
+    assert batches == []
     assert "https://example.com/jobs/seed" in seen
 
 
 def test_same_url_different_description_does_not_resend(monkeypatch) -> None:
-    sent: list[str] = []
-    monkeypatch.setattr("scripts.run_pipeline.notify_vacancy", lambda vacancy: sent.append(vacancy.url))
+    batches: list[list[str]] = []
+
+    def fake_notify(vacancies, *, now=None):
+        batches.append([v.url for v in vacancies])
+        return len(vacancies)
+
+    monkeypatch.setattr("scripts.run_pipeline.notify_new_vacancies", fake_notify)
 
     first = [make_vacancy(url="https://example.com/jobs/2", description="Old")]
     second = [make_vacancy(url="https://example.com/jobs/2", description="Changed requirements")]
@@ -60,21 +75,55 @@ def test_same_url_different_description_does_not_resend(monkeypatch) -> None:
     process_new_vacancies(first, seen, seed_only=False)
     process_new_vacancies(second, seen, seed_only=False)
 
-    assert len(sent) == 1
+    assert len(batches) == 1
 
 
-def test_new_url_sends_once(tmp_path: Path, monkeypatch) -> None:
-    sent: list[str] = []
-    monkeypatch.setattr("scripts.run_pipeline.notify_vacancy", lambda vacancy: sent.append(vacancy.url))
+def test_new_urls_sent_in_one_batch(tmp_path: Path, monkeypatch) -> None:
+    batches: list[list[str]] = []
+
+    def fake_notify(vacancies, *, now=None):
+        batches.append([v.url for v in vacancies])
+        return len(vacancies)
+
+    monkeypatch.setattr("scripts.run_pipeline.notify_new_vacancies", fake_notify)
     path = tmp_path / "seen.json"
     seen = load_seen(path)
 
     first = [make_vacancy(url="https://example.com/jobs/a")]
-    second = [make_vacancy(url="https://example.com/jobs/b", title="iOS Engineer II")]
+    second = [
+        make_vacancy(url="https://example.com/jobs/a"),
+        make_vacancy(url="https://example.com/jobs/b", title="iOS Engineer II"),
+    ]
 
     process_new_vacancies(first, seen, seed_only=False)
     save_seen(path, seen)
     seen = load_seen(path)
     process_new_vacancies(second, seen, seed_only=False)
 
-    assert sent == ["https://example.com/jobs/a", "https://example.com/jobs/b"]
+    assert batches == [
+        ["https://example.com/jobs/a"],
+        ["https://example.com/jobs/b"],
+    ]
+
+
+def test_multiple_new_vacancies_one_telegram_call(monkeypatch) -> None:
+    batches: list[list[str]] = []
+
+    def fake_notify(vacancies, *, now=None):
+        batches.append([v.url for v in vacancies])
+        return len(vacancies)
+
+    monkeypatch.setattr("scripts.run_pipeline.notify_new_vacancies", fake_notify)
+
+    vacancies = [
+        make_vacancy(url="https://example.com/jobs/1", title="iOS Engineer"),
+        make_vacancy(url="https://example.com/jobs/2", title="Swift Developer"),
+    ]
+    seen: dict = {}
+    sent, marked = process_new_vacancies(vacancies, seen, seed_only=False)
+
+    assert sent == 2
+    assert marked == 2
+    assert batches == [
+        ["https://example.com/jobs/1", "https://example.com/jobs/2"],
+    ]

@@ -1,12 +1,102 @@
 from __future__ import annotations
 
+from datetime import datetime
+from urllib.parse import urlsplit
+from zoneinfo import ZoneInfo
+
 from integrations.telegram import send_message
-from parser.normalize import Vacancy
+from parser.normalize import Vacancy, canonicalize_url
+
+_KYIV = ZoneInfo("Europe/Kyiv")
+
+_SOURCE_BY_HOST_SUFFIX: tuple[tuple[str, str], ...] = (
+    ("ashbyhq.com", "Ashby"),
+    ("greenhouse.io", "Greenhouse"),
+    ("lever.co", "Lever"),
+    ("myworkdayjobs.com", "Workday"),
+    ("workable.com", "Workable"),
+    ("teamtailor.com", "Teamtailor"),
+    ("breezy.hr", "Breezy"),
+    ("dou.ua", "DOU"),
+    ("djinni.co", "Djinni"),
+    ("careers.epam.com", "EPAM careers"),
+    ("dataart.team", "DataArt careers"),
+    ("dataart.com", "DataArt careers"),
+    ("globallogic.com", "GlobalLogic careers"),
+)
+
+_SOURCE_BY_RAW: dict[str, str] = {
+    "dou": "DOU",
+    "djinni": "Djinni",
+    "linkedin": "LinkedIn",
+    "ashby": "Ashby",
+    "greenhouse": "Greenhouse",
+    "lever": "Lever",
+    "workable": "Workable",
+    "teamtailor": "Teamtailor",
+    "breezy": "Breezy",
+    "workday": "Workday",
+}
 
 
-def format_vacancy_message(title: str, url: str) -> str:
-    return f"{title.strip()}\n{url.strip()}"
+def resolve_source(vacancy: Vacancy) -> str:
+    raw = (vacancy.source or "").strip()
+    mapped = _SOURCE_BY_RAW.get(raw.lower())
+    if mapped:
+        return mapped
+
+    host = (urlsplit(vacancy.url).hostname or "").lower()
+    if host.startswith("www."):
+        host = host[4:]
+
+    for suffix, label in _SOURCE_BY_HOST_SUFFIX:
+        if host == suffix or host.endswith("." + suffix):
+            return label
+
+    company = (vacancy.company or "").strip()
+    if company:
+        return f"{company} careers"
+    if raw and raw.lower() != "company":
+        return raw
+    return "company career page"
 
 
-def notify_vacancy(vacancy: Vacancy) -> None:
-    send_message(format_vacancy_message(vacancy.title, vacancy.url))
+def _dedupe_vacancies(vacancies: list[Vacancy]) -> list[Vacancy]:
+    seen: set[str] = set()
+    unique: list[Vacancy] = []
+    for vacancy in vacancies:
+        key = canonicalize_url(vacancy.url) or vacancy.url.strip()
+        if not key or key in seen:
+            continue
+        seen.add(key)
+        unique.append(vacancy)
+    return unique
+
+
+def format_vacancies_message(
+    vacancies: list[Vacancy],
+    *,
+    now: datetime | None = None,
+) -> str | None:
+    unique = _dedupe_vacancies(vacancies)
+    if not unique:
+        return None
+
+    stamp = (now or datetime.now(_KYIV)).astimezone(_KYIV)
+    header = f"Вакансий {len(unique)} · {stamp.strftime('%Y-%m-%d %H:%M')}"
+    blocks: list[str] = [header]
+    for index, vacancy in enumerate(unique, start=1):
+        title = vacancy.title.strip()
+        company = vacancy.company.strip()
+        source = resolve_source(vacancy)
+        url = vacancy.url.strip()
+        blocks.append(f"{index}. {title}\n   {company}\n   {source}\n   {url}")
+    return "\n\n".join(blocks)
+
+
+def notify_new_vacancies(vacancies: list[Vacancy], *, now: datetime | None = None) -> int:
+    message = format_vacancies_message(vacancies, now=now)
+    if message is None:
+        return 0
+    send_message(message)
+    return len(_dedupe_vacancies(vacancies))

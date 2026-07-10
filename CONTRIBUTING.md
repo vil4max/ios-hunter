@@ -17,7 +17,7 @@ For local checks:
 ```bash
 python3 -m pip install -r requirements.txt -r requirements-dev.txt
 python3 -m pytest -q
-python3 -c "from collector.companies import collect_all; from database.seen import load_seen; from integrations.notify import format_vacancy_message"
+python3 -c "from collector.companies import collect_all; from database.seen import load_seen; from integrations.notify import format_vacancies_message"
 ```
 
 ### Pull requests

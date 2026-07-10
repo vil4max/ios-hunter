@@ -7,7 +7,3 @@ func isIOSJob(title: String) -> Bool {
     }
     return true
 }
-
-func filterIOSJobs(_ jobs: [Job]) -> [Job] {
-    jobs.filter { isIOSJob(title: $0.title) }
-}

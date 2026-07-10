@@ -19,7 +19,7 @@ GitHub Actions (hourly)
 3. Vacancies are normalized and filtered to iOS / Swift titles (or descriptions).
 4. In-run deduplication collapses identical identity keys and same company+title roles.
 5. Each vacancy’s canonical URL is checked against `database/seen.json`.
-6. Unseen vacancies are sent to Telegram as `title` + newline + `url`, then recorded in the seen store.
+6. Unseen vacancies are sent in one Telegram message (`title`, `company`, `source`, `url`), then recorded in the seen store. If none are new, nothing is sent.
 7. Collect workflow commits `database/seen.json` when it changes (`[skip ci]`).
 
 ## State
