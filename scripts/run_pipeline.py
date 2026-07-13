@@ -21,25 +21,31 @@ from database.seen import (
     seen_key,
     utc_now,
 )
-from integrations.notify import notify_empty_report, notify_new_vacancies
+from integrations.notify import CollectReportStats, notify_empty_report, notify_new_vacancies
 from parser.deduplicate import deduplicate_with_report
 from parser.normalize import Vacancy, normalize_many
 
 
-def collect_vacancies(swift_export_path: Path) -> tuple[list[Vacancy], int, int]:
+def collect_vacancies(swift_export_path: Path) -> tuple[list[Vacancy], int, list[str]]:
     collect_result = collect_all(swift_export_path)
     raw_jobs: list[dict] = []
-    failed_sources = 0
+    failed_source_names: list[str] = []
     for source in collect_result.source_results:
         if source.status == "failed":
-            failed_sources += 1
+            failed_source_names.append(source.source_name)
             print(f"Source failed: {source.source_name}: {source.error}", file=sys.stderr)
             continue
         raw_jobs.extend(source.jobs)
 
+    if collect_result.swift_meta is not None:
+        for company in collect_result.swift_meta.failed_companies:
+            label = f"Swift: {company}"
+            if label not in failed_source_names:
+                failed_source_names.append(label)
+
     vacancies = normalize_many(raw_jobs)
     unique, removed, _ = deduplicate_with_report(vacancies)
-    return unique, removed, failed_sources
+    return unique, removed, failed_source_names
 
 
 def process_new_vacancies(
@@ -47,8 +53,11 @@ def process_new_vacancies(
     seen: dict,
     *,
     seed_only: bool,
+    duplicates_removed: int = 0,
+    failed_source_names: list[str] | None = None,
 ) -> tuple[int, int]:
     now = utc_now()
+    failed = tuple(failed_source_names or ())
     fresh: list[Vacancy] = []
     for vacancy in vacancies:
         key = seen_key(vacancy)
@@ -56,18 +65,26 @@ def process_new_vacancies(
             continue
         fresh.append(vacancy)
 
+    stats = CollectReportStats(
+        found=len(vacancies),
+        seen_total=len(seen),
+        new_count=len(fresh),
+        duplicates_removed=duplicates_removed,
+        failed_source_names=failed,
+    )
+
     sent = 0
     if seed_only:
         pass
     elif fresh:
         try:
-            sent = notify_new_vacancies(fresh)
+            sent = notify_new_vacancies(fresh, stats=stats)
         except Exception as error:
             print(f"Telegram send failed: {error}", file=sys.stderr)
             return 0, 0
     else:
         try:
-            notify_empty_report(checked=len(vacancies))
+            notify_empty_report(stats=stats)
         except Exception as error:
             print(f"Telegram send failed: {error}", file=sys.stderr)
             return 0, 0
@@ -104,8 +121,14 @@ def main() -> int:
         if migrated:
             print(f"Migrated {migrated} vacancies from {jobs_db} into seen store.")
 
-    vacancies, duplicates_removed, failed_sources = collect_vacancies(swift_export)
-    sent, marked = process_new_vacancies(vacancies, seen, seed_only=seed_only)
+    vacancies, duplicates_removed, failed_source_names = collect_vacancies(swift_export)
+    sent, marked = process_new_vacancies(
+        vacancies,
+        seen,
+        seed_only=seed_only,
+        duplicates_removed=duplicates_removed,
+        failed_source_names=failed_source_names,
+    )
 
     if migrated or marked:
         save_seen(seen_path, seen)
@@ -114,7 +137,7 @@ def main() -> int:
     print(
         f"Vacancies: {len(vacancies)}\n"
         f"Duplicates removed: {duplicates_removed}\n"
-        f"Sources failed: {failed_sources}\n"
+        f"Sources failed: {len(failed_source_names)}\n"
         f"New notified: {sent}\n"
         f"Newly marked seen: {marked}\n"
         f"Seed only: {seed_only}\n"

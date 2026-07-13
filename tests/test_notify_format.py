@@ -3,7 +3,12 @@ from __future__ import annotations
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from integrations.notify import format_empty_report, format_vacancies_message, resolve_source
+from integrations.notify import (
+    CollectReportStats,
+    format_empty_report,
+    format_vacancies_message,
+    resolve_source,
+)
 from tests.conftest import make_vacancy
 
 _KYIV = ZoneInfo("Europe/Kyiv")
@@ -22,11 +27,27 @@ def test_format_header_count_and_kyiv_time() -> None:
     assert message.startswith("Вакансий 1 · 2026-07-10 11:47")
 
 
-def test_format_empty_report_kyiv_time_and_checked() -> None:
+def test_format_empty_report_with_proof_stats() -> None:
     now = datetime(2026, 7, 10, 18, 0, tzinfo=_KYIV)
-    assert format_empty_report(checked=21, now=now) == (
+    stats = CollectReportStats(
+        found=19,
+        seen_total=22,
+        new_count=0,
+        duplicates_removed=2,
+        failed_source_names=("DOU Top 50",),
+    )
+    assert format_empty_report(stats=stats, now=now) == (
         "Новых вакансий нет · 2026-07-10 18:00\n"
-        "Проверено: 21"
+        "\n"
+        "Сейчас найдено: 19\n"
+        "Уже в базе: 22\n"
+        "Новых: 0\n"
+        "\n"
+        "Дубликаты сняты: 2\n"
+        "Источники с ошибкой: 1\n"
+        "· DOU Top 50\n"
+        "\n"
+        "Все найденные URL уже есть в базе"
     )
 
 
@@ -46,6 +67,33 @@ def test_format_includes_title_company_source_url() -> None:
         "   Preply\n"
         "   Ashby\n"
         "   https://jobs.ashbyhq.com/preply/abc"
+    )
+
+
+def test_format_vacancies_appends_run_stats_footer() -> None:
+    vacancy = make_vacancy(
+        title="iOS Developer",
+        company="Preply",
+        url="https://jobs.ashbyhq.com/preply/abc",
+        source="company",
+    )
+    now = datetime(2026, 7, 10, 9, 0, tzinfo=_KYIV)
+    stats = CollectReportStats(
+        found=20,
+        seen_total=19,
+        new_count=1,
+        duplicates_removed=2,
+        failed_source_names=(),
+    )
+    message = format_vacancies_message([vacancy], now=now, stats=stats)
+    assert message is not None
+    assert message.endswith(
+        "Сейчас найдено: 20\n"
+        "Уже в базе: 19\n"
+        "Новых: 1\n"
+        "\n"
+        "Дубликаты сняты: 2\n"
+        "Источники с ошибкой: 0"
     )
 
 

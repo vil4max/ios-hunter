@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from datetime import datetime
 from urllib.parse import urlsplit
 from zoneinfo import ZoneInfo
@@ -39,6 +40,15 @@ _SOURCE_BY_RAW: dict[str, str] = {
 }
 
 
+@dataclass(frozen=True)
+class CollectReportStats:
+    found: int
+    seen_total: int
+    new_count: int
+    duplicates_removed: int
+    failed_source_names: tuple[str, ...] = ()
+
+
 def resolve_source(vacancy: Vacancy) -> str:
     raw = (vacancy.source or "").strip()
     mapped = _SOURCE_BY_RAW.get(raw.lower())
@@ -73,10 +83,27 @@ def _dedupe_vacancies(vacancies: list[Vacancy]) -> list[Vacancy]:
     return unique
 
 
+def format_run_stats(stats: CollectReportStats) -> str:
+    lines = [
+        f"Сейчас найдено: {stats.found}",
+        f"Уже в базе: {stats.seen_total}",
+        f"Новых: {stats.new_count}",
+        "",
+        f"Дубликаты сняты: {stats.duplicates_removed}",
+        f"Источники с ошибкой: {len(stats.failed_source_names)}",
+    ]
+    for name in stats.failed_source_names:
+        lines.append(f"· {name}")
+    if stats.new_count == 0 and stats.found > 0:
+        lines.extend(["", "Все найденные URL уже есть в базе"])
+    return "\n".join(lines)
+
+
 def format_vacancies_message(
     vacancies: list[Vacancy],
     *,
     now: datetime | None = None,
+    stats: CollectReportStats | None = None,
 ) -> str | None:
     unique = _dedupe_vacancies(vacancies)
     if not unique:
@@ -91,24 +118,41 @@ def format_vacancies_message(
         source = resolve_source(vacancy)
         url = vacancy.url.strip()
         blocks.append(f"{index}. {title}\n   {company}\n   {source}\n   {url}")
-    return "\n\n".join(blocks)
+    message = "\n\n".join(blocks)
+    if stats is not None:
+        message = f"{message}\n\n{format_run_stats(stats)}"
+    return message
 
 
-def format_empty_report(*, checked: int, now: datetime | None = None) -> str:
+def format_empty_report(
+    *,
+    stats: CollectReportStats,
+    now: datetime | None = None,
+) -> str:
     stamp = (now or datetime.now(_KYIV)).astimezone(_KYIV)
     return (
         f"Новых вакансий нет · {stamp.strftime('%Y-%m-%d %H:%M')}\n"
-        f"Проверено: {checked}"
+        f"\n"
+        f"{format_run_stats(stats)}"
     )
 
 
-def notify_new_vacancies(vacancies: list[Vacancy], *, now: datetime | None = None) -> int:
-    message = format_vacancies_message(vacancies, now=now)
+def notify_new_vacancies(
+    vacancies: list[Vacancy],
+    *,
+    now: datetime | None = None,
+    stats: CollectReportStats | None = None,
+) -> int:
+    message = format_vacancies_message(vacancies, now=now, stats=stats)
     if message is None:
         return 0
     send_message(message)
     return len(_dedupe_vacancies(vacancies))
 
 
-def notify_empty_report(*, checked: int, now: datetime | None = None) -> None:
-    send_message(format_empty_report(checked=checked, now=now))
+def notify_empty_report(
+    *,
+    stats: CollectReportStats,
+    now: datetime | None = None,
+) -> None:
+    send_message(format_empty_report(stats=stats, now=now))

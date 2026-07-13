@@ -22,12 +22,23 @@ One Telegram message per collect run with all newly detected vacancies:
    https://careers.epam.com/en/vacancy/ios-1
 ```
 
-If there are no new vacancies, a short report is still sent:
+If there are no new vacancies, a short report is still sent with proof stats:
 
 ```
 Новых вакансий нет · 2026-07-10 18:00
-Проверено: 21
+
+Сейчас найдено: 19
+Уже в базе: 22
+Новых: 0
+
+Дубликаты сняты: 2
+Источники с ошибкой: 1
+· DOU Top 50
+
+Все найденные URL уже есть в базе
 ```
+
+`Сейчас найдено` can be lower than `Уже в базе` when roles closed or a source failed this hour. `Новых: 0` means every found URL is already in `seen.json`.
 
 Nothing else is sent. No match scores, cover letters, AI summaries, or market reports.
 
