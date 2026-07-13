@@ -21,4 +21,24 @@ jobs:
       - name: Trigger Collect iOS Jobs
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh workflow run "Collect iOS Jobs" --repo "${{ github.repository }}" --ref main
+        run: |
+          set -euo pipefail
+          repo="${{ github.repository }}"
+          attempt=1
+          max_attempts=5
+          delay=15
+          while true; do
+            echo "Dispatch attempt ${attempt}/${max_attempts}"
+            if gh workflow run "Collect iOS Jobs" --repo "${repo}" --ref main; then
+              echo "Collect iOS Jobs dispatched successfully"
+              exit 0
+            fi
+            if [ "${attempt}" -ge "${max_attempts}" ]; then
+              echo "Failed to dispatch Collect iOS Jobs after ${max_attempts} attempts" >&2
+              exit 1
+            fi
+            echo "Dispatch failed; retrying in ${delay}s"
+            sleep "${delay}"
+            attempt=$((attempt + 1))
+            delay=$((delay * 2))
+          done
