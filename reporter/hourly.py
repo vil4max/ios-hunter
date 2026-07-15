@@ -12,30 +12,42 @@ from project_sync.sync import SyncResult
 _KYIV = ZoneInfo("Europe/Kyiv")
 
 
+def _time_label(now: datetime | None) -> str:
+    stamp = (now or datetime.now(_KYIV)).astimezone(_KYIV)
+    return stamp.strftime("%Y-%m-%d %H:%M")
+
+
+def _system_footer(
+    *,
+    stats: CollectReportStats,
+    board_url: str = "",
+    now: datetime | None = None,
+    include_board: bool = False,
+) -> list[str]:
+    lines: list[str] = []
+    if stats.failed_source_names:
+        lines.append(f"⚠️ ошибки: {', '.join(stats.failed_source_names)}")
+        lines.append("")
+    lines.append(f"✅ Система работает · {_time_label(now)}")
+    if include_board and board_url:
+        lines.append(f"🔗 {board_url}")
+    return lines
+
+
 def format_hourly_heartbeat(
     *,
     stats: CollectReportStats,
-    new_count: int,
+    new_count: int = 0,
     board_url: str = "",
     now: datetime | None = None,
 ) -> str:
-    stamp = (now or datetime.now(_KYIV)).astimezone(_KYIV)
-    time_label = stamp.strftime("%Y-%m-%d %H:%M")
-    if new_count > 0:
-        lines = [
-            f"🆕 +{new_count} Inbox · {time_label}",
-            "✅ Система работает",
-        ]
-    else:
-        lines = [
-            f"✅ Система работает · {time_label}",
-            "📭 Новых вакансий не обнаружено",
-        ]
-    if stats.failed_source_names:
-        lines.append(f"⚠️ ошибки: {', '.join(stats.failed_source_names)}")
-    if board_url and new_count > 0:
-        lines.append(f"🔗 {board_url}")
-    return "\n".join(lines)
+    _ = new_count
+    blocks = [
+        "📭 Новых вакансий не обнаружено",
+        "",
+        *_system_footer(stats=stats, board_url=board_url, now=now, include_board=False),
+    ]
+    return "\n".join(blocks)
 
 
 def format_hourly_new_vacancies(
@@ -45,26 +57,29 @@ def format_hourly_new_vacancies(
     board_url: str = "",
     now: datetime | None = None,
 ) -> str:
-    lines = [
-        format_hourly_heartbeat(
-            stats=stats,
-            new_count=len(vacancies),
-            board_url=board_url,
-            now=now,
-        )
-    ]
+    lines = [f"🆕 +{len(vacancies)} Inbox", ""]
     for index, vacancy in enumerate(vacancies, start=1):
+        if index > 1:
+            lines.append("")
         title = vacancy.title.strip()
         company = vacancy.company.strip()
         source = resolve_source(vacancy)
         url = vacancy.url.strip()
-        lines.append("")
         lines.append(f"{index}. {title}")
         if company:
             lines.append(f"   🏢 {company}")
         lines.append(f"   📡 {source}")
         if url:
             lines.append(f"   🔗 {url}")
+    lines.append("")
+    lines.extend(
+        _system_footer(
+            stats=stats,
+            board_url=board_url,
+            now=now,
+            include_board=True,
+        )
+    )
     return "\n".join(lines)
 
 
@@ -98,7 +113,6 @@ def notify_hourly_inbox(
     else:
         message = format_hourly_heartbeat(
             stats=stats,
-            new_count=0,
             board_url=board_url,
             now=now,
         )

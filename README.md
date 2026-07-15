@@ -11,21 +11,23 @@ See `docs/architecture/career-agent.md` and `docs/github-setup-guide.md`.
 **Telegram (every successful collect):**
 
 ```
-✅ Система работает · 2026-07-15 11:00
 📭 Новых вакансий не обнаружено
+
+✅ Система работает · 2026-07-15 11:00
 ```
 
 When there are **new** vacancies:
 
 ```
-🆕 +2 Inbox · 2026-07-15 11:00
-✅ Система работает
-🔗 https://github.com/users/you/projects/1
+🆕 +2 Inbox
 
 1. Senior iOS Engineer
    🏢 Acme
    📡 Ashby
    🔗 https://jobs.example.com/1
+
+✅ Система работает · 2026-07-15 11:00
+🔗 https://github.com/users/you/projects/1
 ```
 
 **Pipeline status / Applied / Screening** — manage on the private [Career CRM Project](https://github.com/users/vil4max/projects/3). Telegram does **not** dump today's tasks or CRM sections.
