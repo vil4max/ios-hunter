@@ -7,7 +7,11 @@ from integrations.notify import CollectReportStats
 from planner.plan import DailyPlan, ProjectCard
 from project_sync.sync import SyncItemResult, SyncResult
 from reporter.daily import format_daily_dashboard
-from reporter.hourly import format_hourly_new_vacancies, vacancies_for_alert
+from reporter.hourly import (
+    format_hourly_heartbeat,
+    format_hourly_new_vacancies,
+    vacancies_for_alert,
+)
 from tests.conftest import make_vacancy
 
 _KYIV = ZoneInfo("Europe/Kyiv")
@@ -42,7 +46,6 @@ def test_hourly_lists_new_vacancies_only() -> None:
         board_url="https://github.com/users/acme/projects/1",
         now=now,
     )
-    assert message is not None
     assert message.startswith("2026-07-15 11:00 · OK · +2 Inbox")
     assert "найдено 10 · в базе 8" in message
     assert "Senior iOS Engineer" in message
@@ -51,15 +54,25 @@ def test_hourly_lists_new_vacancies_only() -> None:
     assert "Pipeline" not in message
 
 
-def test_hourly_skips_empty() -> None:
+def test_hourly_heartbeat_when_no_new() -> None:
+    now = datetime(2026, 7, 15, 11, 0, tzinfo=_KYIV)
     stats = CollectReportStats(
-        found=10,
-        seen_total=10,
+        found=22,
+        seen_total=40,
         new_count=0,
         duplicates_removed=0,
         failed_source_names=(),
     )
-    assert format_hourly_new_vacancies([], stats=stats) is None
+    message = format_hourly_heartbeat(
+        stats=stats,
+        new_count=0,
+        board_url="https://board",
+        now=now,
+    )
+    assert message == (
+        "2026-07-15 11:00 · OK · новых нет\n"
+        "найдено 22 · в базе 40"
+    )
 
 
 def test_vacancies_for_alert_prefers_created_sync_items() -> None:

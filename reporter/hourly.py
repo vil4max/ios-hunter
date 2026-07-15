@@ -12,26 +12,44 @@ from project_sync.sync import SyncResult
 _KYIV = ZoneInfo("Europe/Kyiv")
 
 
+def format_hourly_heartbeat(
+    *,
+    stats: CollectReportStats,
+    new_count: int,
+    board_url: str = "",
+    now: datetime | None = None,
+) -> str:
+    stamp = (now or datetime.now(_KYIV)).astimezone(_KYIV)
+    if new_count > 0:
+        head = f"{stamp.strftime('%Y-%m-%d %H:%M')} · OK · +{new_count} Inbox"
+    else:
+        head = f"{stamp.strftime('%Y-%m-%d %H:%M')} · OK · новых нет"
+    lines = [
+        head,
+        f"найдено {stats.found} · в базе {stats.seen_total}",
+    ]
+    if stats.failed_source_names:
+        lines.append(f"ошибки: {', '.join(stats.failed_source_names)}")
+    if board_url and new_count > 0:
+        lines.append(board_url)
+    return "\n".join(lines)
+
+
 def format_hourly_new_vacancies(
     vacancies: list[Vacancy],
     *,
     stats: CollectReportStats,
     board_url: str = "",
     now: datetime | None = None,
-) -> str | None:
-    if not vacancies:
-        return None
-
-    stamp = (now or datetime.now(_KYIV)).astimezone(_KYIV)
+) -> str:
     lines = [
-        f"{stamp.strftime('%Y-%m-%d %H:%M')} · OK · +{len(vacancies)} Inbox",
-        f"найдено {stats.found} · в базе {stats.seen_total}",
+        format_hourly_heartbeat(
+            stats=stats,
+            new_count=len(vacancies),
+            board_url=board_url,
+            now=now,
+        )
     ]
-    if stats.failed_source_names:
-        lines.append(f"ошибки: {', '.join(stats.failed_source_names)}")
-    if board_url:
-        lines.append(board_url)
-
     for index, vacancy in enumerate(vacancies, start=1):
         title = vacancy.title.strip()
         company = vacancy.company.strip()
@@ -44,7 +62,6 @@ def format_hourly_new_vacancies(
         lines.append(f"   {source}")
         if url:
             lines.append(f"   {url}")
-
     return "\n".join(lines)
 
 
@@ -68,13 +85,19 @@ def notify_hourly_inbox(
     now: datetime | None = None,
 ) -> bool:
     to_show = vacancies_for_alert(sync_result, fresh)
-    message = format_hourly_new_vacancies(
-        to_show,
-        stats=stats,
-        board_url=board_url,
-        now=now,
-    )
-    if message is None:
-        return False
+    if to_show:
+        message = format_hourly_new_vacancies(
+            to_show,
+            stats=stats,
+            board_url=board_url,
+            now=now,
+        )
+    else:
+        message = format_hourly_heartbeat(
+            stats=stats,
+            new_count=0,
+            board_url=board_url,
+            now=now,
+        )
     send_message(message)
     return True

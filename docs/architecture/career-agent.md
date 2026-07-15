@@ -32,7 +32,7 @@ Collect (hourly)
   → Filter → Deduplicator
   → Project Sync (private Draft Inbox if new URL)
   → dual-write seen.json
-  → Telegram only if new: datetime · OK · vacancy list
+  → Telegram each run: datetime · OK · (новых нет | list)
 
 Ops status / Applied → Screening: GitHub Project board (no daily Telegram CRM dump)
 ```

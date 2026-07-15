@@ -2,13 +2,20 @@
 
 iOS Hunter is evolving into **Career Agent**: collect iOS/Swift vacancies, sync them to a GitHub Project board, and report ops status on Telegram.
 
-Production runs on GitHub Actions. GitHub Project is the operational source of truth for vacancy status. Telegram notifies only when new vacancies land in Inbox.
+Production runs on GitHub Actions. GitHub Project is the operational source of truth for vacancy status. Telegram gets a short hourly OK (and the vacancy list only when something new lands in Inbox).
 
 See `docs/architecture/career-agent.md` and `docs/github-setup-guide.md`.
 
 ## What you get
 
-**Telegram (hourly collect)** — only when there are **new** vacancies:
+**Telegram (every successful collect):**
+
+```
+2026-07-15 11:00 · OK · новых нет
+найдено 22 · в базе 40
+```
+
+When there are **new** vacancies:
 
 ```
 2026-07-15 11:00 · OK · +2 Inbox
@@ -19,11 +26,7 @@ https://github.com/users/you/projects/1
    Acme
    Ashby
    https://jobs.example.com/1
-
-2. ...
 ```
-
-No new vacancies → no Telegram message (check GitHub Actions for collector health).
 
 **Pipeline status / Applied / Screening** — manage on the private [Career CRM Project](https://github.com/users/vil4max/projects/3). Telegram does **not** dump today's tasks or CRM sections.
 
