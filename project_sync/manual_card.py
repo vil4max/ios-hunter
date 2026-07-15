@@ -104,6 +104,10 @@ def apply_manual_fields(
             )
 
 
+def card_title(card: ManualCard) -> str:
+    return f"{card.company} — {card.title}"
+
+
 def create_private_card(
     settings: Settings,
     card: ManualCard,
@@ -115,7 +119,46 @@ def create_private_card(
         raise GitHubGraphQLError("Project owner/number not configured")
     gh = client or GitHubClient(settings.github_token)
     meta = gh.resolve_project(settings.project_owner, settings.project_number)
-    title = f"{card.company} — {card.title}"
+    title = card_title(card)
     item_id = gh.add_draft_issue(meta.project_id, title=title, body=build_draft_body(card))
     apply_manual_fields(gh, meta, item_id, card)
     return item_id
+
+
+def find_existing_item_id(client: GitHubClient, project_id: str, card: ManualCard) -> str | None:
+    if card.url:
+        by_url = client.find_project_item_by_canonical_url(project_id, card.url)
+        if by_url:
+            return by_url
+    return client.find_project_item_by_title(project_id, card_title(card))
+
+
+def upsert_private_card(
+    settings: Settings,
+    card: ManualCard,
+    *,
+    client: GitHubClient | None = None,
+) -> tuple[str, bool]:
+    """Create or update a private Project draft. Returns (item_id, created)."""
+    if not settings.project_owner or settings.project_number <= 0:
+        raise GitHubGraphQLError("Project owner/number not configured")
+    gh = client or GitHubClient(settings.github_token)
+    meta = gh.resolve_project(settings.project_owner, settings.project_number)
+    existing = find_existing_item_id(gh, meta.project_id, card)
+    if existing:
+        draft_id = gh.draft_issue_id_for_item(meta.project_id, existing)
+        if draft_id:
+            gh.update_draft_issue(
+                draft_id,
+                title=card_title(card),
+                body=build_draft_body(card),
+            )
+        apply_manual_fields(gh, meta, existing, card)
+        return existing, False
+    item_id = gh.add_draft_issue(
+        meta.project_id,
+        title=card_title(card),
+        body=build_draft_body(card),
+    )
+    apply_manual_fields(gh, meta, item_id, card)
+    return item_id, True

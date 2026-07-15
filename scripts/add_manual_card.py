@@ -11,7 +11,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from config.settings import load_settings
-from project_sync.manual_card import ManualCard, create_private_card
+from project_sync.manual_card import ManualCard, create_private_card, upsert_private_card
 
 
 def _ensure_env() -> None:
@@ -40,7 +40,7 @@ def _ensure_env() -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Add a private Career CRM draft card (not a public Issue)."
+        description="Upsert a private Career CRM draft card (not a public Issue)."
     )
     parser.add_argument("--company", required=True)
     parser.add_argument("--title", required=True)
@@ -57,6 +57,11 @@ def main() -> int:
         help="Your estimate of offer chance",
     )
     parser.add_argument("--notes", default="")
+    parser.add_argument(
+        "--create-only",
+        action="store_true",
+        help="Always create a new draft (skip upsert by URL/title)",
+    )
     args = parser.parse_args()
 
     _ensure_env()
@@ -73,8 +78,13 @@ def main() -> int:
         offer_probability=args.offer_probability,
         notes=args.notes,
     )
-    item_id = create_private_card(settings, card)
-    print(f"Created private card: {card.company} — {card.title}")
+    if args.create_only:
+        item_id = create_private_card(settings, card)
+        created = True
+    else:
+        item_id, created = upsert_private_card(settings, card)
+    action = "Created" if created else "Updated"
+    print(f"{action} private card: {card.company} — {card.title}")
     print(f"Status: {card.status}")
     if card.offer_probability:
         print(f"Offer Probability: {card.offer_probability}")

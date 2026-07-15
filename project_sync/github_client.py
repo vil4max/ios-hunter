@@ -331,6 +331,53 @@ class GitHubClient:
                     return str(item_id)
         return None
 
+    def find_project_item_by_title(self, project_id: str, title: str) -> str | None:
+        needle = title.strip()
+        if not needle:
+            return None
+        for raw in self.list_project_items(project_id):
+            content = raw.get("content") or {}
+            if str(content.get("title") or "").strip() != needle:
+                continue
+            item_id = raw.get("id")
+            if item_id:
+                return str(item_id)
+        return None
+
+    def draft_issue_id_for_item(self, project_id: str, item_id: str) -> str | None:
+        for raw in self.list_project_items(project_id):
+            if str(raw.get("id") or "") != item_id:
+                continue
+            content = raw.get("content") or {}
+            draft_id = content.get("id")
+            if draft_id:
+                return str(draft_id)
+            return None
+        return None
+
+    def update_draft_issue(
+        self,
+        draft_issue_id: str,
+        *,
+        title: str | None = None,
+        body: str | None = None,
+    ) -> None:
+        payload: dict[str, Any] = {"draftIssueId": draft_issue_id}
+        if title is not None:
+            payload["title"] = title
+        if body is not None:
+            payload["body"] = body
+        self.graphql(
+            """
+            mutation($input: UpdateProjectV2DraftIssueInput!) {
+              updateProjectV2DraftIssue(input: $input) {
+                draftIssue { id }
+              }
+            }
+            """,
+            {"input": payload},
+        )
+
     def set_date_field(
         self,
         *,
@@ -451,6 +498,7 @@ class GitHubClient:
                               state
                             }
                             ... on DraftIssue {
+                              id
                               title
                               body
                             }
