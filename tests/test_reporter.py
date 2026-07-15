@@ -48,7 +48,7 @@ def test_hourly_lists_new_vacancies_only() -> None:
     )
     assert message.startswith("🆕 +2 Inbox · 2026-07-15 11:00")
     assert "✅ Система работает" in message
-    assert "📊 найдено 10 · в базе 8" in message
+    assert "📊" not in message
     assert "Senior iOS Engineer" in message
     assert "🏢 Acme" in message
     assert "🔗 https://example.com/a" in message
@@ -73,8 +73,7 @@ def test_hourly_heartbeat_when_no_new() -> None:
     )
     assert message == (
         "✅ Система работает · 2026-07-15 11:00\n"
-        "📭 Новых вакансий не обнаружено\n"
-        "📊 найдено 22 · в базе 40"
+        "📭 Новых вакансий не обнаружено"
     )
 
 

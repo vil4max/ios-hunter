@@ -13,7 +13,6 @@ See `docs/architecture/career-agent.md` and `docs/github-setup-guide.md`.
 ```
 ✅ Система работает · 2026-07-15 11:00
 📭 Новых вакансий не обнаружено
-📊 найдено 22 · в базе 40
 ```
 
 When there are **new** vacancies:
@@ -21,7 +20,6 @@ When there are **new** vacancies:
 ```
 🆕 +2 Inbox · 2026-07-15 11:00
 ✅ Система работает
-📊 найдено 19 · в базе 22
 🔗 https://github.com/users/you/projects/1
 
 1. Senior iOS Engineer

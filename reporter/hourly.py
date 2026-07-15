@@ -25,13 +25,11 @@ def format_hourly_heartbeat(
         lines = [
             f"🆕 +{new_count} Inbox · {time_label}",
             "✅ Система работает",
-            f"📊 найдено {stats.found} · в базе {stats.seen_total}",
         ]
     else:
         lines = [
             f"✅ Система работает · {time_label}",
             "📭 Новых вакансий не обнаружено",
-            f"📊 найдено {stats.found} · в базе {stats.seen_total}",
         ]
     if stats.failed_source_names:
         lines.append(f"⚠️ ошибки: {', '.join(stats.failed_source_names)}")
