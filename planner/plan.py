@@ -5,7 +5,6 @@ from datetime import date, datetime, timezone
 from typing import Any
 
 from config.settings import (
-    ACTIVE_PIPELINE_STATUSES,
     STALE_STATUSES,
     Settings,
     STATUS_WORKFLOW,
@@ -32,6 +31,27 @@ def _parse_datetime(value: str | None) -> datetime | None:
         return None
 
 
+def _split_company_title(title: str, company: str) -> tuple[str, str]:
+    """Normalize draft titles like 'Acme — Role' so display is not doubled."""
+    raw_title = (title or "").strip()
+    raw_company = (company or "").strip()
+    if " — " in raw_title:
+        left, _, right = raw_title.partition(" — ")
+        left, right = left.strip(), right.strip()
+        if right:
+            if not raw_company:
+                raw_company = left
+            elif left.lower() == raw_company.lower() or raw_title.lower().startswith(
+                (raw_company + " — ").lower()
+            ):
+                raw_title = right
+            else:
+                raw_title = right
+    if raw_company and raw_title.lower().startswith((raw_company + " — ").lower()):
+        raw_title = raw_title[len(raw_company) + 3 :].strip()
+    return raw_company, raw_title
+
+
 @dataclass
 class ProjectCard:
     item_id: str
@@ -53,9 +73,10 @@ class ProjectCard:
 
     @property
     def display_title(self) -> str:
-        if self.company and self.title:
-            return f"{self.company} — {self.title}"
-        return self.title or self.company or self.canonical_url or self.issue_url
+        company, title = _split_company_title(self.title, self.company)
+        if company and title:
+            return f"{company} — {title}"
+        return title or company or self.canonical_url or self.issue_url
 
 
 def parse_project_item(raw: dict[str, Any]) -> ProjectCard | None:
@@ -81,12 +102,10 @@ def parse_project_item(raw: dict[str, Any]) -> ProjectCard | None:
             fields[str(name)] = str(node["date"])
 
     status = fields.get("Status", "Inbox")
-    title = str(content.get("title") or "")
-    company = fields.get("Company", "")
-    if " — " in title and not company:
-        company, _, rest = title.partition(" — ")
-        if rest:
-            title = rest
+    company, title = _split_company_title(
+        str(content.get("title") or ""),
+        fields.get("Company", ""),
+    )
 
     updated = _parse_datetime(str(raw.get("updatedAt") or content.get("updatedAt") or ""))
     created = _parse_datetime(str(content.get("createdAt") or ""))
@@ -124,6 +143,8 @@ class DailyPlan:
 
 def _age_days(card: ProjectCard, today: date) -> int | None:
     stamp = card.updated_at or card.created_at
+    if stamp is None and card.applied_at is not None:
+        return (today - card.applied_at).days
     if stamp is None:
         return None
     if stamp.tzinfo is not None:
@@ -141,7 +162,7 @@ def build_plan(cards: list[ProjectCard], settings: Settings, *, today: date | No
 
     ranked: list[tuple[int, ProjectCard]] = []
     for card in cards:
-        if card.status == "Archived":
+        if card.status in {"Archived", "Rejected", "Offer"}:
             continue
 
         age = _age_days(card, today)
@@ -154,24 +175,25 @@ def build_plan(cards: list[ProjectCard], settings: Settings, *, today: date | No
         if follow_due:
             plan.pending_follow_ups.append(card)
             ranked.append((0, card))
-        elif card.status in {"Technical", "Screening"} and card.follow_up and follow_upcoming:
-            plan.upcoming_interviews.append(card)
-            ranked.append((1, card))
-        elif card.status in STALE_STATUSES and age is not None and age >= settings.stale_days:
-            plan.needs_attention.append(card)
-            ranked.append((2, card))
-        elif card.status == "Inbox" and (age is None or age <= settings.inbox_new_days):
-            plan.new_vacancies.append(card)
-            ranked.append((3, card))
-        elif card.status == "Inbox":
-            ranked.append((4, card))
-        elif card.status == "Applied":
-            ranked.append((5, card))
-        elif card.status in ACTIVE_PIPELINE_STATUSES:
-            ranked.append((6, card))
+            continue
 
-        if follow_upcoming and card not in plan.upcoming_interviews:
+        if card.status in {"Technical", "Screening"} and follow_upcoming:
             plan.upcoming_interviews.append(card)
+            continue
+
+        if card.status in STALE_STATUSES and age is not None and age >= settings.stale_days:
+            plan.needs_attention.append(card)
+            ranked.append((1, card))
+            continue
+
+        if card.status == "Inbox":
+            if age is None or age <= settings.inbox_new_days:
+                plan.new_vacancies.append(card)
+            ranked.append((2, card))
+            continue
+
+        if card.status == "Screening" and not follow_upcoming:
+            ranked.append((3, card))
 
     seen_ids: set[str] = set()
     for _, card in sorted(ranked, key=lambda pair: (pair[0], pair[1].display_title.lower())):
