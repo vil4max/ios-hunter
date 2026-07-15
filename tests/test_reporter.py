@@ -46,10 +46,12 @@ def test_hourly_lists_new_vacancies_only() -> None:
         board_url="https://github.com/users/acme/projects/1",
         now=now,
     )
-    assert message.startswith("2026-07-15 11:00 · OK · +2 Inbox")
-    assert "найдено 10 · в базе 8" in message
+    assert message.startswith("🆕 +2 Inbox · 2026-07-15 11:00")
+    assert "✅ Система работает" in message
+    assert "📊 найдено 10 · в базе 8" in message
     assert "Senior iOS Engineer" in message
-    assert "https://example.com/a" in message
+    assert "🏢 Acme" in message
+    assert "🔗 https://example.com/a" in message
     assert "Today's tasks" not in message
     assert "Pipeline" not in message
 
@@ -70,8 +72,9 @@ def test_hourly_heartbeat_when_no_new() -> None:
         now=now,
     )
     assert message == (
-        "2026-07-15 11:00 · OK · новых нет\n"
-        "найдено 22 · в базе 40"
+        "✅ Система работает · 2026-07-15 11:00\n"
+        "📭 Новых вакансий не обнаружено\n"
+        "📊 найдено 22 · в базе 40"
     )
 
 

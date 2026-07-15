@@ -20,18 +20,23 @@ def format_hourly_heartbeat(
     now: datetime | None = None,
 ) -> str:
     stamp = (now or datetime.now(_KYIV)).astimezone(_KYIV)
+    time_label = stamp.strftime("%Y-%m-%d %H:%M")
     if new_count > 0:
-        head = f"{stamp.strftime('%Y-%m-%d %H:%M')} · OK · +{new_count} Inbox"
+        lines = [
+            f"🆕 +{new_count} Inbox · {time_label}",
+            "✅ Система работает",
+            f"📊 найдено {stats.found} · в базе {stats.seen_total}",
+        ]
     else:
-        head = f"{stamp.strftime('%Y-%m-%d %H:%M')} · OK · новых нет"
-    lines = [
-        head,
-        f"найдено {stats.found} · в базе {stats.seen_total}",
-    ]
+        lines = [
+            f"✅ Система работает · {time_label}",
+            "📭 Новых вакансий не обнаружено",
+            f"📊 найдено {stats.found} · в базе {stats.seen_total}",
+        ]
     if stats.failed_source_names:
-        lines.append(f"ошибки: {', '.join(stats.failed_source_names)}")
+        lines.append(f"⚠️ ошибки: {', '.join(stats.failed_source_names)}")
     if board_url and new_count > 0:
-        lines.append(board_url)
+        lines.append(f"🔗 {board_url}")
     return "\n".join(lines)
 
 
@@ -58,10 +63,10 @@ def format_hourly_new_vacancies(
         lines.append("")
         lines.append(f"{index}. {title}")
         if company:
-            lines.append(f"   {company}")
-        lines.append(f"   {source}")
+            lines.append(f"   🏢 {company}")
+        lines.append(f"   📡 {source}")
         if url:
-            lines.append(f"   {url}")
+            lines.append(f"   🔗 {url}")
     return "\n".join(lines)
 
 
