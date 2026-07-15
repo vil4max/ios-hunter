@@ -30,14 +30,11 @@ scripts/            thin CLIs: run_pipeline, run_daily_report, seed_project
 ```text
 Collect (hourly)
   → Filter → Deduplicator
-  → Project Sync (create Issue+item Inbox if new URL)
+  → Project Sync (private Draft Inbox if new URL)
   → dual-write seen.json
-  → Telegram: Inbox +N (no vacancy list)
+  → Telegram only if new: datetime · OK · vacancy list
 
-Daily report (~07:00 Europe/Kyiv)
-  → GraphQL read Project
-  → Planner
-  → Reporter dashboard → Telegram
+Ops status / Applied → Screening: GitHub Project board (no daily Telegram CRM dump)
 ```
 
 ## Vacancy minimum model

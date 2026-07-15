@@ -2,26 +2,30 @@
 
 iOS Hunter is evolving into **Career Agent**: collect iOS/Swift vacancies, sync them to a GitHub Project board, and report ops status on Telegram.
 
-Production runs on GitHub Actions. GitHub Project is the operational source of truth for vacancy status. Telegram is the daily interface.
+Production runs on GitHub Actions. GitHub Project is the operational source of truth for vacancy status. Telegram notifies only when new vacancies land in Inbox.
 
 See `docs/architecture/career-agent.md` and `docs/github-setup-guide.md`.
 
 ## What you get
 
-**Hourly** (collect run) — short Inbox alert (no vacancy list):
+**Telegram (hourly collect)** — only when there are **new** vacancies:
 
 ```
-Inbox +2 · 2026-07-15 11:00
-Новых карточек: 2
+2026-07-15 11:00 · OK · +2 Inbox
+найдено 19 · в базе 22
 https://github.com/users/you/projects/1
 
-Сейчас найдено: 19
-Уже в базе: 22
-Новых: 2
-...
+1. Senior iOS Engineer
+   Acme
+   Ashby
+   https://jobs.example.com/1
+
+2. ...
 ```
 
-**Daily** — ops dashboard from Project state (new, attention, today's tasks, follow-ups, pipeline stats).
+No new vacancies → no Telegram message (check GitHub Actions for collector health).
+
+**Pipeline status / Applied / Screening** — manage on the private [Career CRM Project](https://github.com/users/vil4max/projects/3). Telegram does **not** dump today's tasks or CRM sections.
 
 DOU and Djinni board browsing stays in their native apps. This repo watches company career pages (and related DOU Top 50 career-site discovery).
 
@@ -55,18 +59,18 @@ Python sources (boards / DOU careers)
         ↓
 Normalize + iOS/Swift filter → Deduplicate
         ↓
-Project Sync (Issue + Project Inbox) + seen.json dual-write
+Project Sync (private Draft + Project Inbox) + seen.json dual-write
         ↓
-Telegram hourly short alert · Daily Planner dashboard
+Telegram only on new vacancies (list + OK)
 ```
 
 ## Workflows
 
 | Workflow | When |
 |----------|------|
-| **Collect iOS Jobs** | Manual or via hourly trigger — collect, sync, hourly alert |
+| **Collect iOS Jobs** | Manual or via hourly trigger — collect, sync, Telegram if new |
 | **Hourly Collect Trigger** | Every hour UTC — dispatches Collect on macOS |
-| **Daily Career Report** | ~07:00 Kyiv — Planner → Telegram dashboard |
+| **Daily Career Report** | Manual only — Project plan counts to Actions log (no Telegram) |
 | **CI** | Push / PR — Swift build + pytest |
 
 ## Local debug

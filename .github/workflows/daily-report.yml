@@ -1,10 +1,9 @@
 name: Daily Career Report
 
 on:
+  # Telegram no longer sends CRM dashboards. Pipeline ops live on the Project board.
+  # Keep manual dispatch for local/ops debugging (prints plan counts only).
   workflow_dispatch:
-  schedule:
-    # 04:00 UTC ≈ 07:00 Europe/Kyiv (EET); adjust for DST if needed.
-    - cron: "0 4 * * *"
 
 permissions:
   contents: read

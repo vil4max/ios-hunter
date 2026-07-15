@@ -111,6 +111,7 @@ def process_new_vacancies(
         try:
             notify_hourly_inbox(
                 sync_result,
+                fresh,
                 stats=stats,
                 board_url=settings.project_board_url,
             )
@@ -137,6 +138,7 @@ def process_new_vacancies(
     try:
         notify_hourly_inbox(
             sync_result,
+            fresh,
             stats=stats,
             board_url=settings.project_board_url,
         )

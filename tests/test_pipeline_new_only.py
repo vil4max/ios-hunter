@@ -9,7 +9,7 @@ from tests.conftest import make_vacancy
 def test_second_identical_run_sends_zero_created(monkeypatch) -> None:
     alerts: list[int] = []
 
-    def fake_hourly(sync_result, *, stats, board_url="", now=None):
+    def fake_hourly(sync_result, fresh, *, stats, board_url="", now=None):
         alerts.append(sync_result.created_count)
 
     monkeypatch.setattr("scripts.run_pipeline.notify_hourly_inbox", fake_hourly)
@@ -53,7 +53,7 @@ def test_second_identical_run_sends_zero_created(monkeypatch) -> None:
 def test_seed_only_marks_without_sending(monkeypatch) -> None:
     calls: list[int] = []
 
-    def fake_hourly(sync_result, *, stats, board_url="", now=None):
+    def fake_hourly(sync_result, fresh, *, stats, board_url="", now=None):
         calls.append(1)
 
     monkeypatch.setattr("scripts.run_pipeline.notify_hourly_inbox", fake_hourly)
@@ -72,7 +72,7 @@ def test_seed_only_marks_without_sending(monkeypatch) -> None:
 def test_same_url_different_description_does_not_recount(monkeypatch) -> None:
     alerts: list[int] = []
 
-    def fake_hourly(sync_result, *, stats, board_url="", now=None):
+    def fake_hourly(sync_result, fresh, *, stats, board_url="", now=None):
         alerts.append(sync_result.created_count)
 
     monkeypatch.setattr("scripts.run_pipeline.notify_hourly_inbox", fake_hourly)
@@ -91,7 +91,7 @@ def test_same_url_different_description_does_not_recount(monkeypatch) -> None:
 def test_multiple_new_vacancies_one_hourly_alert(monkeypatch) -> None:
     alerts: list[tuple[int, CollectReportStats]] = []
 
-    def fake_hourly(sync_result, *, stats, board_url="", now=None):
+    def fake_hourly(sync_result, fresh, *, stats, board_url="", now=None):
         alerts.append((sync_result.created_count, stats))
 
     monkeypatch.setattr("scripts.run_pipeline.notify_hourly_inbox", fake_hourly)
@@ -122,10 +122,10 @@ def test_multiple_new_vacancies_one_hourly_alert(monkeypatch) -> None:
     )
 
 
-def test_no_vacancies_still_sends_hourly_proof(monkeypatch) -> None:
+def test_no_new_vacancies_still_invokes_notifier(monkeypatch) -> None:
     alerts: list[int] = []
 
-    def fake_hourly(sync_result, *, stats, board_url="", now=None):
+    def fake_hourly(sync_result, fresh, *, stats, board_url="", now=None):
         alerts.append(sync_result.created_count)
 
     monkeypatch.setattr("scripts.run_pipeline.notify_hourly_inbox", fake_hourly)

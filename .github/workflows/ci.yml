@@ -31,4 +31,4 @@ jobs:
         run: python3 -m pytest -q
 
       - name: Verify imports
-        run: python3 -c "from collector.companies import collect_all; from database.seen import load_seen; from integrations.notify import format_vacancies_message; from project_sync.sync import ProjectSync; from planner.plan import build_plan; from reporter.hourly import format_hourly_inbox_alert"
+        run: python3 -c "from collector.companies import collect_all; from database.seen import load_seen; from integrations.notify import format_vacancies_message; from project_sync.sync import ProjectSync; from planner.plan import build_plan; from reporter.hourly import format_hourly_new_vacancies"

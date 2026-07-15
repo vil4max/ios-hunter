@@ -5,13 +5,15 @@ from zoneinfo import ZoneInfo
 
 from integrations.notify import CollectReportStats
 from planner.plan import DailyPlan, ProjectCard
+from project_sync.sync import SyncItemResult, SyncResult
 from reporter.daily import format_daily_dashboard
-from reporter.hourly import format_hourly_inbox_alert
+from reporter.hourly import format_hourly_new_vacancies, vacancies_for_alert
+from tests.conftest import make_vacancy
 
 _KYIV = ZoneInfo("Europe/Kyiv")
 
 
-def test_hourly_alert_has_no_vacancy_list() -> None:
+def test_hourly_lists_new_vacancies_only() -> None:
     now = datetime(2026, 7, 15, 11, 0, tzinfo=_KYIV)
     stats = CollectReportStats(
         found=10,
@@ -20,19 +22,67 @@ def test_hourly_alert_has_no_vacancy_list() -> None:
         duplicates_removed=1,
         failed_source_names=(),
     )
-    message = format_hourly_inbox_alert(
-        created_count=2,
-        board_url="https://github.com/users/acme/projects/1",
+    vacancies = [
+        make_vacancy(
+            title="Senior iOS Engineer",
+            company="Acme",
+            url="https://example.com/a",
+            source="company",
+        ),
+        make_vacancy(
+            title="Swift Developer",
+            company="Beta",
+            url="https://example.com/b",
+            source="company",
+        ),
+    ]
+    message = format_hourly_new_vacancies(
+        vacancies,
         stats=stats,
+        board_url="https://github.com/users/acme/projects/1",
         now=now,
     )
-    assert message.startswith("Inbox +2 · 2026-07-15 11:00")
-    assert "Новых карточек: 2" in message
-    assert "https://example.com" not in message
-    assert "Senior iOS" not in message
+    assert message is not None
+    assert message.startswith("2026-07-15 11:00 · OK · +2 Inbox")
+    assert "найдено 10 · в базе 8" in message
+    assert "Senior iOS Engineer" in message
+    assert "https://example.com/a" in message
+    assert "Today's tasks" not in message
+    assert "Pipeline" not in message
 
 
-def test_daily_dashboard_sections() -> None:
+def test_hourly_skips_empty() -> None:
+    stats = CollectReportStats(
+        found=10,
+        seen_total=10,
+        new_count=0,
+        duplicates_removed=0,
+        failed_source_names=(),
+    )
+    assert format_hourly_new_vacancies([], stats=stats) is None
+
+
+def test_vacancies_for_alert_prefers_created_sync_items() -> None:
+    fresh = [
+        make_vacancy(url="https://example.com/1", title="A", company="Acme"),
+        make_vacancy(url="https://example.com/2", title="B", company="Beta"),
+    ]
+    sync = SyncResult(
+        created=[
+            SyncItemResult(
+                canonical_url="https://example.com/1",
+                company="Acme",
+                title="A",
+                created=True,
+            )
+        ]
+    )
+    shown = vacancies_for_alert(sync, fresh)
+    assert len(shown) == 1
+    assert shown[0].url == "https://example.com/1"
+
+
+def test_daily_dashboard_formatter_still_works() -> None:
     card = ProjectCard(
         item_id="1",
         issue_number=3,
@@ -62,9 +112,4 @@ def test_daily_dashboard_sections() -> None:
     now = datetime(2026, 7, 15, 7, 0, tzinfo=_KYIV)
     message = format_daily_dashboard(plan, board_url="https://board", now=now)
     assert "Career Agent · 2026-07-15" in message
-    assert "New vacancies" in message
-    assert "Needs attention" in message
-    assert "Today's tasks" in message
-    assert "Pipeline statistics" in message
-    assert "Daily summary" in message
     assert "Acme — iOS Engineer" in message

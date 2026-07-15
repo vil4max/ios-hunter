@@ -11,7 +11,6 @@ if str(ROOT) not in sys.path:
 from config.settings import load_settings
 from planner.plan import build_plan, load_cards_from_github
 from project_sync.github_client import GitHubClient
-from reporter.daily import notify_daily_dashboard
 
 
 def main() -> int:
@@ -27,12 +26,15 @@ def main() -> int:
     client = GitHubClient(settings.github_token)
     cards = load_cards_from_github(client, settings)
     plan = build_plan(cards, settings)
-    notify_daily_dashboard(plan, board_url=settings.project_board_url)
     print(
+        "Daily CRM report is Project-only (no Telegram).\n"
+        f"Board: {settings.project_board_url or '(unset)'}\n"
         f"Cards: {len(cards)}\n"
+        f"Inbox: {plan.status_counts.get('Inbox', 0)}\n"
         f"Today tasks: {len(plan.today_tasks)}\n"
         f"New: {len(plan.new_vacancies)}\n"
-        f"Attention: {len(plan.needs_attention)}"
+        f"Attention: {len(plan.needs_attention)}\n"
+        f"Follow-ups due: {len(plan.pending_follow_ups)}"
     )
     return 0
 
