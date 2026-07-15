@@ -74,6 +74,15 @@ class FakeClient:
     def find_project_item_by_title(self, project_id: str, title: str) -> str | None:
         return self._by_title.get(title)
 
+    def find_project_item_by_company(self, project_id: str, company: str) -> str | None:
+        needle = company.strip().casefold()
+        hits = [
+            item_id
+            for item_id, meta in self._items.items()
+            if meta["title"].split(" — ", 1)[0].strip().casefold() == needle
+        ]
+        return hits[0] if len(hits) == 1 else None
+
     def draft_issue_id_for_item(self, project_id: str, item_id: str) -> str | None:
         item = self._items.get(item_id)
         if not item:
@@ -149,3 +158,25 @@ def test_upsert_creates_then_updates_same_url() -> None:
     assert len(client.created_titles) == 1
     assert client.updated_drafts
     assert "opt-screening" in client.status_sets
+
+
+def test_upsert_matches_same_company_when_title_differs() -> None:
+    client = FakeClient()
+    first = ManualCard(
+        company="Visual Craft",
+        title="Senior iOS Engineer",
+        status="Screening",
+    )
+    item_id, created = upsert_private_card(_settings(), first, client=client)  # type: ignore[arg-type]
+    assert created is True
+
+    second = ManualCard(
+        company="Visual Craft",
+        title="Senior iOS (Swift) Engineer",
+        status="Applied",
+        url="https://djinni.co/jobs/836367-senior-ios-swift-engineer/",
+    )
+    same_id, created_again = upsert_private_card(_settings(), second, client=client)  # type: ignore[arg-type]
+    assert created_again is False
+    assert same_id == item_id
+    assert len(client.created_titles) == 1

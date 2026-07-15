@@ -130,7 +130,10 @@ def find_existing_item_id(client: GitHubClient, project_id: str, card: ManualCar
         by_url = client.find_project_item_by_canonical_url(project_id, card.url)
         if by_url:
             return by_url
-    return client.find_project_item_by_title(project_id, card_title(card))
+    by_title = client.find_project_item_by_title(project_id, card_title(card))
+    if by_title:
+        return by_title
+    return client.find_project_item_by_company(project_id, card.company)
 
 
 def upsert_private_card(

@@ -344,6 +344,31 @@ class GitHubClient:
                 return str(item_id)
         return None
 
+    def find_project_item_by_company(self, project_id: str, company: str) -> str | None:
+        needle = company.strip().casefold()
+        if not needle:
+            return None
+        matches: list[str] = []
+        for raw in self.list_project_items(project_id):
+            fields: dict[str, str] = {}
+            for node in (raw.get("fieldValues") or {}).get("nodes") or []:
+                if not isinstance(node, dict):
+                    continue
+                name = (node.get("field") or {}).get("name")
+                if name and "text" in node and node["text"] is not None:
+                    fields[str(name)] = str(node["text"])
+            company_field = fields.get("Company", "").strip().casefold()
+            content = raw.get("content") or {}
+            title = str(content.get("title") or "")
+            title_company = title.split(" — ", 1)[0].strip().casefold() if " — " in title else ""
+            if company_field == needle or title_company == needle:
+                item_id = raw.get("id")
+                if item_id:
+                    matches.append(str(item_id))
+        if len(matches) == 1:
+            return matches[0]
+        return None
+
     def draft_issue_id_for_item(self, project_id: str, item_id: str) -> str | None:
         for raw in self.list_project_items(project_id):
             if str(raw.get("id") or "") != item_id:
