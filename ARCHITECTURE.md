@@ -1,5 +1,7 @@
 # iOS Hunter Architecture
 
+Career Agent target: `docs/architecture/career-agent.md`. ADR: `docs/adr/0001-career-agent-architecture.md`.
+
 ## Overview
 
 ```
@@ -9,39 +11,25 @@ GitHub Actions (hourly)
         │ database/swift_export.json
    Python Pipeline
         │
-   Normalize → Deduplicate → Seen store → Telegram
+   Normalize → Deduplicate → Project Sync (+ seen.json dual-write) → Telegram hourly
+Daily Actions → Planner (Project read) → Telegram dashboard
 ```
 
 ## Pipeline
 
-1. Swift scrapers fetch iOS / Swift vacancies from company career pages and write `database/swift_export.json`.
-2. Python loads the Swift export plus additional Python sources (job boards, DOU Top 50 career-site discovery).
+1. Swift scrapers fetch iOS / Swift vacancies and write `database/swift_export.json`.
+2. Python loads the Swift export plus additional Python sources.
 3. Vacancies are normalized and filtered to iOS / Swift titles (or descriptions).
 4. In-run deduplication collapses identical identity keys and same company+title roles.
-5. Each vacancy’s canonical URL is checked against `database/seen.json`.
-6. Unseen vacancies are sent in one Telegram message (`title`, `company`, `source`, `url`), then recorded in the seen store. If none are new, a short “no new vacancies” report is sent with proof stats (found / seen / new / duplicates / failed sources). Seed-only runs send nothing.
-7. Collect workflow commits `database/seen.json` when it changes (`[skip ci]`).
+5. When Sync is enabled, Project Sync creates Issue + Project item (Inbox) for new Canonical-URLs.
+6. Hourly Telegram sends a short Inbox +N alert (no vacancy list). Daily report is a separate workflow.
+7. Collect workflow commits `database/seen.json` when it changes (`[skip ci]`) during dual-write.
 
 ## State
 
-**`database/seen.json`** is the durable seen-vacancy store (committed to git).
+**GitHub Project** is the operational source of truth for Status after Sync is enabled.
 
-```json
-{
-  "https://example.com/jobs/123": {
-    "title": "Senior iOS Engineer",
-    "company": "Acme",
-    "first_seen": "2026-07-10T10:00:00+00:00"
-  }
-}
-```
-
-There is no SQLite database. Identity is the canonical vacancy URL.
-
-Bootstrap options:
-
-- Migrate URLs from a leftover `database/jobs.db` on first empty seen load.
-- Or run with `SEED_SEEN_ONLY=1` / `--seed-only` to mark the current market as seen without Telegram.
+**`database/seen.json`** remains a dual-write notify/sync journal until cutover (`docs/migration-plan.md`).
 
 ## Modules
 
@@ -50,19 +38,18 @@ Bootstrap options:
 | `Sources/JobHunter/` | Swift scrapers → `swift_export.json` |
 | `collector/` | Python adapters (Swift export, boards, DOU careers) |
 | `parser/` | Normalize, iOS filter, dedupe |
-| `database/seen.py` | Load / save / migrate seen store |
-| `integrations/` | Telegram send + message format |
-| `scripts/run_pipeline.py` | Collect → notify new vacancies |
-
-## Design principles
-
-- Zero-cost hosting (GitHub Actions + private repo)
-- No backend server, no LLM
-- Telegram as the only output channel
-- Minimal durable state: have I already sent this URL?
-- Hourly trigger on ubuntu dispatches macOS Collect (macOS cron is unreliable)
+| `config/` | Project + Sync settings from env |
+| `project_sync/` | Issues + Projects V2 GraphQL |
+| `planner/` | Daily work from Project cards |
+| `reporter/` | Hourly short alert + daily dashboard |
+| `analytics/` | Pipeline summary helpers |
+| `database/seen.py` | Dual-write seen store |
+| `scripts/run_pipeline.py` | Collect → sync → hourly |
+| `scripts/run_daily_report.py` | Planner → daily Telegram |
+| `scripts/seed_project_from_seen.py` | Seed Archived from seen.json |
 
 ## Schedule
 
-- **Collect:** every hour via `hourly-trigger.yml` → `workflow_dispatch` of Collect
+- **Collect:** every hour via `hourly-trigger.yml` → Collect
+- **Daily report:** `daily-report.yml` (~04:00 UTC)
 - **CI:** on push/PR to `main`

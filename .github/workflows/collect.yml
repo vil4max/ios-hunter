@@ -6,6 +6,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: collect-ios-jobs-${{ github.repository }}
@@ -43,6 +44,13 @@ jobs:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           SEED_SEEN_ONLY: ${{ vars.SEED_SEEN_ONLY }}
+          CAREER_AGENT_TOKEN: ${{ secrets.CAREER_AGENT_TOKEN }}
+          CAREER_AGENT_SYNC_ENABLED: ${{ vars.CAREER_AGENT_SYNC_ENABLED }}
+          CAREER_AGENT_SEEN_GATE: ${{ vars.CAREER_AGENT_SEEN_GATE }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          CAREER_PROJECT_OWNER: ${{ vars.CAREER_PROJECT_OWNER }}
+          CAREER_PROJECT_NUMBER: ${{ vars.CAREER_PROJECT_NUMBER }}
+          PROJECT_BOARD_URL: ${{ vars.PROJECT_BOARD_URL }}
         run: python3 scripts/run_pipeline.py
 
       - name: Commit seen store

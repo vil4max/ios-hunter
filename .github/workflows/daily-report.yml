@@ -1,0 +1,44 @@
+name: Daily Career Report
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 04:00 UTC ≈ 07:00 Europe/Kyiv (EET); adjust for DST if needed.
+    - cron: "0 4 * * *"
+
+permissions:
+  contents: read
+  issues: read
+
+concurrency:
+  group: daily-career-report-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run daily report
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          CAREER_AGENT_TOKEN: ${{ secrets.CAREER_AGENT_TOKEN }}
+          CAREER_AGENT_SYNC_ENABLED: ${{ vars.CAREER_AGENT_SYNC_ENABLED }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          CAREER_PROJECT_OWNER: ${{ vars.CAREER_PROJECT_OWNER }}
+          CAREER_PROJECT_NUMBER: ${{ vars.CAREER_PROJECT_NUMBER }}
+          PROJECT_BOARD_URL: ${{ vars.PROJECT_BOARD_URL }}
+          CAREER_AGENT_STALE_DAYS: ${{ vars.CAREER_AGENT_STALE_DAYS }}
+          CAREER_AGENT_INBOX_NEW_DAYS: ${{ vars.CAREER_AGENT_INBOX_NEW_DAYS }}
+          CAREER_AGENT_RESEARCH_STALE_DAYS: ${{ vars.CAREER_AGENT_RESEARCH_STALE_DAYS }}
+        run: python3 scripts/run_daily_report.py

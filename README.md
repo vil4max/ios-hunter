@@ -1,46 +1,27 @@
 # iOS Hunter
 
-iOS Hunter monitors company career pages and sends newly discovered iOS / Swift vacancies to Telegram.
+iOS Hunter is evolving into **Career Agent**: collect iOS/Swift vacancies, sync them to a GitHub Project board, and report ops status on Telegram.
 
-Production runs on GitHub Actions. Telegram is the only output channel.
+Production runs on GitHub Actions. GitHub Project is the operational source of truth for vacancy status. Telegram is the daily interface.
+
+See `docs/architecture/career-agent.md` and `docs/github-setup-guide.md`.
 
 ## What you get
 
-One Telegram message per collect run with all newly detected vacancies:
+**Hourly** (collect run) — short Inbox alert (no vacancy list):
 
 ```
-Вакансий 2 · 2026-07-10 11:47
-
-1. Senior iOS Engineer
-   Acme
-   Ashby
-   https://jobs.ashbyhq.com/acme/123
-
-2. Swift Developer
-   EPAM
-   EPAM careers
-   https://careers.epam.com/en/vacancy/ios-1
-```
-
-If there are no new vacancies, a short report is still sent with proof stats:
-
-```
-Новых вакансий нет · 2026-07-10 18:00
+Inbox +2 · 2026-07-15 11:00
+Новых карточек: 2
+https://github.com/users/you/projects/1
 
 Сейчас найдено: 19
 Уже в базе: 22
-Новых: 0
-
-Дубликаты сняты: 2
-Источники с ошибкой: 1
-· DOU Top 50
-
-Все найденные URL уже есть в базе
+Новых: 2
+...
 ```
 
-`Сейчас найдено` can be lower than `Уже в базе` when roles closed or a source failed this hour. `Новых: 0` means every found URL is already in `seen.json`.
-
-Nothing else is sent. No match scores, cover letters, AI summaries, or market reports.
+**Daily** — ops dashboard from Project state (new, attention, today's tasks, follow-ups, pipeline stats).
 
 DOU and Djinni board browsing stays in their native apps. This repo watches company career pages (and related DOU Top 50 career-site discovery).
 
@@ -50,14 +31,20 @@ DOU and Djinni board browsing stays in their native apps. This repo watches comp
 |--------|----------|---------|
 | `TELEGRAM_TOKEN` | yes | Bot API |
 | `TELEGRAM_CHAT_ID` | yes | Your private chat |
+| `CAREER_AGENT_TOKEN` | for Sync | Fine-grained PAT: Issues + Projects |
 
 Remove unused repo secrets if present: `GEMINI_API_KEY`, `OPENAI_API_KEY`.
 
-Optional repository variable for cutover:
+Repository variables:
 
 | Variable | Purpose |
 |----------|---------|
-| `SEED_SEEN_ONLY` | Set to `1` for the first collect after deploy to mark all current vacancies as seen without Telegram. Clear it afterward. |
+| `SEED_SEEN_ONLY` | `1` to mark/seed without hourly alert |
+| `CAREER_AGENT_SYNC_ENABLED` | `1` to enable GitHub Project Sync |
+| `CAREER_AGENT_SEEN_GATE` | `0` after cutover (default on) |
+| `CAREER_PROJECT_OWNER` | User/org login owning the Project (`vil4max`) |
+| `CAREER_PROJECT_NUMBER` | Project number from URL (`3`) |
+| `PROJECT_BOARD_URL` | Link shown in Telegram |
 
 ## Pipeline
 
@@ -68,17 +55,18 @@ Python sources (boards / DOU careers)
         ↓
 Normalize + iOS/Swift filter → Deduplicate
         ↓
-Seen store (database/seen.json) → Telegram (new URLs, or empty report)
+Project Sync (Issue + Project Inbox) + seen.json dual-write
+        ↓
+Telegram hourly short alert · Daily Planner dashboard
 ```
-
-Seen state is committed to git after each collect so Actions cache loss cannot resend every vacancy.
 
 ## Workflows
 
 | Workflow | When |
 |----------|------|
-| **Collect iOS Jobs** | Manual or via hourly trigger — collect and notify |
+| **Collect iOS Jobs** | Manual or via hourly trigger — collect, sync, hourly alert |
 | **Hourly Collect Trigger** | Every hour UTC — dispatches Collect on macOS |
+| **Daily Career Report** | ~07:00 Kyiv — Planner → Telegram dashboard |
 | **CI** | Push / PR — Swift build + pytest |
 
 ## Local debug
@@ -87,12 +75,14 @@ Seen state is committed to git after each collect so Actions cache loss cannot r
 swift build -c release
 SWIFT_EXPORT_PATH=database/swift_export.json swift run -c release JobHunter
 pip install -r requirements.txt
-SEED_SEEN_ONLY=1 python3 scripts/run_pipeline.py   # first run: seed only
-python3 scripts/run_pipeline.py                    # notify new vacancies
+SEED_SEEN_ONLY=1 python3 scripts/run_pipeline.py
+CAREER_AGENT_SYNC_ENABLED=1 python3 scripts/run_pipeline.py
+python3 scripts/seed_project_from_seen.py --dry-run
+python3 scripts/run_daily_report.py
 ```
 
 Without Telegram secrets, messages print to stdout.
 
 ## Identity
 
-Vacancies are keyed by canonical URL (tracking query params stripped). The same URL is never sent twice. Description changes and reopenings do not create another message.
+Vacancies are keyed by canonical URL (tracking query params stripped). Project Sync is idempotent via `Canonical-URL` in the Issue body.
