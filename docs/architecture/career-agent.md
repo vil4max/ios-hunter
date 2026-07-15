@@ -44,7 +44,7 @@ Daily report (~07:00 Europe/Kyiv)
 
 Issue + Project fields: company, title, url, canonical_url, source, Status, Priority, Offer Probability (Low/Medium/High), Applied At, Follow Up, created/updated.
 
-Manual / historical applications use **private Draft Project items** (not public repo Issues) via `scripts/add_manual_card.py`.
+Manual / historical / collector vacancies use **private Draft Project items** (never public repo Issues) via Sync and `scripts/add_manual_card.py`.
 
 
 ## Status workflow

@@ -9,15 +9,23 @@ Move operational truth from `database/seen.json` (notified URLs) to GitHub Proje
 ### M1 — Dual-write (current Agent v1)
 
 1. Collect, filter, dedupe as today.
-2. For URLs not in `seen.json`, Project Sync creates Issue + Project item (Status Inbox).
+2. For URLs not in `seen.json`, Project Sync creates a **private Draft** Project item (Status Inbox) — never a public Issue.
 3. Mark URL in `seen.json` after successful Sync (and hourly alert).
 4. Hourly Telegram: short Inbox +N only.
+5. **Never** convert Project drafts to Issues in the public `ios-hunter` repo (exposes the search).
 
-### M2 — Seed legacy seen
+### M2 — Seed legacy seen (decision: **skip by default**)
 
-1. Run `python3 scripts/seed_project_from_seen.py` with Sync enabled.
-2. Each `seen.json` URL becomes Issue + item with Status **Archived** (no Telegram).
-3. Existing entries remain in `seen.json`.
+Do **not** bulk-import `database/seen.json` as Archived Project cards.
+
+Why:
+- Seen store is a collector notify/dedup journal (dozens+ URLs), not an application pipeline.
+- Flooding Archived with “already Telegram’d” URLs adds noise, not ops value.
+- Application history already lives as private Drafts on the Project (imported from career/job-search).
+
+`scripts/seed_project_from_seen.py` remains available for rare recovery only — do not run on a schedule.
+
+Keep dual-write: new Sync Inbox drafts + `seen.json` gate until cutover.
 
 ### M3 — Daily dashboard live
 

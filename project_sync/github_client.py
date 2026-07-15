@@ -5,6 +5,8 @@ from typing import Any
 
 import requests
 
+from parser.normalize import canonicalize_url
+
 
 GRAPHQL_URL = "https://api.github.com/graphql"
 
@@ -291,6 +293,43 @@ class GitHubClient:
         if not item_id:
             raise GitHubGraphQLError("addProjectV2DraftIssue returned no item")
         return str(item_id)
+
+    def delete_project_item(self, project_id: str, item_id: str) -> None:
+        self.graphql(
+            """
+            mutation($input: DeleteProjectV2ItemInput!) {
+              deleteProjectV2Item(input: $input) {
+                deletedItemId
+              }
+            }
+            """,
+            {"input": {"projectId": project_id, "itemId": item_id}},
+        )
+
+    def find_project_item_by_canonical_url(self, project_id: str, canonical_url: str) -> str | None:
+        needle = canonicalize_url(canonical_url) if canonical_url else ""
+        if not needle:
+            return None
+        marker = f"Canonical-URL: {needle}"
+        for raw in self.list_project_items(project_id):
+            fields: dict[str, str] = {}
+            for node in (raw.get("fieldValues") or {}).get("nodes") or []:
+                if not isinstance(node, dict):
+                    continue
+                field_meta = node.get("field") or {}
+                name = field_meta.get("name")
+                if not name:
+                    continue
+                if "text" in node and node["text"] is not None:
+                    fields[str(name)] = str(node["text"])
+            field_url = fields.get("Canonical URL") or fields.get("URL") or ""
+            content = raw.get("content") or {}
+            body = str(content.get("body") or "")
+            if field_url == needle or marker in body:
+                item_id = raw.get("id")
+                if item_id:
+                    return str(item_id)
+        return None
 
     def set_date_field(
         self,

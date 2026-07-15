@@ -17,6 +17,7 @@ class SyncItemResult:
     title: str
     issue_number: int | None = None
     issue_url: str = ""
+    item_id: str = ""
     created: bool = False
     existing: bool = False
     failed: bool = False
@@ -101,33 +102,20 @@ def _apply_project_fields(
 
 
 class ProjectSync:
+    """Sync vacancies as private Project draft items (never public repo Issues)."""
+
     def __init__(self, settings: Settings, client: GitHubClient | None = None) -> None:
         self._settings = settings
         self._client = client or GitHubClient(settings.github_token)
-        self._repo_id: str | None = None
         self._meta: ProjectMeta | None = None
-        self._vacancy_label_id: str | None = None
-        self._label_resolved = False
 
-    def _ensure_context(self) -> tuple[str, ProjectMeta]:
-        if self._repo_id is None:
-            self._repo_id = self._client.resolve_repository_id(
-                self._settings.repo_owner,
-                self._settings.repo_name,
-            )
+    def _ensure_meta(self) -> ProjectMeta:
         if self._meta is None:
             self._meta = self._client.resolve_project(
                 self._settings.project_owner,
                 self._settings.project_number,
             )
-        if not self._label_resolved:
-            self._vacancy_label_id = self._client.resolve_label_id(
-                self._settings.repo_owner,
-                self._settings.repo_name,
-                "vacancy",
-            )
-            self._label_resolved = True
-        return self._repo_id, self._meta
+        return self._meta
 
     def sync_vacancy(self, vacancy: Vacancy, *, status_name: str = "Inbox") -> SyncItemResult:
         canonical = vacancy.canonical_url or canonicalize_url(vacancy.url)
@@ -142,30 +130,24 @@ class ProjectSync:
             return base
 
         try:
-            repo_id, meta = self._ensure_context()
-            existing = self._client.find_issue_by_canonical_url(
-                self._settings.repo_owner,
-                self._settings.repo_name,
+            meta = self._ensure_meta()
+            existing_item_id = self._client.find_project_item_by_canonical_url(
+                meta.project_id,
                 canonical,
             )
-            if existing is not None:
+            if existing_item_id is not None:
                 base.existing = True
-                base.issue_number = existing.number
-                base.issue_url = existing.url
+                base.item_id = existing_item_id
                 return base
 
-            label_ids = [self._vacancy_label_id] if self._vacancy_label_id else None
-            issue = self._client.create_issue(
-                repo_id,
+            item_id = self._client.add_draft_issue(
+                meta.project_id,
                 title=build_issue_title(vacancy),
                 body=build_issue_body(vacancy),
-                label_ids=label_ids,
             )
-            item_id = self._client.add_project_item(meta.project_id, issue.id)
             _apply_project_fields(self._client, meta, item_id, vacancy, status_name=status_name)
             base.created = True
-            base.issue_number = issue.number
-            base.issue_url = issue.url
+            base.item_id = item_id
             return base
         except (GitHubGraphQLError, OSError, ValueError) as error:
             base.failed = True

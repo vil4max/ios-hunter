@@ -15,8 +15,8 @@ Career Agent must manage pipeline state with GitHub as source of truth, GitHub P
 ## Decision
 
 1. **Modular pipeline** with single-responsibility packages: Collector (existing Swift/Python), Filter, Deduplicator, Project Sync, Planner, Reporter, Analytics, Configuration.
-2. **Operational source of truth** is GitHub Projects V2: one Issue per vacancy, one Project item, Status single-select for workflow columns, custom fields for URL/company/source/dates/priority.
-3. **Sync stack** is Issues API + Projects V2 **GraphQL** (`addProjectV2ItemById`, `updateProjectV2ItemFieldValue`), not draft-only items and not labels-as-status.
+2. **Operational source of truth** is GitHub Projects V2: **private Draft items** (not public repo Issues), Status single-select for workflow columns, custom fields for URL/company/source/dates/priority/offer probability.
+3. **Sync stack** is Projects V2 GraphQL (`addProjectV2DraftIssue`, `updateProjectV2ItemFieldValue`). Public Issues are forbidden for vacancy CRM in a public repo.
 4. **Telegram**: hourly short Inbox alert (`N new → Inbox`); daily ops dashboard from Planner (not vacancy listing dumps).
 5. **`seen.json` dual-write** during migration; Sync idempotency is primary. Cut over after Sync stability.
 6. **Career Intelligence Platform** ([`CAREER_PLATFORM_ARCHITECTURE.md`](../../CAREER_PLATFORM_ARCHITECTURE.md)) remains a later layer for scores and market history. It is out of scope for Agent v1.

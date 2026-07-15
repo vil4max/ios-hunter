@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from config.settings import Settings
-from project_sync.github_client import IssueRef, ProjectField, ProjectMeta
+from project_sync.github_client import ProjectField, ProjectMeta
 from project_sync.sync import ProjectSync, build_issue_body, build_issue_title
 from tests.conftest import make_vacancy
 
@@ -26,11 +26,11 @@ def _settings(**overrides) -> Settings:
 class FakeClient:
     def __init__(self) -> None:
         self.created_titles: list[str] = []
-        self.added_items: list[tuple[str, str]] = []
+        self.draft_items: list[str] = []
         self.status_sets: list[str] = []
         self.text_sets: list[tuple[str, str]] = []
-        self._existing: dict[str, IssueRef] = {}
-        self._issue_counter = 10
+        self._by_canonical: dict[str, str] = {}
+        self._counter = 10
         self.meta = ProjectMeta(
             project_id="PROJECT",
             status_field=ProjectField(
@@ -53,36 +53,20 @@ class FakeClient:
             },
         )
 
-    def resolve_repository_id(self, owner: str, name: str) -> str:
-        return "REPO"
-
     def resolve_project(self, owner: str, number: int) -> ProjectMeta:
         return self.meta
 
-    def resolve_label_id(self, owner: str, repo: str, name: str) -> str | None:
-        return "LABEL" if name == "vacancy" else None
+    def find_project_item_by_canonical_url(self, project_id: str, canonical_url: str) -> str | None:
+        return self._by_canonical.get(canonical_url)
 
-    def find_issue_by_canonical_url(self, owner: str, repo: str, canonical_url: str) -> IssueRef | None:
-        return self._existing.get(canonical_url)
-
-    def create_issue(self, repository_id: str, *, title: str, body: str, label_ids=None) -> IssueRef:
-        self._issue_counter += 1
-        issue = IssueRef(
-            id=f"ISSUE-{self._issue_counter}",
-            number=self._issue_counter,
-            url=f"https://github.com/acme/ios-hunter/issues/{self._issue_counter}",
-            title=title,
-            body=body,
-        )
+    def add_draft_issue(self, project_id: str, *, title: str, body: str = "") -> str:
+        self._counter += 1
+        item_id = f"DRAFT-{self._counter}"
         self.created_titles.append(title)
+        self.draft_items.append(item_id)
         for line in body.splitlines():
             if line.startswith("Canonical-URL: "):
-                self._existing[line.removeprefix("Canonical-URL: ")] = issue
-        return issue
-
-    def add_project_item(self, project_id: str, content_id: str) -> str:
-        item_id = f"ITEM-{content_id}"
-        self.added_items.append((project_id, content_id))
+                self._by_canonical[line.removeprefix("Canonical-URL: ")] = item_id
         return item_id
 
     def set_single_select_field(self, *, project_id: str, item_id: str, field_id: str, option_id: str) -> None:
@@ -90,6 +74,8 @@ class FakeClient:
 
     def set_text_field(self, *, project_id: str, item_id: str, field_id: str, text: str) -> None:
         self.text_sets.append((field_id, text))
+        if field_id == "F_CAN":
+            self._by_canonical[text] = item_id
 
 
 def test_build_issue_includes_canonical_marker() -> None:
@@ -99,13 +85,13 @@ def test_build_issue_includes_canonical_marker() -> None:
     assert build_issue_title(vacancy) == "Acme — Senior iOS Developer"
 
 
-def test_sync_creates_issue_and_sets_inbox() -> None:
+def test_sync_creates_private_draft_and_sets_inbox() -> None:
     client = FakeClient()
     sync = ProjectSync(_settings(), client=client)  # type: ignore[arg-type]
     result = sync.sync_vacancies([make_vacancy(url="https://example.com/jobs/99")])
     assert result.created_count == 1
     assert result.existing_count == 0
-    assert client.created_titles
+    assert client.draft_items
     assert "opt-inbox" in client.status_sets
     assert any(field_id == "F_CAN" for field_id, _ in client.text_sets)
 
@@ -119,7 +105,7 @@ def test_sync_is_idempotent_for_same_canonical_url() -> None:
     assert first.created_count == 1
     assert second.existing_count == 1
     assert second.created_count == 0
-    assert len(client.created_titles) == 1
+    assert len(client.draft_items) == 1
 
 
 def test_sync_skipped_when_disabled() -> None:

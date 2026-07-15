@@ -44,14 +44,6 @@ enum JobSources {
                 http: http
             ),
             HTMLRegexJobSource(
-                company: "JetSoftPro",
-                tier: .tier3,
-                listURL: URL(string: "https://career.jetsoftpro.com/vacancies/")!,
-                baseURL: URL(string: "https://career.jetsoftpro.com/")!,
-                pattern: #"https://career\.jetsoftpro\.com/vacancies/([a-z0-9-]+)/"#,
-                http: http
-            ),
-            HTMLRegexJobSource(
                 company: "Sombra",
                 tier: .tier3,
                 listURL: URL(string: "https://sombrainc.com/careers")!,
