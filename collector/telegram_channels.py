@@ -4,6 +4,7 @@ import asyncio
 import os
 import re
 import time
+from datetime import datetime, timezone
 from typing import Any
 
 from parser.normalize import is_ios_job
@@ -18,6 +19,8 @@ _CANDIDATE_MARKERS: tuple[str, ...] = (
     "#candidates",
     "#candidate",
     "#резюме",
+    "#resume",
+    "#cv",
     "#candidatebench",
     "looking for new opportunities",
     "looking for opportunities",
@@ -28,6 +31,11 @@ _CANDIDATE_MARKERS: tuple[str, ...] = (
     "шукаю роботу",
     "шукаю проєкт",
     "шукаю проект",
+    "available candidate",
+    "propose partnership",
+    "white-label",
+    "outstaffing projects",
+    "outsourcing & outstaffing",
 )
 
 _VACANCY_MARKERS: tuple[str, ...] = (
@@ -37,12 +45,31 @@ _VACANCY_MARKERS: tuple[str, ...] = (
     "#job",
     "#hiring",
     "#jobs",
+    "#ios",
+    "#swift",
     "вакансія",
     "вакансия",
+    "we're hiring",
+    "we are hiring",
+    "now hiring",
+    "hiring:",
     "looking for",
     "шукаємо",
+    "шукає",
     "ищем",
+    "ищут",
     "за деталями",
+    "open role",
+    "open position",
+    "open positions",
+)
+
+_COMPANY_PATTERNS: tuple[re.Pattern[str], ...] = (
+    re.compile(r"(?im)^(.{2,80}?)\s+шука[єе]\b"),
+    re.compile(r"(?im)^(.{2,80}?)\s+is hiring\b"),
+    re.compile(r"(?im)^(.{2,80}?)\s+are hiring\b"),
+    re.compile(r"(?im)^company\s*[:\-]\s*(.+)$"),
+    re.compile(r"(?im)^компані[яя]\s*[:\-]\s*(.+)$"),
 )
 
 
@@ -67,9 +94,11 @@ def looks_like_vacancy(text: str) -> bool:
 def should_keep_message(text: str) -> bool:
     if not text.strip():
         return False
+    if is_candidate_post(text):
+        return False
     if not is_ios_job(text):
         return False
-    if is_candidate_post(text):
+    if not looks_like_vacancy(text):
         return False
     return True
 
@@ -89,20 +118,59 @@ def extract_title(text: str) -> str:
     return "iOS / Swift vacancy"
 
 
+def extract_company(text: str) -> str | None:
+    for pattern in _COMPANY_PATTERNS:
+        match = pattern.search(text)
+        if not match:
+            continue
+        company = re.sub(r"\s+", " ", match.group(1)).strip(" -–—|🎯🚀⚓️")
+        company = re.sub(r"^#\S+\s*", "", company).strip()
+        if 2 <= len(company) <= 80:
+            return company
+    return None
+
+
+def description_snippet(text: str, *, title: str, limit: int = 140) -> str:
+    lines: list[str] = []
+    for raw_line in text.splitlines():
+        line = re.sub(r"\s+", " ", raw_line).strip()
+        if not line:
+            continue
+        if re.fullmatch(r"(?:#\w[\w+-]*\s*)+", line, flags=re.UNICODE):
+            continue
+        if line == title:
+            continue
+        lines.append(line)
+    blob = " · ".join(lines) if lines else text.strip()
+    blob = re.sub(r"\s+", " ", blob).strip()
+    if len(blob) <= limit:
+        return blob
+    return blob[: limit - 1].rstrip() + "…"
+
+
 def message_url(channel: str, message_id: int) -> str:
     return f"https://t.me/{channel}/{message_id}"
 
 
-def job_from_message(channel: str, message_id: int, text: str) -> dict[str, Any] | None:
+def job_from_message(
+    channel: str,
+    message_id: int,
+    text: str,
+    *,
+    published_at: datetime | None = None,
+) -> dict[str, Any] | None:
     if not should_keep_message(text):
         return None
+    title = extract_title(text)
+    company = extract_company(text) or "Telegram"
     return {
-        "company": f"Telegram @{channel}",
-        "title": extract_title(text),
+        "company": company,
+        "title": title,
         "url": message_url(channel, message_id),
         "source": "telegram",
         "source_job_id": f"{channel}:{message_id}",
-        "description": text.strip()[:4000],
+        "description": description_snippet(text, title=title, limit=4000),
+        "published_at": published_at.isoformat() if published_at else None,
     }
 
 
@@ -142,6 +210,17 @@ def _source_skipped(channel: str, reason: str, started: float) -> SourceResult:
     )
 
 
+def _message_published_at(message: Any) -> datetime | None:
+    raw = getattr(message, "date", None)
+    if raw is None:
+        return None
+    if isinstance(raw, datetime):
+        if raw.tzinfo is None:
+            return raw.replace(tzinfo=timezone.utc)
+        return raw
+    return None
+
+
 async def _fetch_channel_jobs(channel: str) -> list[dict[str, Any]]:
     from telethon import TelegramClient
     from telethon.sessions import StringSession
@@ -159,7 +238,12 @@ async def _fetch_channel_jobs(channel: str) -> list[dict[str, Any]]:
             text = (message.message or "").strip()
             if not text and getattr(message, "raw_text", None):
                 text = str(message.raw_text).strip()
-            job = job_from_message(channel, int(message.id), text)
+            job = job_from_message(
+                channel,
+                int(message.id),
+                text,
+                published_at=_message_published_at(message),
+            )
             if job:
                 jobs.append(job)
     return jobs

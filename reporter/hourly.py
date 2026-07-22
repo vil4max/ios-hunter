@@ -50,6 +50,32 @@ def format_hourly_heartbeat(
     return "\n".join(blocks)
 
 
+def _snippet(vacancy: Vacancy, *, limit: int = 140) -> str:
+    raw = (vacancy.description or "").strip()
+    if not raw:
+        return ""
+    title = vacancy.title.strip()
+    lines: list[str] = []
+    for part in raw.splitlines():
+        line = " ".join(part.split()).strip()
+        if not line or line == title:
+            continue
+        lines.append(line)
+    blob = " · ".join(lines) if lines else " ".join(raw.split())
+    if len(blob) <= limit:
+        return blob
+    return blob[: limit - 1].rstrip() + "…"
+
+
+def _published_label(vacancy: Vacancy) -> str:
+    if vacancy.published_at is None:
+        return ""
+    stamp = vacancy.published_at
+    if stamp.tzinfo is None:
+        stamp = stamp.replace(tzinfo=_KYIV)
+    return stamp.astimezone(_KYIV).strftime("%Y-%m-%d %H:%M")
+
+
 def format_hourly_new_vacancies(
     vacancies: list[Vacancy],
     *,
@@ -63,12 +89,20 @@ def format_hourly_new_vacancies(
             lines.append("")
         title = vacancy.title.strip()
         company = vacancy.company.strip()
-        source = resolve_source(vacancy)
         url = vacancy.url.strip()
+        is_telegram = (vacancy.source or "").strip().lower() == "telegram"
         lines.append(f"{index}. {title}")
-        if company:
-            lines.append(f"   🏢 {company}")
-        lines.append(f"   📡 {source}")
+        snippet = _snippet(vacancy)
+        if snippet:
+            lines.append(f"   📝 {snippet}")
+        if company and not (is_telegram and company.lower() in {"telegram", "itrecruit_ua"}):
+            if not (is_telegram and company.lower().startswith("telegram @")):
+                lines.append(f"   🏢 {company}")
+        if not is_telegram:
+            lines.append(f"   📡 {resolve_source(vacancy)}")
+        published = _published_label(vacancy)
+        if published:
+            lines.append(f"   📅 {published}")
         if url:
             lines.append(f"   🔗 {url}")
     lines.append("")

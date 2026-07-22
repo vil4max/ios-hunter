@@ -123,9 +123,19 @@ def normalize_token(value: str) -> str:
     return re.sub(r"\s+", " ", value.strip().lower())
 
 
+_IOS_ANCHOR = re.compile(
+    r"(?i)(?<![a-z0-9])("
+    r"ios|swift|swiftui|uikit|"
+    r"objective[\s\-]?c|objc|obj[\s\-]?c|"
+    r"xcode|iphone|ipad|tvos|watchos|visionos|"
+    r"cocoa(?:pods|touch)?"
+    r")(?![a-z0-9])"
+)
+
+
 def is_ios_job(title: str, description: str | None = None) -> bool:
-    haystack = f"{title} {description or ''}".lower()
-    return "ios" in haystack or "swift" in haystack
+    haystack = f"{title} {description or ''}"
+    return _IOS_ANCHOR.search(haystack) is not None
 
 
 def infer_remote(title: str, location: str | None, description: str | None) -> str:

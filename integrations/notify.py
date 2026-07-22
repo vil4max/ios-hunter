@@ -37,6 +37,7 @@ _SOURCE_BY_RAW: dict[str, str] = {
     "teamtailor": "Teamtailor",
     "breezy": "Breezy",
     "workday": "Workday",
+    "telegram": "Telegram",
 }
 
 

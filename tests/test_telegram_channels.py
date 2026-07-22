@@ -1,18 +1,22 @@
 from __future__ import annotations
 
+from datetime import datetime, timezone
+
 from collector.telegram_channels import (
+    extract_company,
     extract_title,
     is_candidate_post,
     job_from_message,
     looks_like_vacancy,
     should_keep_message,
 )
+from parser.normalize import is_ios_job
 
 
 VACANCY_IOS = """
 #ios #swift #вакансія
 Senior iOS Engineer
-SmartTek Solutions
+SmartTek Solutions шукає Senior iOS Engineer
 Swift, UIKit, 5+ years
 За деталями пишіть - @recruiter
 """.strip()
@@ -31,9 +35,36 @@ Senior Backend Engineer
 Python, TypeScript
 """.strip()
 
+STUDIOS_SEO = """
+⚓️Admiral Studios шукає SEO Specialist
+#вакансія #seo
+""".strip()
+
+QA_CRYPTO = """
+🚀 We’re Hiring: Manual QA Engineer (Crypto Casino | AI-Native Team)
+#вакансія #qa
+""".strip()
+
+GREETING = """
+Всім хай 🙋🏻‍♀️
+""".strip()
+
+PARTNERSHIP = """
+We propose partnership on the development of White-Label, Outsourcing & Outstaffing projects.
+""".strip()
+
+
+def test_is_ios_job_rejects_studios_substring() -> None:
+    assert not is_ios_job(STUDIOS_SEO)
+    assert not is_ios_job("Mind Studios Designer")
+
 
 def test_extract_title_skips_hashtag_only_line() -> None:
     assert extract_title(VACANCY_IOS) == "Senior iOS Engineer"
+
+
+def test_extract_company_from_hiring_line() -> None:
+    assert extract_company(VACANCY_IOS) == "SmartTek Solutions"
 
 
 def test_is_candidate_post_detects_seeking() -> None:
@@ -43,24 +74,34 @@ def test_is_candidate_post_detects_seeking() -> None:
 
 def test_looks_like_vacancy() -> None:
     assert looks_like_vacancy(VACANCY_IOS) is True
-    assert looks_like_vacancy(BACKEND_VACANCY) is True
+    assert looks_like_vacancy(GREETING) is False
 
 
-def test_should_keep_only_ios_vacancies() -> None:
+def test_should_keep_only_ios_hiring_posts() -> None:
     assert should_keep_message(VACANCY_IOS) is True
     assert should_keep_message(CANDIDATE_IOS) is False
     assert should_keep_message(BACKEND_VACANCY) is False
+    assert should_keep_message(STUDIOS_SEO) is False
+    assert should_keep_message(QA_CRYPTO) is False
+    assert should_keep_message(GREETING) is False
+    assert should_keep_message(PARTNERSHIP) is False
 
 
-def test_job_from_message_builds_telegram_url() -> None:
-    job = job_from_message("itrecruit_ua", 12345, VACANCY_IOS)
+def test_job_from_message_builds_telegram_url_and_date() -> None:
+    published = datetime(2026, 7, 22, 10, 0, tzinfo=timezone.utc)
+    job = job_from_message("itrecruit_ua", 12345, VACANCY_IOS, published_at=published)
     assert job is not None
     assert job["title"] == "Senior iOS Engineer"
+    assert job["company"] == "SmartTek Solutions"
     assert job["url"] == "https://t.me/itrecruit_ua/12345"
     assert job["source"] == "telegram"
     assert job["source_job_id"] == "itrecruit_ua:12345"
-    assert job["company"] == "Telegram @itrecruit_ua"
+    assert job["published_at"] == published.isoformat()
+    assert "UIKit" in job["description"]
 
 
-def test_job_from_message_drops_candidates() -> None:
+def test_job_from_message_drops_junk() -> None:
     assert job_from_message("itrecruit_ua", 1, CANDIDATE_IOS) is None
+    assert job_from_message("itrecruit_ua", 2, STUDIOS_SEO) is None
+    assert job_from_message("itrecruit_ua", 3, QA_CRYPTO) is None
+    assert job_from_message("itrecruit_ua", 4, GREETING) is None

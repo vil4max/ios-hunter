@@ -32,12 +32,14 @@ def test_hourly_lists_new_vacancies_only() -> None:
             company="Acme",
             url="https://example.com/a",
             source="company",
+            description="SwiftUI and UIKit experience required",
         ),
         make_vacancy(
             title="Swift Developer",
             company="Beta",
             url="https://example.com/b",
             source="company",
+            description=None,
         ),
     ]
     message = format_hourly_new_vacancies(
@@ -50,6 +52,7 @@ def test_hourly_lists_new_vacancies_only() -> None:
         "🆕 +2 Inbox\n"
         "\n"
         "1. Senior iOS Engineer\n"
+        "   📝 SwiftUI and UIKit experience required\n"
         "   🏢 Acme\n"
         "   📡 Acme careers\n"
         "   🔗 https://example.com/a\n"
@@ -62,6 +65,38 @@ def test_hourly_lists_new_vacancies_only() -> None:
         "✅ Система работает · 2026-07-15 11:00\n"
         "🔗 https://github.com/users/acme/projects/1"
     )
+
+
+def test_hourly_telegram_vacancy_uses_snippet_and_date() -> None:
+    now = datetime(2026, 7, 15, 11, 0, tzinfo=_KYIV)
+    published = datetime(2026, 7, 22, 12, 44, tzinfo=_KYIV)
+    stats = CollectReportStats(
+        found=1,
+        seen_total=0,
+        new_count=1,
+        duplicates_removed=0,
+        failed_source_names=(),
+    )
+    vacancy = make_vacancy(
+        title="Senior iOS Engineer",
+        company="SmartTek Solutions",
+        url="https://t.me/itrecruit_ua/123",
+        source="telegram",
+        description="Swift, UIKit, 5+ years · Remote UA",
+        published_at=published,
+    )
+    message = format_hourly_new_vacancies(
+        [vacancy],
+        stats=stats,
+        board_url="https://board",
+        now=now,
+    )
+    assert "📡" not in message
+    assert "Telegram @itrecruit_ua" not in message
+    assert "📝 Swift, UIKit, 5+ years · Remote UA" in message
+    assert "🏢 SmartTek Solutions" in message
+    assert "📅 2026-07-22 12:44" in message
+    assert "🔗 https://t.me/itrecruit_ua/123" in message
 
 
 def test_hourly_heartbeat_when_no_new() -> None:
