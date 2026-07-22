@@ -17,6 +17,66 @@ def _time_label(now: datetime | None) -> str:
     return stamp.strftime("%Y-%m-%d %H:%M")
 
 
+def _telegram_failed_names(stats: CollectReportStats) -> list[str]:
+    names: list[str] = []
+    for name in stats.failed_source_names:
+        if name.startswith("Telegram @") or name.lower().startswith("telegram"):
+            names.append(name.removeprefix("Telegram @").removeprefix("Telegram ").strip() or name)
+    return names
+
+
+def _site_failed_names(stats: CollectReportStats) -> list[str]:
+    return [
+        name
+        for name in stats.failed_source_names
+        if not (name.startswith("Telegram @") or name.lower().startswith("telegram"))
+    ]
+
+
+def _sites_status_line(stats: CollectReportStats) -> str:
+    failed = _site_failed_names(stats)
+    total = stats.sites_total
+    ok = stats.sites_ok
+    if total <= 0 and not failed:
+        return "✅ Поиск по сайтам: OK"
+    if failed:
+        shown = ", ".join(failed[:4])
+        extra = f" (+{len(failed) - 4})" if len(failed) > 4 else ""
+        ratio = f"{ok}/{total} " if total > 0 else ""
+        return f"⚠️ Поиск по сайтам: {ratio}ошибки — {shown}{extra}"
+    return f"✅ Поиск по сайтам: OK ({ok}/{total})" if total > 0 else "✅ Поиск по сайтам: OK"
+
+
+def _telegram_status_line(stats: CollectReportStats) -> str:
+    failed = _telegram_failed_names(stats)
+    if stats.telegram_total <= 0 and stats.telegram_skipped <= 0 and not failed:
+        return "⏭️ Telegram: не настроен"
+    if stats.telegram_skipped > 0 and stats.telegram_ok == 0 and not failed:
+        return "⏭️ Telegram: пропущен (нет session)"
+    if failed:
+        shown = ", ".join(f"@{name.lstrip('@')}" for name in failed[:4])
+        ratio = f"{stats.telegram_ok}/{stats.telegram_total} " if stats.telegram_total > 0 else ""
+        return f"⚠️ Telegram: {ratio}ошибки — {shown}"
+    names = [f"@{name.lstrip('@')}" for name in stats.telegram_ok_names[:3]]
+    names_part = f" · {', '.join(names)}" if names else ""
+    return f"✅ Telegram: OK ({stats.telegram_ok}/{stats.telegram_total}){names_part}"
+
+
+def _checks_passed(stats: CollectReportStats) -> bool:
+    return not stats.failed_source_names
+
+
+def _status_block(stats: CollectReportStats) -> list[str]:
+    lines = [
+        _sites_status_line(stats),
+        _telegram_status_line(stats),
+        (
+            f"📊 Найдено: {stats.found} · в базе: {stats.seen_total} · новых: {stats.new_count}"
+        ),
+    ]
+    return lines
+
+
 def _system_footer(
     *,
     stats: CollectReportStats,
@@ -25,10 +85,10 @@ def _system_footer(
     include_board: bool = False,
 ) -> list[str]:
     lines: list[str] = []
-    if stats.failed_source_names:
-        lines.append(f"⚠️ ошибки: {', '.join(stats.failed_source_names)}")
-        lines.append("")
-    lines.append(f"✅ Система работает · {_time_label(now)}")
+    if _checks_passed(stats):
+        lines.append(f"✅ Все проверки прошли · {_time_label(now)}")
+    else:
+        lines.append(f"⚠️ Проверки с ошибками · {_time_label(now)}")
     if include_board and board_url:
         lines.append(f"🔗 {board_url}")
     return lines
@@ -44,6 +104,8 @@ def format_hourly_heartbeat(
     _ = new_count
     blocks = [
         "📭 Новых вакансий не обнаружено",
+        "",
+        *_status_block(stats),
         "",
         *_system_footer(stats=stats, board_url=board_url, now=now, include_board=False),
     ]
@@ -105,6 +167,8 @@ def format_hourly_new_vacancies(
             lines.append(f"   📅 {published}")
         if url:
             lines.append(f"   🔗 {url}")
+    lines.append("")
+    lines.extend(_status_block(stats))
     lines.append("")
     lines.extend(
         _system_footer(

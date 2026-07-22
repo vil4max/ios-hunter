@@ -12,6 +12,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from collector.companies import collect_all
+from collector.types import SourceResult
 from config.settings import load_settings
 from database.seen import (
     default_seen_path,
@@ -29,26 +30,92 @@ from project_sync.sync import ProjectSync, SyncItemResult, SyncResult
 from reporter.hourly import notify_hourly_inbox
 
 
-def collect_vacancies(swift_export_path: Path) -> tuple[list[Vacancy], int, list[str]]:
+def _is_telegram_source(source: SourceResult) -> bool:
+    return source.source_id.startswith("telegram:") or source.source_name.startswith("Telegram @")
+
+
+def _telegram_channel_label(source: SourceResult) -> str:
+    if source.source_id.startswith("telegram:"):
+        return source.source_id.split(":", 1)[1]
+    if source.source_name.startswith("Telegram @"):
+        return source.source_name.removeprefix("Telegram @").strip()
+    return source.source_name
+
+
+def summarize_source_checks(
+    source_results: list[SourceResult],
+    *,
+    swift_failed_companies: list[str] | None = None,
+) -> tuple[tuple[str, ...], dict[str, object]]:
+    failed_names: list[str] = []
+    sites_ok = 0
+    sites_total = 0
+    telegram_ok = 0
+    telegram_total = 0
+    telegram_skipped = 0
+    telegram_ok_names: list[str] = []
+
+    for source in source_results:
+        if _is_telegram_source(source):
+            telegram_total += 1
+            skipped = bool(source.error and "not set" in source.error.lower())
+            if source.status == "failed":
+                failed_names.append(source.source_name)
+            elif skipped:
+                telegram_skipped += 1
+            else:
+                telegram_ok += 1
+                telegram_ok_names.append(_telegram_channel_label(source))
+            continue
+
+        sites_total += 1
+        if source.status == "failed":
+            failed_names.append(source.source_name)
+        else:
+            sites_ok += 1
+
+    for company in swift_failed_companies or []:
+        label = f"Swift: {company}"
+        if label not in failed_names:
+            failed_names.append(label)
+
+    health = {
+        "sites_ok": sites_ok,
+        "sites_total": sites_total,
+        "telegram_ok": telegram_ok,
+        "telegram_total": telegram_total,
+        "telegram_skipped": telegram_skipped,
+        "telegram_ok_names": tuple(telegram_ok_names),
+    }
+    return tuple(failed_names), health
+
+
+def collect_vacancies(
+    swift_export_path: Path,
+) -> tuple[list[Vacancy], int, tuple[str, ...], dict[str, object]]:
     collect_result = collect_all(swift_export_path)
     raw_jobs: list[dict] = []
-    failed_source_names: list[str] = []
     for source in collect_result.source_results:
         if source.status == "failed":
-            failed_source_names.append(source.source_name)
             print(f"Source failed: {source.source_name}: {source.error}", file=sys.stderr)
             continue
         raw_jobs.extend(source.jobs)
 
-    if collect_result.swift_meta is not None:
-        for company in collect_result.swift_meta.failed_companies:
-            label = f"Swift: {company}"
-            if label not in failed_source_names:
-                failed_source_names.append(label)
+    swift_failed = (
+        list(collect_result.swift_meta.failed_companies)
+        if collect_result.swift_meta is not None
+        else []
+    )
+    for company in swift_failed:
+        print(f"Source failed: Swift: {company}", file=sys.stderr)
 
+    failed_source_names, health = summarize_source_checks(
+        collect_result.source_results,
+        swift_failed_companies=swift_failed,
+    )
     vacancies = normalize_many(raw_jobs)
     unique, removed, _ = deduplicate_with_report(vacancies)
-    return unique, removed, failed_source_names
+    return unique, removed, failed_source_names, health
 
 
 def select_fresh(vacancies: list[Vacancy], seen: dict, *, seen_gate: bool) -> list[Vacancy]:
@@ -78,11 +145,13 @@ def process_new_vacancies(
     *,
     seed_only: bool,
     duplicates_removed: int = 0,
-    failed_source_names: list[str] | None = None,
+    failed_source_names: list[str] | tuple[str, ...] | None = None,
+    source_health: dict[str, object] | None = None,
 ) -> tuple[int, int, SyncResult]:
     settings = load_settings()
     now = utc_now()
     failed = tuple(failed_source_names or ())
+    health = source_health or {}
     fresh = select_fresh(vacancies, seen, seen_gate=settings.seen_gate_enabled)
 
     stats = CollectReportStats(
@@ -91,6 +160,14 @@ def process_new_vacancies(
         new_count=len(fresh),
         duplicates_removed=duplicates_removed,
         failed_source_names=failed,
+        sites_ok=int(health.get("sites_ok", 0) or 0),
+        sites_total=int(health.get("sites_total", 0) or 0),
+        telegram_ok=int(health.get("telegram_ok", 0) or 0),
+        telegram_total=int(health.get("telegram_total", 0) or 0),
+        telegram_skipped=int(health.get("telegram_skipped", 0) or 0),
+        telegram_ok_names=tuple(
+            str(name) for name in (health.get("telegram_ok_names") or ())
+        ),
     )
 
     if seed_only:
@@ -176,13 +253,14 @@ def main() -> int:
         if migrated:
             print(f"Migrated {migrated} vacancies from {jobs_db} into seen store.")
 
-    vacancies, duplicates_removed, failed_source_names = collect_vacancies(swift_export)
+    vacancies, duplicates_removed, failed_source_names, source_health = collect_vacancies(swift_export)
     sent, marked, sync_result = process_new_vacancies(
         vacancies,
         seen,
         seed_only=seed_only,
         duplicates_removed=duplicates_removed,
         failed_source_names=failed_source_names,
+        source_health=source_health,
     )
 
     if migrated or marked:

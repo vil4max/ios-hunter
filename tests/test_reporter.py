@@ -25,6 +25,11 @@ def test_hourly_lists_new_vacancies_only() -> None:
         new_count=2,
         duplicates_removed=1,
         failed_source_names=(),
+        sites_ok=10,
+        sites_total=10,
+        telegram_ok=3,
+        telegram_total=3,
+        telegram_ok_names=("itrecruit_ua", "remotejobss", "itfreelancers"),
     )
     vacancies = [
         make_vacancy(
@@ -62,7 +67,11 @@ def test_hourly_lists_new_vacancies_only() -> None:
         "   📡 Beta careers\n"
         "   🔗 https://example.com/b\n"
         "\n"
-        "✅ Система работает · 2026-07-15 11:00\n"
+        "✅ Поиск по сайтам: OK (10/10)\n"
+        "✅ Telegram: OK (3/3) · @itrecruit_ua, @remotejobss, @itfreelancers\n"
+        "📊 Найдено: 10 · в базе: 8 · новых: 2\n"
+        "\n"
+        "✅ Все проверки прошли · 2026-07-15 11:00\n"
         "🔗 https://github.com/users/acme/projects/1"
     )
 
@@ -107,6 +116,11 @@ def test_hourly_heartbeat_when_no_new() -> None:
         new_count=0,
         duplicates_removed=0,
         failed_source_names=(),
+        sites_ok=12,
+        sites_total=12,
+        telegram_ok=3,
+        telegram_total=3,
+        telegram_ok_names=("itrecruit_ua", "remotejobss", "itfreelancers"),
     )
     message = format_hourly_heartbeat(
         stats=stats,
@@ -117,8 +131,32 @@ def test_hourly_heartbeat_when_no_new() -> None:
     assert message == (
         "📭 Новых вакансий не обнаружено\n"
         "\n"
-        "✅ Система работает · 2026-07-15 11:00"
+        "✅ Поиск по сайтам: OK (12/12)\n"
+        "✅ Telegram: OK (3/3) · @itrecruit_ua, @remotejobss, @itfreelancers\n"
+        "📊 Найдено: 22 · в базе: 40 · новых: 0\n"
+        "\n"
+        "✅ Все проверки прошли · 2026-07-15 11:00"
     )
+
+
+def test_hourly_heartbeat_reports_partial_failures() -> None:
+    now = datetime(2026, 7, 15, 11, 0, tzinfo=_KYIV)
+    stats = CollectReportStats(
+        found=20,
+        seen_total=40,
+        new_count=0,
+        duplicates_removed=0,
+        failed_source_names=("SoftServe", "Telegram @remotejobss"),
+        sites_ok=11,
+        sites_total=12,
+        telegram_ok=2,
+        telegram_total=3,
+        telegram_ok_names=("itrecruit_ua", "itfreelancers"),
+    )
+    message = format_hourly_heartbeat(stats=stats, now=now)
+    assert "⚠️ Поиск по сайтам: 11/12 ошибки — SoftServe" in message
+    assert "⚠️ Telegram: 2/3 ошибки — @remotejobss" in message
+    assert "⚠️ Проверки с ошибками · 2026-07-15 11:00" in message
 
 
 def test_vacancies_for_alert_prefers_created_sync_items() -> None:

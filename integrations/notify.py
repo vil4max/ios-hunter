@@ -48,6 +48,12 @@ class CollectReportStats:
     new_count: int
     duplicates_removed: int
     failed_source_names: tuple[str, ...] = ()
+    sites_ok: int = 0
+    sites_total: int = 0
+    telegram_ok: int = 0
+    telegram_total: int = 0
+    telegram_skipped: int = 0
+    telegram_ok_names: tuple[str, ...] = ()
 
 
 def resolve_source(vacancy: Vacancy) -> str:
