@@ -13,10 +13,14 @@ struct EPAMSource: JobSource {
     }
 
     func fetchJobs() async throws -> [Job] {
+        let sitemapJobs = try await fetchFromSitemap()
+        if !sitemapJobs.isEmpty {
+            return sitemapJobs
+        }
         if let apiJobs = try? await fetchFromAPI(), !apiJobs.isEmpty {
             return apiJobs
         }
-        return try await fetchFromSitemap()
+        return sitemapJobs
     }
 
     private func fetchFromAPI() async throws -> [Job] {
