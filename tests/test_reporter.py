@@ -122,14 +122,26 @@ def test_hourly_heartbeat_when_no_new() -> None:
         telegram_total=3,
         telegram_ok_names=("itrecruit_ua", "remotejobss", "itfreelancers"),
     )
+    live = [
+        make_vacancy(company="EPAM", url="https://example.com/epam/1"),
+        make_vacancy(company="EPAM", url="https://example.com/epam/2"),
+        make_vacancy(company="EPAM", url="https://example.com/epam/3"),
+        make_vacancy(company="DataArt", url="https://example.com/dataart/1"),
+        make_vacancy(company="DataArt", url="https://example.com/dataart/2"),
+    ]
     message = format_hourly_heartbeat(
         stats=stats,
         new_count=0,
         board_url="https://board",
         now=now,
+        live=live,
     )
     assert message == (
         "📭 Новых вакансий не обнаружено\n"
+        "\n"
+        "Живые:\n"
+        "EPAM: 3\n"
+        "DataArt: 2\n"
         "\n"
         "✅ Поиск по сайтам: OK (12/12)\n"
         "✅ Telegram: OK (3/3)\n"

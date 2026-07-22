@@ -10,11 +10,13 @@ struct JobHunterCLI {
         var fetchedJobs: [Job] = []
         var failedSourceCount = 0
         var failedCompanies: [String] = []
+        var okCompanies: [String] = []
 
         for source in sources {
             do {
                 let jobs = try await source.fetchJobs()
                 fetchedJobs.append(contentsOf: jobs)
+                okCompanies.append(source.company)
                 fputs("[\(source.company)] \(jobs.count) iOS job(s)\n", stderr)
             } catch {
                 failedSourceCount += 1
@@ -36,7 +38,8 @@ struct JobHunterCLI {
                 meta: SwiftExport.Meta(
                     sourcesTotal: sources.count,
                     sourcesFailed: failedSourceCount,
-                    failedCompanies: failedCompanies
+                    failedCompanies: failedCompanies,
+                    okCompanies: okCompanies
                 ),
                 to: exportPath
             )

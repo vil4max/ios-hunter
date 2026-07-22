@@ -97,16 +97,37 @@ def format_hourly_heartbeat(
     new_count: int = 0,
     board_url: str = "",
     now: datetime | None = None,
+    live: list[Vacancy] | None = None,
 ) -> str:
     _ = new_count
     blocks = [
         "📭 Новых вакансий не обнаружено",
+        "",
+        *_live_block(live or []),
         "",
         *_status_block(stats),
         "",
         *_system_footer(stats=stats, board_url=board_url, now=now, include_board=False),
     ]
     return "\n".join(blocks)
+
+
+def _company_counts(vacancies: list[Vacancy]) -> list[tuple[str, int]]:
+    counts: dict[str, int] = {}
+    for vacancy in vacancies:
+        company = vacancy.company.strip() or "Unknown"
+        counts[company] = counts.get(company, 0) + 1
+    return sorted(counts.items(), key=lambda item: (-item[1], item[0].lower()))
+
+
+def _live_block(vacancies: list[Vacancy]) -> list[str]:
+    counts = _company_counts(vacancies)
+    if not counts:
+        return ["Живые: нет"]
+    lines = ["Живые:"]
+    for company, count in counts:
+        lines.append(f"{company}: {count}")
+    return lines
 
 
 def _snippet(vacancy: Vacancy, *, limit: int = 140) -> str:
@@ -196,6 +217,7 @@ def notify_hourly_inbox(
     stats: CollectReportStats,
     board_url: str = "",
     now: datetime | None = None,
+    live: list[Vacancy] | None = None,
 ) -> bool:
     to_show = vacancies_for_alert(sync_result, fresh)
     if to_show:
@@ -210,6 +232,7 @@ def notify_hourly_inbox(
             stats=stats,
             board_url=board_url,
             now=now,
+            live=live,
         )
     send_message(message)
     return True

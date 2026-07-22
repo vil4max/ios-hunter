@@ -39,10 +39,14 @@ def load_swift_collector_meta(path: str | Path) -> SwiftCollectorMeta | None:
     failed_companies = meta.get("failed_companies", [])
     if not isinstance(failed_companies, list):
         failed_companies = []
+    ok_companies = meta.get("ok_companies", [])
+    if not isinstance(ok_companies, list):
+        ok_companies = []
     return SwiftCollectorMeta(
         sources_total=int(meta.get("sources_total", 0)),
         sources_failed=int(meta.get("sources_failed", 0)),
         failed_companies=[str(name) for name in failed_companies],
+        ok_companies=[str(name) for name in ok_companies],
     )
 
 

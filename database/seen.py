@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from parser.normalize import Vacancy, canonicalize_url
+from parser.normalize import Vacancy, canonicalize_url, normalize_token
 
 
 def utc_now() -> str:
@@ -54,6 +54,29 @@ def mark_seen(
         "first_seen": first_seen or utc_now(),
     }
     return True
+
+
+def purge_dead_seen(
+    seen: dict[str, dict[str, Any]],
+    *,
+    live_urls: set[str],
+    purgeable_companies: set[str] | frozenset[str],
+) -> list[str]:
+    if not purgeable_companies:
+        return []
+    purgeable = {normalize_token(name) for name in purgeable_companies if name.strip()}
+    if not purgeable:
+        return []
+    removed: list[str] = []
+    for key, meta in list(seen.items()):
+        company = normalize_token(str(meta.get("company") or ""))
+        if not company or company not in purgeable:
+            continue
+        if key in live_urls:
+            continue
+        del seen[key]
+        removed.append(key)
+    return removed
 
 
 def migrate_from_sqlite(db_path: Path, seen: dict[str, dict[str, Any]]) -> int:

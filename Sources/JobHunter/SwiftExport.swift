@@ -5,6 +5,7 @@ enum SwiftExport {
         let sourcesTotal: Int
         let sourcesFailed: Int
         let failedCompanies: [String]
+        let okCompanies: [String]
     }
 
     static func write(jobs: [Job], meta: Meta, to path: String) throws {
@@ -34,6 +35,7 @@ enum SwiftExport {
                 "sources_total": meta.sourcesTotal,
                 "sources_failed": meta.sourcesFailed,
                 "failed_companies": meta.failedCompanies,
+                "ok_companies": meta.okCompanies,
             ],
             "jobs": jobPayload,
         ]

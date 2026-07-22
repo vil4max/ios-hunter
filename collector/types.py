@@ -20,6 +20,7 @@ class SwiftCollectorMeta:
     sources_total: int
     sources_failed: int
     failed_companies: list[str]
+    ok_companies: list[str]
 
     @property
     def sources_ok(self) -> int:

@@ -14,6 +14,7 @@ def test_load_swift_collector_meta_reads_meta_block(tmp_path) -> None:
                     "sources_total": 53,
                     "sources_failed": 1,
                     "failed_companies": ["EPAM"],
+                    "ok_companies": ["Acme", "Intellias"],
                 },
                 "jobs": [{"company": "Acme", "title": "iOS Dev", "url": "https://example.com"}],
             }
@@ -28,6 +29,7 @@ def test_load_swift_collector_meta_reads_meta_block(tmp_path) -> None:
     assert meta.sources_total == 53
     assert meta.sources_ok == 52
     assert meta.failed_companies == ["EPAM"]
+    assert meta.ok_companies == ["Acme", "Intellias"]
     assert len(jobs) == 1
 
 
@@ -36,7 +38,12 @@ def test_collect_all_returns_swift_meta(tmp_path) -> None:
     export_path.write_text(
         json.dumps(
             {
-                "meta": {"sources_total": 2, "sources_failed": 0, "failed_companies": []},
+                "meta": {
+                    "sources_total": 2,
+                    "sources_failed": 0,
+                    "failed_companies": [],
+                    "ok_companies": ["Acme"],
+                },
                 "jobs": [{"company": "Acme", "title": "iOS Dev", "url": "https://example.com"}],
             }
         ),

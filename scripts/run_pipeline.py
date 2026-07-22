@@ -19,6 +19,7 @@ from database.seen import (
     load_seen,
     mark_seen,
     migrate_from_sqlite,
+    purge_dead_seen,
     save_seen,
     seen_key,
     utc_now,
@@ -92,14 +93,19 @@ def summarize_source_checks(
 
 def collect_vacancies(
     swift_export_path: Path,
-) -> tuple[list[Vacancy], int, tuple[str, ...], dict[str, object]]:
+) -> tuple[list[Vacancy], int, tuple[str, ...], dict[str, object], frozenset[str]]:
     collect_result = collect_all(swift_export_path)
     raw_jobs: list[dict] = []
+    purgeable_companies: set[str] = set()
     for source in collect_result.source_results:
         if source.status == "failed":
             print(f"Source failed: {source.source_name}: {source.error}", file=sys.stderr)
             continue
         raw_jobs.extend(source.jobs)
+        if _is_telegram_source(source):
+            continue
+        if source.source_id.startswith("company:"):
+            purgeable_companies.add(source.source_name)
 
     swift_failed = (
         list(collect_result.swift_meta.failed_companies)
@@ -109,13 +115,17 @@ def collect_vacancies(
     for company in swift_failed:
         print(f"Source failed: Swift: {company}", file=sys.stderr)
 
+    if collect_result.swift_meta is not None:
+        for company in collect_result.swift_meta.ok_companies:
+            purgeable_companies.add(company)
+
     failed_source_names, health = summarize_source_checks(
         collect_result.source_results,
         swift_failed_companies=swift_failed,
     )
     vacancies = normalize_many(raw_jobs)
     unique, removed, _ = deduplicate_with_report(vacancies)
-    return unique, removed, failed_source_names, health
+    return unique, removed, failed_source_names, health, frozenset(purgeable_companies)
 
 
 def select_fresh(vacancies: list[Vacancy], seen: dict, *, seen_gate: bool) -> list[Vacancy]:
@@ -191,6 +201,7 @@ def process_new_vacancies(
                 fresh,
                 stats=stats,
                 board_url=settings.project_board_url,
+                live=vacancies,
             )
         except Exception as error:
             print(f"Telegram send failed: {error}", file=sys.stderr)
@@ -218,6 +229,7 @@ def process_new_vacancies(
             fresh,
             stats=stats,
             board_url=settings.project_board_url,
+            live=vacancies,
         )
     except Exception as error:
         print(f"Telegram send failed: {error}", file=sys.stderr)
@@ -253,7 +265,15 @@ def main() -> int:
         if migrated:
             print(f"Migrated {migrated} vacancies from {jobs_db} into seen store.")
 
-    vacancies, duplicates_removed, failed_source_names, source_health = collect_vacancies(swift_export)
+    vacancies, duplicates_removed, failed_source_names, source_health, purgeable_companies = (
+        collect_vacancies(swift_export)
+    )
+    live_urls = {seen_key(vacancy) for vacancy in vacancies if seen_key(vacancy)}
+    purged = purge_dead_seen(
+        seen,
+        live_urls=live_urls,
+        purgeable_companies=purgeable_companies,
+    )
     sent, marked, sync_result = process_new_vacancies(
         vacancies,
         seen,
@@ -263,7 +283,7 @@ def main() -> int:
         source_health=source_health,
     )
 
-    if migrated or marked:
+    if migrated or marked or purged:
         save_seen(seen_path, seen)
 
     runtime = time.perf_counter() - started
@@ -271,6 +291,7 @@ def main() -> int:
         f"Vacancies: {len(vacancies)}\n"
         f"Duplicates removed: {duplicates_removed}\n"
         f"Sources failed: {len(failed_source_names)}\n"
+        f"Dead purged: {len(purged)}\n"
         f"Inbox created: {sync_result.created_count}\n"
         f"Already in Project: {sync_result.existing_count}\n"
         f"Sync failed: {sync_result.failed_count}\n"

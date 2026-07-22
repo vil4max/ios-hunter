@@ -3,7 +3,7 @@ from __future__ import annotations
 import sqlite3
 from pathlib import Path
 
-from database.seen import load_seen, mark_seen, migrate_from_sqlite, save_seen, seen_key
+from database.seen import load_seen, mark_seen, migrate_from_sqlite, purge_dead_seen, save_seen, seen_key
 from tests.conftest import make_vacancy
 
 
@@ -25,6 +25,35 @@ def test_mark_seen_persists_and_skips_duplicates(tmp_path: Path) -> None:
     assert seen_key(vacancy) in reloaded
     assert reloaded[seen_key(vacancy)]["title"] == vacancy.title
     assert reloaded[seen_key(vacancy)]["company"] == vacancy.company
+
+
+def test_purge_dead_seen_removes_only_missing_for_purgeable_companies() -> None:
+    seen = {
+        "https://example.com/epam/live": {
+            "title": "Senior iOS",
+            "company": "EPAM",
+            "first_seen": "2026-07-01T00:00:00+00:00",
+        },
+        "https://example.com/epam/dead": {
+            "title": "Middle iOS",
+            "company": "EPAM",
+            "first_seen": "2026-07-01T00:00:00+00:00",
+        },
+        "https://example.com/softserve/old": {
+            "title": "iOS Engineer",
+            "company": "SoftServe",
+            "first_seen": "2026-07-01T00:00:00+00:00",
+        },
+    }
+    removed = purge_dead_seen(
+        seen,
+        live_urls={"https://example.com/epam/live"},
+        purgeable_companies={"EPAM"},
+    )
+    assert removed == ["https://example.com/epam/dead"]
+    assert "https://example.com/epam/live" in seen
+    assert "https://example.com/softserve/old" in seen
+    assert "https://example.com/epam/dead" not in seen
 
 
 def test_migrate_from_sqlite_imports_urls(tmp_path: Path) -> None:
