@@ -14,7 +14,7 @@ See `docs/architecture/career-agent.md` and `docs/github-setup-guide.md`.
 📭 Новых вакансий не обнаружено
 
 ✅ Поиск по сайтам: OK (12/12)
-✅ Telegram: OK (3/3) · @itrecruit_ua, @remotejobss, @itfreelancers
+✅ Telegram: OK (3/3)
 📊 Найдено: 30 · в базе: 120 · новых: 0
 
 ✅ Все проверки прошли · 2026-07-15 11:00
@@ -32,7 +32,7 @@ When there are **new** vacancies:
    🔗 https://jobs.example.com/1
 
 ✅ Поиск по сайтам: OK (12/12)
-✅ Telegram: OK (3/3) · @itrecruit_ua, @remotejobss, @itfreelancers
+✅ Telegram: OK (3/3)
 📊 Найдено: 32 · в базе: 120 · новых: 2
 
 ✅ Все проверки прошли · 2026-07-15 11:00

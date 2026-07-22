@@ -68,7 +68,7 @@ def test_hourly_lists_new_vacancies_only() -> None:
         "   🔗 https://example.com/b\n"
         "\n"
         "✅ Поиск по сайтам: OK (10/10)\n"
-        "✅ Telegram: OK (3/3) · @itrecruit_ua, @remotejobss, @itfreelancers\n"
+        "✅ Telegram: OK (3/3)\n"
         "📊 Найдено: 10 · в базе: 8 · новых: 2\n"
         "\n"
         "✅ Все проверки прошли · 2026-07-15 11:00\n"
@@ -132,7 +132,7 @@ def test_hourly_heartbeat_when_no_new() -> None:
         "📭 Новых вакансий не обнаружено\n"
         "\n"
         "✅ Поиск по сайтам: OK (12/12)\n"
-        "✅ Telegram: OK (3/3) · @itrecruit_ua, @remotejobss, @itfreelancers\n"
+        "✅ Telegram: OK (3/3)\n"
         "📊 Найдено: 22 · в базе: 40 · новых: 0\n"
         "\n"
         "✅ Все проверки прошли · 2026-07-15 11:00"
@@ -155,7 +155,8 @@ def test_hourly_heartbeat_reports_partial_failures() -> None:
     )
     message = format_hourly_heartbeat(stats=stats, now=now)
     assert "⚠️ Поиск по сайтам: 11/12 ошибки — SoftServe" in message
-    assert "⚠️ Telegram: 2/3 ошибки — @remotejobss" in message
+    assert "⚠️ Telegram: 2/3 ошибки" in message
+    assert "@remotejobss" not in message
     assert "⚠️ Проверки с ошибками · 2026-07-15 11:00" in message
 
 
