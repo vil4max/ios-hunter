@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 
 from config.settings import Settings
-from parser.normalize import canonicalize_url
+from database.seen import default_seen_path, load_seen, mark_seen, save_seen, seen_key, utc_now
+from parser.normalize import Vacancy, canonicalize_url
 from project_sync.github_client import GitHubClient, GitHubGraphQLError, ProjectMeta
 
 
@@ -124,6 +126,38 @@ def apply_manual_fields(
 
 def card_title(card: ManualCard) -> str:
     return f"{card.company} — {card.title}"
+
+
+def vacancy_from_manual_card(card: ManualCard) -> Vacancy | None:
+    url = (card.url or "").strip()
+    if not url:
+        return None
+    return Vacancy(
+        company=card.company.strip(),
+        title=card.title.strip(),
+        url=url,
+        source=(card.source or "manual").strip() or "manual",
+    )
+
+
+def seed_seen_from_manual_card(
+    card: ManualCard,
+    *,
+    seen_path: Path | None = None,
+) -> tuple[bool, str]:
+    vacancy = vacancy_from_manual_card(card)
+    if vacancy is None:
+        return False, ""
+    path = seen_path or default_seen_path()
+    seen = load_seen(path)
+    key = seen_key(vacancy)
+    first_seen = utc_now()
+    if card.applied_at:
+        first_seen = f"{card.applied_at}T00:00:00+00:00"
+    if not mark_seen(seen, vacancy, first_seen=first_seen):
+        return False, key
+    save_seen(path, seen)
+    return True, key
 
 
 def create_private_card(

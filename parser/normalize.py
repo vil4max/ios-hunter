@@ -12,6 +12,7 @@ _TRACKING_QUERY_KEYS = {
     "ref",
     "source",
     "gh_src",
+    "sent",
     "utm_source",
     "utm_medium",
     "utm_campaign",

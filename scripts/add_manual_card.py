@@ -11,7 +11,12 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from config.settings import load_settings
-from project_sync.manual_card import ManualCard, create_private_card, upsert_private_card
+from project_sync.manual_card import (
+    ManualCard,
+    create_private_card,
+    seed_seen_from_manual_card,
+    upsert_private_card,
+)
 
 
 def _ensure_env() -> None:
@@ -149,6 +154,13 @@ def main() -> int:
         print(f"Offer Probability: {card.offer_probability}")
     print(f"Item: {item_id}")
     print("Board: https://github.com/users/vil4max/projects/3")
+    seeded, seen_key_value = seed_seen_from_manual_card(card)
+    if seeded:
+        print(f"Seen seeded: {seen_key_value}")
+    elif seen_key_value:
+        print(f"Seen already present: {seen_key_value}")
+    else:
+        print("Seen skipped: no URL")
     return 0
 
 

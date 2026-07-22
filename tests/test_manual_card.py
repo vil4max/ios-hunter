@@ -1,8 +1,16 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 from config.settings import Settings
+from database.seen import load_seen
 from project_sync.github_client import ProjectField, ProjectMeta
-from project_sync.manual_card import ManualCard, build_draft_body, upsert_private_card
+from project_sync.manual_card import (
+    ManualCard,
+    build_draft_body,
+    seed_seen_from_manual_card,
+    upsert_private_card,
+)
 
 
 def _settings() -> Settings:
@@ -180,3 +188,34 @@ def test_upsert_matches_same_company_when_title_differs() -> None:
     assert created_again is False
     assert same_id == item_id
     assert len(client.created_titles) == 1
+
+
+def test_seed_seen_from_manual_card_writes_url(tmp_path: Path) -> None:
+    seen_path = tmp_path / "seen.json"
+    card = ManualCard(
+        company="Sombra",
+        title="Middle Software Engineer (IOS Native)",
+        status="Applied",
+        source="dou",
+        url="https://jobs.dou.ua/companies/sombra/vacancies/366864/?sent",
+        applied_at="2026-07-22",
+    )
+    seeded, key = seed_seen_from_manual_card(card, seen_path=seen_path)
+    assert seeded is True
+    assert key == "https://jobs.dou.ua/companies/sombra/vacancies/366864"
+    seen = load_seen(seen_path)
+    assert seen[key]["company"] == "Sombra"
+    assert seen[key]["first_seen"] == "2026-07-22T00:00:00+00:00"
+
+    seeded_again, key_again = seed_seen_from_manual_card(card, seen_path=seen_path)
+    assert seeded_again is False
+    assert key_again == key
+
+
+def test_seed_seen_from_manual_card_skips_without_url(tmp_path: Path) -> None:
+    seeded, key = seed_seen_from_manual_card(
+        ManualCard(company="Acme", title="iOS", status="Applied"),
+        seen_path=tmp_path / "seen.json",
+    )
+    assert seeded is False
+    assert key == ""
