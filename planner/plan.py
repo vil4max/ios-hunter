@@ -162,7 +162,7 @@ def build_plan(cards: list[ProjectCard], settings: Settings, *, today: date | No
 
     ranked: list[tuple[int, ProjectCard]] = []
     for card in cards:
-        if card.status in {"Archived", "Rejected", "Offer"}:
+        if card.status == "Archived":
             continue
 
         age = _age_days(card, today)
@@ -171,13 +171,14 @@ def build_plan(cards: list[ProjectCard], settings: Settings, *, today: date | No
             card.follow_up is not None
             and today < card.follow_up <= date.fromordinal(today.toordinal() + 7)
         )
+        interview_statuses = {"Screening", "Post-Screen", "Technical", "Post-Tech"}
 
         if follow_due:
             plan.pending_follow_ups.append(card)
             ranked.append((0, card))
             continue
 
-        if card.status in {"Technical", "Screening"} and follow_upcoming:
+        if card.status in interview_statuses and follow_upcoming:
             plan.upcoming_interviews.append(card)
             continue
 
@@ -192,7 +193,7 @@ def build_plan(cards: list[ProjectCard], settings: Settings, *, today: date | No
             ranked.append((2, card))
             continue
 
-        if card.status == "Screening" and not follow_upcoming:
+        if card.status in {"Replied", "Screening", "Post-Screen", "Technical", "Post-Tech"} and not follow_upcoming:
             ranked.append((3, card))
 
     seen_ids: set[str] = set()

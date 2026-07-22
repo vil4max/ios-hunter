@@ -77,9 +77,11 @@ See `docs/migration-plan.md`.
 
 ## Status names (exact)
 
-Inbox, Applied, Screening, Technical, Offer, Rejected, Archived
+Inbox, Applied, Replied, Screening, Post-Screen, Technical, Post-Tech, Archived
 
-Flow: new → Inbox → Applied (or Archive) → Screening → Technical → Offer | Rejected.
+Flow: active pipeline → Archived (always) with Close Reason + Closed Stage.
+
+Close Reason covers reject / offer / no-reply / duplicate / withdrawn.
 
 ## Do not configure
 

@@ -46,6 +46,27 @@ def main() -> int:
     parser.add_argument("--title", required=True)
     parser.add_argument("--status", default="Applied")
     parser.add_argument("--source", default="")
+    parser.add_argument(
+        "--channel",
+        default=None,
+        choices=["Djinni", "LinkedIn", "Telegram", "Company site", "Recruiter", "Other"],
+        help="Where the vacancy came from (filter tag)",
+    )
+    parser.add_argument(
+        "--recruiter",
+        default=None,
+        help="Recruiter / HR contact name",
+    )
+    parser.add_argument(
+        "--summary",
+        default=None,
+        help="2-3 sentences: unique duties, market, schedule",
+    )
+    parser.add_argument(
+        "--salary",
+        default=None,
+        help="Stated/discussed compensation, e.g. 4k USD gross",
+    )
     parser.add_argument("--url", default="")
     parser.add_argument("--applied-at", default=None, help="YYYY-MM-DD")
     parser.add_argument("--follow-up", default=None, help="YYYY-MM-DD")
@@ -55,6 +76,38 @@ def main() -> int:
         default=None,
         choices=["Low", "Medium", "High"],
         help="Your estimate of offer chance",
+    )
+    parser.add_argument(
+        "--close-reason",
+        default=None,
+        choices=[
+            "No reply",
+            "Rejected HR",
+            "Rejected tech",
+            "Accepted offer",
+            "Declined offer",
+            "Duplicate",
+            "Not interested",
+            "Withdrawn",
+            "Role closed",
+            "Other",
+        ],
+        help="Why the card is Archived",
+    )
+    parser.add_argument(
+        "--closed-stage",
+        default=None,
+        choices=[
+            "Inbox",
+            "Applied",
+            "Replied",
+            "Screening",
+            "Post-Screen",
+            "Technical",
+            "Post-Tech",
+            "Offer",
+        ],
+        help="Pipeline stage when the card was closed",
     )
     parser.add_argument("--notes", default="")
     parser.add_argument(
@@ -71,11 +124,17 @@ def main() -> int:
         title=args.title,
         status=args.status,
         source=args.source,
+        channel=args.channel,
+        recruiter=args.recruiter,
+        summary=args.summary,
+        salary=args.salary,
         url=args.url,
         applied_at=args.applied_at,
         follow_up=args.follow_up,
         priority=args.priority,
         offer_probability=args.offer_probability,
+        close_reason=args.close_reason,
+        closed_stage=args.closed_stage,
         notes=args.notes,
     )
     if args.create_only:

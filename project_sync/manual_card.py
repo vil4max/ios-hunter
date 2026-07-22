@@ -18,6 +18,12 @@ class ManualCard:
     follow_up: str | None = None
     priority: str | None = None
     offer_probability: str | None = None
+    channel: str | None = None
+    recruiter: str | None = None
+    summary: str | None = None
+    salary: str | None = None
+    close_reason: str | None = None
+    closed_stage: str | None = None
     notes: str = ""
 
 
@@ -30,6 +36,12 @@ def build_draft_body(card: ManualCard) -> str:
     ]
     if card.source:
         lines.append(f"**Source:** {card.source}")
+    if card.recruiter:
+        lines.append(f"**Recruiter:** {card.recruiter}")
+    if card.summary:
+        lines.append(f"**Summary:** {card.summary}")
+    if card.salary:
+        lines.append(f"**Salary:** {card.salary}")
     if card.url:
         lines.append(f"**URL:** {card.url}")
     if canonical:
@@ -59,6 +71,9 @@ def apply_manual_fields(
     text_values = {
         "Company": card.company,
         "Source": card.source,
+        "Recruiter": card.recruiter or "",
+        "Summary": card.summary or "",
+        "Salary": card.salary or "",
         "URL": card.url,
         "Canonical URL": canonicalize_url(card.url) if card.url else "",
     }
@@ -89,6 +104,9 @@ def apply_manual_fields(
     select_values = {
         "Priority": card.priority,
         "Offer Probability": card.offer_probability,
+        "Channel": card.channel,
+        "Close Reason": card.close_reason,
+        "Closed Stage": card.closed_stage,
     }
     for field_name, value in select_values.items():
         project_field = meta.fields_by_name.get(field_name)

@@ -48,12 +48,18 @@ Manual / historical / collector vacancies use **private Draft Project items** (n
 
 ```text
 Inbox
-  ├─→ Applied → Screening → Technical → Offer
-  │                              └────→ Rejected
-  └─→ Archived   (not interested)
+  └─→ Applied → Replied → Screening → Post-Screen → Technical → Post-Tech
+                                                                      └─→ Archived
 ```
 
-Columns (exact names): Inbox, Applied, Screening, Technical, Offer, Rejected, Archived.
+Columns (exact names): Inbox, Applied, Replied, Screening, Post-Screen, Technical, Post-Tech, Archived.
+
+Terminal outcomes are not Status columns. Always archive with Close Reason + Closed Stage:
+- no reply after wait window → `No reply`
+- HR/recruiter reject → `Rejected HR`
+- tech reject → `Rejected tech`
+- offer → `Accepted offer` / `Declined offer` (Closed Stage `Offer`)
+- other → `Duplicate` / `Withdrawn` / …
 
 ## Boundaries
 

@@ -24,10 +24,11 @@ def _env_int(name: str, default: int) -> int:
 STATUS_WORKFLOW: tuple[str, ...] = (
     "Inbox",
     "Applied",
+    "Replied",
     "Screening",
+    "Post-Screen",
     "Technical",
-    "Offer",
-    "Rejected",
+    "Post-Tech",
     "Archived",
 )
 
@@ -35,12 +36,57 @@ ACTIVE_PIPELINE_STATUSES: frozenset[str] = frozenset(
     {
         "Inbox",
         "Applied",
+        "Replied",
         "Screening",
+        "Post-Screen",
         "Technical",
+        "Post-Tech",
     }
 )
 
-STALE_STATUSES: frozenset[str] = frozenset({"Applied", "Screening", "Technical"})
+STALE_STATUSES: frozenset[str] = frozenset(
+    {
+        "Applied",
+        "Replied",
+        "Screening",
+        "Post-Screen",
+        "Technical",
+        "Post-Tech",
+    }
+)
+
+CLOSE_REASON_OPTIONS: tuple[str, ...] = (
+    "No reply",
+    "Rejected HR",
+    "Rejected tech",
+    "Accepted offer",
+    "Declined offer",
+    "Duplicate",
+    "Not interested",
+    "Withdrawn",
+    "Role closed",
+    "Other",
+)
+
+CLOSED_STAGE_OPTIONS: tuple[str, ...] = (
+    "Inbox",
+    "Applied",
+    "Replied",
+    "Screening",
+    "Post-Screen",
+    "Technical",
+    "Post-Tech",
+    "Offer",
+)
+
+CHANNEL_OPTIONS: tuple[str, ...] = (
+    "Djinni",
+    "LinkedIn",
+    "Telegram",
+    "Company site",
+    "Recruiter",
+    "Other",
+)
 
 
 @dataclass(frozen=True)
