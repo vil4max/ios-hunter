@@ -59,14 +59,7 @@ enum JobSources {
                 pattern: #"/careers/([a-z0-9-]+(?:-[a-z0-9-]+)+)"#,
                 http: http
             ),
-            HTMLRegexJobSource(
-                company: "Binary Studio",
-                tier: .tier2,
-                listURL: URL(string: "https://binary-studio.com/careers/")!,
-                baseURL: URL(string: "https://binary-studio.com/")!,
-                pattern: #"https://binary-studio\.com/careers/([a-z0-9-]+)/"#,
-                http: http
-            ),
+            BinaryStudioSource(http: http),
             WorkableWidgetSource(company: "KindGeek", tier: .tier3, accountSlug: "kindgeek", http: http),
             HTMLRegexJobSource(
                 company: "Inoxoft",

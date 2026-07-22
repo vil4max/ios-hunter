@@ -17,6 +17,7 @@ struct AndersenSource: JobSource {
             headers: [
                 "Accept-Language": "en",
                 "Accept": "application/json",
+                "Referer": "https://people.andersenlab.com/",
             ]
         )
         let vacancies = try JSONDecoder().decode([AndersenVacancy].self, from: data)

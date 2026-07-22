@@ -23,6 +23,46 @@ struct HTTPClient: Sendable {
         headers: [String: String] = [:],
         acceptableStatusCodes: Range<Int> = 200 ..< 300
     ) async throws -> Data {
+        var lastError: Error?
+
+        for attempt in 0 ..< 3 {
+            do {
+                return try await fetchDataOnce(
+                    from: url,
+                    headers: headers,
+                    acceptableStatusCodes: acceptableStatusCodes
+                )
+            } catch let error as HTTPClientError {
+                lastError = error
+                guard case let .httpStatus(code) = error, (500 ... 599).contains(code), attempt < 2 else {
+                    throw error
+                }
+                try await Task.sleep(nanoseconds: UInt64(400_000_000 * (attempt + 1)))
+            }
+        }
+
+        throw lastError ?? HTTPClientError.invalidResponse
+    }
+
+    func fetchStringAllowingBotWall(
+        from url: URL,
+        headers: [String: String] = [:]
+    ) async throws -> String? {
+        do {
+            return try await fetchString(from: url, headers: headers)
+        } catch let error as HTTPClientError {
+            guard case let .httpStatus(code) = error, code == 403 else {
+                throw error
+            }
+            return nil
+        }
+    }
+
+    private func fetchDataOnce(
+        from url: URL,
+        headers: [String: String],
+        acceptableStatusCodes: Range<Int>
+    ) async throws -> Data {
         var request = URLRequest(url: url)
         request.setValue(
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",

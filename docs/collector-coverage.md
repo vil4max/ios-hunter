@@ -4,7 +4,7 @@
 
 | Layer | What |
 |-------|------|
-| Swift `JobSources.all` | Manual career-page / ATS adapters (company list in `JobSource.swift`) |
+| Swift `JobSources.all` | Manual career-page / ATS adapters (company list in `JobSource.swift`); Innovecs via Greenhouse API; Binary Studio soft-fails on Cloudflare bot wall |
 | Python `collector/companies.py` | Extra ATS boards (Greenhouse, Ashby, Lever, Workable, Teamtailor, …) |
 | Python `collector/dou.py` | DOU Top 50 career discovery + iOS/Swift feeds |
 | Python `collector/telegram_channels.py` | Telegram chats (MTProto / Telethon): `@itrecruit_ua`, `@remotejobss`, `@itfreelancers` |
