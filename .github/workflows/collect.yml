@@ -17,6 +17,8 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Prepare directories
         run: mkdir -p database
@@ -58,12 +60,25 @@ jobs:
 
       - name: Commit seen store
         run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add database/seen.json
           if git diff --staged --quiet; then
             echo "No seen.json changes to commit."
-          else
-            git commit -m "chore(seen): record notified vacancies [skip ci]"
-            git push
+            exit 0
           fi
+          git commit -m "chore(seen): record notified vacancies [skip ci]"
+          branch="${GITHUB_REF_NAME}"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin "$branch"
+            if git rebase "origin/$branch" && git push origin "HEAD:$branch"; then
+              echo "Pushed seen.json on attempt ${attempt}"
+              exit 0
+            fi
+            echo "Push race on attempt ${attempt}, retrying..."
+            git rebase --abort 2>/dev/null || true
+            sleep $((attempt * 2))
+          done
+          echo "Failed to push seen.json after retries" >&2
+          exit 1
