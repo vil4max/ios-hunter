@@ -11,6 +11,7 @@ import requests
 from parser.normalize import is_ios_job
 
 from collector.dou import collect_dou_top50
+from collector.telegram_channels import collect_telegram_channels
 from collector.types import CollectResult, SourceResult, SwiftCollectorMeta
 from integrations.http_client import fetch_json
 
@@ -275,4 +276,5 @@ def collect_all(swift_export_path: str | Path = "database/swift_export.json") ->
     results.append(collect_workable_jobs_md("Romexsoft", "romexsoft"))
     results.append(collect_workable_jobs_md("SupportYourApp", "supportyourapp"))
     results.append(collect_dou_top50())
+    results.extend(collect_telegram_channels())
     return CollectResult(source_results=results, swift_meta=swift_meta)

@@ -32,14 +32,26 @@ When there are **new** vacancies:
 
 **Pipeline status / Applied / Screening** — manage on the private [Career CRM Project](https://github.com/users/vil4max/projects/3). Telegram does **not** dump today's tasks or CRM sections.
 
-DOU and Djinni board browsing stays in their native apps. This repo watches company career pages (and related DOU Top 50 career-site discovery).
+DOU and Djinni board browsing stays in their native apps. This repo watches company career pages, DOU Top 50 career-site discovery, and optional Telegram chats (currently `@itrecruit_ua`, iOS/Swift vacancies only).
+
+One-time Telegram chat setup:
+
+```bash
+pip install -r requirements.txt
+python3 scripts/telegram_login.py
+```
+
+Then add `TELEGRAM_API_ID`, `TELEGRAM_API_HASH`, and `TELEGRAM_SESSION` as repository secrets. Your account must already be a member of the monitored chat.
 
 ## Secrets
 
 | Secret | Required | Purpose |
 |--------|----------|---------|
-| `TELEGRAM_TOKEN` | yes | Bot API |
+| `TELEGRAM_TOKEN` | yes | Bot API (outbound alerts) |
 | `TELEGRAM_CHAT_ID` | yes | Your private chat |
+| `TELEGRAM_API_ID` | for TG chats | MTProto app id from my.telegram.org |
+| `TELEGRAM_API_HASH` | for TG chats | MTProto app hash |
+| `TELEGRAM_SESSION` | for TG chats | StringSession from `scripts/telegram_login.py` |
 | `CAREER_AGENT_TOKEN` | for Sync | Fine-grained PAT: Issues + Projects |
 
 Remove unused repo secrets if present: `GEMINI_API_KEY`, `OPENAI_API_KEY`.
