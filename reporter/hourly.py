@@ -54,12 +54,9 @@ def _telegram_status_line(stats: CollectReportStats) -> str:
     if stats.telegram_skipped > 0 and stats.telegram_ok == 0 and not failed:
         return "⏭️ Telegram: пропущен (нет session)"
     if failed:
-        shown = ", ".join(f"@{name.lstrip('@')}" for name in failed[:4])
         ratio = f"{stats.telegram_ok}/{stats.telegram_total} " if stats.telegram_total > 0 else ""
-        return f"⚠️ Telegram: {ratio}ошибки — {shown}"
-    names = [f"@{name.lstrip('@')}" for name in stats.telegram_ok_names[:3]]
-    names_part = f" · {', '.join(names)}" if names else ""
-    return f"✅ Telegram: OK ({stats.telegram_ok}/{stats.telegram_total}){names_part}"
+        return f"⚠️ Telegram: {ratio}ошибки"
+    return f"✅ Telegram: OK ({stats.telegram_ok}/{stats.telegram_total})"
 
 
 def _checks_passed(stats: CollectReportStats) -> bool:
