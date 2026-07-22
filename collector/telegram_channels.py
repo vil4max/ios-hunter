@@ -11,7 +11,11 @@ from parser.normalize import is_ios_job
 
 from collector.types import SourceResult
 
-TELEGRAM_CHANNELS: tuple[str, ...] = ("itrecruit_ua",)
+TELEGRAM_CHANNELS: tuple[str, ...] = (
+    "itrecruit_ua",
+    "remotejobss",
+    "itfreelancers",
+)
 
 _LOOKBACK = 100
 

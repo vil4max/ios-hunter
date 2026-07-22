@@ -95,7 +95,7 @@ def format_hourly_new_vacancies(
         snippet = _snippet(vacancy)
         if snippet:
             lines.append(f"   📝 {snippet}")
-        if company and not (is_telegram and company.lower() in {"telegram", "itrecruit_ua"}):
+        if company and not (is_telegram and company.lower() in {"telegram", "itrecruit_ua", "remotejobss", "itfreelancers"}):
             if not (is_telegram and company.lower().startswith("telegram @")):
                 lines.append(f"   🏢 {company}")
         if not is_telegram:

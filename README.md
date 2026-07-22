@@ -32,7 +32,7 @@ When there are **new** vacancies:
 
 **Pipeline status / Applied / Screening** — manage on the private [Career CRM Project](https://github.com/users/vil4max/projects/3). Telegram does **not** dump today's tasks or CRM sections.
 
-DOU and Djinni board browsing stays in their native apps. This repo watches company career pages, DOU Top 50 career-site discovery, and optional Telegram chats (currently `@itrecruit_ua`, iOS/Swift vacancies only).
+DOU and Djinni board browsing stays in their native apps. This repo watches company career pages, DOU Top 50 career-site discovery, and optional Telegram chats (`@itrecruit_ua`, `@remotejobss`, `@itfreelancers` — iOS/Swift hiring posts only).
 
 One-time Telegram chat setup:
 
