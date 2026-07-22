@@ -47,16 +47,23 @@ _VACANCY_MARKERS: tuple[str, ...] = (
     "#вакансия",
     "#vacancy",
     "#job",
-    "#hiring",
     "#jobs",
+    "#hiring",
     "#ios",
     "#swift",
+    "#itjobs",
+    "#remote_jobs",
+    "#remotejobs",
+    "#techjobs",
     "вакансія",
     "вакансия",
+    "job opportunity",
+    "jobs opportunity",
     "we're hiring",
     "we are hiring",
     "now hiring",
     "hiring:",
+    "hiring ",
     "looking for",
     "шукаємо",
     "шукає",
@@ -66,14 +73,29 @@ _VACANCY_MARKERS: tuple[str, ...] = (
     "open role",
     "open position",
     "open positions",
+    "ready to apply",
+    "apply using the button",
+    "how to apply",
+    "send your resume",
+    "send your cv",
+    "send dm",
+)
+
+_TITLE_NOISE: tuple[str, ...] = (
+    "job opportunity",
+    "ready to apply",
+    "apply using the button below",
+    "apply using the button",
+    "tags",
+    "how to apply",
 )
 
 _COMPANY_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(r"(?im)^(.{2,80}?)\s+шука[єе]\b"),
     re.compile(r"(?im)^(.{2,80}?)\s+is hiring\b"),
     re.compile(r"(?im)^(.{2,80}?)\s+are hiring\b"),
-    re.compile(r"(?im)^company\s*[:\-]\s*(.+)$"),
-    re.compile(r"(?im)^компані[яя]\s*[:\-]\s*(.+)$"),
+    re.compile(r"(?im)^[^\w#]*company\s*[:\-]\s*(.+)$"),
+    re.compile(r"(?im)^[^\w#]*компані[яя]\s*[:\-]\s*(.+)$"),
 )
 
 
@@ -107,6 +129,27 @@ def should_keep_message(text: str) -> bool:
     return True
 
 
+def _strip_line_noise(line: str) -> str:
+    cleaned = re.sub(r"\s+", " ", line).strip(" -–—|━_")
+    cleaned = re.sub(r"^[\W_]+", "", cleaned)
+    return cleaned.strip()
+
+
+def _is_title_noise(line: str) -> bool:
+    lowered = _strip_line_noise(line).lower()
+    if not lowered:
+        return True
+    if lowered in _TITLE_NOISE:
+        return True
+    if re.match(r"^company\s*[:\-]", lowered):
+        return True
+    if re.match(r"^компані[яя]\s*[:\-]", lowered):
+        return True
+    if re.fullmatch(r"[\W_]+", line):
+        return True
+    return False
+
+
 def extract_title(text: str) -> str:
     for raw_line in text.splitlines():
         line = raw_line.strip()
@@ -116,7 +159,9 @@ def extract_title(text: str) -> str:
             continue
         if re.fullmatch(r"(?:#\w[\w+-]*\s*)+", line, flags=re.UNICODE):
             continue
-        cleaned = re.sub(r"\s+", " ", line).strip(" -–—|")
+        if _is_title_noise(line):
+            continue
+        cleaned = _strip_line_noise(line)
         if cleaned:
             return cleaned[:160]
     return "iOS / Swift vacancy"
@@ -127,7 +172,7 @@ def extract_company(text: str) -> str | None:
         match = pattern.search(text)
         if not match:
             continue
-        company = re.sub(r"\s+", " ", match.group(1)).strip(" -–—|🎯🚀⚓️")
+        company = re.sub(r"\s+", " ", match.group(1)).strip(" -–—|🎯🚀⚓️🏢")
         company = re.sub(r"^#\S+\s*", "", company).strip()
         if 2 <= len(company) <= 80:
             return company
