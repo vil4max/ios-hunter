@@ -133,10 +133,44 @@ _IOS_ANCHOR = re.compile(
     r")(?![a-z0-9])"
 )
 
+_IOS_DENY = re.compile(
+    r"(?i)(?<![a-z0-9])("
+    r"qa|sdet|tpm|kmm|"
+    r"kotlin\s+multiplatform|"
+    r"quality\s+assurance|"
+    r"test(?:ing)?\s+(?:automation|engineer|developer)|"
+    r"automation\s+(?:qa|engineer|tester)|"
+    r"manual\s+qa|"
+    r"mobile\s+automation"
+    r")(?![a-z0-9])"
+)
+
 
 def is_ios_job(title: str, description: str | None = None) -> bool:
+    if _IOS_DENY.search(title or ""):
+        return False
     haystack = f"{title} {description or ''}"
     return _IOS_ANCHOR.search(haystack) is not None
+
+
+_LOCATION_DENY = re.compile(
+    r"(?i)\b("
+    r"argentina|buenos\s+aires|brazil|mexico|chile|colombia|peru|"
+    r"india|bengaluru|bangalore|hyderabad|pune|chennai|"
+    r"philippines|vietnam|china"
+    r")\b"
+)
+
+_LOCATION_ALLOW_OVERRIDE = re.compile(r"(?i)\b(remote|remotely|worldwide|anywhere|emea|europe|eu)\b")
+
+
+def is_relevant_job_location(location: str | None) -> bool:
+    text = (location or "").strip()
+    if not text:
+        return True
+    if _LOCATION_ALLOW_OVERRIDE.search(text):
+        return True
+    return _LOCATION_DENY.search(text) is None
 
 
 def infer_remote(title: str, location: str | None, description: str | None) -> str:
@@ -166,6 +200,8 @@ def normalize_raw(raw: dict[str, Any]) -> Vacancy | None:
 
     location = raw.get("location")
     location = str(location).strip() if location else None
+    if not is_relevant_job_location(location):
+        return None
     remote = raw.get("remote") or infer_remote(title, location, description)
 
     published_at = None

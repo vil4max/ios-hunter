@@ -113,6 +113,66 @@ def update_status() -> None:
         print(f"  - {opt['name']}")
 
 
+def update_channel() -> None:
+    channel_field_id = "PVTSSF_lAHOABVlTc4Bdb8RzhYjtQA"
+    data = graphql(
+        """
+        query($id: ID!) {
+          node(id: $id) {
+            ... on ProjectV2SingleSelectField {
+              options { id name color description }
+            }
+          }
+        }
+        """,
+        {"id": channel_field_id},
+    )
+    existing = {
+        str(opt["name"]): opt
+        for opt in (((data.get("node") or {}).get("options")) or [])
+        if opt.get("name")
+    }
+    desired = [
+        ("Djinni", "BLUE", "Djinni.co"),
+        ("DOU", "YELLOW", "DOU.ua jobs"),
+        ("LinkedIn", "BLUE", "LinkedIn post / InMail / recruiter"),
+        ("Telegram", "GREEN", "Direct Telegram / HR chat"),
+        ("Company site", "PURPLE", "Company careers / ATS"),
+        ("Recruiter", "ORANGE", "Agency / cold recruiter outreach"),
+        ("Other", "GRAY", "Other / unknown"),
+    ]
+    single_select_options = []
+    for name, color, desc in desired:
+        option = {"name": name, "color": color, "description": desc}
+        if name in existing and existing[name].get("id"):
+            option["id"] = existing[name]["id"]
+        single_select_options.append(option)
+    data = graphql(
+        """
+        mutation($input: UpdateProjectV2FieldInput!) {
+          updateProjectV2Field(input: $input) {
+            projectV2Field {
+              ... on ProjectV2SingleSelectField {
+                name
+                options { id name }
+              }
+            }
+          }
+        }
+        """,
+        {
+            "input": {
+                "fieldId": channel_field_id,
+                "singleSelectOptions": single_select_options,
+            }
+        },
+    )
+    field = data["updateProjectV2Field"]["projectV2Field"]
+    print("Channel options:")
+    for opt in field["options"]:
+        print(f"  - {opt['name']}")
+
+
 def create_field(name: str, data_type: str, single_select_options: list[dict] | None = None) -> None:
     variables: dict = {
         "input": {
@@ -146,6 +206,7 @@ def create_field(name: str, data_type: str, single_select_options: list[dict] | 
 
 def main() -> int:
     update_status()
+    update_channel()
     present = existing_field_names()
     for name in ("URL", "Company", "Source", "Canonical URL", "Recruiter", "Summary", "Salary"):
         if name in present:
@@ -225,6 +286,7 @@ def main() -> int:
             "SINGLE_SELECT",
             [
                 {"name": "Djinni", "color": "BLUE", "description": "Djinni.co"},
+                {"name": "DOU", "color": "YELLOW", "description": "DOU.ua jobs"},
                 {"name": "LinkedIn", "color": "BLUE", "description": "LinkedIn post / InMail / recruiter"},
                 {"name": "Telegram", "color": "GREEN", "description": "Direct Telegram / HR chat"},
                 {"name": "Company site", "color": "PURPLE", "description": "Company careers / ATS"},

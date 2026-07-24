@@ -44,6 +44,16 @@
     "company": "KissMyApps",
     "first_seen": "2026-07-10T08:29:48+00:00"
   },
+  "https://jobs.dou.ua/companies/mobilunity/vacancies/367008": {
+    "title": "iOS Engineer",
+    "company": "Mobilunity",
+    "first_seen": "2026-07-23T00:00:00+00:00"
+  },
+  "https://jobs.dou.ua/companies/sombra/vacancies/366864": {
+    "title": "Middle Software Engineer (IOS Native)",
+    "company": "Sombra",
+    "first_seen": "2026-07-22T16:20:19+00:00"
+  },
   "https://jobs.dou.ua/companies/uklon/vacancies/357039": {
     "title": "iOS Engineer Senior (Finance Team)",
     "company": "Uklon",
@@ -73,6 +83,11 @@
     "title": "iOS Developer (Swift) in Kazakhstan",
     "company": "Andersen",
     "first_seen": "2026-07-10T08:29:48+00:00"
+  },
+  "https://people.andersenlab.com/vacancy/2510013": {
+    "title": "iOS Developer",
+    "company": "Andersen",
+    "first_seen": "2026-07-15T16:31:11+00:00"
   },
   "https://sombrainc.com/middle-software-engineer-ios-native": {
     "title": "middle software engineer ios native",
@@ -119,15 +134,15 @@
     "company": "DataArt",
     "first_seen": "2026-07-10T08:29:48+00:00"
   },
+  "https://www.globallogic.com/ua/careers/ios-developer-with-android-irc296867": {
+    "title": "iOS Developer with Android",
+    "company": "GlobalLogic",
+    "first_seen": "2026-07-10T08:29:48+00:00"
+  },
   "https://www.globallogic.com/ua/careers/ios-software-engineer-irc300022": {
     "title": "iOS Software Engineer",
     "company": "GlobalLogic",
     "first_seen": "2026-07-14T20:20:33+00:00"
-  },
-  "https://www.globallogic.com/ua/careers/lead-kmm-engineer-kmm-android-ios-irc294950": {
-    "title": "Lead KMM Engineer – KMM, Android, iOS",
-    "company": "GlobalLogic",
-    "first_seen": "2026-07-24T10:28:05+00:00"
   },
   "https://www.globallogic.com/ua/careers/senior-ios-software-engineer-irc296452-2": {
     "title": "Senior iOS Software Engineer",
@@ -143,15 +158,5 @@
     "title": "Technical Project Manager ( Java & Android/IOS/Kotlin) Nagpur Location",
     "company": "GlobalLogic",
     "first_seen": "2026-07-10T08:29:48+00:00"
-  },
-  "https://www.griddynamics.com/careers/vacancy/45715": {
-    "title": "iOS Developer",
-    "company": "Grid Dynamics",
-    "first_seen": "2026-07-24T10:28:05+00:00"
-  },
-  "https://www.griddynamics.com/careers/vacancy/57895": {
-    "title": "Mobile Automation QA Engineer (iOS & Android)",
-    "company": "Grid Dynamics",
-    "first_seen": "2026-07-24T10:28:05+00:00"
   }
 }

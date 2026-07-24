@@ -81,6 +81,7 @@ CLOSED_STAGE_OPTIONS: tuple[str, ...] = (
 
 CHANNEL_OPTIONS: tuple[str, ...] = (
     "Djinni",
+    "DOU",
     "LinkedIn",
     "Telegram",
     "Company site",

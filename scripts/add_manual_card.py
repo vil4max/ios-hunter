@@ -54,7 +54,7 @@ def main() -> int:
     parser.add_argument(
         "--channel",
         default=None,
-        choices=["Djinni", "LinkedIn", "Telegram", "Company site", "Recruiter", "Other"],
+        choices=["Djinni", "DOU", "LinkedIn", "Telegram", "Company site", "Recruiter", "Other"],
         help="Where the vacancy came from (filter tag)",
     )
     parser.add_argument(
