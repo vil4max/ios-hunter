@@ -59,17 +59,23 @@ def _telegram_status_line(stats: CollectReportStats) -> str:
     return f"✅ Telegram: OK ({stats.telegram_ok}/{stats.telegram_total})"
 
 
-def _problem_lines(stats: CollectReportStats) -> list[str]:
+def _collect_status_lines(stats: CollectReportStats) -> list[str]:
     lines: list[str] = []
     if _site_failed_names(stats):
         lines.append(_sites_status_line(stats))
     if _telegram_failed_names(stats):
         lines.append(_telegram_status_line(stats))
+    if not lines:
+        lines.append("✅ Сбор OK")
     return lines
 
 
-def _summary_line(stats: CollectReportStats, now: datetime | None = None) -> str:
-    return f"📊 {stats.new_count} новых · {_time_label(now)}"
+def _status_block(stats: CollectReportStats, now: datetime | None = None) -> list[str]:
+    stamp = _time_label(now)
+    status = _collect_status_lines(stats)
+    if len(status) == 1 and status[0] == "✅ Сбор OK":
+        return [f"✅ Сбор OK · {stamp}"]
+    return [*status, f"🕐 {stamp}"]
 
 
 def _footer(
@@ -79,7 +85,7 @@ def _footer(
     now: datetime | None = None,
     include_board: bool = False,
 ) -> list[str]:
-    lines = [*_problem_lines(stats), _summary_line(stats, now)]
+    lines = list(_status_block(stats, now))
     if include_board and board_url:
         lines.append(f"🔗 {board_url}")
     return lines
@@ -111,10 +117,7 @@ def format_hourly_heartbeat(
     _ = new_count
     _ = board_url
     _ = live
-    lines = [f"📭 Нет новых · {_time_label(now)}"]
-    problems = _problem_lines(stats)
-    if problems:
-        lines.extend(["", *problems])
+    lines = [f"📊 {stats.new_count} новых", "", *_status_block(stats, now)]
     return "\n".join(lines)
 
 
