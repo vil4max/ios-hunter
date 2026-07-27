@@ -145,6 +145,7 @@ def test_hourly_heartbeat_when_no_new() -> None:
         "📭 Нет новых\n"
         "\n"
         "Живые: 5 · 2 компаний\n"
+        "EPAM: 3, DataArt: 2\n"
         "\n"
         "📊 22 найдено · 0 новых · 2026-07-15 11:00"
     )
@@ -195,6 +196,7 @@ def test_hourly_heartbeat_shows_only_degraded_without_ok_noise() -> None:
         "📭 Нет новых\n"
         "\n"
         "Живые: 3 · 2 компаний\n"
+        "Intellias: 2, N-iX: 1\n"
         "\n"
         "🔕 Источники без результата: 1 — Binary Studio\n"
         "📊 31 найдено · 0 новых · 2026-07-27 22:39"

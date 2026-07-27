@@ -110,7 +110,11 @@ def _live_block(vacancies: list[Vacancy]) -> list[str]:
     if not counts:
         return ["Живые: нет"]
     total = sum(count for _, count in counts)
-    return [f"Живые: {total} · {len(counts)} компаний"]
+    names = ", ".join(f"{company}: {count}" for company, count in counts)
+    return [
+        f"Живые: {total} · {len(counts)} компаний",
+        names,
+    ]
 
 
 def _vacancy_label(vacancy: Vacancy) -> str:
