@@ -280,13 +280,6 @@ def _python_collectors() -> list[Callable[[], SourceResult]]:
             r"/careers/([a-z0-9-]+(?:-[a-z0-9-]+)+)",
         ),
         lambda: collect_html_regex(
-            "Binary Studio",
-            "https://binary-studio.com/careers/",
-            "https://binary-studio.com/",
-            r"/careers/(?!$)([a-z0-9]+(?:-[a-z0-9]+)+)/",
-            allow_bot_wall=True,
-        ),
-        lambda: collect_html_regex(
             "Inoxoft",
             "https://inoxoft.com/vacancies/",
             "https://inoxoft.com/",

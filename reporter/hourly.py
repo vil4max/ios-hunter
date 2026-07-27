@@ -59,29 +59,17 @@ def _telegram_status_line(stats: CollectReportStats) -> str:
     return f"✅ Telegram: OK ({stats.telegram_ok}/{stats.telegram_total})"
 
 
-def _degraded_status_line(stats: CollectReportStats) -> str | None:
-    names = list(stats.degraded_source_names)
-    if not names:
-        return None
-    shown = ", ".join(names[:4])
-    extra = f" (+{len(names) - 4})" if len(names) > 4 else ""
-    return f"🔕 Источники без результата: {len(names)} — {shown}{extra}"
-
-
 def _problem_lines(stats: CollectReportStats) -> list[str]:
     lines: list[str] = []
     if _site_failed_names(stats):
         lines.append(_sites_status_line(stats))
     if _telegram_failed_names(stats):
         lines.append(_telegram_status_line(stats))
-    degraded = _degraded_status_line(stats)
-    if degraded:
-        lines.append(degraded)
     return lines
 
 
 def _summary_line(stats: CollectReportStats, now: datetime | None = None) -> str:
-    return f"📊 {stats.found} найдено · {stats.new_count} новых · {_time_label(now)}"
+    return f"📊 {stats.new_count} новых · {_time_label(now)}"
 
 
 def _footer(
@@ -95,43 +83,6 @@ def _footer(
     if include_board and board_url:
         lines.append(f"🔗 {board_url}")
     return lines
-
-
-def _company_counts(vacancies: list[Vacancy]) -> list[tuple[str, int]]:
-    counts: dict[str, int] = {}
-    for vacancy in vacancies:
-        company = vacancy.company.strip() or "Unknown"
-        counts[company] = counts.get(company, 0) + 1
-    return sorted(counts.items(), key=lambda item: (-item[1], item[0].lower()))
-
-
-def _live_block(vacancies: list[Vacancy]) -> list[str]:
-    counts = _company_counts(vacancies)
-    if not counts:
-        return ["Живые: нет"]
-    total = sum(count for _, count in counts)
-    names = ", ".join(f"{company}: {count}" for company, count in counts)
-    return [
-        f"Живые: {total} · {len(counts)} компаний",
-        names,
-    ]
-
-
-def active_live_vacancies(
-    vacancies: list[Vacancy],
-    *,
-    excluded_urls: set[str] | frozenset[str] | None = None,
-) -> list[Vacancy]:
-    excluded = excluded_urls or set()
-    if not excluded:
-        return list(vacancies)
-    active: list[Vacancy] = []
-    for vacancy in vacancies:
-        key = seen_key(vacancy)
-        if key and key in excluded:
-            continue
-        active.append(vacancy)
-    return active
 
 
 def _vacancy_label(vacancy: Vacancy) -> str:
@@ -159,10 +110,9 @@ def format_hourly_heartbeat(
 ) -> str:
     _ = new_count
     _ = board_url
+    _ = live
     blocks = [
         "📭 Нет новых",
-        "",
-        *_live_block(live or []),
         "",
         *_footer(stats=stats, now=now, include_board=False),
     ]
@@ -284,6 +234,8 @@ def notify_hourly_inbox(
     live: list[Vacancy] | None = None,
     excluded_urls: set[str] | frozenset[str] | None = None,
 ) -> bool:
+    _ = live
+    _ = excluded_urls
     to_show = vacancies_for_alert(sync_result, fresh)
     if to_show:
         for message in _pack_vacancy_batches(
@@ -299,7 +251,6 @@ def notify_hourly_inbox(
                 stats=stats,
                 board_url=board_url,
                 now=now,
-                live=active_live_vacancies(live or [], excluded_urls=excluded_urls),
             )
         )
     return True

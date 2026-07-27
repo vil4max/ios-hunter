@@ -9,7 +9,7 @@ from config.settings import (
     Settings,
     STATUS_WORKFLOW,
 )
-from parser.normalize import canonicalize_url
+from parser.normalize import canonicalize_url, role_key, Vacancy
 from project_sync.github_client import GitHubClient
 
 
@@ -228,3 +228,37 @@ def archived_canonical_urls(cards: list[ProjectCard]) -> set[str]:
             if key:
                 urls.add(key)
     return urls
+
+
+def archived_role_keys(cards: list[ProjectCard]) -> set[tuple[str, str]]:
+    roles: set[tuple[str, str]] = set()
+    for card in cards:
+        if card.status != "Archived":
+            continue
+        company = (card.company or "").strip()
+        title = (card.title or "").strip()
+        if not company or not title:
+            continue
+        roles.add(role_key(company, title))
+    return roles
+
+
+def exclude_archived_vacancies(
+    vacancies: list[Vacancy],
+    *,
+    archived_urls: set[str] | frozenset[str] | None = None,
+    archived_roles: set[tuple[str, str]] | frozenset[tuple[str, str]] | None = None,
+) -> list[Vacancy]:
+    urls = archived_urls or set()
+    roles = archived_roles or set()
+    if not urls and not roles:
+        return list(vacancies)
+    active: list[Vacancy] = []
+    for vacancy in vacancies:
+        url = canonicalize_url(vacancy.canonical_url or vacancy.url)
+        if url and url in urls:
+            continue
+        if role_key(vacancy.company, vacancy.title) in roles:
+            continue
+        active.append(vacancy)
+    return active

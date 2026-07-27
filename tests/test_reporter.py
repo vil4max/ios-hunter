@@ -7,12 +7,17 @@ import pytest
 
 from integrations.notify import CollectReportStats
 from integrations.telegram import TELEGRAM_MAX_LENGTH
-from planner.plan import DailyPlan, ProjectCard, archived_canonical_urls
+from planner.plan import (
+    DailyPlan,
+    ProjectCard,
+    archived_canonical_urls,
+    archived_role_keys,
+    exclude_archived_vacancies,
+)
 from project_sync.sync import SyncItemResult, SyncResult
 from reporter.daily import format_daily_dashboard
 from reporter.hourly import (
     _pack_vacancy_batches,
-    active_live_vacancies,
     format_hourly_heartbeat,
     format_hourly_new_vacancies,
     notify_hourly_inbox,
@@ -71,7 +76,7 @@ def test_hourly_lists_new_vacancies_only() -> None:
         "2. Beta — Swift Developer\n"
         "   https://example.com/b\n"
         "\n"
-        "📊 10 найдено · 2 новых · 2026-07-15 11:00\n"
+        "📊 2 новых · 2026-07-15 11:00\n"
         "🔗 https://github.com/users/acme/projects/1"
     )
 
@@ -106,7 +111,7 @@ def test_hourly_telegram_vacancy_is_compact() -> None:
         "1. SmartTek Solutions — Senior iOS Engineer\n"
         "   https://t.me/itrecruit_ua/123\n"
         "\n"
-        "📊 1 найдено · 1 новых · 2026-07-15 11:00\n"
+        "📊 1 новых · 2026-07-15 11:00\n"
         "🔗 https://board"
     )
     assert "📝" not in message
@@ -128,28 +133,19 @@ def test_hourly_heartbeat_when_no_new() -> None:
         telegram_total=3,
         telegram_ok_names=("itrecruit_ua", "remotejobss", "itfreelancers"),
     )
-    live = [
-        make_vacancy(company="EPAM", url="https://example.com/epam/1"),
-        make_vacancy(company="EPAM", url="https://example.com/epam/2"),
-        make_vacancy(company="EPAM", url="https://example.com/epam/3"),
-        make_vacancy(company="DataArt", url="https://example.com/dataart/1"),
-        make_vacancy(company="DataArt", url="https://example.com/dataart/2"),
-    ]
     message = format_hourly_heartbeat(
         stats=stats,
         new_count=0,
         board_url="https://board",
         now=now,
-        live=live,
+        live=[make_vacancy(company="EPAM", url="https://example.com/epam/1")],
     )
     assert message == (
         "📭 Нет новых\n"
         "\n"
-        "Живые: 5 · 2 компаний\n"
-        "EPAM: 3, DataArt: 2\n"
-        "\n"
-        "📊 22 найдено · 0 новых · 2026-07-15 11:00"
+        "📊 0 новых · 2026-07-15 11:00"
     )
+    assert "Живые" not in message
 
 
 def test_hourly_heartbeat_reports_partial_failures() -> None:
@@ -165,45 +161,15 @@ def test_hourly_heartbeat_reports_partial_failures() -> None:
         telegram_ok=2,
         telegram_total=3,
         telegram_ok_names=("itrecruit_ua", "itfreelancers"),
+        degraded_source_names=("Binary Studio",),
     )
     message = format_hourly_heartbeat(stats=stats, now=now)
     assert "⚠️ Поиск по сайтам: 11/12 ошибки — SoftServe" in message
     assert "⚠️ Telegram: 2/3 ошибки" in message
     assert "@remotejobss" not in message
-    assert "📊 20 найдено · 0 новых · 2026-07-15 11:00" in message
-
-
-def test_hourly_heartbeat_shows_only_degraded_without_ok_noise() -> None:
-    now = datetime(2026, 7, 27, 22, 39, tzinfo=_KYIV)
-    stats = CollectReportStats(
-        found=31,
-        seen_total=50,
-        new_count=0,
-        duplicates_removed=0,
-        failed_source_names=(),
-        sites_ok=54,
-        sites_total=55,
-        telegram_ok=3,
-        telegram_total=3,
-        degraded_source_names=("Binary Studio",),
-    )
-    live = [
-        make_vacancy(company="Intellias", url="https://example.com/1"),
-        make_vacancy(company="Intellias", url="https://example.com/2"),
-        make_vacancy(company="N-iX", url="https://example.com/3"),
-    ]
-    message = format_hourly_heartbeat(stats=stats, now=now, live=live)
-    assert message == (
-        "📭 Нет новых\n"
-        "\n"
-        "Живые: 3 · 2 компаний\n"
-        "Intellias: 2, N-iX: 1\n"
-        "\n"
-        "🔕 Источники без результата: 1 — Binary Studio\n"
-        "📊 31 найдено · 0 новых · 2026-07-27 22:39"
-    )
-    assert "✅ Поиск по сайтам" not in message
-    assert "✅ Telegram" not in message
+    assert "Binary Studio" not in message
+    assert "🔕" not in message
+    assert "📊 0 новых · 2026-07-15 11:00" in message
 
 
 def test_vacancies_for_alert_prefers_created_sync_items() -> None:
@@ -302,45 +268,80 @@ def test_notify_hourly_inbox_sends_packed_batches(monkeypatch: pytest.MonkeyPatc
     assert all(len(message) <= 350 for message in sent)
 
 
-def test_active_live_vacancies_skips_excluded_urls() -> None:
-    live = [
-        make_vacancy(company="Keep", url="https://example.com/keep"),
-        make_vacancy(company="Drop", url="https://example.com/drop"),
-    ]
-    active = active_live_vacancies(
-        live,
-        excluded_urls={"https://example.com/drop"},
-    )
-    assert [item.url for item in active] == ["https://example.com/keep"]
-
-
-def test_heartbeat_omits_archived_companies(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_notify_heartbeat_has_no_live_block(monkeypatch: pytest.MonkeyPatch) -> None:
     sent: list[str] = []
     monkeypatch.setattr("reporter.hourly.send_message", sent.append)
     now = datetime(2026, 7, 27, 23, 0, tzinfo=_KYIV)
     stats = CollectReportStats(found=3, seen_total=3, new_count=0, duplicates_removed=0)
-    live = [
-        make_vacancy(company="Paybis", url="https://example.com/paybis"),
-        make_vacancy(company="MWDN", url="https://example.com/mwdn"),
-        make_vacancy(company="MWDN", url="https://example.com/mwdn-2"),
-    ]
     sync = SyncResult(skipped_disabled=True)
     assert notify_hourly_inbox(
         sync,
         [],
         stats=stats,
         now=now,
-        live=live,
-        excluded_urls={"https://example.com/mwdn", "https://example.com/mwdn-2"},
+        live=[make_vacancy(company="Paybis", url="https://example.com/paybis")],
     )
     assert sent == [
         "📭 Нет новых\n"
         "\n"
-        "Живые: 1 · 1 компаний\n"
-        "Paybis: 1\n"
-        "\n"
-        "📊 3 найдено · 0 новых · 2026-07-27 23:00"
+        "📊 0 новых · 2026-07-27 23:00"
     ]
+
+
+def test_exclude_archived_vacancies_by_url_and_role_key() -> None:
+    cards = [
+        ProjectCard(
+            item_id="1",
+            issue_number=None,
+            title="Middle Software Engineer (IOS Native)",
+            url="https://jobs.dou.ua/companies/sombra/vacancies/366864/",
+            issue_url="",
+            company="Sombra",
+            source="dou",
+            canonical_url="https://jobs.dou.ua/companies/sombra/vacancies/366864",
+            status="Archived",
+            priority="",
+            offer_probability="",
+            follow_up=None,
+            applied_at=None,
+            created_at=None,
+            updated_at=None,
+        ),
+        ProjectCard(
+            item_id="2",
+            issue_number=None,
+            title="Keep",
+            url="https://example.com/keep",
+            issue_url="",
+            company="Paybis",
+            source="",
+            canonical_url="https://example.com/keep",
+            status="Applied",
+            priority="",
+            offer_probability="",
+            follow_up=None,
+            applied_at=None,
+            created_at=None,
+            updated_at=None,
+        ),
+    ]
+    vacancies = [
+        make_vacancy(
+            company="Sombra",
+            title="Middle Software Engineer (IOS Native)",
+            url="https://sombrainc.com/careers/middle-software-engineer-ios-native",
+        ),
+        make_vacancy(company="Paybis", title="Lead iOS Developer", url="https://example.com/paybis"),
+        make_vacancy(
+            company="Sombra",
+            title="Middle Software Engineer (IOS Native)",
+            url="https://jobs.dou.ua/companies/sombra/vacancies/366864/?x=1",
+        ),
+    ]
+    urls = archived_canonical_urls(cards)
+    roles = archived_role_keys(cards)
+    active = exclude_archived_vacancies(vacancies, archived_urls=urls, archived_roles=roles)
+    assert [item.company for item in active] == ["Paybis"]
 
 
 def test_archived_canonical_urls_collects_archived_only() -> None:
