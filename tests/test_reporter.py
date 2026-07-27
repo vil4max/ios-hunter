@@ -144,9 +144,7 @@ def test_hourly_heartbeat_when_no_new() -> None:
     assert message == (
         "📭 Нет новых\n"
         "\n"
-        "Живые:\n"
-        "EPAM: 3\n"
-        "DataArt: 2\n"
+        "Живые: 5 · 2 компаний\n"
         "\n"
         "📊 22 найдено · 0 новых · 2026-07-15 11:00"
     )
