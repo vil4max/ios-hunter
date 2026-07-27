@@ -76,7 +76,7 @@ def test_hourly_lists_new_vacancies_only() -> None:
         "2. Beta — Swift Developer\n"
         "   https://example.com/b\n"
         "\n"
-        "📊 2 новых · 2026-07-15 11:00\n"
+        "✅ Сбор OK · 2026-07-15 11:00\n"
         "🔗 https://github.com/users/acme/projects/1"
     )
 
@@ -111,7 +111,7 @@ def test_hourly_telegram_vacancy_is_compact() -> None:
         "1. SmartTek Solutions — Senior iOS Engineer\n"
         "   https://t.me/itrecruit_ua/123\n"
         "\n"
-        "📊 1 новых · 2026-07-15 11:00\n"
+        "✅ Сбор OK · 2026-07-15 11:00\n"
         "🔗 https://board"
     )
     assert "📝" not in message
@@ -140,9 +140,13 @@ def test_hourly_heartbeat_when_no_new() -> None:
         now=now,
         live=[make_vacancy(company="EPAM", url="https://example.com/epam/1")],
     )
-    assert message == "📭 Нет новых · 2026-07-15 11:00"
+    assert message == (
+        "📊 0 новых\n"
+        "\n"
+        "✅ Сбор OK · 2026-07-15 11:00"
+    )
     assert "Живые" not in message
-    assert "0 новых" not in message
+    assert "Нет новых" not in message
 
 
 def test_hourly_heartbeat_reports_partial_failures() -> None:
@@ -161,13 +165,17 @@ def test_hourly_heartbeat_reports_partial_failures() -> None:
         degraded_source_names=("Binary Studio",),
     )
     message = format_hourly_heartbeat(stats=stats, now=now)
-    assert "⚠️ Поиск по сайтам: 11/12 ошибки — SoftServe" in message
-    assert "⚠️ Telegram: 2/3 ошибки" in message
+    assert message == (
+        "📊 0 новых\n"
+        "\n"
+        "⚠️ Поиск по сайтам: 11/12 ошибки — SoftServe\n"
+        "⚠️ Telegram: 2/3 ошибки\n"
+        "🕐 2026-07-15 11:00"
+    )
     assert "@remotejobss" not in message
     assert "Binary Studio" not in message
     assert "🔕" not in message
-    assert message.startswith("📭 Нет новых · 2026-07-15 11:00")
-    assert "0 новых" not in message
+    assert "✅ Сбор OK" not in message
 
 
 def test_vacancies_for_alert_prefers_created_sync_items() -> None:
@@ -279,7 +287,11 @@ def test_notify_heartbeat_has_no_live_block(monkeypatch: pytest.MonkeyPatch) -> 
         now=now,
         live=[make_vacancy(company="Paybis", url="https://example.com/paybis")],
     )
-    assert sent == ["📭 Нет новых · 2026-07-27 23:00"]
+    assert sent == [
+        "📊 0 новых\n"
+        "\n"
+        "✅ Сбор OK · 2026-07-27 23:00"
+    ]
 
 
 def test_exclude_archived_vacancies_by_url_and_role_key() -> None:
