@@ -68,17 +68,12 @@ def _degraded_status_line(stats: CollectReportStats) -> str | None:
     return f"🔕 Источники без результата: {len(names)} — {shown}{extra}"
 
 
-def _checks_passed(stats: CollectReportStats) -> bool:
-    return not stats.failed_source_names and not stats.degraded_source_names
-
-
 def _problem_lines(stats: CollectReportStats) -> list[str]:
-    if _checks_passed(stats):
-        return []
-    lines = [
-        _sites_status_line(stats),
-        _telegram_status_line(stats),
-    ]
+    lines: list[str] = []
+    if _site_failed_names(stats):
+        lines.append(_sites_status_line(stats))
+    if _telegram_failed_names(stats):
+        lines.append(_telegram_status_line(stats))
     degraded = _degraded_status_line(stats)
     if degraded:
         lines.append(degraded)

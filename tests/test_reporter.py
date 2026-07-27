@@ -171,6 +171,38 @@ def test_hourly_heartbeat_reports_partial_failures() -> None:
     assert "📊 20 найдено · 0 новых · 2026-07-15 11:00" in message
 
 
+def test_hourly_heartbeat_shows_only_degraded_without_ok_noise() -> None:
+    now = datetime(2026, 7, 27, 22, 39, tzinfo=_KYIV)
+    stats = CollectReportStats(
+        found=31,
+        seen_total=50,
+        new_count=0,
+        duplicates_removed=0,
+        failed_source_names=(),
+        sites_ok=54,
+        sites_total=55,
+        telegram_ok=3,
+        telegram_total=3,
+        degraded_source_names=("Binary Studio",),
+    )
+    live = [
+        make_vacancy(company="Intellias", url="https://example.com/1"),
+        make_vacancy(company="Intellias", url="https://example.com/2"),
+        make_vacancy(company="N-iX", url="https://example.com/3"),
+    ]
+    message = format_hourly_heartbeat(stats=stats, now=now, live=live)
+    assert message == (
+        "📭 Нет новых\n"
+        "\n"
+        "Живые: 3 · 2 компаний\n"
+        "\n"
+        "🔕 Источники без результата: 1 — Binary Studio\n"
+        "📊 31 найдено · 0 новых · 2026-07-27 22:39"
+    )
+    assert "✅ Поиск по сайтам" not in message
+    assert "✅ Telegram" not in message
+
+
 def test_vacancies_for_alert_prefers_created_sync_items() -> None:
     fresh = [
         make_vacancy(url="https://example.com/1", title="A", company="Acme"),

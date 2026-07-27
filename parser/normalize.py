@@ -146,11 +146,26 @@ _IOS_DENY = re.compile(
     r")(?![a-z0-9])"
 )
 
+_DOMAIN_DENY = re.compile(
+    r"(?i)(?<![a-z0-9а-яіїєґ])("
+    r"igaming|i[\s\-]?gaming|"
+    r"gambling|gambl(?:er|ing)?|"
+    r"casino|casinos|"
+    r"sportsbook|bookmaker|bookmaking|"
+    r"betting\s+(?:company|app|platform|product|operator)|"
+    r"online\s+casino|"
+    r"poker\s+(?:app|platform|product|casino)|"
+    r"гембл(?:інг|инг)?|казино|букмекер(?:ськ\w*)?"
+    r")(?![a-z0-9а-яіїєґ])"
+)
+
 
 def is_ios_job(title: str, description: str | None = None) -> bool:
+    haystack = f"{title} {description or ''}"
     if _IOS_DENY.search(title or ""):
         return False
-    haystack = f"{title} {description or ''}"
+    if _DOMAIN_DENY.search(haystack):
+        return False
     return _IOS_ANCHOR.search(haystack) is not None
 
 
