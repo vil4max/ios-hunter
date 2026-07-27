@@ -140,12 +140,9 @@ def test_hourly_heartbeat_when_no_new() -> None:
         now=now,
         live=[make_vacancy(company="EPAM", url="https://example.com/epam/1")],
     )
-    assert message == (
-        "📭 Нет новых\n"
-        "\n"
-        "📊 0 новых · 2026-07-15 11:00"
-    )
+    assert message == "📭 Нет новых · 2026-07-15 11:00"
     assert "Живые" not in message
+    assert "0 новых" not in message
 
 
 def test_hourly_heartbeat_reports_partial_failures() -> None:
@@ -169,7 +166,8 @@ def test_hourly_heartbeat_reports_partial_failures() -> None:
     assert "@remotejobss" not in message
     assert "Binary Studio" not in message
     assert "🔕" not in message
-    assert "📊 0 новых · 2026-07-15 11:00" in message
+    assert message.startswith("📭 Нет новых · 2026-07-15 11:00")
+    assert "0 новых" not in message
 
 
 def test_vacancies_for_alert_prefers_created_sync_items() -> None:
@@ -281,11 +279,7 @@ def test_notify_heartbeat_has_no_live_block(monkeypatch: pytest.MonkeyPatch) -> 
         now=now,
         live=[make_vacancy(company="Paybis", url="https://example.com/paybis")],
     )
-    assert sent == [
-        "📭 Нет новых\n"
-        "\n"
-        "📊 0 новых · 2026-07-27 23:00"
-    ]
+    assert sent == ["📭 Нет новых · 2026-07-27 23:00"]
 
 
 def test_exclude_archived_vacancies_by_url_and_role_key() -> None:
