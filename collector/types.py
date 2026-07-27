@@ -13,6 +13,7 @@ class SourceResult:
     status: str
     error: str | None
     response_ms: int
+    items_scanned: int = 0
 
 
 @dataclass

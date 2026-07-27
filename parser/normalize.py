@@ -129,6 +129,7 @@ _IOS_ANCHOR = re.compile(
     r"ios|swift|swiftui|uikit|"
     r"objective[\s\-]?c|objc|obj[\s\-]?c|"
     r"xcode|iphone|ipad|tvos|watchos|visionos|"
+    r"macos|mac\s*os|os\s*x|appkit|"
     r"cocoa(?:pods|touch)?"
     r")(?![a-z0-9])"
 )
@@ -153,24 +154,43 @@ def is_ios_job(title: str, description: str | None = None) -> bool:
     return _IOS_ANCHOR.search(haystack) is not None
 
 
-_LOCATION_DENY = re.compile(
+_UKRAINE = re.compile(
     r"(?i)\b("
-    r"argentina|buenos\s+aires|brazil|mexico|chile|colombia|peru|"
-    r"india|bengaluru|bangalore|hyderabad|pune|chennai|"
-    r"philippines|vietnam|china"
+    r"ukraine|kyiv|kiev|lviv|kharkiv|odesa|odessa|dnipro|"
+    r"vinnytsia|ivano[\s\-]?frankivsk|zhytomyr|chernivtsi|uzhhorod|"
+    r"rivne|ternopil|khmelnytskyi|cherkasy|poltava|zaporizhzhia"
     r")\b"
 )
 
-_LOCATION_ALLOW_OVERRIDE = re.compile(r"(?i)\b(remote|remotely|worldwide|anywhere|emea|europe|eu)\b")
+_NON_UA_GEO = re.compile(
+    r"(?i)\b("
+    r"argentina|buenos\s+aires|brazil|mexico|chile|colombia|peru|"
+    r"india|bengaluru|bangalore|hyderabad|pune|chennai|"
+    r"philippines|vietnam|china|"
+    r"usa|united\s+states|america|canada|uk|united\s+kingdom|"
+    r"germany|poland|польща|польша|krakow|kraków|warsaw|warszawa|"
+    r"hungary|romania|spain|portugal|netherlands|"
+    r"malaysia|singapore|uae|israel|turkey|georgia|kazakhstan|armenia|"
+    r"austin|budapest|kuala\s+lumpur|newtown|culiacan"
+    r")\b"
+)
+
+_GLOBAL_REMOTE = re.compile(
+    r"(?i)\b(worldwide|anywhere|emea|europe|eu|cee|remote\s+europe)\b"
+)
 
 
 def is_relevant_job_location(location: str | None) -> bool:
     text = (location or "").strip()
     if not text:
         return True
-    if _LOCATION_ALLOW_OVERRIDE.search(text):
+    if _UKRAINE.search(text):
         return True
-    return _LOCATION_DENY.search(text) is None
+    if _NON_UA_GEO.search(text):
+        return False
+    if _GLOBAL_REMOTE.search(text):
+        return True
+    return True
 
 
 def infer_remote(title: str, location: str | None, description: str | None) -> str:

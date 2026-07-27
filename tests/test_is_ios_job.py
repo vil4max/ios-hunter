@@ -9,6 +9,8 @@ def test_is_ios_job_matches_title() -> None:
     assert is_ios_job("Objective-C Developer")
     assert is_ios_job("ObjC Engineer")
     assert is_ios_job("SwiftUI / UIKit Engineer")
+    assert is_ios_job("Principal macOS Platform Engineer")
+    assert is_ios_job("macOS Developer (Swift / AppKit)")
 
 
 def test_is_ios_job_matches_description() -> None:
@@ -35,11 +37,22 @@ def test_is_ios_job_rejects_qa_and_test_noise() -> None:
     assert is_ios_job("Swift Developer")
 
 
-def test_is_relevant_job_location_rejects_latam_and_india_only() -> None:
-    assert not is_relevant_job_location("Buenos Aires, Argentina")
-    assert not is_relevant_job_location("Bengaluru, India")
+def test_is_relevant_job_location_ukraine_and_global_remote() -> None:
     assert is_relevant_job_location("Kyiv, Ukraine")
+    assert is_relevant_job_location("Ukraine")
     assert is_relevant_job_location("Remote, Europe")
-    assert is_relevant_job_location("Buenos Aires / Remote")
+    assert is_relevant_job_location("Worldwide")
+    assert is_relevant_job_location("Remote")
     assert is_relevant_job_location(None)
     assert is_relevant_job_location("")
+
+
+def test_is_relevant_job_location_rejects_non_ua_geo() -> None:
+    assert not is_relevant_job_location("Buenos Aires, Argentina")
+    assert not is_relevant_job_location("Buenos Aires / Remote")
+    assert not is_relevant_job_location("Argentina / Chile / Colombia / Mexico")
+    assert not is_relevant_job_location("Hybrid, Budapest, Hungary")
+    assert not is_relevant_job_location("Bengaluru, India")
+    assert not is_relevant_job_location("Austin, USA")
+    assert not is_relevant_job_location("Poland, Remote")
+    assert not is_relevant_job_location("Львів, Краків (Польща), віддалено")
