@@ -154,7 +154,8 @@ def seed_seen_from_manual_card(
     first_seen = utc_now()
     if card.applied_at:
         first_seen = f"{card.applied_at}T00:00:00+00:00"
-    if not mark_seen(seen, vacancy, first_seen=first_seen):
+    disposition = "dropped" if card.status == "Archived" else None
+    if not mark_seen(seen, vacancy, first_seen=first_seen, disposition=disposition):
         return False, key
     save_seen(path, seen)
     return True, key

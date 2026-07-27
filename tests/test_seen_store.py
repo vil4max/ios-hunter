@@ -3,7 +3,15 @@ from __future__ import annotations
 import sqlite3
 from pathlib import Path
 
-from database.seen import load_seen, mark_seen, migrate_from_sqlite, purge_dead_seen, save_seen, seen_key
+from database.seen import (
+    dropped_urls_from_seen,
+    load_seen,
+    mark_seen,
+    migrate_from_sqlite,
+    purge_dead_seen,
+    save_seen,
+    seen_key,
+)
 from tests.conftest import make_vacancy
 
 
@@ -25,6 +33,15 @@ def test_mark_seen_persists_and_skips_duplicates(tmp_path: Path) -> None:
     assert seen_key(vacancy) in reloaded
     assert reloaded[seen_key(vacancy)]["title"] == vacancy.title
     assert reloaded[seen_key(vacancy)]["company"] == vacancy.company
+
+
+def test_mark_seen_can_set_dropped_disposition() -> None:
+    vacancy = make_vacancy(url="https://example.com/jobs/drop")
+    seen: dict = {}
+    assert mark_seen(seen, vacancy) is True
+    assert mark_seen(seen, vacancy, disposition="dropped") is True
+    assert seen[seen_key(vacancy)]["disposition"] == "dropped"
+    assert dropped_urls_from_seen(seen) == {"https://example.com/jobs/drop"}
 
 
 def test_purge_dead_seen_removes_only_missing_for_purgeable_companies() -> None:

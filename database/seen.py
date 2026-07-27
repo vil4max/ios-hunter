@@ -44,16 +44,37 @@ def mark_seen(
     vacancy: Vacancy,
     *,
     first_seen: str | None = None,
+    disposition: str | None = None,
 ) -> bool:
     key = seen_key(vacancy)
-    if not key or key in seen:
+    if not key:
         return False
-    seen[key] = {
-        "title": vacancy.title,
-        "company": vacancy.company,
-        "first_seen": first_seen or utc_now(),
-    }
-    return True
+    existing = seen.get(key)
+    if existing is not None and not disposition:
+        return False
+    record = dict(existing or {})
+    if not existing:
+        record["title"] = vacancy.title
+        record["company"] = vacancy.company
+        record["first_seen"] = first_seen or utc_now()
+    else:
+        record.setdefault("title", vacancy.title)
+        record.setdefault("company", vacancy.company)
+        record.setdefault("first_seen", first_seen or utc_now())
+    if disposition:
+        record["disposition"] = disposition
+    changed = existing != record
+    seen[key] = record
+    return changed if existing is not None else True
+
+
+def dropped_urls_from_seen(seen: dict[str, dict[str, Any]]) -> set[str]:
+    dropped: set[str] = set()
+    for key, meta in seen.items():
+        disposition = str(meta.get("disposition") or "").strip().lower()
+        if disposition in {"dropped", "archived"}:
+            dropped.add(key)
+    return dropped
 
 
 def purge_dead_seen(
