@@ -35,7 +35,12 @@ from database.source_health import (
 from integrations.notify import CollectReportStats
 from parser.deduplicate import deduplicate_with_report
 from parser.normalize import Vacancy, normalize_many
-from planner.plan import archived_canonical_urls, load_cards_from_github
+from planner.plan import (
+    archived_canonical_urls,
+    archived_role_keys,
+    exclude_archived_vacancies,
+    load_cards_from_github,
+)
 from project_sync.github_client import GitHubClient
 from project_sync.sync import ProjectSync, SyncItemResult, SyncResult
 from reporter.hourly import notify_hourly_inbox
@@ -169,17 +174,26 @@ def process_new_vacancies(
     now = utc_now()
     failed = tuple(failed_source_names or ())
     health = source_health or {}
-    fresh = select_fresh(vacancies, seen, seen_gate=settings.seen_gate_enabled)
-    excluded_urls = dropped_urls_from_seen(seen)
+
+    archived_urls = dropped_urls_from_seen(seen)
+    archived_roles: set[tuple[str, str]] = set()
     if settings.configured_for_sync:
         try:
             cards = load_cards_from_github(GitHubClient(settings.github_token), settings)
-            excluded_urls |= archived_canonical_urls(cards)
+            archived_urls |= archived_canonical_urls(cards)
+            archived_roles |= archived_role_keys(cards)
         except Exception as error:  # noqa: BLE001
-            print(f"Live exclude load failed: {error}", file=sys.stderr)
+            print(f"Archived exclude load failed: {error}", file=sys.stderr)
+
+    active = exclude_archived_vacancies(
+        vacancies,
+        archived_urls=archived_urls,
+        archived_roles=archived_roles,
+    )
+    fresh = select_fresh(active, seen, seen_gate=settings.seen_gate_enabled)
 
     stats = CollectReportStats(
-        found=len(vacancies),
+        found=len(active),
         seen_total=len(seen),
         new_count=len(fresh),
         duplicates_removed=duplicates_removed,
@@ -192,9 +206,7 @@ def process_new_vacancies(
         telegram_ok_names=tuple(
             str(name) for name in (health.get("telegram_ok_names") or ())
         ),
-        degraded_source_names=tuple(
-            str(name) for name in (health.get("degraded_source_names") or ())
-        ),
+        degraded_source_names=(),
     )
 
     if seed_only:
@@ -218,8 +230,6 @@ def process_new_vacancies(
                 fresh,
                 stats=stats,
                 board_url=settings.project_board_url,
-                live=vacancies,
-                excluded_urls=excluded_urls,
             )
         except Exception as error:
             print(f"Telegram send failed: {error}", file=sys.stderr)
@@ -247,8 +257,6 @@ def process_new_vacancies(
             fresh,
             stats=stats,
             board_url=settings.project_board_url,
-            live=vacancies,
-            excluded_urls=excluded_urls,
         )
     except Exception as error:
         print(f"Telegram send failed: {error}", file=sys.stderr)
