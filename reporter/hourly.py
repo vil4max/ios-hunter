@@ -4,8 +4,8 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from database.seen import seen_key
-from integrations.notify import CollectReportStats, resolve_source
-from integrations.telegram import send_message
+from integrations.notify import CollectReportStats
+from integrations.telegram import TELEGRAM_MAX_LENGTH, send_message
 from parser.normalize import Vacancy
 from project_sync.sync import SyncResult
 
@@ -72,7 +72,9 @@ def _checks_passed(stats: CollectReportStats) -> bool:
     return not stats.failed_source_names and not stats.degraded_source_names
 
 
-def _status_block(stats: CollectReportStats) -> list[str]:
+def _problem_lines(stats: CollectReportStats) -> list[str]:
+    if _checks_passed(stats):
+        return []
     lines = [
         _sites_status_line(stats),
         _telegram_status_line(stats),
@@ -80,48 +82,24 @@ def _status_block(stats: CollectReportStats) -> list[str]:
     degraded = _degraded_status_line(stats)
     if degraded:
         lines.append(degraded)
-    lines.append(
-        f"📊 Найдено: {stats.found} · в базе: {stats.seen_total} · новых: {stats.new_count}"
-    )
     return lines
 
 
-def _system_footer(
+def _summary_line(stats: CollectReportStats, now: datetime | None = None) -> str:
+    return f"📊 {stats.found} найдено · {stats.new_count} новых · {_time_label(now)}"
+
+
+def _footer(
     *,
     stats: CollectReportStats,
     board_url: str = "",
     now: datetime | None = None,
     include_board: bool = False,
 ) -> list[str]:
-    lines: list[str] = []
-    if _checks_passed(stats):
-        lines.append(f"✅ Все проверки прошли · {_time_label(now)}")
-    else:
-        lines.append(f"⚠️ Проверки с ошибками · {_time_label(now)}")
+    lines = [*_problem_lines(stats), _summary_line(stats, now)]
     if include_board and board_url:
         lines.append(f"🔗 {board_url}")
     return lines
-
-
-def format_hourly_heartbeat(
-    *,
-    stats: CollectReportStats,
-    new_count: int = 0,
-    board_url: str = "",
-    now: datetime | None = None,
-    live: list[Vacancy] | None = None,
-) -> str:
-    _ = new_count
-    blocks = [
-        "📭 Новых вакансий не обнаружено",
-        "",
-        *_live_block(live or []),
-        "",
-        *_status_block(stats),
-        "",
-        *_system_footer(stats=stats, board_url=board_url, now=now, include_board=False),
-    ]
-    return "\n".join(blocks)
 
 
 def _company_counts(vacancies: list[Vacancy]) -> list[tuple[str, int]]:
@@ -142,30 +120,39 @@ def _live_block(vacancies: list[Vacancy]) -> list[str]:
     return lines
 
 
-def _snippet(vacancy: Vacancy, *, limit: int = 140) -> str:
-    raw = (vacancy.description or "").strip()
-    if not raw:
-        return ""
+def _vacancy_label(vacancy: Vacancy) -> str:
     title = vacancy.title.strip()
-    lines: list[str] = []
-    for part in raw.splitlines():
-        line = " ".join(part.split()).strip()
-        if not line or line == title:
-            continue
-        lines.append(line)
-    blob = " · ".join(lines) if lines else " ".join(raw.split())
-    if len(blob) <= limit:
-        return blob
-    return blob[: limit - 1].rstrip() + "…"
+    company = vacancy.company.strip()
+    is_telegram = (vacancy.source or "").strip().lower() == "telegram"
+    skip_company = is_telegram and company.lower() in {
+        "telegram",
+        "itrecruit_ua",
+        "remotejobss",
+        "itfreelancers",
+    }
+    if company and not skip_company and not (is_telegram and company.lower().startswith("telegram @")):
+        return f"{company} — {title}" if title else company
+    return title or company or vacancy.url.strip()
 
 
-def _published_label(vacancy: Vacancy) -> str:
-    if vacancy.published_at is None:
-        return ""
-    stamp = vacancy.published_at
-    if stamp.tzinfo is None:
-        stamp = stamp.replace(tzinfo=_KYIV)
-    return stamp.astimezone(_KYIV).strftime("%Y-%m-%d %H:%M")
+def format_hourly_heartbeat(
+    *,
+    stats: CollectReportStats,
+    new_count: int = 0,
+    board_url: str = "",
+    now: datetime | None = None,
+    live: list[Vacancy] | None = None,
+) -> str:
+    _ = new_count
+    _ = board_url
+    blocks = [
+        "📭 Нет новых",
+        "",
+        *_live_block(live or []),
+        "",
+        *_footer(stats=stats, now=now, include_board=False),
+    ]
+    return "\n".join(blocks)
 
 
 def format_hourly_new_vacancies(
@@ -174,44 +161,25 @@ def format_hourly_new_vacancies(
     stats: CollectReportStats,
     board_url: str = "",
     now: datetime | None = None,
+    total_count: int | None = None,
+    part: int | None = None,
+    parts: int | None = None,
+    index_offset: int = 0,
 ) -> str:
-    lines = [f"🆕 +{len(vacancies)} Inbox", ""]
+    total = total_count if total_count is not None else len(vacancies)
+    header = f"🆕 +{total}"
+    if part is not None and parts is not None and parts > 1:
+        header = f"{header} ({part}/{parts})"
+    lines = [header, ""]
     for index, vacancy in enumerate(vacancies, start=1):
-        if index > 1:
-            lines.append("")
-        title = vacancy.title.strip()
-        company = vacancy.company.strip()
+        display_index = index_offset + index
+        lines.append(f"{display_index}. {_vacancy_label(vacancy)}")
         url = vacancy.url.strip()
-        is_telegram = (vacancy.source or "").strip().lower() == "telegram"
-        lines.append(f"{index}. {title}")
-        snippet = _snippet(vacancy)
-        if snippet:
-            lines.append(f"   📝 {snippet}")
-        location = (vacancy.location or "").strip()
-        remote = (vacancy.remote or "").strip()
-        if remote in {"", "unknown"}:
-            remote = ""
-        if location and remote:
-            lines.append(f"   📍 {location} · {remote}")
-        elif location:
-            lines.append(f"   📍 {location}")
-        elif remote:
-            lines.append(f"   📍 {remote}")
-        if company and not (is_telegram and company.lower() in {"telegram", "itrecruit_ua", "remotejobss", "itfreelancers"}):
-            if not (is_telegram and company.lower().startswith("telegram @")):
-                lines.append(f"   🏢 {company}")
-        if not is_telegram:
-            lines.append(f"   📡 {resolve_source(vacancy)}")
-        published = _published_label(vacancy)
-        if published:
-            lines.append(f"   📅 {published}")
         if url:
-            lines.append(f"   🔗 {url}")
-    lines.append("")
-    lines.extend(_status_block(stats))
+            lines.append(f"   {url}")
     lines.append("")
     lines.extend(
-        _system_footer(
+        _footer(
             stats=stats,
             board_url=board_url,
             now=now,
@@ -221,15 +189,75 @@ def format_hourly_new_vacancies(
     return "\n".join(lines)
 
 
+def _pack_vacancy_batches(
+    vacancies: list[Vacancy],
+    *,
+    stats: CollectReportStats,
+    board_url: str = "",
+    now: datetime | None = None,
+    limit: int | None = None,
+) -> list[str]:
+    if not vacancies:
+        return []
+    max_len = TELEGRAM_MAX_LENGTH if limit is None else limit
+    total = len(vacancies)
+    batches: list[list[Vacancy]] = []
+    current: list[Vacancy] = []
+    offset = 0
+    for vacancy in vacancies:
+        candidate = current + [vacancy]
+        message = format_hourly_new_vacancies(
+            candidate,
+            stats=stats,
+            board_url=board_url,
+            now=now,
+            total_count=total,
+            part=1,
+            parts=99,
+            index_offset=offset,
+        )
+        if current and len(message) > max_len:
+            batches.append(current)
+            offset += len(current)
+            current = [vacancy]
+        else:
+            current = candidate
+    if current:
+        batches.append(current)
+
+    parts = len(batches)
+    messages: list[str] = []
+    index_offset = 0
+    for part_index, batch in enumerate(batches, start=1):
+        messages.append(
+            format_hourly_new_vacancies(
+                batch,
+                stats=stats,
+                board_url=board_url,
+                now=now,
+                total_count=total,
+                part=part_index,
+                parts=parts,
+                index_offset=index_offset,
+            )
+        )
+        index_offset += len(batch)
+    return messages
+
+
 def vacancies_for_alert(sync_result: SyncResult, fresh: list[Vacancy]) -> list[Vacancy]:
     if not fresh:
         return []
     if sync_result.skipped_disabled:
         return list(fresh)
-    created_keys = {item.canonical_url for item in sync_result.created if item.canonical_url}
-    if not created_keys:
+    alert_keys = {
+        item.canonical_url
+        for item in (*sync_result.created, *sync_result.existing)
+        if item.canonical_url
+    }
+    if not alert_keys:
         return []
-    return [vacancy for vacancy in fresh if seen_key(vacancy) in created_keys]
+    return [vacancy for vacancy in fresh if seen_key(vacancy) in alert_keys]
 
 
 def notify_hourly_inbox(
@@ -243,18 +271,20 @@ def notify_hourly_inbox(
 ) -> bool:
     to_show = vacancies_for_alert(sync_result, fresh)
     if to_show:
-        message = format_hourly_new_vacancies(
+        for message in _pack_vacancy_batches(
             to_show,
             stats=stats,
             board_url=board_url,
             now=now,
-        )
+        ):
+            send_message(message)
     else:
-        message = format_hourly_heartbeat(
-            stats=stats,
-            board_url=board_url,
-            now=now,
-            live=live,
+        send_message(
+            format_hourly_heartbeat(
+                stats=stats,
+                board_url=board_url,
+                now=now,
+                live=live,
+            )
         )
-    send_message(message)
     return True
