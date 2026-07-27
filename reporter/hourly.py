@@ -59,6 +59,9 @@ def _telegram_status_line(stats: CollectReportStats) -> str:
     return f"✅ Telegram: OK ({stats.telegram_ok}/{stats.telegram_total})"
 
 
+_HEALTHY_STATUS = "🟢 Система в порядке"
+
+
 def _collect_status_lines(stats: CollectReportStats) -> list[str]:
     lines: list[str] = []
     if _site_failed_names(stats):
@@ -66,15 +69,15 @@ def _collect_status_lines(stats: CollectReportStats) -> list[str]:
     if _telegram_failed_names(stats):
         lines.append(_telegram_status_line(stats))
     if not lines:
-        lines.append("✅ Сбор OK")
+        lines.append(_HEALTHY_STATUS)
     return lines
 
 
 def _status_block(stats: CollectReportStats, now: datetime | None = None) -> list[str]:
     stamp = _time_label(now)
     status = _collect_status_lines(stats)
-    if len(status) == 1 and status[0] == "✅ Сбор OK":
-        return [f"✅ Сбор OK · {stamp}"]
+    if len(status) == 1 and status[0] == _HEALTHY_STATUS:
+        return [f"{_HEALTHY_STATUS} · {stamp}"]
     return [*status, f"🕐 {stamp}"]
 
 
@@ -117,7 +120,7 @@ def format_hourly_heartbeat(
     _ = new_count
     _ = board_url
     _ = live
-    lines = [f"📊 {stats.new_count} новых", "", *_status_block(stats, now)]
+    lines = ["📭 Новых вакансий нет", "", *_status_block(stats, now)]
     return "\n".join(lines)
 
 
@@ -133,7 +136,7 @@ def format_hourly_new_vacancies(
     index_offset: int = 0,
 ) -> str:
     total = total_count if total_count is not None else len(vacancies)
-    header = f"🆕 +{total}"
+    header = f"📬 +{total}"
     if part is not None and parts is not None and parts > 1:
         header = f"{header} ({part}/{parts})"
     lines = [header, ""]
