@@ -37,6 +37,16 @@ def test_is_ios_job_rejects_qa_and_test_noise() -> None:
     assert is_ios_job("Swift Developer")
 
 
+def test_is_ios_job_rejects_igaming_and_gambling() -> None:
+    assert not is_ios_job("Team Lead Swift", "Affiliate Marketing, розвиваємо iGaming-продукти")
+    assert not is_ios_job("Senior iOS Engineer", "Online casino and sportsbook mobile apps")
+    assert not is_ios_job("iOS Developer", "Gambling / betting platform for EU markets")
+    assert not is_ios_job("Swift Developer", "Букмекерська компанія шукає iOS")
+    assert not is_ios_job("Lead iOS", "Казино product, SwiftUI")
+    assert is_ios_job("Senior iOS Engineer", "Fintech payments and crypto exchange")
+    assert is_ios_job("Team Lead Swift", "Health & fitness subscription apps")
+
+
 def test_is_relevant_job_location_ukraine_and_global_remote() -> None:
     assert is_relevant_job_location("Kyiv, Ukraine")
     assert is_relevant_job_location("Ukraine")
