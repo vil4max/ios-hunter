@@ -12,7 +12,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from collector.companies import collect_all
-from collector.types import SourceResult
+from collector.types import STATUS_DEGRADED, STATUS_FAILED, SourceResult
 from config.settings import load_settings
 from database.seen import (
     default_seen_path,
@@ -23,6 +23,13 @@ from database.seen import (
     save_seen,
     seen_key,
     utc_now,
+)
+from database.source_health import (
+    classify_degraded,
+    default_baseline_path,
+    load_baseline,
+    save_baseline,
+    update_baseline,
 )
 from integrations.notify import CollectReportStats
 from parser.deduplicate import deduplicate_with_report
@@ -45,10 +52,9 @@ def _telegram_channel_label(source: SourceResult) -> str:
 
 def summarize_source_checks(
     source_results: list[SourceResult],
-    *,
-    swift_failed_companies: list[str] | None = None,
 ) -> tuple[tuple[str, ...], dict[str, object]]:
     failed_names: list[str] = []
+    degraded_names: list[str] = []
     sites_ok = 0
     sites_total = 0
     telegram_ok = 0
@@ -60,7 +66,7 @@ def summarize_source_checks(
         if _is_telegram_source(source):
             telegram_total += 1
             skipped = bool(source.error and "not set" in source.error.lower())
-            if source.status == "failed":
+            if source.status == STATUS_FAILED:
                 failed_names.append(source.source_name)
             elif skipped:
                 telegram_skipped += 1
@@ -70,15 +76,12 @@ def summarize_source_checks(
             continue
 
         sites_total += 1
-        if source.status == "failed":
+        if source.status == STATUS_FAILED:
             failed_names.append(source.source_name)
+        elif source.status == STATUS_DEGRADED:
+            degraded_names.append(source.source_name)
         else:
             sites_ok += 1
-
-    for company in swift_failed_companies or []:
-        label = f"Swift: {company}"
-        if label not in failed_names:
-            failed_names.append(label)
 
     health = {
         "sites_ok": sites_ok,
@@ -87,42 +90,43 @@ def summarize_source_checks(
         "telegram_total": telegram_total,
         "telegram_skipped": telegram_skipped,
         "telegram_ok_names": tuple(telegram_ok_names),
+        "degraded_source_names": tuple(degraded_names),
     }
     return tuple(failed_names), health
 
 
 def collect_vacancies(
-    swift_export_path: Path,
+    *,
+    baseline_path: Path | None = None,
 ) -> tuple[list[Vacancy], int, tuple[str, ...], dict[str, object], frozenset[str]]:
-    collect_result = collect_all(swift_export_path)
+    collect_result = collect_all()
+    results = collect_result.source_results
+
+    path = baseline_path or default_baseline_path(ROOT)
+    baseline = load_baseline(path)
+    degraded = classify_degraded(results, baseline)
+    save_baseline(path, update_baseline(baseline, results))
+
     raw_jobs: list[dict] = []
     purgeable_companies: set[str] = set()
-    for source in collect_result.source_results:
-        if source.status == "failed":
+    for source in results:
+        if source.status == STATUS_FAILED:
             print(f"Source failed: {source.source_name}: {source.error}", file=sys.stderr)
             continue
         raw_jobs.extend(source.jobs)
         if _is_telegram_source(source):
             continue
-        if source.source_id.startswith("company:"):
+        # A source that parsed nothing cannot prove a vacancy is gone, so its
+        # history must survive until the source is healthy again.
+        if source.items_scanned <= 0:
+            continue
+        if source.source_id.startswith("company:") or source.source_id.startswith("dou"):
             purgeable_companies.add(source.source_name)
 
-    swift_failed = (
-        list(collect_result.swift_meta.failed_companies)
-        if collect_result.swift_meta is not None
-        else []
-    )
-    for company in swift_failed:
-        print(f"Source failed: Swift: {company}", file=sys.stderr)
+    for name in degraded:
+        print(f"Source degraded (parsed 0 items): {name}", file=sys.stderr)
 
-    if collect_result.swift_meta is not None:
-        for company in collect_result.swift_meta.ok_companies:
-            purgeable_companies.add(company)
-
-    failed_source_names, health = summarize_source_checks(
-        collect_result.source_results,
-        swift_failed_companies=swift_failed,
-    )
+    failed_source_names, health = summarize_source_checks(results)
     vacancies = normalize_many(raw_jobs)
     unique, removed, _ = deduplicate_with_report(vacancies)
     return unique, removed, failed_source_names, health, frozenset(purgeable_companies)
@@ -177,6 +181,9 @@ def process_new_vacancies(
         telegram_skipped=int(health.get("telegram_skipped", 0) or 0),
         telegram_ok_names=tuple(
             str(name) for name in (health.get("telegram_ok_names") or ())
+        ),
+        degraded_source_names=tuple(
+            str(name) for name in (health.get("degraded_source_names") or ())
         ),
     )
 
@@ -253,7 +260,6 @@ def main() -> int:
 
     seed_only = args.seed_only or os.environ.get("SEED_SEEN_ONLY", "").strip() in {"1", "true", "yes"}
     seen_path = Path(os.environ.get("SEEN_PATH", default_seen_path(ROOT)))
-    swift_export = Path(os.environ.get("SWIFT_EXPORT_PATH", ROOT / "database" / "swift_export.json"))
     jobs_db = Path(os.environ.get("JOBS_DB_PATH", ROOT / "database" / "jobs.db"))
 
     started = time.perf_counter()
@@ -266,7 +272,7 @@ def main() -> int:
             print(f"Migrated {migrated} vacancies from {jobs_db} into seen store.")
 
     vacancies, duplicates_removed, failed_source_names, source_health, purgeable_companies = (
-        collect_vacancies(swift_export)
+        collect_vacancies()
     )
     live_urls = {seen_key(vacancy) for vacancy in vacancies if seen_key(vacancy)}
     purged = purge_dead_seen(

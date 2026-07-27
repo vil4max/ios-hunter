@@ -15,8 +15,8 @@ Manage the job-search lifecycle: collect → Inbox → research/apply/interview 
 ## Module map
 
 ```text
-collector/          fetch RawJob (Swift CLI + Python adapters)
-parser/             normalize, iOS filter, dedupe
+collector/          fetch RawJob (Python company/ATS/DOU/Telegram collectors)
+parser/             normalize, iOS filter, geo filter, dedupe
 config/             env: project, statuses, thresholds
 project_sync/       Issues + Projects V2 GraphQL
 planner/            read Project → prioritized work

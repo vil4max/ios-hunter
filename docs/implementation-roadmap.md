@@ -35,4 +35,4 @@ After Sync stability: stop using `seen.json` as notify gate. See [migration-plan
 
 ## Non-goals (this wave)
 
-Intelligence scores, company registry rewrite, Djinni, web UI, deleting Swift scrapers.
+Intelligence scores, company registry rewrite, Djinni, web UI.

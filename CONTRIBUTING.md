@@ -5,7 +5,7 @@ Thanks for your interest in contributing.
 ### What to contribute
 
 - Fix broken collectors / parsing edge cases
-- Add new company sources (Swift) or feeds (Python)
+- Add new company sources or feeds (Python)
 - CI improvements and reliability hardening
 
 ### Development

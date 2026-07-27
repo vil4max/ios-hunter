@@ -3,7 +3,7 @@ name: Hourly Collect Trigger
 on:
   workflow_dispatch:
   schedule:
-    # Every hour UTC — dispatches Collect iOS Jobs (macos) reliably via ubuntu runner.
+    # Every hour UTC — dispatches Collect iOS Jobs via ubuntu runner.
     - cron: "0 * * * *"
 
 permissions:

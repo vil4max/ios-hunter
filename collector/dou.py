@@ -9,6 +9,7 @@ import requests
 
 from parser.normalize import is_ios_job, is_relevant_job_location
 
+from collector.results import source_failed, source_ok
 from collector.types import SourceResult
 
 IOS_MACOS_FEED_URL = "https://jobs.dou.ua/vacancies/feeds/?category=iOS/macOS"
@@ -85,26 +86,19 @@ def collect_dou_ios_rss() -> SourceResult:
         root = ET.fromstring(xml_text)
         scanned = len(root.findall("./channel/item"))
         jobs = parse_dou_category_rss(xml_text)
-        elapsed = int((time.perf_counter() - started) * 1000)
-        return SourceResult(
+        return source_ok(
+            "DOU iOS/macOS",
+            IOS_MACOS_FEED_URL,
+            jobs,
+            started,
+            scanned=scanned,
             source_id="dou-ios-rss",
-            source_name="DOU iOS/macOS",
-            source_url=IOS_MACOS_FEED_URL,
-            jobs=jobs,
-            status="healthy",
-            error=None,
-            response_ms=elapsed,
-            items_scanned=scanned,
         )
     except Exception as error:  # noqa: BLE001
-        elapsed = int((time.perf_counter() - started) * 1000)
-        return SourceResult(
+        return source_failed(
+            "DOU iOS/macOS",
+            IOS_MACOS_FEED_URL,
+            error,
+            started,
             source_id="dou-ios-rss",
-            source_name="DOU iOS/macOS",
-            source_url=IOS_MACOS_FEED_URL,
-            jobs=[],
-            status="failed",
-            error=str(error),
-            response_ms=elapsed,
-            items_scanned=0,
         )

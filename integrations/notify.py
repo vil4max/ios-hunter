@@ -54,6 +54,7 @@ class CollectReportStats:
     telegram_total: int = 0
     telegram_skipped: int = 0
     telegram_ok_names: tuple[str, ...] = ()
+    degraded_source_names: tuple[str, ...] = ()
 
 
 def resolve_source(vacancy: Vacancy) -> str:
@@ -101,6 +102,10 @@ def format_run_stats(stats: CollectReportStats) -> str:
     ]
     for name in stats.failed_source_names:
         lines.append(f"· {name}")
+    if stats.degraded_source_names:
+        lines.append(f"Источники без результата: {len(stats.degraded_source_names)}")
+        for name in stats.degraded_source_names:
+            lines.append(f"· {name}")
     if stats.new_count == 0 and stats.found > 0:
         lines.extend(["", "Все найденные URL уже есть в базе"])
     return "\n".join(lines)

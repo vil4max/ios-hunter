@@ -4,6 +4,11 @@ from dataclasses import dataclass
 from typing import Any
 
 
+STATUS_HEALTHY = "healthy"
+STATUS_DEGRADED = "degraded"
+STATUS_FAILED = "failed"
+
+
 @dataclass
 class SourceResult:
     source_id: str
@@ -15,20 +20,11 @@ class SourceResult:
     response_ms: int
     items_scanned: int = 0
 
-
-@dataclass
-class SwiftCollectorMeta:
-    sources_total: int
-    sources_failed: int
-    failed_companies: list[str]
-    ok_companies: list[str]
-
     @property
-    def sources_ok(self) -> int:
-        return self.sources_total - self.sources_failed
+    def is_usable(self) -> bool:
+        return self.status != STATUS_FAILED
 
 
 @dataclass
 class CollectResult:
     source_results: list[SourceResult]
-    swift_meta: SwiftCollectorMeta | None

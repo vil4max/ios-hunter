@@ -79,11 +79,9 @@ Repository variables:
 ## Pipeline
 
 ```
-Swift collectors → swift_export.json
+Python collectors (career pages / ATS / DOU / Telegram)
         ↓
-Python sources (boards / DOU careers)
-        ↓
-Normalize + iOS/Swift filter → Deduplicate
+Normalize + iOS/Swift filter + geo filter → Deduplicate
         ↓
 Project Sync (private Draft + Project Inbox) + seen.json dual-write
         ↓
@@ -95,18 +93,18 @@ Telegram only on new vacancies (list + OK)
 | Workflow | When |
 |----------|------|
 | **Collect iOS Jobs** | Manual or via hourly trigger — collect, sync, Telegram if new |
-| **Hourly Collect Trigger** | Every hour UTC — dispatches Collect on macOS |
+| **Hourly Collect Trigger** | Every hour UTC — dispatches Collect on ubuntu |
 | **Daily Career Report** | Manual only — Project plan counts to Actions log (no Telegram) |
-| **CI** | Push / PR — Swift build + pytest |
+| **CI** | Push / PR — pytest |
 
 ## Local debug
 
 ```bash
-swift build -c release
-SWIFT_EXPORT_PATH=database/swift_export.json swift run -c release JobHunter
 pip install -r requirements.txt
 SEED_SEEN_ONLY=1 python3 scripts/run_pipeline.py
+SEEN_PATH=/tmp/seen.json python3 scripts/run_pipeline.py
 CAREER_AGENT_SYNC_ENABLED=1 python3 scripts/run_pipeline.py
+python3 scripts/collector_parity.py
 python3 scripts/seed_project_from_seen.py --dry-run
 python3 scripts/run_daily_report.py
 ```

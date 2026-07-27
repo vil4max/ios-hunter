@@ -31,7 +31,6 @@ playground.xcworkspace
 
 .build/
 
-database/swift_export.json
 database/jobs.db
 database/jobs.json
 database/history.json
@@ -42,6 +41,8 @@ database/history.json
 __pycache__/
 *.pyc
 .venv/
+.coverage
+
 
 # CocoaPods
 #

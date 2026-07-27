@@ -38,6 +38,8 @@ def test_hourly_lists_new_vacancies_only() -> None:
             url="https://example.com/a",
             source="company",
             description="SwiftUI and UIKit experience required",
+            location="Kyiv, Ukraine",
+            remote="remote",
         ),
         make_vacancy(
             title="Swift Developer",
@@ -45,6 +47,8 @@ def test_hourly_lists_new_vacancies_only() -> None:
             url="https://example.com/b",
             source="company",
             description=None,
+            location=None,
+            remote=None,
         ),
     ]
     message = format_hourly_new_vacancies(
@@ -58,6 +62,7 @@ def test_hourly_lists_new_vacancies_only() -> None:
         "\n"
         "1. Senior iOS Engineer\n"
         "   📝 SwiftUI and UIKit experience required\n"
+        "   📍 Kyiv, Ukraine · remote\n"
         "   🏢 Acme\n"
         "   📡 Acme careers\n"
         "   🔗 https://example.com/a\n"

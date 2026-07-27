@@ -59,18 +59,30 @@ def _telegram_status_line(stats: CollectReportStats) -> str:
     return f"✅ Telegram: OK ({stats.telegram_ok}/{stats.telegram_total})"
 
 
+def _degraded_status_line(stats: CollectReportStats) -> str | None:
+    names = list(stats.degraded_source_names)
+    if not names:
+        return None
+    shown = ", ".join(names[:4])
+    extra = f" (+{len(names) - 4})" if len(names) > 4 else ""
+    return f"🔕 Источники без результата: {len(names)} — {shown}{extra}"
+
+
 def _checks_passed(stats: CollectReportStats) -> bool:
-    return not stats.failed_source_names
+    return not stats.failed_source_names and not stats.degraded_source_names
 
 
 def _status_block(stats: CollectReportStats) -> list[str]:
     lines = [
         _sites_status_line(stats),
         _telegram_status_line(stats),
-        (
-            f"📊 Найдено: {stats.found} · в базе: {stats.seen_total} · новых: {stats.new_count}"
-        ),
     ]
+    degraded = _degraded_status_line(stats)
+    if degraded:
+        lines.append(degraded)
+    lines.append(
+        f"📊 Найдено: {stats.found} · в базе: {stats.seen_total} · новых: {stats.new_count}"
+    )
     return lines
 
 
@@ -175,6 +187,16 @@ def format_hourly_new_vacancies(
         snippet = _snippet(vacancy)
         if snippet:
             lines.append(f"   📝 {snippet}")
+        location = (vacancy.location or "").strip()
+        remote = (vacancy.remote or "").strip()
+        if remote in {"", "unknown"}:
+            remote = ""
+        if location and remote:
+            lines.append(f"   📍 {location} · {remote}")
+        elif location:
+            lines.append(f"   📍 {location}")
+        elif remote:
+            lines.append(f"   📍 {remote}")
         if company and not (is_telegram and company.lower() in {"telegram", "itrecruit_ua", "remotejobss", "itfreelancers"}):
             if not (is_telegram and company.lower().startswith("telegram @")):
                 lines.append(f"   🏢 {company}")
