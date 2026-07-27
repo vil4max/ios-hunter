@@ -54,22 +54,25 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add database/seen.json
+          git add database/seen.json database/source_baseline.json
           if git diff --staged --quiet; then
-            echo "No seen.json changes to commit."
+            echo "No seen/baseline changes to commit."
             exit 0
           fi
           git commit -m "chore(seen): record notified vacancies [skip ci]"
           branch="${GITHUB_REF_NAME}"
           for attempt in 1 2 3 4 5; do
             git fetch origin "$branch"
+            if ! git diff --quiet || ! git diff --cached --quiet; then
+              git stash push --include-untracked -m "collect-ci-dirty-${attempt}" || true
+            fi
             if git rebase "origin/$branch" && git push origin "HEAD:$branch"; then
-              echo "Pushed seen.json on attempt ${attempt}"
+              echo "Pushed seen/baseline on attempt ${attempt}"
               exit 0
             fi
             echo "Push race on attempt ${attempt}, retrying..."
             git rebase --abort 2>/dev/null || true
             sleep $((attempt * 2))
           done
-          echo "Failed to push seen.json after retries" >&2
+          echo "Failed to push seen/baseline after retries" >&2
           exit 1
