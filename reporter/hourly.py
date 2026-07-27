@@ -117,6 +117,23 @@ def _live_block(vacancies: list[Vacancy]) -> list[str]:
     ]
 
 
+def active_live_vacancies(
+    vacancies: list[Vacancy],
+    *,
+    excluded_urls: set[str] | frozenset[str] | None = None,
+) -> list[Vacancy]:
+    excluded = excluded_urls or set()
+    if not excluded:
+        return list(vacancies)
+    active: list[Vacancy] = []
+    for vacancy in vacancies:
+        key = seen_key(vacancy)
+        if key and key in excluded:
+            continue
+        active.append(vacancy)
+    return active
+
+
 def _vacancy_label(vacancy: Vacancy) -> str:
     title = vacancy.title.strip()
     company = vacancy.company.strip()
@@ -265,6 +282,7 @@ def notify_hourly_inbox(
     board_url: str = "",
     now: datetime | None = None,
     live: list[Vacancy] | None = None,
+    excluded_urls: set[str] | frozenset[str] | None = None,
 ) -> bool:
     to_show = vacancies_for_alert(sync_result, fresh)
     if to_show:
@@ -281,7 +299,7 @@ def notify_hourly_inbox(
                 stats=stats,
                 board_url=board_url,
                 now=now,
-                live=live,
+                live=active_live_vacancies(live or [], excluded_urls=excluded_urls),
             )
         )
     return True

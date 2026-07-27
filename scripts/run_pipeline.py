@@ -16,6 +16,7 @@ from collector.types import STATUS_DEGRADED, STATUS_FAILED, SourceResult
 from config.settings import load_settings
 from database.seen import (
     default_seen_path,
+    dropped_urls_from_seen,
     load_seen,
     mark_seen,
     migrate_from_sqlite,
@@ -34,6 +35,8 @@ from database.source_health import (
 from integrations.notify import CollectReportStats
 from parser.deduplicate import deduplicate_with_report
 from parser.normalize import Vacancy, normalize_many
+from planner.plan import archived_canonical_urls, load_cards_from_github
+from project_sync.github_client import GitHubClient
 from project_sync.sync import ProjectSync, SyncItemResult, SyncResult
 from reporter.hourly import notify_hourly_inbox
 
@@ -167,6 +170,13 @@ def process_new_vacancies(
     failed = tuple(failed_source_names or ())
     health = source_health or {}
     fresh = select_fresh(vacancies, seen, seen_gate=settings.seen_gate_enabled)
+    excluded_urls = dropped_urls_from_seen(seen)
+    if settings.configured_for_sync:
+        try:
+            cards = load_cards_from_github(GitHubClient(settings.github_token), settings)
+            excluded_urls |= archived_canonical_urls(cards)
+        except Exception as error:  # noqa: BLE001
+            print(f"Live exclude load failed: {error}", file=sys.stderr)
 
     stats = CollectReportStats(
         found=len(vacancies),
@@ -209,6 +219,7 @@ def process_new_vacancies(
                 stats=stats,
                 board_url=settings.project_board_url,
                 live=vacancies,
+                excluded_urls=excluded_urls,
             )
         except Exception as error:
             print(f"Telegram send failed: {error}", file=sys.stderr)
@@ -237,6 +248,7 @@ def process_new_vacancies(
             stats=stats,
             board_url=settings.project_board_url,
             live=vacancies,
+            excluded_urls=excluded_urls,
         )
     except Exception as error:
         print(f"Telegram send failed: {error}", file=sys.stderr)

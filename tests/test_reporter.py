@@ -7,11 +7,12 @@ import pytest
 
 from integrations.notify import CollectReportStats
 from integrations.telegram import TELEGRAM_MAX_LENGTH
-from planner.plan import DailyPlan, ProjectCard
+from planner.plan import DailyPlan, ProjectCard, archived_canonical_urls
 from project_sync.sync import SyncItemResult, SyncResult
 from reporter.daily import format_daily_dashboard
 from reporter.hourly import (
     _pack_vacancy_batches,
+    active_live_vacancies,
     format_hourly_heartbeat,
     format_hourly_new_vacancies,
     notify_hourly_inbox,
@@ -299,6 +300,87 @@ def test_notify_hourly_inbox_sends_packed_batches(monkeypatch: pytest.MonkeyPatc
     assert notify_hourly_inbox(sync, vacancies, stats=stats, board_url="https://board") is True
     assert len(sent) >= 2
     assert all(len(message) <= 350 for message in sent)
+
+
+def test_active_live_vacancies_skips_excluded_urls() -> None:
+    live = [
+        make_vacancy(company="Keep", url="https://example.com/keep"),
+        make_vacancy(company="Drop", url="https://example.com/drop"),
+    ]
+    active = active_live_vacancies(
+        live,
+        excluded_urls={"https://example.com/drop"},
+    )
+    assert [item.url for item in active] == ["https://example.com/keep"]
+
+
+def test_heartbeat_omits_archived_companies(monkeypatch: pytest.MonkeyPatch) -> None:
+    sent: list[str] = []
+    monkeypatch.setattr("reporter.hourly.send_message", sent.append)
+    now = datetime(2026, 7, 27, 23, 0, tzinfo=_KYIV)
+    stats = CollectReportStats(found=3, seen_total=3, new_count=0, duplicates_removed=0)
+    live = [
+        make_vacancy(company="Paybis", url="https://example.com/paybis"),
+        make_vacancy(company="MWDN", url="https://example.com/mwdn"),
+        make_vacancy(company="MWDN", url="https://example.com/mwdn-2"),
+    ]
+    sync = SyncResult(skipped_disabled=True)
+    assert notify_hourly_inbox(
+        sync,
+        [],
+        stats=stats,
+        now=now,
+        live=live,
+        excluded_urls={"https://example.com/mwdn", "https://example.com/mwdn-2"},
+    )
+    assert sent == [
+        "📭 Нет новых\n"
+        "\n"
+        "Живые: 1 · 1 компаний\n"
+        "Paybis: 1\n"
+        "\n"
+        "📊 3 найдено · 0 новых · 2026-07-27 23:00"
+    ]
+
+
+def test_archived_canonical_urls_collects_archived_only() -> None:
+    cards = [
+        ProjectCard(
+            item_id="1",
+            issue_number=None,
+            title="Keep",
+            url="https://example.com/keep",
+            issue_url="",
+            company="Paybis",
+            source="",
+            canonical_url="https://example.com/keep",
+            status="Applied",
+            priority="",
+            offer_probability="",
+            follow_up=None,
+            applied_at=None,
+            created_at=None,
+            updated_at=None,
+        ),
+        ProjectCard(
+            item_id="2",
+            issue_number=None,
+            title="Drop",
+            url="https://example.com/drop/",
+            issue_url="",
+            company="MWDN",
+            source="",
+            canonical_url="",
+            status="Archived",
+            priority="",
+            offer_probability="",
+            follow_up=None,
+            applied_at=None,
+            created_at=None,
+            updated_at=None,
+        ),
+    ]
+    assert archived_canonical_urls(cards) == {"https://example.com/drop"}
 
 
 def test_daily_dashboard_formatter_still_works() -> None:

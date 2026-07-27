@@ -9,6 +9,7 @@ from config.settings import (
     Settings,
     STATUS_WORKFLOW,
 )
+from parser.normalize import canonicalize_url
 from project_sync.github_client import GitHubClient
 
 
@@ -215,3 +216,15 @@ def load_cards_from_github(client: GitHubClient, settings: Settings) -> list[Pro
         if card is not None:
             cards.append(card)
     return cards
+
+
+def archived_canonical_urls(cards: list[ProjectCard]) -> set[str]:
+    urls: set[str] = set()
+    for card in cards:
+        if card.status != "Archived":
+            continue
+        for raw in (card.canonical_url, card.url):
+            key = canonicalize_url(raw) if raw else ""
+            if key:
+                urls.add(key)
+    return urls
