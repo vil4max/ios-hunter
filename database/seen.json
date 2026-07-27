@@ -9,31 +9,6 @@
     "company": "Intellias",
     "first_seen": "2026-07-10T08:29:48+00:00"
   },
-  "https://careers.epam.com/en/vacancy/ios-software-engineer-bltdal07e7ko9k6cj2e_en": {
-    "title": "Ios Software Engineer",
-    "company": "EPAM",
-    "first_seen": "2026-07-27T11:32:12+00:00"
-  },
-  "https://careers.epam.com/en/vacancy/lead-ios-software-engineer-bltpq5kvge6c75psv1q_en": {
-    "title": "Lead Ios Software Engineer",
-    "company": "EPAM",
-    "first_seen": "2026-07-27T11:32:12+00:00"
-  },
-  "https://careers.epam.com/en/vacancy/senior-ios-developer-blt7rnc5o2hvnrsiz9x_en": {
-    "title": "Senior Ios Developer",
-    "company": "EPAM",
-    "first_seen": "2026-07-10T08:29:48+00:00"
-  },
-  "https://careers.epam.com/en/vacancy/senior-ios-software-engineer-bltitduh407tb4vdd28_en": {
-    "title": "Senior Ios Software Engineer",
-    "company": "EPAM",
-    "first_seen": "2026-07-27T11:32:12+00:00"
-  },
-  "https://careers.epam.com/en/vacancy/senior-software-engineer-ios-bltx9m8apcjok2305z6_en": {
-    "title": "Senior Software Engineer Ios",
-    "company": "EPAM",
-    "first_seen": "2026-07-10T08:29:48+00:00"
-  },
   "https://careers.n-ix.com/jobs/4912838101?gh_jid=4912838101": {
     "title": "Lead iOS Engineer",
     "company": "N-iX",
@@ -44,10 +19,75 @@
     "company": "N-iX",
     "first_seen": "2026-07-10T08:29:48+00:00"
   },
+  "https://djinni.co/jobs/807553-swift-mid-level-experience-ios-developer": {
+    "title": "Swift / mid-level experience iOS Developer",
+    "company": "WE wilke experience",
+    "first_seen": "2026-07-27T19:26:23+00:00"
+  },
+  "https://djinni.co/jobs/824099-ios-developer": {
+    "title": "iOS Developer",
+    "company": "Kiss My Apps",
+    "first_seen": "2026-07-27T19:26:23+00:00"
+  },
+  "https://djinni.co/jobs/833474-farmer-ios": {
+    "title": "Farmer IOS",
+    "company": "Technology Minded Company",
+    "first_seen": "2026-07-27T19:26:23+00:00"
+  },
+  "https://djinni.co/jobs/833590-macos-developer-swift-appkit": {
+    "title": "macOS Developer (Swift / AppKit)",
+    "company": "Out of the Box Systems",
+    "first_seen": "2026-07-27T19:26:23+00:00"
+  },
+  "https://djinni.co/jobs/835115-ios-farmer": {
+    "title": "iOS Farmer",
+    "company": "Trident Media",
+    "first_seen": "2026-07-27T19:26:23+00:00"
+  },
+  "https://djinni.co/jobs/835500-mobile-sdk-developer-ios-android-react-native": {
+    "title": "Mobile SDK Developer (iOS/Android/React Native)",
+    "company": "limaz",
+    "first_seen": "2026-07-27T19:26:23+00:00"
+  },
+  "https://djinni.co/jobs/836367-senior-ios-swift-engineer": {
+    "title": "Senior iOS (Swift) Engineer",
+    "company": "Visual Craft",
+    "first_seen": "2026-07-27T19:26:23+00:00"
+  },
+  "https://djinni.co/jobs/837052-ios-developer-ios-swift-mobile-apps-subscript": {
+    "title": "iOS Developer (iOS • Swift • Mobile apps • Subscriptions)",
+    "company": "Viralcut.io",
+    "first_seen": "2026-07-27T19:26:23+00:00"
+  },
+  "https://djinni.co/jobs/838070-senior-mdm-engineer-apple-devices-setup": {
+    "title": "Senior MDM Engineer – Apple Devices Setup",
+    "company": "Applefy - Premium Software Development",
+    "first_seen": "2026-07-27T19:26:23+00:00"
+  },
+  "https://djinni.co/jobs/838078-senior-ios-developer": {
+    "title": "Senior iOS Developer",
+    "company": "Archysoft",
+    "first_seen": "2026-07-27T19:26:23+00:00"
+  },
+  "https://djinni.co/jobs/838746-senior-objective-j-engineer-objective-c-cappu": {
+    "title": "Senior Objective-J Engineer (Objective-C/Cappuccino Framework)",
+    "company": "SiloDev",
+    "first_seen": "2026-07-27T19:26:23+00:00"
+  },
+  "https://djinni.co/jobs/838937-senior-ios-engineer": {
+    "title": "Senior iOS Engineer",
+    "company": "Kultrix",
+    "first_seen": "2026-07-27T19:26:23+00:00"
+  },
   "https://djinni.co/jobs/839291-senior-ios-developer-contract-project-based": {
     "title": "Senior iOS Developer (Contract/Project-based)",
     "company": "Devico",
     "first_seen": "2026-07-24T00:00:00+00:00"
+  },
+  "https://djinni.co/jobs/839297-senior-ios-developer-contract-project-based": {
+    "title": "Senior iOS Developer (Contract/Project-based)",
+    "company": "Devico",
+    "first_seen": "2026-07-27T19:26:23+00:00"
   },
   "https://gen-tech.breezy.hr/p/beb01cda1666-ios-developer": {
     "title": "IOS Developer",
@@ -59,10 +99,35 @@
     "company": "KissMyApps",
     "first_seen": "2026-07-10T08:29:48+00:00"
   },
+  "https://jobs.dou.ua/companies/a-listware/vacancies/367041": {
+    "title": "Principal macOS Platform Engineer",
+    "company": "A-listware",
+    "first_seen": "2026-07-27T19:26:23+00:00"
+  },
   "https://jobs.dou.ua/companies/mobilunity/vacancies/367008": {
     "title": "iOS Engineer",
     "company": "Mobilunity",
     "first_seen": "2026-07-23T00:00:00+00:00"
+  },
+  "https://jobs.dou.ua/companies/newsoft/vacancies/366019": {
+    "title": "Senior iOS Developer [USA project]",
+    "company": "Newsoft",
+    "first_seen": "2026-07-27T19:26:23+00:00"
+  },
+  "https://jobs.dou.ua/companies/paybis-com/vacancies/365757": {
+    "title": "Lead iOS Developer",
+    "company": "Paybis",
+    "first_seen": "2026-07-27T19:26:23+00:00"
+  },
+  "https://jobs.dou.ua/companies/rozetka-ua-internet-supermarket/vacancies/364294": {
+    "title": "Business Analyst (WEB, Android, IOS)",
+    "company": "ROZETKA",
+    "first_seen": "2026-07-27T19:26:23+00:00"
+  },
+  "https://jobs.dou.ua/companies/sombra/vacancies/366864": {
+    "title": "Middle Software Engineer (IOS Native)",
+    "company": "Sombra",
+    "first_seen": "2026-07-27T19:26:23+00:00"
   },
   "https://jobs.dou.ua/companies/uklon/vacancies/357039": {
     "title": "iOS Engineer Senior (Finance Team)",
@@ -79,6 +144,11 @@
     "company": "ZONE3000",
     "first_seen": "2026-07-10T08:29:48+00:00"
   },
+  "https://jobs.mwdn.com/careers/co/ukraine/6B.76B/senior-macos-developer/all": {
+    "title": "Senior macOS Developer",
+    "company": "MWDN",
+    "first_seen": "2026-07-27T19:26:23+00:00"
+  },
   "https://jobs.ua.levi9.com/jobs/7979103-senior-ios-developer": {
     "title": "Senior iOS Developer",
     "company": "Levi9",
@@ -94,10 +164,10 @@
     "company": "Andersen",
     "first_seen": "2026-07-10T08:29:48+00:00"
   },
-  "https://sombrainc.com/middle-software-engineer-ios-native": {
+  "https://sombrainc.com/careers/middle-software-engineer-ios-native": {
     "title": "middle software engineer ios native",
     "company": "Sombra",
-    "first_seen": "2026-07-22T17:29:14+00:00"
+    "first_seen": "2026-07-27T19:26:23+00:00"
   },
   "https://t.me/itrecruit_ua/268714": {
     "title": "Привіт!",
@@ -133,6 +203,16 @@
     "title": "🚀 We’re Hiring: Manual QA Engineer (Crypto Casino | AI-Native Team)",
     "company": "Telegram @itrecruit_ua",
     "first_seen": "2026-07-22T10:24:57+00:00"
+  },
+  "https://t.me/itrecruit_ua/269578": {
+    "title": "Міжнародна product-компанія шукає Middle+ / Senior Mobile Developer (iOS / Android) у Mobile System Team 🚀",
+    "company": "Міжнародна product-компанія",
+    "first_seen": "2026-07-27T19:26:23+00:00"
+  },
+  "https://t.me/itrecruit_ua/269596": {
+    "title": "Шукаємо Team Lead Swift❗️",
+    "company": "Telegram",
+    "first_seen": "2026-07-27T19:26:23+00:00"
   },
   "https://www.dataart.team/vacancies/iOS00038": {
     "title": "iOS Developer, Mobile Ticketing Platform",
