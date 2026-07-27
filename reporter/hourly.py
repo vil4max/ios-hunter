@@ -111,12 +111,11 @@ def format_hourly_heartbeat(
     _ = new_count
     _ = board_url
     _ = live
-    blocks = [
-        "📭 Нет новых",
-        "",
-        *_footer(stats=stats, now=now, include_board=False),
-    ]
-    return "\n".join(blocks)
+    lines = [f"📭 Нет новых · {_time_label(now)}"]
+    problems = _problem_lines(stats)
+    if problems:
+        lines.extend(["", *problems])
+    return "\n".join(lines)
 
 
 def format_hourly_new_vacancies(
