@@ -20,9 +20,9 @@ parser/             normalize, iOS filter, geo filter, dedupe
 config/             env: project, statuses, thresholds
 project_sync/       Issues + Projects V2 GraphQL
 planner/            read Project → prioritized work
-reporter/           hourly short alert + daily dashboard
+reporter/           hourly alert + daily vacancy-liveness Telegram
 analytics/          pipeline counts for daily summary
-scripts/            thin CLIs: run_pipeline, run_daily_report, seed_project
+scripts/            thin CLIs: run_pipeline, run_vacancy_liveness, seed_project
 ```
 
 ## Data flow
@@ -33,6 +33,11 @@ Collect (hourly)
   → Project Sync (private Draft Inbox if new URL)
   → dual-write seen.json
   → Telegram each run: datetime · OK · (новых нет | list)
+
+Vacancy liveness (daily 04:00 UTC, incl. weekends)
+  → probe active Project card URLs
+  → archive Role closed when vacancy page is gone / replaced
+  → Telegram status (count + company — title)
 
 Ops status / Applied → Screening: GitHub Project board (no daily Telegram CRM dump)
 ```

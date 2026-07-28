@@ -1,20 +1,21 @@
-name: Daily Career Report
+name: Daily Vacancy Liveness
 
 on:
-  # Telegram no longer sends CRM dashboards. Pipeline ops live on the Project board.
-  # Keep manual dispatch for local/ops debugging (prints plan counts only).
   workflow_dispatch:
+  schedule:
+    # 04:00 UTC daily (incl. weekends) ≈ 07:00 Kyiv in summer / 06:00 in winter.
+    - cron: "0 4 * * *"
 
 permissions:
   contents: read
   issues: read
 
 concurrency:
-  group: daily-career-report-${{ github.repository }}
+  group: daily-vacancy-liveness-${{ github.repository }}
   cancel-in-progress: false
 
 jobs:
-  report:
+  liveness:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,7 +28,7 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
-      - name: Run daily report
+      - name: Check closed vacancies
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -37,7 +38,4 @@ jobs:
           CAREER_PROJECT_OWNER: ${{ vars.CAREER_PROJECT_OWNER }}
           CAREER_PROJECT_NUMBER: ${{ vars.CAREER_PROJECT_NUMBER }}
           PROJECT_BOARD_URL: ${{ vars.PROJECT_BOARD_URL }}
-          CAREER_AGENT_STALE_DAYS: ${{ vars.CAREER_AGENT_STALE_DAYS }}
-          CAREER_AGENT_INBOX_NEW_DAYS: ${{ vars.CAREER_AGENT_INBOX_NEW_DAYS }}
-          CAREER_AGENT_RESEARCH_STALE_DAYS: ${{ vars.CAREER_AGENT_RESEARCH_STALE_DAYS }}
-        run: python3 scripts/run_daily_report.py
+        run: python3 scripts/run_vacancy_liveness.py

@@ -10,7 +10,10 @@ GitHub Actions (hourly, ubuntu)
    Python collectors (company pages, ATS, DOU, Telegram)
         │
    Normalize → Deduplicate → Project Sync (+ seen.json dual-write) → Telegram hourly
-Daily Actions → Planner (Project read) → Telegram dashboard
+
+GitHub Actions (daily 04:00 UTC, incl. weekends)
+        │
+   Vacancy liveness (active Project URLs) → archive Role closed → Telegram status
 ```
 
 ## Pipeline
@@ -37,16 +40,17 @@ Daily Actions → Planner (Project read) → Telegram dashboard
 | `config/` | Project + Sync settings from env |
 | `project_sync/` | Issues + Projects V2 GraphQL |
 | `planner/` | Daily work from Project cards |
-| `reporter/` | Hourly short alert + daily dashboard |
+| `reporter/` | Hourly short alert + daily vacancy-liveness Telegram |
 | `analytics/` | Pipeline summary helpers |
 | `database/seen.py` | Dual-write seen store |
 | `scripts/run_pipeline.py` | Collect → sync → hourly |
-| `scripts/run_daily_report.py` | Planner → daily Telegram |
+| `scripts/run_vacancy_liveness.py` | Daily closed-URL check → archive → Telegram |
+| `scripts/run_daily_report.py` | Optional Project plan counts (Actions log) |
 | `scripts/seed_project_from_seen.py` | Seed Archived from seen.json |
 | `scripts/collector_parity.py` | Collector health report |
 
 ## Schedule
 
 - **Collect:** every hour UTC via `hourly-trigger.yml`, Kyiv 09:00–18:00 gate → Collect (manual Collect anytime)
-- **Daily report:** `daily-report.yml` (~04:00 UTC)
+- **Vacancy liveness:** `vacancy-liveness.yml` daily 04:00 UTC incl. weekends
 - **CI:** on push/PR to `main`

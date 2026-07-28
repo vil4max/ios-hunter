@@ -27,9 +27,9 @@ Why:
 
 Keep dual-write: new Sync Inbox drafts + `seen.json` gate until cutover.
 
-### M3 — Daily dashboard live
+### M3 — Daily vacancy liveness live
 
-Enable `daily-report.yml`. Planner reads Project only.
+Enable `vacancy-liveness.yml`. Active Project URLs are probed daily; closed roles archive with Telegram status.
 
 ### M4 — Cutover (after 3–7 stable days)
 

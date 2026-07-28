@@ -41,7 +41,17 @@ When there are **new** vacancies:
 
 **Pipeline status / Applied / Screening** — manage on the private [Career CRM Project](https://github.com/users/vil4max/projects/3). Telegram does **not** dump today's tasks or CRM sections.
 
-DOU and Djinni board browsing stays in their native apps. This repo watches company career pages, DOU Top 50 career-site discovery, and optional Telegram chats (`@itrecruit_ua`, `@remotejobss`, `@itfreelancers` — iOS/Swift hiring posts only).
+DOU and Djinni board browsing stays in their native apps. This repo watches company career pages, the committed DOU company seed (`database/dou_companies.json`) plus DOU iOS/macOS RSS, and optional Telegram chats (`@itrecruit_ua`, `@remotejobss`, `@itfreelancers` — iOS/Swift hiring posts only).
+
+Refresh the DOU company seed periodically (not on every pipeline run):
+
+```bash
+python3 scripts/discover_dou_companies.py
+python3 scripts/discover_dou_companies.py --enrich-sites
+python3 scripts/discover_dou_companies.py --max-pages 2 --limit 40 --dry-run
+```
+
+Daily collect only **reads** the seed. Active DOU company feeds are capped with `DOU_SEED_FEED_LIMIT` (default `300`; use `all` for no cap).
 
 One-time Telegram chat setup:
 
@@ -94,7 +104,7 @@ Telegram only on new vacancies (list + OK)
 |----------|------|
 | **Collect iOS Jobs** | Manual or via hourly trigger — collect, sync, Telegram if new |
 | **Hourly Collect Trigger** | Every hour UTC; dispatches Collect only Kyiv 09:00–18:00 |
-| **Daily Career Report** | Manual only — Project plan counts to Actions log (no Telegram) |
+| **Daily Vacancy Liveness** | Every day 04:00 UTC (incl. weekends) — probe active board URLs, archive closed, Telegram status |
 | **CI** | Push / PR — pytest |
 
 ## Local debug
@@ -106,6 +116,7 @@ SEEN_PATH=/tmp/seen.json python3 scripts/run_pipeline.py
 CAREER_AGENT_SYNC_ENABLED=1 python3 scripts/run_pipeline.py
 python3 scripts/collector_parity.py
 python3 scripts/seed_project_from_seen.py --dry-run
+python3 scripts/run_vacancy_liveness.py --dry-run
 python3 scripts/run_daily_report.py
 ```
 

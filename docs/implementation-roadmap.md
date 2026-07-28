@@ -21,9 +21,9 @@ ADR, audit, architecture, GitHub setup guide, migration plan, this roadmap.
 ## Phase 3 — Planner + daily Reporter
 
 - `planner/plan.py`
-- `reporter/` hourly + daily
-- `scripts/run_daily_report.py`
-- `.github/workflows/daily-report.yml`
+- `reporter/` hourly + vacancy liveness
+- `scripts/run_vacancy_liveness.py`
+- `.github/workflows/vacancy-liveness.yml` (daily incl. weekends)
 
 ## Phase 4 — Hygiene
 

@@ -58,7 +58,7 @@ python3 scripts/seed_project_from_seen.py
 
 1. Actions → Collect iOS Jobs → Run  
 2. Confirm Inbox Issue + Telegram `Inbox +N`  
-3. Actions → Daily Career Report → Run  
+3. Actions → Daily Vacancy Liveness → Run  
 
 ### 6. Cutover later
 
