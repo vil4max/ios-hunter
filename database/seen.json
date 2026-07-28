@@ -9,6 +9,16 @@
     "company": "Intellias",
     "first_seen": "2026-07-10T08:29:48+00:00"
   },
+  "https://career.luxoft.com/jobs/regularsenior-ios-developer-mobile-apps-25898": {
+    "title": "Regular/Senior iOS Developer (Mobile Apps)",
+    "company": "Luxoft",
+    "first_seen": "2026-07-28T14:13:22+00:00"
+  },
+  "https://career.luxoft.com/jobs/senior-mobile-engineer-ios-swift-24568": {
+    "title": "Senior Mobile Engineer - iOS Swift",
+    "company": "Luxoft",
+    "first_seen": "2026-07-28T14:13:22+00:00"
+  },
   "https://careers.n-ix.com/jobs/4912838101?gh_jid=4912838101": {
     "title": "Lead iOS Engineer",
     "company": "N-iX",
@@ -129,21 +139,6 @@
     "company": "Sombra",
     "first_seen": "2026-07-27T19:26:23+00:00"
   },
-  "https://jobs.dou.ua/companies/uklon/vacancies/357039": {
-    "title": "iOS Engineer Senior (Finance Team)",
-    "company": "Uklon",
-    "first_seen": "2026-07-14T08:16:30+00:00"
-  },
-  "https://jobs.dou.ua/companies/uklon/vacancies/363708": {
-    "title": "iOS Engineer Senior (Rider Team)",
-    "company": "Uklon",
-    "first_seen": "2026-07-10T08:29:48+00:00"
-  },
-  "https://jobs.dou.ua/companies/zone3000/vacancies/365331": {
-    "title": "Middle + / Senior Mobile iOS Developer in Mobile System Team (#1204)",
-    "company": "ZONE3000",
-    "first_seen": "2026-07-10T08:29:48+00:00"
-  },
   "https://jobs.mwdn.com/careers/co/ukraine/6B.76B/senior-macos-developer/all": {
     "title": "Senior macOS Developer",
     "company": "MWDN",
@@ -223,5 +218,10 @@
     "title": "Senior iOS Software Engineer",
     "company": "GlobalLogic",
     "first_seen": "2026-07-10T08:29:48+00:00"
+  },
+  "https://zone3000.net/vacancies/middle-----senior-mobile-ios-developer-in-mobile-system-team---1204-": {
+    "title": "Middle + / Senior Mobile iOS Developer in Mobile System Team (#1204)",
+    "company": "ZONE3000",
+    "first_seen": "2026-07-28T14:13:22+00:00"
   }
 }
