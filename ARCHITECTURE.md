@@ -47,6 +47,6 @@ Daily Actions → Planner (Project read) → Telegram dashboard
 
 ## Schedule
 
-- **Collect:** every hour via `hourly-trigger.yml` → Collect
+- **Collect:** Kyiv 09:00–18:00 hourly via `hourly-trigger.yml` → Collect (manual Collect anytime)
 - **Daily report:** `daily-report.yml` (~04:00 UTC)
 - **CI:** on push/PR to `main`
