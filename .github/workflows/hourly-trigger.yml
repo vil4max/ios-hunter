@@ -3,8 +3,8 @@ name: Hourly Collect Trigger
 on:
   workflow_dispatch:
   schedule:
-    # UTC band covering Kyiv 09:00-18:00 year-round; Kyiv gate skips edge hours.
-    - cron: "0 6-16 * * *"
+    # Every hour UTC; Kyiv 09:00-18:00 gate skips nights (narrow cron was unreliable on GHA).
+    - cron: "0 * * * *"
 
 permissions:
   actions: write
