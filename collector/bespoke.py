@@ -541,6 +541,27 @@ def collect_globallogic() -> SourceResult:
         return _fail(company, list_url, error, started)
 
 
+def _luxoft_location(anchor: Any) -> str | None:
+    bookmark = anchor.select_one("[data-job]")
+    raw_meta = bookmark.get("data-job") if bookmark is not None else None
+    if raw_meta:
+        try:
+            meta = json.loads(str(raw_meta))
+        except json.JSONDecodeError:
+            meta = None
+        if isinstance(meta, dict):
+            city = str(meta.get("city") or "").strip()
+            country = str(meta.get("location") or "").strip()
+            label = ", ".join(part for part in (city, country) if part)
+            if label:
+                return label
+    loc_el = anchor.select_one('[class*="location"]')
+    if loc_el is None:
+        return None
+    text = loc_el.get_text(" ", strip=True)
+    return text or None
+
+
 def collect_luxoft() -> SourceResult:
     company = "Luxoft"
     started = time.perf_counter()
@@ -563,21 +584,35 @@ def collect_luxoft() -> SourceResult:
             if absolute in seen:
                 continue
             seen.add(absolute)
+            heading = anchor.select_one("h2")
+            title = heading.get_text(" ", strip=True) if heading is not None else ""
             raw = anchor.get_text(" ", strip=True)
-            title = re.split(r"\s+Facebook\s+", raw, maxsplit=1)[0].strip()
-            title = re.sub(
-                r"\s+iOS\s*\(Objective-C/Swift\).*$",
-                "",
-                title,
-                flags=re.IGNORECASE,
-            ).strip()
+            if not title:
+                title = re.split(r"\s+Facebook\s+", raw, maxsplit=1)[0].strip()
+                title = re.sub(
+                    r"\s+iOS\s*\(Objective-C/Swift\).*$",
+                    "",
+                    title,
+                    flags=re.IGNORECASE,
+                ).strip()
             if not title:
                 title = title_from_slug(absolute)
             if not is_ios_job(title) and not is_ios_job(raw):
                 continue
             if not is_ios_job(title):
                 title = raw.split(" iOS ")[0].strip() or title
-            jobs.append({"company": company, "title": title, "url": absolute, "source": "company"})
+            location = _luxoft_location(anchor)
+            if not is_relevant_job_location(location):
+                continue
+            jobs.append(
+                {
+                    "company": company,
+                    "title": title,
+                    "url": absolute,
+                    "source": "company",
+                    "location": location,
+                }
+            )
         return _ok(company, list_url, jobs, started, scanned=len(seen))
     except Exception as error:  # noqa: BLE001
         return _fail(company, list_url, error, started)

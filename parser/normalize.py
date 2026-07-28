@@ -186,7 +186,7 @@ _NON_UA_GEO = re.compile(
     r"germany|poland|польща|польша|krakow|kraków|warsaw|warszawa|"
     r"hungary|romania|spain|portugal|netherlands|"
     r"malaysia|singapore|uae|israel|turkey|georgia|kazakhstan|armenia|"
-    r"austin|budapest|kuala\s+lumpur|newtown|culiacan"
+    r"egypt|cairo|austin|budapest|kuala\s+lumpur|newtown|culiacan"
     r")\b"
 )
 

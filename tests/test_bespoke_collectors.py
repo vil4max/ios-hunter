@@ -527,9 +527,28 @@ def test_globallogic_reports_failure(stub) -> None:
 def test_luxoft_parses_specialization_jobs(stub) -> None:
     stub(
         text=(
-            '<a href="/jobs/senior-ios-developer-26100">'
-            "Senior iOS Developer iOS (Objective-C/Swift) Cairo Egypt Facebook Twitter</a>"
-            '<a href="/jobs/senior-ios-developer-26100">dup</a>'
+            '<a class="jobs__list__job" href="/jobs/senior-ios-developer-26100">'
+            "<h2>Senior iOS Developer</h2>"
+            "<p>iOS (Objective-C/Swift)</p>"
+            '<div class="jobs__list__job__details__tags__location">'
+            "<p>Kyiv</p><p>Ukraine</p></div>"
+            "<div data-job='"
+            '{"title":"Senior iOS Developer","city":"Kyiv","location":"Ukraine",'
+            '"url":"/jobs/senior-ios-developer-26100"}'
+            "'></div></a>"
+            '<a class="jobs__list__job" href="/jobs/senior-ios-developer-26100">dup</a>'
+            '<a class="jobs__list__job" href="/jobs/senior-ios-bengaluru-26102">'
+            "<h2>Senior iOS Developer</h2>"
+            '<div class="jobs__list__job__details__tags__location">'
+            "<p>Bengaluru</p><p>India</p></div>"
+            "<div data-job='"
+            '{"title":"Senior iOS Developer","city":"Bengaluru","location":"India",'
+            '"url":"/jobs/senior-ios-bengaluru-26102"}'
+            "'></div></a>"
+            '<a class="jobs__list__job" href="/jobs/senior-ios-cairo-26103">'
+            "<h2>Senior iOS Developer</h2>"
+            '<div class="jobs__list__job__details__tags__location">'
+            "<p>Cairo</p><p>Egypt</p></div></a>"
             '<a href="/jobs/java-developer-26101">Java Developer Java India Facebook</a>'
         )
     )
@@ -537,10 +556,11 @@ def test_luxoft_parses_specialization_jobs(stub) -> None:
     result = bespoke.collect_luxoft()
 
     assert result.status == "healthy"
-    assert result.items_scanned == 2
+    assert result.items_scanned == 4
     assert len(result.jobs) == 1
     assert result.jobs[0]["title"] == "Senior iOS Developer"
     assert result.jobs[0]["url"] == "https://career.luxoft.com/jobs/senior-ios-developer-26100"
+    assert result.jobs[0]["location"] == "Kyiv, Ukraine"
 
 
 def test_luxoft_reports_failure(stub) -> None:

@@ -63,6 +63,8 @@ def test_is_relevant_job_location_rejects_non_ua_geo() -> None:
     assert not is_relevant_job_location("Argentina / Chile / Colombia / Mexico")
     assert not is_relevant_job_location("Hybrid, Budapest, Hungary")
     assert not is_relevant_job_location("Bengaluru, India")
+    assert not is_relevant_job_location("Kuala Lumpur, Malaysia")
+    assert not is_relevant_job_location("Cairo, Egypt")
     assert not is_relevant_job_location("Austin, USA")
     assert not is_relevant_job_location("Poland, Remote")
     assert not is_relevant_job_location("Львів, Краків (Польща), віддалено")
