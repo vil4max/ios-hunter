@@ -28,32 +28,37 @@ def format_vacancy_liveness_report(
     stamp = (now or datetime.now(_KYIV)).astimezone(_KYIV)
     clock = stamp.strftime("%Y-%m-%d %H:%M")
     archived = list(result.archived or [])
-    if not archived:
-        lines = [
-            f"✅ Закрытых вакансий нет · {clock}",
-            f"Проверено: {result.checked} · пропущено: {result.skipped}",
-        ]
-        if board_url:
-            lines.append(f"🔗 {board_url}")
-        return "\n".join(lines)
+    closed = list(result.closed or [])
+    hits = archived or closed
 
-    lines = [
-        f"🗂️ Архивировано: {len(archived)}",
-        "",
-    ]
-    for index, hit in enumerate(archived, start=1):
-        lines.append(f"{index}. {_card_label(hit)}")
-        if hit.probe.reason:
-            lines.append(f"   {hit.probe.reason}")
-    lines.extend(
-        [
+    if not hits:
+        lines = [
+            "✅ Отправлено в архив: 0",
             "",
-            f"Проверено: {result.checked} · пропущено: {result.skipped}",
             f"🕐 {clock}",
         ]
-    )
+        return "\n".join(lines)
+
+    if archived:
+        header = f"🗂️ Отправлено в архив: {len(archived)}"
+    else:
+        header = f"⚠️ Найдено закрытых: {len(closed)}"
+
+    lines = [header, ""]
+    for index, hit in enumerate(hits, start=1):
+        lines.append(f"{index}. {_card_label(hit)}")
+        if hit.probe.reason:
+            lines.append(f"   └ {hit.probe.reason}")
+        if hit.card.url or hit.card.canonical_url:
+            url = (hit.card.url or hit.card.canonical_url or "").strip()
+            if url:
+                lines.append(f"   🔗 {url}")
+        lines.append("")
+
     if board_url:
-        lines.append(f"🔗 {board_url}")
+        lines.append(f"📋 {board_url}")
+        lines.append("")
+    lines.append(f"🕐 {clock}")
     return "\n".join(lines)
 
 

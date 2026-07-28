@@ -192,11 +192,10 @@ def test_format_liveness_report_empty_and_archived() -> None:
         board_url="https://github.com/users/x/projects/3",
         now=now,
     )
-    assert empty.startswith("✅ Закрытых вакансий нет · 2026-07-28 07:00")
-    assert "Проверено: 5 · пропущено: 2" in empty
+    assert empty == "✅ Отправлено в архив: 0\n\n🕐 2026-07-28 07:00"
 
     hit = ClosedVacancyHit(
-        card=_card(company="Andersen", title="iOS Developer"),
+        card=_card(company="Andersen", title="iOS Developer", url="https://example.com/x"),
         probe=ProbeResult(
             url="https://example.com/x",
             closed=True,
@@ -210,6 +209,31 @@ def test_format_liveness_report_empty_and_archived() -> None:
         board_url="https://github.com/users/x/projects/3",
         now=now,
     )
-    assert message.startswith("🗂️ Архивировано: 1")
+    assert message.startswith("🗂️ Отправлено в архив: 1")
     assert "1. Andersen — iOS Developer" in message
-    assert "http 404" in message
+    assert "└ http 404" in message
+    assert "🔗 https://example.com/x" in message
+    assert message.endswith("🕐 2026-07-28 07:00")
+    assert "Проверено:" not in message
+    assert "пропущено" not in message
+
+
+def test_format_liveness_report_dry_run_closed_not_archived() -> None:
+    now = datetime(2026, 7, 28, 7, 0, tzinfo=_KYIV)
+    hit = ClosedVacancyHit(
+        card=_card(company="Acme", title="Swift Engineer"),
+        probe=ProbeResult(
+            url="https://example.com/y",
+            closed=True,
+            skipped=False,
+            http_status=410,
+            reason="http 410",
+        ),
+    )
+    message = format_vacancy_liveness_report(
+        LivenessResult(checked=1, skipped=0, closed=[hit], archived=[]),
+        now=now,
+    )
+    assert message.startswith("⚠️ Найдено закрытых: 1")
+    assert "1. Acme — Swift Engineer" in message
+    assert message.endswith("🕐 2026-07-28 07:00")
