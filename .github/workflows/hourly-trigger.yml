@@ -3,8 +3,8 @@ name: Hourly Collect Trigger
 on:
   workflow_dispatch:
   schedule:
-    # Every hour UTC — dispatches Collect iOS Jobs via ubuntu runner.
-    - cron: "0 * * * *"
+    # UTC band covering Kyiv 09:00-18:00 year-round; Kyiv gate skips edge hours.
+    - cron: "0 6-16 * * *"
 
 permissions:
   actions: write
@@ -18,7 +18,30 @@ jobs:
   trigger:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Kyiv business-hours gate
+        id: gate
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" != "schedule" ]; then
+            echo "skip_gate=false" >> "$GITHUB_OUTPUT"
+            echo "Manual trigger — gate bypassed"
+            exit 0
+          fi
+          if python3 scripts/should_run_collect.py; then
+            echo "skip_gate=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip_gate=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Trigger Collect iOS Jobs
+        if: steps.gate.outputs.skip_gate != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

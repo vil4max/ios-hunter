@@ -77,6 +77,7 @@ def test_hourly_lists_new_vacancies_only() -> None:
         "   https://example.com/b\n"
         "\n"
         "🟢 Система в порядке · 2026-07-15 11:00\n"
+        "⏭ Следующая проверка в 12:00\n"
         "🔗 https://github.com/users/acme/projects/1"
     )
 
@@ -112,6 +113,7 @@ def test_hourly_telegram_vacancy_is_compact() -> None:
         "   https://t.me/itrecruit_ua/123\n"
         "\n"
         "🟢 Система в порядке · 2026-07-15 11:00\n"
+        "⏭ Следующая проверка в 12:00\n"
         "🔗 https://board"
     )
     assert "📝" not in message
@@ -143,7 +145,8 @@ def test_hourly_heartbeat_when_no_new() -> None:
     assert message == (
         "📭 Новых вакансий нет\n"
         "\n"
-        "🟢 Система в порядке · 2026-07-15 11:00"
+        "🟢 Система в порядке · 2026-07-15 11:00\n"
+        "⏭ Следующая проверка в 12:00"
     )
     assert "Живые" not in message
     assert "Сбор OK" not in message
@@ -171,7 +174,8 @@ def test_hourly_heartbeat_reports_partial_failures() -> None:
         "\n"
         "⚠️ Поиск по сайтам: 11/12 ошибки — SoftServe\n"
         "⚠️ Telegram: 2/3 ошибки\n"
-        "🕐 2026-07-15 11:00"
+        "🕐 2026-07-15 11:00\n"
+        "⏭ Следующая проверка в 12:00"
     )
     assert "@remotejobss" not in message
     assert "Binary Studio" not in message
@@ -291,7 +295,8 @@ def test_notify_heartbeat_has_no_live_block(monkeypatch: pytest.MonkeyPatch) -> 
     assert sent == [
         "📭 Новых вакансий нет\n"
         "\n"
-        "🟢 Система в порядке · 2026-07-27 23:00"
+        "🟢 Система в порядке · 2026-07-27 23:00\n"
+        "⏭ Следующая проверка завтра в 9:00"
     ]
 
 
