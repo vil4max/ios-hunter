@@ -81,7 +81,7 @@ def _status_block(stats: CollectReportStats, now: datetime | None = None) -> lis
         lines = [f"{_HEALTHY_STATUS} · {stamp}"]
     else:
         lines = [*status, f"🕐 {stamp}"]
-    lines.append(format_next_check_line(now))
+    lines.extend(["", format_next_check_line(now)])
     return lines
 
 
