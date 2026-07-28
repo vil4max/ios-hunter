@@ -17,6 +17,11 @@
     "last_scanned": 6,
     "last_nonzero": "2026-07-28T11:20:52+00:00"
   },
+  "company:am-soft@jobs.dou.ua": {
+    "name": "AM-SOFT",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
   "company:andersen@asite-api.andersenlab.com": {
     "name": "Andersen",
     "best_scanned": 213,
@@ -28,6 +33,11 @@
     "best_scanned": 0,
     "last_scanned": 0
   },
+  "company:astound digital@jobs.dou.ua": {
+    "name": "Astound Digital",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
   "company:avenga@career.avenga.com": {
     "name": "Avenga",
     "best_scanned": 127,
@@ -36,6 +46,16 @@
   },
   "company:betterme@apply.workable.com": {
     "name": "BetterMe",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:betterme@betterme.breezy.hr": {
+    "name": "BetterMe",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:capgemini engineering@jobs.dou.ua": {
+    "name": "Capgemini Engineering",
     "best_scanned": 0,
     "last_scanned": 0
   },
@@ -56,6 +76,16 @@
     "best_scanned": 8,
     "last_scanned": 8,
     "last_nonzero": "2026-07-28T11:20:52+00:00"
+  },
+  "company:creatio@jobs.dou.ua": {
+    "name": "Creatio",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:cs ltd.@csltd.com.ua": {
+    "name": "CS Ltd.",
+    "best_scanned": 0,
+    "last_scanned": 0
   },
   "company:dataart@dataart.team": {
     "name": "DataArt",
@@ -99,6 +129,16 @@
     "last_scanned": 2,
     "last_nonzero": "2026-07-28T11:20:52+00:00"
   },
+  "company:frog@jobs.dou.ua": {
+    "name": "Frog",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:gameloft@api.smartrecruiters.com": {
+    "name": "Gameloft",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
   "company:genesis@api.ashbyhq.com": {
     "name": "Genesis",
     "best_scanned": 42,
@@ -121,6 +161,11 @@
     "best_scanned": 13,
     "last_scanned": 13,
     "last_nonzero": "2026-07-28T11:20:52+00:00"
+  },
+  "company:globallogic@globallogic.com": {
+    "name": "GlobalLogic",
+    "best_scanned": 0,
+    "last_scanned": 0
   },
   "company:grammarly@api.ashbyhq.com": {
     "name": "Grammarly",
@@ -181,6 +226,11 @@
     "last_scanned": 7,
     "last_nonzero": "2026-07-28T11:20:52+00:00"
   },
+  "company:isd@jobs.dou.ua": {
+    "name": "ISD",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
   "company:kindgeek@apply.workable.com": {
     "name": "KindGeek",
     "best_scanned": 0,
@@ -215,14 +265,29 @@
     "best_scanned": 0,
     "last_scanned": 0
   },
+  "company:luxoft@career.luxoft.com": {
+    "name": "Luxoft",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
   "company:macpaw@macpaw.com": {
     "name": "MacPaw",
     "best_scanned": 6,
     "last_scanned": 6,
     "last_nonzero": "2026-07-28T11:20:52+00:00"
   },
+  "company:magento@jobs.dou.ua": {
+    "name": "Magento",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
   "company:mind studios@themindstudios.com": {
     "name": "Mind Studios",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:miratech@api.smartrecruiters.com": {
+    "name": "Miratech",
     "best_scanned": 0,
     "last_scanned": 0
   },
@@ -309,6 +374,11 @@
     "best_scanned": 0,
     "last_scanned": 0
   },
+  "company:samsung@jobs.dou.ua": {
+    "name": "Samsung",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
   "company:sigma software@career.sigma.software": {
     "name": "Sigma Software",
     "best_scanned": 42,
@@ -326,6 +396,21 @@
     "best_scanned": 2,
     "last_scanned": 2,
     "last_nonzero": "2026-07-28T11:20:52+00:00"
+  },
+  "company:softline@softline.com": {
+    "name": "Softline",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:softserve@career.softserveinc.com": {
+    "name": "SoftServe",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:software mackiev@mackiev.com": {
+    "name": "Software MacKiev",
+    "best_scanned": 0,
+    "last_scanned": 0
   },
   "company:solvd@api.ashbyhq.com": {
     "name": "Solvd",
@@ -350,6 +435,11 @@
     "best_scanned": 34,
     "last_scanned": 34,
     "last_nonzero": "2026-07-28T11:20:52+00:00"
+  },
+  "company:star@star.breezy.hr": {
+    "name": "Star",
+    "best_scanned": 0,
+    "last_scanned": 0
   },
   "company:supportyourapp@apply.workable.com": {
     "name": "SupportYourApp",
@@ -387,6 +477,11 @@
     "last_scanned": 8,
     "last_nonzero": "2026-07-28T11:20:52+00:00"
   },
+  "company:zone3000@zone3000.net": {
+    "name": "ZONE3000",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
   "djinni": {
     "name": "Djinni",
     "best_scanned": 21,
@@ -411,6 +506,191 @@
   },
   "telegram:remotejobss": {
     "name": "Telegram @remotejobss",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:ajax systems@api.lever.co": {
+    "name": "Ajax Systems",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:upstars@career.upstars.com": {
+    "name": "UPSTARS",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:amdaris@boards-api.greenhouse.io": {
+    "name": "Amdaris",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:petcube@petcube.com": {
+    "name": "Petcube",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:gismart@gismart.com": {
+    "name": "Gismart",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:stfalcon@stfalcon.com": {
+    "name": "Stfalcon",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:mono@jobs.dou.ua": {
+    "name": "mono",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:nova digital@jobs.dou.ua": {
+    "name": "Nova Digital",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:fractal@jobs.dou.ua": {
+    "name": "FRACTAL",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:autodoc@jobs.dou.ua": {
+    "name": "AUTODOC",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:modus x@jobs.dou.ua": {
+    "name": "MODUS X",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:king group@jobs.dou.ua": {
+    "name": "King Group",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:playtika ukraine@jobs.dou.ua": {
+    "name": "Playtika Ukraine",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:evoplay@jobs.dou.ua": {
+    "name": "Evoplay",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:grammarly@jobs.dou.ua": {
+    "name": "Grammarly",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:uklon@jobs.dou.ua": {
+    "name": "Uklon",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:evo@jobs.dou.ua": {
+    "name": "EVO",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:jooble@jobs.dou.ua": {
+    "name": "Jooble",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:depositphotos@jobs.dou.ua": {
+    "name": "Depositphotos",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:boosters@jobs.dou.ua": {
+    "name": "Boosters",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:kiss my apps@jobs.dou.ua": {
+    "name": "Kiss My Apps",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:appflame@jobs.dou.ua": {
+    "name": "appflame",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:reface@jobs.dou.ua": {
+    "name": "Reface",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:geeksforless@jobs.dou.ua": {
+    "name": "GeeksForLess",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:techmagic@jobs.dou.ua": {
+    "name": "TechMagic",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:mobidev@jobs.dou.ua": {
+    "name": "MobiDev",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:rubygarage@jobs.dou.ua": {
+    "name": "RubyGarage",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:uptech@jobs.dou.ua": {
+    "name": "Uptech",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:cleveroad@jobs.dou.ua": {
+    "name": "Cleveroad",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:ukrsibbank@jobs.dou.ua": {
+    "name": "UKRSIBBANK",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:privatbank@jobs.dou.ua": {
+    "name": "PrivatBank",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:plarium@jobs.dou.ua": {
+    "name": "Plarium",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:ubisoft@jobs.dou.ua": {
+    "name": "Ubisoft",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:metinvest digital@jobs.dou.ua": {
+    "name": "Metinvest Digital",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:wargaming@jobs.dou.ua": {
+    "name": "Wargaming",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:work.ua@jobs.dou.ua": {
+    "name": "Work.ua",
+    "best_scanned": 0,
+    "last_scanned": 0
+  },
+  "company:unit@jobs.dou.ua": {
+    "name": "UNIT",
     "best_scanned": 0,
     "last_scanned": 0
   }

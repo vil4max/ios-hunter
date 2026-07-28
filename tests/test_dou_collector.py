@@ -3,6 +3,7 @@ from __future__ import annotations
 from unittest.mock import patch
 
 from collector.dou import (
+    collect_dou_company_feed,
     collect_dou_ios_rss,
     parse_dou_category_rss,
     parse_rss_title,
@@ -80,3 +81,34 @@ def test_collect_dou_ios_rss_reports_failure() -> None:
 
     assert result.status == "failed"
     assert "rss down" in (result.error or "")
+
+
+def test_collect_dou_company_feed_overrides_company_name() -> None:
+    xml = """<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"><channel>
+<item>
+<title>Senior iOS Developer в Creatio, віддалено</title>
+<link>https://jobs.dou.ua/companies/creatio/vacancies/111/?utm_source=jobsrss</link>
+</item>
+<item>
+<title>Backend Engineer в Creatio, Київ</title>
+<link>https://jobs.dou.ua/companies/creatio/vacancies/222/</link>
+</item>
+</channel></rss>"""
+
+    with patch("collector.dou._fetch_text", return_value=xml):
+        result = collect_dou_company_feed("Creatio", "creatio")
+
+    assert result.status == "healthy"
+    assert result.source_name == "Creatio"
+    assert result.items_scanned == 2
+    assert len(result.jobs) == 1
+    assert result.jobs[0]["company"] == "Creatio"
+    assert result.jobs[0]["url"] == "https://jobs.dou.ua/companies/creatio/vacancies/111/"
+
+
+def test_collect_dou_company_feed_reports_failure() -> None:
+    with patch("collector.dou._fetch_text", side_effect=RuntimeError("feed down")):
+        result = collect_dou_company_feed("Creatio", "creatio")
+
+    assert result.status == "failed"

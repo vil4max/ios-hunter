@@ -1,25 +1,37 @@
 from __future__ import annotations
 
+import os
 import re
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from pathlib import Path
 from typing import Any, Callable
 
 from collector.bespoke import (
     collect_andersen,
     collect_ciklum,
     collect_dataart,
+    collect_globallogic,
     collect_grid_dynamics,
     collect_infopulse,
     collect_intellias,
+    collect_luxoft,
     collect_mwdn,
     collect_nix_html,
     collect_nortal,
     collect_onix,
     collect_rbi,
     collect_sigma,
+    collect_softserve,
+    collect_zone3000,
 )
-from collector.dou import collect_dou_ios_rss
+from collector.dou import collect_dou_company_feed, collect_dou_ios_rss
+from collector.dou_catalog import (
+    DEFAULT_SEED_FEED_LIMIT,
+    companies_for_collect,
+    default_seed_path,
+    load_seed,
+)
 from collector.djinni import collect_djinni
 from collector.epam import collect_epam
 from collector.generic import (
@@ -39,6 +51,40 @@ from integrations.http_client import fetch_json, fetch_text
 from parser.normalize import is_ios_job
 
 _MAX_FEED_PAGES = 50
+_HARDCODED_DOU_FEED_SLUGS: set[str] = set()
+_REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+def _seed_feed_limit() -> int | None:
+    raw = os.environ.get("DOU_SEED_FEED_LIMIT", "").strip()
+    if raw == "":
+        return DEFAULT_SEED_FEED_LIMIT
+    if raw.lower() in {"none", "all", "0"}:
+        return None
+    return max(0, int(raw))
+
+
+def _dou_collectors_from_seed(
+    *,
+    seed_path: Path | None = None,
+    skip_slugs: set[str] | None = None,
+) -> list[Callable[[], SourceResult]]:
+    path = seed_path or default_seed_path(_REPO_ROOT)
+    seed = load_seed(path)
+    skip = set(_HARDCODED_DOU_FEED_SLUGS)
+    if skip_slugs:
+        skip |= {slug.lower() for slug in skip_slugs}
+    companies = companies_for_collect(
+        seed,
+        skip_slugs=skip,
+        feed_limit=_seed_feed_limit(),
+    )
+    collectors: list[Callable[[], SourceResult]] = []
+    for row in companies:
+        name = str(row["name"])
+        slug = str(row["slug"])
+        collectors.append(lambda name=name, slug=slug: collect_dou_company_feed(name, slug))
+    return collectors
 
 
 def collect_teamtailor(company: str, feed_url: str) -> SourceResult:
@@ -337,7 +383,69 @@ def _python_collectors() -> list[Callable[[], SourceResult]]:
         collect_ciklum,
         collect_sigma,
         collect_infopulse,
+        collect_softserve,
+        collect_globallogic,
+        collect_luxoft,
         lambda: collect_breezy("Genesis", "gen-tech.breezy.hr"),
+        lambda: collect_breezy("BetterMe", "betterme.breezy.hr"),
+        collect_zone3000,
+        lambda: collect_smartrecruiters("Miratech", "MiratechGroup"),
+        lambda: collect_smartrecruiters("Gameloft", "Gameloft"),
+        lambda: collect_breezy("Star", "star.breezy.hr"),
+        lambda: collect_lever("Ajax Systems", "ajax"),
+        lambda: collect_ashby("Preply", "preply"),
+        lambda: collect_teamtailor("UPSTARS", "https://career.upstars.com/jobs.json"),
+        lambda: collect_greenhouse("Amdaris", "amdaris"),
+        lambda: collect_soup_links(
+            "Petcube",
+            "https://petcube.com/careers/",
+            base_url="https://petcube.com/",
+            selector="a[href^='/careers/']",
+            skip_exact={
+                "https://petcube.com/careers/",
+                "https://petcube.com/careers",
+            },
+        ),
+        lambda: collect_soup_links(
+            "Gismart",
+            "https://gismart.com/careers/",
+            base_url="https://gismart.com/",
+            selector="a[href*='/vacancy/']",
+        ),
+        lambda: collect_soup_links(
+            "Stfalcon",
+            "https://stfalcon.com/en/jobs",
+            base_url="https://stfalcon.com/",
+            selector='a[href*="/jobs/job/"]',
+            skip_hrefs={"#more"},
+        ),
+        *_dou_collectors_from_seed(),
+        lambda: collect_soup_links(
+            "CS Ltd.",
+            "https://csltd.com.ua/career/",
+            base_url="https://csltd.com.ua/",
+            selector='a[href*="/career/"]',
+            skip_exact={
+                "https://csltd.com.ua/career/",
+                "https://csltd.com.ua/career",
+                "https://csltd.com.ua/ru/career/",
+                "https://csltd.com.ua/en/career/",
+            },
+        ),
+        lambda: collect_html_regex(
+            "Software MacKiev",
+            "https://www.mackiev.com/",
+            "https://www.mackiev.com/",
+            r'href="([^"]*(?:career|job|vacanc)[^"]*)"',
+            allow_bot_wall=True,
+        ),
+        lambda: collect_html_regex(
+            "Softline",
+            "https://softline.com/",
+            "https://softline.com/",
+            r'href="([^"]*(?:career|job|vacanc)[^"]*)"',
+            allow_bot_wall=True,
+        ),
         lambda: collect_soup_links(
             "MacPaw",
             "https://macpaw.com/careers",

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from collections import Counter
 
 import pytest
@@ -25,6 +26,7 @@ def offline(monkeypatch: pytest.MonkeyPatch) -> None:
         for name in ("fetch_text", "fetch_json", "fetch_text_allowing_bot_wall", "post_form_data"):
             if hasattr(module, name):
                 monkeypatch.setattr(module, name, refuse)
+    monkeypatch.setattr(dou, "_fetch_text", refuse)
     monkeypatch.setattr(dou, "collect_dou_ios_rss", lambda: _stub_result("dou-ios-rss", "DOU iOS/macOS"))
     monkeypatch.setattr(companies, "collect_dou_ios_rss", lambda: _stub_result("dou-ios-rss", "DOU iOS/macOS"))
     monkeypatch.setattr(companies, "collect_telegram_channels", lambda: [])
@@ -80,7 +82,38 @@ def test_companies_registered_more_than_once_keep_one_display_name(offline: None
     assert inconsistent == {}
 
 
-def test_collect_all_runs_every_collector_and_appends_telegram(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_dou_seed_collectors_are_added_and_deduped(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
+    seed_path = tmp_path / "dou_companies.json"
+    seed_path.write_text(
+        json.dumps(
+            {
+                "updated_at": None,
+                "source": "https://jobs.dou.ua/companies/",
+                "companies": [
+                    {"name": "Alpha", "slug": "alpha"},
+                    {"name": "Beta", "slug": "beta", "vacancy_count": 4},
+                    {"name": "Gamma", "slug": "gamma", "vacancy_count": 0},
+                    {"name": "Skip", "slug": "skip-me", "vacancy_count": 8},
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(companies, "_REPO_ROOT", tmp_path)
+    monkeypatch.setattr(companies, "default_seed_path", lambda _root=None: seed_path)
+    monkeypatch.setenv("DOU_SEED_FEED_LIMIT", "all")
+
+    collectors = companies._dou_collectors_from_seed(skip_slugs={"skip-me"})
+    monkeypatch.setattr(companies, "collect_dou_company_feed", lambda name, slug: _stub_result(f"company:{slug}@jobs.dou.ua", name))
+    results = [collector() for collector in collectors]
+    assert {result.source_name for result in results} == {"Alpha", "Beta"}
+    assert len(results) == 2
+
+
+def test_dou_seed_missing_file_adds_no_collectors(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(companies, "default_seed_path", lambda _root=None: tmp_path / "missing.json")
+    assert companies._dou_collectors_from_seed() == []
+
     monkeypatch.setattr(
         companies,
         "_python_collectors",

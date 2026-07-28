@@ -102,3 +102,20 @@ def collect_dou_ios_rss() -> SourceResult:
             started,
             source_id="dou-ios-rss",
         )
+
+
+def collect_dou_company_feed(company: str, slug: str) -> SourceResult:
+    started = time.perf_counter()
+    feed_url = f"https://jobs.dou.ua/vacancies/{slug}/feeds/"
+    session = requests.Session()
+    session.headers.update({"User-Agent": USER_AGENT})
+    try:
+        xml_text = _fetch_text(feed_url, session)
+        root = ET.fromstring(xml_text)
+        scanned = len(root.findall("./channel/item"))
+        jobs = parse_dou_category_rss(xml_text)
+        for job in jobs:
+            job["company"] = company
+        return source_ok(company, feed_url, jobs, started, scanned=scanned)
+    except Exception as error:  # noqa: BLE001
+        return source_failed(company, feed_url, error, started)

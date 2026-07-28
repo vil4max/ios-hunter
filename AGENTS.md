@@ -26,3 +26,7 @@ Standard commands live in `README.md` ("Local debug") and `CONTRIBUTING.md`
 - To avoid mutating the tracked `database/seen.json`, run with
   `SEEN_PATH=/tmp/seen.json python3 scripts/run_pipeline.py`.
 - Collector coverage report: `python3 scripts/collector_parity.py`.
+- Refresh DOU company catalog seed (periodic, not part of hourly collect):
+  `python3 scripts/discover_dou_companies.py [--enrich-sites]`.
+  Seed file: `database/dou_companies.json`. Collect reads it and adds DOU company
+  feeds (active vacancies, capped by `DOU_SEED_FEED_LIMIT`, default 300).

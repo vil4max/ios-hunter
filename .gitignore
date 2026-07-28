@@ -43,6 +43,10 @@ __pycache__/
 .venv/
 .coverage
 
+.cursor/plans/
+.cursor/project-context
+.cursor/project-context.yaml
+.cursor/**/*.bak*
 
 # CocoaPods
 #

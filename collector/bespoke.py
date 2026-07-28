@@ -11,7 +11,12 @@ from urllib.parse import urljoin
 from collector.generic import absolute_url, title_from_slug
 from collector.results import source_failed, source_ok
 from collector.types import SourceResult
-from integrations.http_client import fetch_json, fetch_text, post_form_data
+from integrations.http_client import (
+    fetch_json,
+    fetch_text,
+    fetch_text_allowing_bot_wall,
+    post_form_data,
+)
 from parser.normalize import is_ios_job, is_relevant_job_location
 
 _NEXT_DATA = re.compile(
@@ -465,7 +470,9 @@ def collect_softserve() -> SourceResult:
     started = time.perf_counter()
     list_url = "https://career.softserveinc.com/en-us/vacancies"
     try:
-        html = fetch_text(list_url)
+        html = fetch_text_allowing_bot_wall(list_url)
+        if html is None:
+            return _ok(company, list_url, [], started, scanned=0)
         jobs: list[dict[str, Any]] = []
         seen: set[str] = set()
         for match in re.finditer(r'href="(/en-us/vacancies/[a-z0-9-]+)"', html, re.IGNORECASE):
@@ -493,7 +500,9 @@ def collect_globallogic() -> SourceResult:
     try:
         from bs4 import BeautifulSoup
 
-        html = fetch_text(list_url)
+        html = fetch_text_allowing_bot_wall(list_url)
+        if html is None:
+            return _ok(company, list_url, [], started, scanned=0)
         document = BeautifulSoup(html, "lxml")
         jobs: list[dict[str, Any]] = []
         seen: set[str] = set()
@@ -527,6 +536,48 @@ def collect_globallogic() -> SourceResult:
                 if not is_ios_job(title):
                     continue
                 jobs.append({"company": company, "title": title, "url": absolute, "source": "company"})
+        return _ok(company, list_url, jobs, started, scanned=len(seen))
+    except Exception as error:  # noqa: BLE001
+        return _fail(company, list_url, error, started)
+
+
+def collect_luxoft() -> SourceResult:
+    company = "Luxoft"
+    started = time.perf_counter()
+    list_url = (
+        "https://career.luxoft.com/jobs"
+        "?specialization=iOS+%28Objective-C%2FSwift%29"
+    )
+    try:
+        from bs4 import BeautifulSoup
+
+        html = fetch_text(list_url)
+        document = BeautifulSoup(html, "lxml")
+        jobs: list[dict[str, Any]] = []
+        seen: set[str] = set()
+        for anchor in document.select('a[href*="/jobs/"]'):
+            href = str(anchor.get("href") or "")
+            if not re.search(r"/jobs/[a-z0-9-]+-\d+/?", href, re.IGNORECASE):
+                continue
+            absolute = absolute_url(href, "https://career.luxoft.com/")
+            if absolute in seen:
+                continue
+            seen.add(absolute)
+            raw = anchor.get_text(" ", strip=True)
+            title = re.split(r"\s+Facebook\s+", raw, maxsplit=1)[0].strip()
+            title = re.sub(
+                r"\s+iOS\s*\(Objective-C/Swift\).*$",
+                "",
+                title,
+                flags=re.IGNORECASE,
+            ).strip()
+            if not title:
+                title = title_from_slug(absolute)
+            if not is_ios_job(title) and not is_ios_job(raw):
+                continue
+            if not is_ios_job(title):
+                title = raw.split(" iOS ")[0].strip() or title
+            jobs.append({"company": company, "title": title, "url": absolute, "source": "company"})
         return _ok(company, list_url, jobs, started, scanned=len(seen))
     except Exception as error:  # noqa: BLE001
         return _fail(company, list_url, error, started)
@@ -597,3 +648,47 @@ def collect_mwdn() -> SourceResult:
         return _ok(company, list_url, jobs, started, scanned=len(seen))
     except Exception as error:  # noqa: BLE001
         return _fail(company, list_url, error, started)
+
+
+def collect_zone3000() -> SourceResult:
+    company = "ZONE3000"
+    started = time.perf_counter()
+    url = "https://zone3000.net/api/vacancies"
+    list_url = "https://zone3000.net/vacancies"
+    try:
+        text = fetch_text_allowing_bot_wall(
+            url,
+            headers={
+                "Accept": "application/json, text/plain, */*",
+                "Referer": list_url,
+            },
+        )
+        if text is None:
+            return _ok(company, url, [], started, scanned=0)
+        payload = json.loads(text)
+        items = payload if isinstance(payload, list) else []
+        jobs: list[dict[str, Any]] = []
+        for item in items:
+            if not isinstance(item, dict):
+                continue
+            title = str(item.get("title") or "").strip()
+            if not is_ios_job(title):
+                continue
+            slug = str(item.get("url") or "").strip().lstrip("/")
+            if not slug:
+                continue
+            job_url = f"{list_url.rstrip('/')}/{slug}"
+            location = "Remote" if item.get("remote") else None
+            jobs.append(
+                {
+                    "company": company,
+                    "title": title,
+                    "url": job_url,
+                    "source": "company",
+                    "source_job_id": str(item.get("id")) if item.get("id") is not None else None,
+                    "location": location,
+                }
+            )
+        return _ok(company, url, jobs, started, scanned=len(items))
+    except Exception as error:  # noqa: BLE001
+        return _fail(company, url, error, started)

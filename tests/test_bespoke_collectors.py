@@ -13,6 +13,7 @@ def stub(monkeypatch: pytest.MonkeyPatch):
         if text is not None:
             handler = text if callable(text) else (lambda url, **_k: text)
             monkeypatch.setattr(bespoke, "fetch_text", handler)
+            monkeypatch.setattr(bespoke, "fetch_text_allowing_bot_wall", handler)
         if payload is not None:
             handler = payload if callable(payload) else (lambda url, **_k: payload)
             monkeypatch.setattr(bespoke, "fetch_json", handler)
@@ -482,6 +483,15 @@ def test_softserve_reports_failure(stub) -> None:
     assert "anti-bot" in (result.error or "")
 
 
+def test_softserve_treats_bot_wall_as_empty(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(bespoke, "fetch_text_allowing_bot_wall", lambda url, **_k: None)
+
+    result = bespoke.collect_softserve()
+
+    assert result.status == "healthy"
+    assert result.jobs == []
+
+
 def test_globallogic_reads_job_boxes(stub) -> None:
     stub(
         text=(
@@ -512,6 +522,31 @@ def test_globallogic_reports_failure(stub) -> None:
     stub(text=_raiser("403"))
 
     assert bespoke.collect_globallogic().status == "failed"
+
+
+def test_luxoft_parses_specialization_jobs(stub) -> None:
+    stub(
+        text=(
+            '<a href="/jobs/senior-ios-developer-26100">'
+            "Senior iOS Developer iOS (Objective-C/Swift) Cairo Egypt Facebook Twitter</a>"
+            '<a href="/jobs/senior-ios-developer-26100">dup</a>'
+            '<a href="/jobs/java-developer-26101">Java Developer Java India Facebook</a>'
+        )
+    )
+
+    result = bespoke.collect_luxoft()
+
+    assert result.status == "healthy"
+    assert result.items_scanned == 2
+    assert len(result.jobs) == 1
+    assert result.jobs[0]["title"] == "Senior iOS Developer"
+    assert result.jobs[0]["url"] == "https://career.luxoft.com/jobs/senior-ios-developer-26100"
+
+
+def test_luxoft_reports_failure(stub) -> None:
+    stub(text=_raiser("down"))
+
+    assert bespoke.collect_luxoft().status == "failed"
 
 
 def test_mind_studios_reads_api(stub) -> None:
@@ -588,3 +623,61 @@ def test_mwdn_reports_failure(stub) -> None:
     stub(text=_raiser("boom"))
 
     assert bespoke.collect_mwdn().status == "failed"
+
+
+def test_zone3000_filters_ios_jobs(monkeypatch: pytest.MonkeyPatch) -> None:
+    payload = [
+        {
+            "id": 380,
+            "title": "Middle + / Senior Mobile iOS Developer in Mobile System Team (#1204)",
+            "url": "middle-----senior-mobile-ios-developer-in-mobile-system-team---1204-",
+            "remote": 1,
+        },
+        {
+            "id": 117,
+            "title": "Customer Support Specialist",
+            "url": "customer-support-specialist",
+            "remote": 1,
+        },
+        {
+            "id": 1,
+            "title": "Android Platform Engineer",
+            "url": "android-platform-engineer",
+            "remote": 0,
+        },
+    ]
+    monkeypatch.setattr(
+        bespoke,
+        "fetch_text_allowing_bot_wall",
+        lambda url, **_kwargs: json.dumps(payload),
+    )
+
+    result = bespoke.collect_zone3000()
+
+    assert result.status == "healthy"
+    assert result.source_id == "company:zone3000@zone3000.net"
+    assert result.items_scanned == 3
+    assert len(result.jobs) == 1
+    assert result.jobs[0]["title"].startswith("Middle + / Senior Mobile iOS")
+    assert (
+        result.jobs[0]["url"]
+        == "https://zone3000.net/vacancies/middle-----senior-mobile-ios-developer-in-mobile-system-team---1204-"
+    )
+    assert result.jobs[0]["location"] == "Remote"
+    assert result.jobs[0]["source_job_id"] == "380"
+
+
+def test_zone3000_treats_bot_wall_as_empty(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(bespoke, "fetch_text_allowing_bot_wall", lambda url, **_kwargs: None)
+
+    result = bespoke.collect_zone3000()
+
+    assert result.status == "healthy"
+    assert result.items_scanned == 0
+    assert result.jobs == []
+
+
+def test_zone3000_reports_failure(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(bespoke, "fetch_text_allowing_bot_wall", _raiser("api down"))
+
+    assert bespoke.collect_zone3000().status == "failed"
