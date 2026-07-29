@@ -14,6 +14,11 @@
     "company": "Intellias",
     "first_seen": "2026-07-10T08:29:48+00:00"
   },
+  "https://careers.n-ix.com/jobs/4431905101-javascript-senior": {
+    "title": "Senior Mobile/Web Engineer",
+    "company": "N-iX",
+    "first_seen": "2026-07-29T00:00:00+00:00"
+  },
   "https://careers.n-ix.com/jobs/4912838101?gh_jid=4912838101": {
     "title": "Lead iOS Engineer",
     "company": "N-iX",
@@ -143,7 +148,8 @@
   "https://jobs.dou.ua/companies/vikisoft/vacancies/311547": {
     "title": "Junior iOS Developer",
     "company": "Вікісофт",
-    "first_seen": "2026-07-29T13:11:48+00:00"
+    "first_seen": "2026-07-29T13:11:48+00:00",
+    "disposition": "dropped"
   },
   "https://jobs.mwdn.com/careers/co/ukraine/6B.76B/senior-macos-developer/all": {
     "title": "Senior macOS Developer",
