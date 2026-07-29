@@ -73,6 +73,11 @@ on:
         description: Closed Stage (when Archived)
         required: false
         type: string
+  push:
+    paths:
+      - "database/crm_upsert_once.json"
+      - "scripts/run_crm_manual_card.py"
+      - ".github/workflows/crm-manual-card.yml"
 
 permissions:
   contents: read
