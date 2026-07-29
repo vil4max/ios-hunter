@@ -14,36 +14,14 @@
     "company": "Intellias",
     "first_seen": "2026-07-10T08:29:48+00:00"
   },
-  "https://career.luxoft.com/jobs/regularsenior-ios-developer-mobile-apps-25898": {
-    "title": "Regular/Senior iOS Developer (Mobile Apps)",
-    "company": "Luxoft",
-    "first_seen": "2026-07-29T10:54:17+00:00",
-    "disposition": "dropped"
-  },
-  "https://career.luxoft.com/jobs/senior-mobile-engineer-ios-swift-24568": {
-    "title": "Senior Mobile Engineer - iOS Swift",
-    "company": "Luxoft",
-    "first_seen": "2026-07-29T10:54:07+00:00",
-    "disposition": "dropped"
-  },
   "https://careers.n-ix.com/jobs/4912838101?gh_jid=4912838101": {
     "title": "Lead iOS Engineer",
-    "company": "N-iX",
-    "first_seen": "2026-07-10T08:29:48+00:00"
-  },
-  "https://careers.n-ix.com/jobs/4920361101?gh_jid=4920361101": {
-    "title": "Middle iOS Engineer",
     "company": "N-iX",
     "first_seen": "2026-07-10T08:29:48+00:00"
   },
   "https://djinni.co/jobs/807553-swift-mid-level-experience-ios-developer": {
     "title": "Swift / mid-level experience iOS Developer",
     "company": "WE wilke experience",
-    "first_seen": "2026-07-27T19:26:23+00:00"
-  },
-  "https://djinni.co/jobs/824099-ios-developer": {
-    "title": "iOS Developer",
-    "company": "Kiss My Apps",
     "first_seen": "2026-07-27T19:26:23+00:00"
   },
   "https://djinni.co/jobs/833474-farmer-ios": {
@@ -96,15 +74,10 @@
     "company": "Kultrix",
     "first_seen": "2026-07-27T19:26:23+00:00"
   },
-  "https://djinni.co/jobs/839291-senior-ios-developer-contract-project-based": {
-    "title": "Senior iOS Developer (Contract/Project-based)",
-    "company": "Devico",
-    "first_seen": "2026-07-24T00:00:00+00:00"
-  },
-  "https://djinni.co/jobs/839297-senior-ios-developer-contract-project-based": {
-    "title": "Senior iOS Developer (Contract/Project-based)",
-    "company": "Devico",
-    "first_seen": "2026-07-27T19:26:23+00:00"
+  "https://djinni.co/jobs/839944-senior-ios-developer-usa-project": {
+    "title": "Senior iOS Developer (USA project)",
+    "company": "Newsoft",
+    "first_seen": "2026-07-29T13:11:48+00:00"
   },
   "https://gen-tech.breezy.hr/p/beb01cda1666-ios-developer": {
     "title": "IOS Developer",
@@ -132,6 +105,11 @@
     "first_seen": "2026-07-29T06:34:12+00:00",
     "disposition": "dropped"
   },
+  "https://jobs.dou.ua/companies/lineup/vacancies/367702": {
+    "title": "Middle Software Engineer (Android / iOS / Python)",
+    "company": "LineUp",
+    "first_seen": "2026-07-29T13:11:48+00:00"
+  },
   "https://jobs.dou.ua/companies/mobilunity/vacancies/367008": {
     "title": "iOS Engineer",
     "company": "Mobilunity",
@@ -156,6 +134,11 @@
     "title": "Middle Software Engineer (IOS Native)",
     "company": "Sombra",
     "first_seen": "2026-07-27T19:26:23+00:00"
+  },
+  "https://jobs.dou.ua/companies/vikisoft/vacancies/311547": {
+    "title": "Junior iOS Developer",
+    "company": "Вікісофт",
+    "first_seen": "2026-07-29T13:11:48+00:00"
   },
   "https://jobs.mwdn.com/careers/co/ukraine/6B.76B/senior-macos-developer/all": {
     "title": "Senior macOS Developer",
