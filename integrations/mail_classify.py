@@ -53,6 +53,14 @@ _SUBJECT_COMPANY = (
     (re.compile(r"\bintellias\b", re.I), "Intellias"),
     (re.compile(r"\bciklum\b", re.I), "Ciklum"),
     (re.compile(r"\bgloballogic\b", re.I), "GlobalLogic"),
+    (re.compile(r"\bbetterme\b", re.I), "BetterMe"),
+    (re.compile(r"\bnorthstrat\b", re.I), "Northstrat"),
+)
+
+_APPLYING_TO = re.compile(
+    r"(?:thanks?\s+for\s+applying\s+to|thank\s+you\s+for\s+applying\s+to|"
+    r"applying\s+to|application\s+to)\s+([A-Z][A-Za-z0-9&.'\- ]{1,60})",
+    re.I,
 )
 
 _REJECT_PATTERNS = (
@@ -136,6 +144,8 @@ _NOISE_FROM = (
     re.compile(r"notifications?@", re.I),
     re.compile(r"linkedin\.com", re.I),
     re.compile(r"facebookmail\.com", re.I),
+    re.compile(r"jooble\.", re.I),
+    re.compile(r"@jooble\.", re.I),
 )
 
 
@@ -175,6 +185,13 @@ def extract_company(mail: InboundMail) -> str:
         if pattern.search(hay):
             return company
 
+    applying = _APPLYING_TO.search(f"{mail.subject}\n{mail.body_text[:800]}")
+    if applying:
+        name = re.sub(r"\s+", " ", applying.group(1)).strip(" -–,.")
+        name = re.split(r"[.!?\n|]", name, maxsplit=1)[0].strip()
+        if 2 <= len(name) <= 60 and name.lower() not in {"us", "our", "the", "your"}:
+            return name
+
     domain = _domain(mail.from_addr)
     if domain in _DOMAIN_COMPANY:
         return _DOMAIN_COMPANY[domain]
@@ -185,7 +202,7 @@ def extract_company(mail: InboundMail) -> str:
             return _DOMAIN_COMPANY[parent]
 
     name = (mail.from_name or "").strip()
-    if name and not re.search(r"recruit|talent|hr team|careers|noreply|no-reply", name, re.I):
+    if name and not re.search(r"recruit|talent|hr team|careers|noreply|no-reply|hiring team", name, re.I):
         cleaned = re.sub(r"\s*(recruitment|talent|hr|team)\s*$", "", name, flags=re.I).strip()
         if cleaned and len(cleaned) <= 40:
             return cleaned
@@ -252,6 +269,19 @@ def classify_mail(mail: InboundMail) -> MailEvent:
     role_hint = extract_role_hint(mail)
     recruiter = extract_recruiter(mail)
     snippet = _snippet(mail)
+
+    if re.search(r"jooble\.", mail.from_addr, re.I) or re.search(r"\bjooble\b", mail.subject, re.I):
+        return MailEvent(
+            kind=KIND_IGNORE,
+            company=company,
+            role_hint=role_hint,
+            recruiter=recruiter,
+            confidence=0.95,
+            snippet=snippet,
+            subject=mail.subject,
+            from_addr=mail.from_addr,
+            message_id=mail.message_id,
+        )
 
     if any(pattern.search(mail.from_addr) for pattern in _NOISE_FROM) and not _matches_any(
         hay, _ACK_PATTERNS + _REJECT_PATTERNS + _SCREENING_PATTERNS
