@@ -23,6 +23,8 @@ Standard commands live in `README.md` ("Local debug") and `CONTRIBUTING.md`
   normalizes + dedupes, and (without `TELEGRAM_*` secrets) **prints the alert to stdout**
   and reports `Sync skipped: True` (GitHub Project Sync stays off without
   `CAREER_AGENT_TOKEN` + `CAREER_AGENT_SYNC_ENABLED=1`).
+- IMAP recruiter poll (CRM from inbox): `python3 scripts/run_imap_poll.py [--dry-run]`.
+  Reuses `SMTP_USER`/`SMTP_PASS` App Password; writes `database/email_seen.json`.
 - To avoid mutating the tracked `database/seen.json`, run with
   `SEEN_PATH=/tmp/seen.json python3 scripts/run_pipeline.py`.
 - Collector coverage report: `python3 scripts/collector_parity.py`.

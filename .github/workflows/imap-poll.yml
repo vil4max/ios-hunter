@@ -1,0 +1,92 @@
+name: IMAP Recruiter Poll
+
+on:
+  workflow_dispatch:
+  schedule:
+    # :47 past each UTC hour — offset from collect (:17).
+    - cron: "47 * * * *"
+
+permissions:
+  contents: write
+  issues: read
+
+concurrency:
+  group: imap-recruiter-poll-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Kyiv business-hours gate
+        id: gate
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" != "schedule" ]; then
+            echo "skip_gate=false" >> "$GITHUB_OUTPUT"
+            echo "Manual trigger — gate bypassed"
+            exit 0
+          fi
+          if python3 scripts/should_run_collect.py; then
+            echo "skip_gate=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip_gate=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Poll IMAP and sync CRM
+        if: steps.gate.outputs.skip_gate != 'true'
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          CAREER_AGENT_TOKEN: ${{ secrets.CAREER_AGENT_TOKEN }}
+          CAREER_AGENT_SYNC_ENABLED: ${{ vars.CAREER_AGENT_SYNC_ENABLED }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          CAREER_PROJECT_OWNER: ${{ vars.CAREER_PROJECT_OWNER }}
+          CAREER_PROJECT_NUMBER: ${{ vars.CAREER_PROJECT_NUMBER }}
+          PROJECT_BOARD_URL: ${{ vars.PROJECT_BOARD_URL }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          IMAP_HOST: ${{ vars.IMAP_HOST }}
+          IMAP_PORT: ${{ vars.IMAP_PORT }}
+          IMAP_FOLDER: ${{ vars.IMAP_FOLDER }}
+          EMAIL_SEEN_PATH: database/email_seen.json
+        run: python3 scripts/run_imap_poll.py
+
+      - name: Commit email seen store
+        if: steps.gate.outputs.skip_gate != 'true'
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add database/email_seen.json
+          if git diff --staged --quiet; then
+            echo "No email_seen changes to commit."
+            exit 0
+          fi
+          git commit -m "chore(email_seen): record processed recruiter mail [skip ci]"
+          branch="${GITHUB_REF_NAME}"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin "$branch"
+            if ! git diff --quiet || ! git diff --cached --quiet; then
+              git stash push --include-untracked -m "imap-ci-dirty-${attempt}" || true
+            fi
+            if git rebase "origin/$branch" && git push origin "HEAD:$branch"; then
+              echo "Pushed email_seen on attempt ${attempt}"
+              exit 0
+            fi
+            echo "Push race on attempt ${attempt}, retrying..."
+            git rebase --abort 2>/dev/null || true
+            sleep $((attempt * 2))
+          done
+          echo "Failed to push email_seen after retries" >&2
+          exit 1

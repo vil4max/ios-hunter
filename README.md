@@ -72,8 +72,8 @@ Then add `TELEGRAM_API_ID`, `TELEGRAM_API_HASH`, and `TELEGRAM_SESSION` as repos
 | `TELEGRAM_API_HASH` | for TG chats | MTProto app hash |
 | `TELEGRAM_SESSION` | for TG chats | StringSession from `scripts/telegram_login.py` |
 | `CAREER_AGENT_TOKEN` | for Sync | Fine-grained PAT: Issues + Projects |
-| `SMTP_USER` | for daily email | Gmail address (e.g. `vil4max@gmail.com`) |
-| `SMTP_PASS` | for daily email | [Gmail App Password](https://myaccount.google.com/apppasswords) |
+| `SMTP_USER` | for daily email + IMAP | Gmail address (e.g. `vil4max@gmail.com`) |
+| `SMTP_PASS` | for daily email + IMAP | [Gmail App Password](https://myaccount.google.com/apppasswords) |
 | `SMTP_FROM` | optional | From address (defaults to `SMTP_USER`) |
 
 Remove unused repo secrets if present: `GEMINI_API_KEY`, `OPENAI_API_KEY`.
@@ -91,6 +91,9 @@ Repository variables:
 | `REPORT_EMAIL_TO` | Daily report recipient (default `vil4max@gmail.com`) |
 | `SMTP_HOST` | optional SMTP host (default `smtp.gmail.com`) |
 | `SMTP_PORT` | optional SMTP port (default `587`) |
+| `IMAP_HOST` | optional IMAP host (default `imap.gmail.com`) |
+| `IMAP_PORT` | optional IMAP port (default `993`) |
+| `IMAP_FOLDER` | optional folder (default `INBOX`) |
 
 ## Pipeline
 
@@ -112,6 +115,7 @@ Telegram only on new vacancies (list + OK)
 | **Hourly Collect Trigger** | Every hour at :17 UTC; dispatches Collect only Kyiv 09:00–18:00 |
 | **Daily Vacancy Liveness** | Every day 04:00 UTC (incl. weekends) — probe active board URLs, archive closed, Telegram status |
 | **Daily Email Report** | Every day 15:00 UTC (≈18:00 Kyiv) — full CRM + collect summary to email |
+| **IMAP Recruiter Poll** | Every hour at :47 UTC (Kyiv 09:00–18:00) — classify recruiter mail, update CRM, Telegram |
 | **CI** | Push / PR — pytest |
 
 ## Local debug
@@ -125,9 +129,12 @@ python3 scripts/collector_parity.py
 python3 scripts/seed_project_from_seen.py --dry-run
 python3 scripts/run_vacancy_liveness.py --dry-run
 python3 scripts/run_daily_report.py
+python3 scripts/run_imap_poll.py --dry-run
 ```
 
 Daily email needs `SMTP_USER` + `SMTP_PASS` (Gmail App Password) and Sync enabled. Without SMTP secrets the script exits with an error. Without Telegram secrets, Telegram messages print to stdout.
+
+IMAP recruiter poll reuses the same `SMTP_USER` / `SMTP_PASS` App Password (`imap.gmail.com`). It updates matched Project cards (`Replied` / `Screening` / `Archived`+`Rejected HR`) and dedupes via `database/email_seen.json`.
 
 ## Identity
 
