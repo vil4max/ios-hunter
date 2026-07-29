@@ -21,6 +21,17 @@ def test_classify_welltech_ack() -> None:
     assert event.company == "Welltech"
 
 
+def test_classify_welltech_via_ashby_ses() -> None:
+    event = classify_from_headers(
+        message_id="<0100019fadd13d4f-b8c430b5@email.amazonses.com>",
+        subject="Thanks for Applying to Welltech!",
+        from_header="Welltech <jobs@ashbyhq.com>",
+        body_text="Dear Max,\n\nThanks for applying to Welltech!\n",
+    )
+    assert event.kind == KIND_APPLICATION_ACK
+    assert event.company == "Welltech"
+
+
 def test_classify_nix_ack() -> None:
     event = classify_from_headers(
         message_id="<2@n-ix.com>",

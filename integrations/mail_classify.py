@@ -24,11 +24,24 @@ _DOMAIN_COMPANY: dict[str, str] = {
     "softserve.com": "SoftServe",
     "lineup.software": "LineUp",
     "lineup.com": "LineUp",
-    "dou.ua": "DOU",
-    "ashbyhq.com": "Ashby",
-    "greenhouse.io": "Greenhouse",
-    "lever.co": "Lever",
 }
+
+_ATS_DOMAINS = frozenset(
+    {
+        "ashbyhq.com",
+        "greenhouse.io",
+        "lever.co",
+        "workable.com",
+        "comeet.co",
+        "comeet.com",
+        "jobvite.com",
+        "smartrecruiters.com",
+        "recruitee.com",
+        "personio.de",
+        "amazonses.com",
+        "email.amazonses.com",
+    }
+)
 
 _SUBJECT_COMPANY = (
     (re.compile(r"\bwelltech\b", re.I), "Welltech"),
@@ -157,6 +170,11 @@ def _domain(addr: str) -> str:
 
 
 def extract_company(mail: InboundMail) -> str:
+    hay = f"{mail.subject}\n{mail.from_name}\n{mail.body_text[:1500]}"
+    for pattern, company in _SUBJECT_COMPANY:
+        if pattern.search(hay):
+            return company
+
     domain = _domain(mail.from_addr)
     if domain in _DOMAIN_COMPANY:
         return _DOMAIN_COMPANY[domain]
@@ -166,16 +184,14 @@ def extract_company(mail: InboundMail) -> str:
         if parent in _DOMAIN_COMPANY:
             return _DOMAIN_COMPANY[parent]
 
-    hay = f"{mail.subject}\n{mail.from_name}\n{mail.body_text[:1500]}"
-    for pattern, company in _SUBJECT_COMPANY:
-        if pattern.search(hay):
-            return company
-
     name = (mail.from_name or "").strip()
-    if name and not re.search(r"recruit|talent|hr team|careers", name, re.I):
+    if name and not re.search(r"recruit|talent|hr team|careers|noreply|no-reply", name, re.I):
         cleaned = re.sub(r"\s*(recruitment|talent|hr|team)\s*$", "", name, flags=re.I).strip()
         if cleaned and len(cleaned) <= 40:
             return cleaned
+
+    if any(domain == ats or domain.endswith("." + ats) for ats in _ATS_DOMAINS):
+        return ""
 
     if domain and domain not in {"gmail.com", "googlemail.com", "outlook.com", "yahoo.com"}:
         label = parts[0] if parts else domain
