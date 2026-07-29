@@ -72,6 +72,9 @@ Then add `TELEGRAM_API_ID`, `TELEGRAM_API_HASH`, and `TELEGRAM_SESSION` as repos
 | `TELEGRAM_API_HASH` | for TG chats | MTProto app hash |
 | `TELEGRAM_SESSION` | for TG chats | StringSession from `scripts/telegram_login.py` |
 | `CAREER_AGENT_TOKEN` | for Sync | Fine-grained PAT: Issues + Projects |
+| `SMTP_USER` | for daily email | Gmail address (e.g. `vil4max@gmail.com`) |
+| `SMTP_PASS` | for daily email | [Gmail App Password](https://myaccount.google.com/apppasswords) |
+| `SMTP_FROM` | optional | From address (defaults to `SMTP_USER`) |
 
 Remove unused repo secrets if present: `GEMINI_API_KEY`, `OPENAI_API_KEY`.
 
@@ -85,6 +88,9 @@ Repository variables:
 | `CAREER_PROJECT_OWNER` | User/org login owning the Project (`vil4max`) |
 | `CAREER_PROJECT_NUMBER` | Project number from URL (`3`) |
 | `PROJECT_BOARD_URL` | Link shown in Telegram |
+| `REPORT_EMAIL_TO` | Daily report recipient (default `vil4max@gmail.com`) |
+| `SMTP_HOST` | optional SMTP host (default `smtp.gmail.com`) |
+| `SMTP_PORT` | optional SMTP port (default `587`) |
 
 ## Pipeline
 
@@ -105,6 +111,7 @@ Telegram only on new vacancies (list + OK)
 | **Collect iOS Jobs** | Manual or via hourly trigger — collect, sync, Telegram if new |
 | **Hourly Collect Trigger** | Every hour UTC; dispatches Collect only Kyiv 09:00–18:00 |
 | **Daily Vacancy Liveness** | Every day 04:00 UTC (incl. weekends) — probe active board URLs, archive closed, Telegram status |
+| **Daily Email Report** | Every day 15:00 UTC (≈18:00 Kyiv) — full CRM + collect summary to email |
 | **CI** | Push / PR — pytest |
 
 ## Local debug
@@ -120,7 +127,7 @@ python3 scripts/run_vacancy_liveness.py --dry-run
 python3 scripts/run_daily_report.py
 ```
 
-Without Telegram secrets, messages print to stdout.
+Daily email needs `SMTP_USER` + `SMTP_PASS` (Gmail App Password) and Sync enabled. Without SMTP secrets the script exits with an error. Without Telegram secrets, Telegram messages print to stdout.
 
 ## Identity
 

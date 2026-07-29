@@ -434,3 +434,78 @@ def test_daily_dashboard_formatter_still_works() -> None:
     message = format_daily_dashboard(plan, board_url="https://board", now=now)
     assert "Career Agent · 2026-07-15" in message
     assert "Acme — iOS Engineer" in message
+
+
+def test_full_daily_report_includes_collect_summary() -> None:
+    from collector.types import SourceResult
+    from reporter.daily import build_collect_day_summary, format_full_daily_report
+
+    card = ProjectCard(
+        item_id="1",
+        issue_number=3,
+        title="iOS Engineer",
+        url="https://example.com/job",
+        issue_url="https://github.com/a/b/issues/3",
+        company="Acme",
+        source="test",
+        canonical_url="https://example.com/job",
+        status="Inbox",
+        priority="P1",
+        offer_probability="",
+        follow_up=None,
+        applied_at=None,
+        created_at=None,
+        updated_at=None,
+    )
+    plan = DailyPlan(
+        today_tasks=[card],
+        new_vacancies=[card],
+        needs_attention=[],
+        pending_follow_ups=[],
+        upcoming_interviews=[],
+        status_counts={"Inbox": 1, "Applied": 0},
+        cards=[card],
+    )
+    now = datetime(2026, 7, 15, 18, 0, tzinfo=_KYIV)
+    seen = {
+        "https://example.com/new": {
+            "title": "Senior iOS",
+            "company": "Beta",
+            "first_seen": "2026-07-15T10:00:00+00:00",
+        },
+        "https://example.com/old": {
+            "title": "Old Role",
+            "company": "Gamma",
+            "first_seen": "2026-07-14T10:00:00+00:00",
+        },
+    }
+    sources = [
+        SourceResult(
+            source_id="a",
+            source_name="Acme",
+            source_url=None,
+            jobs=[{"title": "x"}],
+            status="healthy",
+            error=None,
+            response_ms=1,
+            items_scanned=1,
+        ),
+        SourceResult(
+            source_id="b",
+            source_name="Broken",
+            source_url=None,
+            jobs=[],
+            status="failed",
+            error="boom",
+            response_ms=1,
+            items_scanned=0,
+        ),
+    ]
+    summary = build_collect_day_summary(seen, sources, now=now)
+    message = format_full_daily_report(plan, summary, board_url="https://board", now=now)
+    assert "Career Agent · 2026-07-15" in message
+    assert "Collect summary (today)" in message
+    assert "New in seen today: 1" in message
+    assert "Beta — Senior iOS" in message
+    assert "Failed: Broken" in message
+    assert "Sources: 1 healthy / 0 degraded / 1 failed" in message
