@@ -9,18 +9,6 @@
     "company": "Intellias",
     "first_seen": "2026-07-10T08:29:48+00:00"
   },
-  "https://career.luxoft.com/jobs/regularsenior-ios-developer-mobile-apps-25898": {
-    "title": "Regular/Senior iOS Developer (Mobile Apps)",
-    "company": "Luxoft",
-    "first_seen": "2026-07-28T14:13:22+00:00",
-    "disposition": "dropped"
-  },
-  "https://career.luxoft.com/jobs/senior-mobile-engineer-ios-swift-24568": {
-    "title": "Senior Mobile Engineer - iOS Swift",
-    "company": "Luxoft",
-    "first_seen": "2026-07-28T14:13:22+00:00",
-    "disposition": "dropped"
-  },
   "https://careers.n-ix.com/jobs/4912838101?gh_jid=4912838101": {
     "title": "Lead iOS Engineer",
     "company": "N-iX",
@@ -115,6 +103,16 @@
     "title": "Principal macOS Platform Engineer",
     "company": "A-listware",
     "first_seen": "2026-07-27T19:26:23+00:00"
+  },
+  "https://jobs.dou.ua/companies/breeze/vacancies/365262": {
+    "title": "Senior iOS Developer",
+    "company": "Breeze",
+    "first_seen": "2026-07-29T06:34:12+00:00"
+  },
+  "https://jobs.dou.ua/companies/developex/vacancies/365694": {
+    "title": "Middle C++ Developer (Windows/macOS)",
+    "company": "Developex",
+    "first_seen": "2026-07-29T06:34:12+00:00"
   },
   "https://jobs.dou.ua/companies/mobilunity/vacancies/367008": {
     "title": "iOS Engineer",
