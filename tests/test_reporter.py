@@ -69,7 +69,7 @@ def test_hourly_lists_new_vacancies_only() -> None:
         now=now,
     )
     assert message == (
-        "📬 +2\n"
+        "📬 +2 новые вакансии\n"
         "\n"
         "1. Acme — Senior iOS Engineer\n"
         "   https://example.com/a\n"
@@ -78,9 +78,10 @@ def test_hourly_lists_new_vacancies_only() -> None:
         "\n"
         "🟢 Система в порядке · 2026-07-15 11:00\n"
         "\n"
-        "⏭ Следующая проверка в 12:00\n"
-        "🔗 https://github.com/users/acme/projects/1"
+        "⏭ Следующая проверка в 12:00"
     )
+    assert "🔗" not in message
+    assert "github.com" not in message
 
 
 def test_hourly_telegram_vacancy_is_compact() -> None:
@@ -108,16 +109,17 @@ def test_hourly_telegram_vacancy_is_compact() -> None:
         now=now,
     )
     assert message == (
-        "📬 +1\n"
+        "📬 +1 новая вакансия\n"
         "\n"
         "1. SmartTek Solutions — Senior iOS Engineer\n"
         "   https://t.me/itrecruit_ua/123\n"
         "\n"
         "🟢 Система в порядке · 2026-07-15 11:00\n"
         "\n"
-        "⏭ Следующая проверка в 12:00\n"
-        "🔗 https://board"
+        "⏭ Следующая проверка в 12:00"
     )
+    assert "🔗" not in message
+    assert "https://board" not in message
     assert "📝" not in message
     assert "📅" not in message
     assert "📡" not in message
@@ -246,7 +248,7 @@ def test_pack_vacancy_batches_splits_long_lists() -> None:
     )
     assert len(messages) >= 2
     assert all(len(message) <= TELEGRAM_MAX_LENGTH for message in messages)
-    assert messages[0].startswith("📬 +24 (1/")
+    assert messages[0].startswith("📬 +24 новые вакансии (1/")
     assert "1. Company 1 — Senior iOS Engineer 1" in messages[0]
     assert any(
         f"{len(vacancies)}. Company {len(vacancies)} — Senior iOS Engineer {len(vacancies)}" in message
