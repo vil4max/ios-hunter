@@ -1,0 +1,119 @@
+name: CRM Manual Card
+
+# Upsert a private Career CRM draft (Applied / Archived / …).
+# Cloud-agent PAT often lacks Projects scope; Actions CAREER_AGENT_TOKEN has it.
+on:
+  workflow_dispatch:
+    inputs:
+      company:
+        description: Company name
+        required: true
+        type: string
+      title:
+        description: Role title
+        required: true
+        type: string
+      url:
+        description: Vacancy URL
+        required: true
+        type: string
+      status:
+        description: Project Status
+        required: true
+        type: choice
+        options:
+          - Applied
+          - Replied
+          - Screening
+          - Post-Screen
+          - Technical
+          - Post-Tech
+          - Archived
+          - Inbox
+        default: Applied
+      channel:
+        description: Channel
+        required: false
+        type: choice
+        options:
+          - Djinni
+          - DOU
+          - LinkedIn
+          - Telegram
+          - Company site
+          - Recruiter
+          - Other
+        default: Djinni
+      source:
+        description: Source label
+        required: false
+        type: string
+        default: Djinni
+      applied_at:
+        description: Applied At (YYYY-MM-DD)
+        required: false
+        type: string
+      salary:
+        description: Salary note
+        required: false
+        type: string
+      summary:
+        description: Short summary
+        required: false
+        type: string
+      recruiter:
+        description: Recruiter name
+        required: false
+        type: string
+      close_reason:
+        description: Close Reason (when Archived)
+        required: false
+        type: string
+      closed_stage:
+        description: Closed Stage (when Archived)
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: crm-manual-card-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  upsert:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Upsert CRM card
+        env:
+          CAREER_AGENT_TOKEN: ${{ secrets.CAREER_AGENT_TOKEN }}
+          CAREER_AGENT_SYNC_ENABLED: ${{ vars.CAREER_AGENT_SYNC_ENABLED }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          CAREER_PROJECT_OWNER: ${{ vars.CAREER_PROJECT_OWNER }}
+          CAREER_PROJECT_NUMBER: ${{ vars.CAREER_PROJECT_NUMBER }}
+          PROJECT_BOARD_URL: ${{ vars.PROJECT_BOARD_URL }}
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_COMPANY: ${{ inputs.company }}
+          INPUT_TITLE: ${{ inputs.title }}
+          INPUT_URL: ${{ inputs.url }}
+          INPUT_STATUS: ${{ inputs.status }}
+          INPUT_CHANNEL: ${{ inputs.channel }}
+          INPUT_SOURCE: ${{ inputs.source }}
+          INPUT_APPLIED_AT: ${{ inputs.applied_at }}
+          INPUT_SALARY: ${{ inputs.salary }}
+          INPUT_SUMMARY: ${{ inputs.summary }}
+          INPUT_RECRUITER: ${{ inputs.recruiter }}
+          INPUT_CLOSE_REASON: ${{ inputs.close_reason }}
+          INPUT_CLOSED_STAGE: ${{ inputs.closed_stage }}
+        run: python3 scripts/run_crm_manual_card.py
