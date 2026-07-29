@@ -12,6 +12,7 @@ from collector.generic import absolute_url, title_from_slug
 from collector.results import source_failed, source_ok
 from collector.types import SourceResult
 from integrations.http_client import (
+    fetch_impersonated,
     fetch_json,
     fetch_text,
     fetch_text_allowing_bot_wall,
@@ -25,8 +26,9 @@ _NEXT_DATA = re.compile(
 )
 _RBI_MAX_DETAIL_PAGES = 60
 _RBI_MAX_WORKERS = 6
-_IMPERSONATE_CANDIDATES = ("chrome131", "chrome124", "chrome120")
+_IMPERSONATE_CANDIDATES = ("chrome136", "chrome131", "chrome124", "safari184", "firefox135")
 _ZONE3000_API_URL = "https://zone3000.net/api/vacancies"
+_ZONE3000_HOME_URL = "https://zone3000.net/"
 _ZONE3000_LIST_URL = "https://zone3000.net/vacancies"
 _SOFTSERVE_LIST_URL = "https://career.softserveinc.com/en-us/vacancies"
 _SOFTSERVE_PAYLOAD_URL = "https://career.softserveinc.com/en-us/vacancies/_payload.json"
@@ -35,34 +37,14 @@ _SOFTSERVE_MAX_PAGES = 40
 
 
 def _fetch_zone3000_api_text() -> str:
-    from curl_cffi import requests as curl_requests
-
-    headers = {
-        "Accept": "application/json, text/plain, */*",
-        "Referer": _ZONE3000_LIST_URL,
-    }
-    last_error: Exception | None = None
-    for impersonate in _IMPERSONATE_CANDIDATES:
-        try:
-            response = curl_requests.get(
-                _ZONE3000_API_URL,
-                impersonate=impersonate,
-                headers=headers,
-                timeout=30,
-            )
-            if response.status_code >= 400:
-                last_error = RuntimeError(
-                    f"HTTP {response.status_code} for {_ZONE3000_API_URL}"
-                )
-                continue
-            text = response.text or ""
-            if text.lstrip().startswith("["):
-                return text
-            last_error = RuntimeError("ZONE3000 API returned non-list payload")
-        except Exception as error:  # noqa: BLE001
-            last_error = error
-    raise RuntimeError(
-        str(last_error) if last_error else f"failed to fetch {_ZONE3000_API_URL}"
+    return fetch_impersonated(
+        _ZONE3000_API_URL,
+        headers={
+            "Accept": "application/json, text/plain, */*",
+            "Referer": _ZONE3000_LIST_URL,
+        },
+        warm_urls=(_ZONE3000_HOME_URL, _ZONE3000_LIST_URL),
+        accept=lambda text: text.lstrip().startswith("["),
     )
 
 

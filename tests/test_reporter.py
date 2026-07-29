@@ -177,8 +177,8 @@ def test_hourly_heartbeat_reports_partial_failures() -> None:
     assert message == (
         "📭 Новых вакансий нет\n"
         "\n"
-        "⚠️ Поиск по сайтам: 11/12 ошибки — SoftServe\n"
-        "⚠️ Telegram: 2/3 ошибки\n"
+        "⚠️ Поиск по сайтам: SoftServe\n"
+        "⚠️ Telegram: remotejobss\n"
         "🕐 2026-07-15 11:00\n"
         "\n"
         "⏭ Следующая проверка в 12:00"
@@ -461,7 +461,7 @@ def test_daily_dashboard_formatter_still_works() -> None:
                 offer_probability="",
                 follow_up=None,
                 applied_at=None,
-                created_at=datetime(2026, 2, 1, tzinfo=_KYIV),
+                created_at=datetime(2026, 6, 20, tzinfo=_KYIV),
                 updated_at=None,
             ),
         ],
@@ -470,8 +470,8 @@ def test_daily_dashboard_formatter_still_works() -> None:
     message = format_daily_dashboard(plan, board_url="https://board", now=now)
     assert "Career Agent · 2026-07-15" in message
     assert "Acme — iOS Engineer" in message
-    assert "Archived 2026: 1" in message
-    assert "History (before 2026): 1" in message
+    assert "Archived (recent): 1" in message
+    assert "Archived (100d+ stale): 1" in message
 
 
 def test_full_daily_report_is_human_summary() -> None:

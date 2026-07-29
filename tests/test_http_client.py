@@ -115,15 +115,23 @@ def test_get_reraises_connection_error_after_retries(monkeypatch: pytest.MonkeyP
         "<html><title>Attention Required! | Cloudflare</title></html>",
     ],
 )
-def test_fetch_text_rejects_bot_walls(monkeypatch: pytest.MonkeyPatch, body: str) -> None:
+def test_fetch_text_falls_back_to_impersonate_on_bot_wall(
+    monkeypatch: pytest.MonkeyPatch, body: str
+) -> None:
     _record_get(monkeypatch, [FakeResponse(text=body)])
+    monkeypatch.setattr(http_client, "fetch_impersonated", lambda *a, **k: "real-content")
 
-    with pytest.raises(http_client.BotWallError):
-        http_client.fetch_text("https://example.com")
+    assert http_client.fetch_text("https://example.com") == "real-content"
+
+
+def test_fetch_text_falls_back_to_impersonate_on_403(monkeypatch: pytest.MonkeyPatch) -> None:
+    _record_get(monkeypatch, [FakeResponse(status_code=403)])
+    monkeypatch.setattr(http_client, "fetch_impersonated", lambda *a, **k: "via-curl")
+
+    assert http_client.fetch_text("https://example.com") == "via-curl"
 
 
 def test_long_page_mentioning_cloudflare_is_not_a_bot_wall(monkeypatch: pytest.MonkeyPatch) -> None:
-    # Real vacancy pages may mention Cloudflare; only challenge markers count.
     body = "We use Cloudflare for CDN protection. " + ("x" * 5000)
     _record_get(monkeypatch, [FakeResponse(text=body)])
 
@@ -139,6 +147,75 @@ def test_cloudflare_challenge_page_is_bot_wall() -> None:
     )
     assert len(body) > 4000
     assert http_client.looks_like_bot_wall(body) is True
+
+
+def test_fetch_impersonated_warms_then_fetches(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls: list[str] = []
+
+    class FakeSession:
+        def __init__(self, impersonate: str) -> None:
+            self.impersonate = impersonate
+
+        def get(self, url: str, headers: dict, timeout: int) -> FakeResponse:
+            calls.append(url)
+            if url.endswith("/warm"):
+                return FakeResponse(text="warm-ok")
+            return FakeResponse(text='[{"id": 1}]')
+
+    class FakeCurlRequests:
+        @staticmethod
+        def Session(impersonate: str) -> FakeSession:
+            return FakeSession(impersonate)
+
+    import sys
+    import types
+
+    fake_mod = types.ModuleType("curl_cffi")
+    fake_mod.requests = FakeCurlRequests()
+    monkeypatch.setitem(sys.modules, "curl_cffi", fake_mod)
+    monkeypatch.setitem(sys.modules, "curl_cffi.requests", fake_mod.requests)
+
+    text = http_client.fetch_impersonated(
+        "https://example.com/api",
+        warm_urls=("https://example.com/warm",),
+        accept=lambda body: body.lstrip().startswith("["),
+    )
+
+    assert text == '[{"id": 1}]'
+    assert calls == ["https://example.com/warm", "https://example.com/api"]
+
+
+def test_fetch_impersonated_tries_next_fingerprint_on_403(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    attempts: list[str] = []
+
+    class FakeSession:
+        def __init__(self, impersonate: str) -> None:
+            self.impersonate = impersonate
+            attempts.append(impersonate)
+
+        def get(self, url: str, headers: dict, timeout: int) -> FakeResponse:
+            if self.impersonate == http_client._IMPERSONATE_CANDIDATES[0]:
+                return FakeResponse(status_code=403)
+            return FakeResponse(text="ok-body")
+
+    class FakeCurlRequests:
+        @staticmethod
+        def Session(impersonate: str) -> FakeSession:
+            return FakeSession(impersonate)
+
+    import sys
+    import types
+
+    fake_mod = types.ModuleType("curl_cffi")
+    fake_mod.requests = FakeCurlRequests()
+    monkeypatch.setitem(sys.modules, "curl_cffi", fake_mod)
+    monkeypatch.setitem(sys.modules, "curl_cffi.requests", fake_mod.requests)
+
+    assert http_client.fetch_impersonated("https://example.com") == "ok-body"
+    assert attempts[0] == http_client._IMPERSONATE_CANDIDATES[0]
+    assert attempts[1] == http_client._IMPERSONATE_CANDIDATES[1]
 
 
 def test_fetch_text_allowing_bot_wall_returns_none_on_403(monkeypatch: pytest.MonkeyPatch) -> None:

@@ -23,7 +23,13 @@ def offline(monkeypatch: pytest.MonkeyPatch) -> None:
         raise Offline("network disabled in tests")
 
     for module in _NETWORK_MODULES:
-        for name in ("fetch_text", "fetch_json", "fetch_text_allowing_bot_wall", "post_form_data"):
+        for name in (
+            "fetch_text",
+            "fetch_json",
+            "fetch_text_allowing_bot_wall",
+            "fetch_impersonated",
+            "post_form_data",
+        ):
             if hasattr(module, name):
                 monkeypatch.setattr(module, name, refuse)
     monkeypatch.setattr(dou, "_fetch_text", refuse)

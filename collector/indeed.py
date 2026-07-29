@@ -7,43 +7,27 @@ from typing import Any
 
 from collector.results import source_failed, source_ok
 from collector.types import SourceResult
+from integrations.http_client import fetch_impersonated
 from parser.normalize import is_ios_job, is_relevant_job_location
 
 _SOURCE_NAME = "Indeed UA"
 _SOURCE_ID = "indeed"
 _SOURCE_URL = "https://ua.indeed.com/jobs?q=iOS"
+_WARM_URL = "https://ua.indeed.com/"
 _JOBCARDS_MARKER = 'window.mosaic.providerData["mosaic-provider-jobcards"]='
-_IMPERSONATE_CANDIDATES = ("chrome131", "chrome124", "chrome120")
 _HTML_TAG = re.compile(r"<[^>]+>")
 
 
 def _fetch_search_html(url: str = _SOURCE_URL) -> str:
-    from curl_cffi import requests as curl_requests
-
-    headers = {
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "uk-UA,uk;q=0.9,en-US;q=0.8,en;q=0.7",
-    }
-    last_error: Exception | None = None
-    for impersonate in _IMPERSONATE_CANDIDATES:
-        try:
-            response = curl_requests.get(
-                url,
-                impersonate=impersonate,
-                headers=headers,
-                timeout=30,
-            )
-            if response.status_code >= 400:
-                last_error = RuntimeError(f"HTTP {response.status_code} for {url}")
-                continue
-            text = response.text or ""
-            if _JOBCARDS_MARKER in text:
-                return text
-            last_error = RuntimeError("Indeed HTML missing mosaic jobcards payload")
-        except Exception as error:  # noqa: BLE001
-            last_error = error
-    raise RuntimeError(str(last_error) if last_error else f"failed to fetch {url}")
-
+    return fetch_impersonated(
+        url,
+        headers={
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Language": "uk-UA,uk;q=0.9,en-US;q=0.8,en;q=0.7",
+        },
+        warm_urls=(_WARM_URL,),
+        accept=lambda text: _JOBCARDS_MARKER in text,
+    )
 
 def _extract_json_object(text: str, start: int) -> dict[str, Any]:
     if start < 0 or start >= len(text) or text[start] != "{":

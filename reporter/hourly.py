@@ -36,16 +36,11 @@ def _site_failed_names(stats: CollectReportStats) -> list[str]:
 
 def _sites_status_line(stats: CollectReportStats) -> str:
     failed = _site_failed_names(stats)
-    total = stats.sites_total
-    ok = stats.sites_ok
-    if total <= 0 and not failed:
+    if not failed:
         return "✅ Поиск по сайтам: OK"
-    if failed:
-        shown = ", ".join(failed[:4])
-        extra = f" (+{len(failed) - 4})" if len(failed) > 4 else ""
-        ratio = f"{ok}/{total} " if total > 0 else ""
-        return f"⚠️ Поиск по сайтам: {ratio}ошибки — {shown}{extra}"
-    return f"✅ Поиск по сайтам: OK ({ok}/{total})" if total > 0 else "✅ Поиск по сайтам: OK"
+    shown = ", ".join(failed[:4])
+    extra = f" (+{len(failed) - 4})" if len(failed) > 4 else ""
+    return f"⚠️ Поиск по сайтам: {shown}{extra}"
 
 
 def _telegram_status_line(stats: CollectReportStats) -> str:
@@ -55,9 +50,10 @@ def _telegram_status_line(stats: CollectReportStats) -> str:
     if stats.telegram_skipped > 0 and stats.telegram_ok == 0 and not failed:
         return "⏭️ Telegram: пропущен (нет session)"
     if failed:
-        ratio = f"{stats.telegram_ok}/{stats.telegram_total} " if stats.telegram_total > 0 else ""
-        return f"⚠️ Telegram: {ratio}ошибки"
-    return f"✅ Telegram: OK ({stats.telegram_ok}/{stats.telegram_total})"
+        shown = ", ".join(failed[:4])
+        extra = f" (+{len(failed) - 4})" if len(failed) > 4 else ""
+        return f"⚠️ Telegram: {shown}{extra}"
+    return "✅ Telegram: OK"
 
 
 _HEALTHY_STATUS = "🟢 Система в порядке"
