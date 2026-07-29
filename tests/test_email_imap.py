@@ -20,6 +20,34 @@ def test_imap_credentials_reuse_smtp(monkeypatch: pytest.MonkeyPatch) -> None:
     assert email_imap.imap_folder() == "[Gmail]/All Mail"
 
 
+def test_smtp_pass_strips_app_password_spaces(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("SMTP_PASS", " abcd efgh ijkl mnop \n")
+    assert email_imap.smtp_password() == "abcdefghijklmnop"
+
+
+def test_fetch_auth_failure_raises_hint(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("SMTP_USER", "vil4max@gmail.com")
+    monkeypatch.setenv("SMTP_PASS", "bad-pass")
+    monkeypatch.setattr(email_imap.time, "sleep", lambda _seconds: None)
+
+    class FakeIMAP:
+        def __init__(self, *args, **kwargs) -> None:
+            pass
+
+        def login(self, user: str, password: str) -> None:
+            raise email_imap.imaplib.IMAP4.error(
+                b"[AUTHENTICATIONFAILED] Invalid credentials (Failure)"
+            )
+
+        def logout(self) -> None:
+            return None
+
+    monkeypatch.setattr(email_imap.imaplib, "IMAP4_SSL", FakeIMAP)
+
+    with pytest.raises(RuntimeError, match="Gmail IMAP authentication failed"):
+        email_imap.fetch_recent_mail(login_attempts=2)
+
+
 def test_quote_mailbox_gmail_all_mail() -> None:
     assert email_imap.quote_mailbox("[Gmail]/All Mail") == '"[Gmail]/All Mail"'
     assert email_imap.quote_mailbox("INBOX") == "INBOX"

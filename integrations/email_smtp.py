@@ -25,7 +25,9 @@ def smtp_user() -> str:
 
 
 def smtp_password() -> str:
-    return os.environ.get("SMTP_PASS", "").strip()
+    # Gmail App Passwords are often copied as "xxxx xxxx xxxx xxxx";
+    # strip all whitespace so login stays stable across SMTP + IMAP.
+    return "".join(os.environ.get("SMTP_PASS", "").split())
 
 
 def smtp_from() -> str:
