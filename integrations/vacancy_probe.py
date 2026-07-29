@@ -4,11 +4,12 @@ import json
 import re
 from dataclasses import dataclass
 from html import unescape
+from typing import Any
 from urllib.parse import urlsplit
 
 import requests
 
-from integrations.http_client import _merge_headers
+from integrations.http_client import _merge_headers, looks_like_bot_wall
 
 _SOFT_404_MARKERS = (
     "page not found",
@@ -196,6 +197,101 @@ def _body_closed(html: str) -> str | None:
     return None
 
 
+def _response_is_bot_blocked(response: requests.Response) -> bool:
+    mitigated = str(response.headers.get("cf-mitigated") or "").strip().lower()
+    if mitigated in {"challenge", "managed_challenge", "js_challenge"}:
+        return True
+    return looks_like_bot_wall(response.text or "")
+
+
+def _zone3000_slug(url: str) -> str:
+    path = urlsplit(url).path or ""
+    return path.rstrip("/").rsplit("/", 1)[-1].strip()
+
+
+def _probe_zone3000_api(
+    url: str,
+    *,
+    http_status: int | None,
+    session: requests.Session,
+    timeout: int,
+) -> ProbeResult | None:
+    """Confirm ZONE3000 vacancies via JSON API when HTML is blocked or 404.
+
+    ZONE3000 sits behind Cloudflare; GitHub runners often get challenge/404 HTML
+    for pages that still open in a browser. The public API lists active slugs.
+    """
+    if _host(url) != "zone3000.net":
+        return None
+    slug = _zone3000_slug(url)
+    if not slug:
+        return None
+    api_url = "https://zone3000.net/api/vacancies"
+    try:
+        response = session.get(
+            api_url,
+            headers=_merge_headers(
+                {
+                    "Accept": "application/json, text/plain, */*",
+                    "Referer": "https://zone3000.net/vacancies",
+                }
+            ),
+            timeout=timeout,
+            allow_redirects=True,
+        )
+    except requests.RequestException as error:
+        return ProbeResult(
+            url=url,
+            closed=False,
+            skipped=True,
+            http_status=http_status,
+            reason=f"zone3000 api error: {type(error).__name__}",
+        )
+
+    api_status = int(response.status_code)
+    if _response_is_bot_blocked(response) or api_status >= 400:
+        return ProbeResult(
+            url=url,
+            closed=False,
+            skipped=True,
+            http_status=http_status if http_status is not None else api_status,
+            reason=f"zone3000 api blocked ({api_status})",
+        )
+
+    try:
+        payload: Any = response.json()
+    except ValueError:
+        return ProbeResult(
+            url=url,
+            closed=False,
+            skipped=True,
+            http_status=http_status,
+            reason="zone3000 api invalid json",
+        )
+    items = payload if isinstance(payload, list) else []
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        item_slug = str(item.get("url") or "").strip().lstrip("/")
+        if item_slug == slug:
+            title = str(item.get("title") or "").strip()
+            return ProbeResult(
+                url=url,
+                closed=False,
+                skipped=False,
+                http_status=http_status if http_status is not None else 200,
+                reason="open (zone3000 api)",
+                page_title=title[:200],
+            )
+    return ProbeResult(
+        url=url,
+        closed=True,
+        skipped=False,
+        http_status=http_status if http_status is not None else api_status,
+        reason="zone3000 api: vacancy missing",
+    )
+
+
 def probe_vacancy_url(
     url: str,
     *,
@@ -232,14 +328,42 @@ def probe_vacancy_url(
 
     status = int(response.status_code)
     final_url = str(response.url or url)
+    html = response.text or ""
+    page_title = _extract_title(html)
+
+    if _response_is_bot_blocked(response):
+        api_result = _probe_zone3000_api(
+            url,
+            http_status=status,
+            session=http,
+            timeout=timeout,
+        )
+        if api_result is not None:
+            return api_result
+        return ProbeResult(
+            url=final_url,
+            closed=False,
+            skipped=True,
+            http_status=status,
+            reason=f"bot wall (http {status})",
+        )
+
     if status in {404, 410}:
+        api_result = _probe_zone3000_api(
+            url,
+            http_status=status,
+            session=http,
+            timeout=timeout,
+        )
+        if api_result is not None:
+            return api_result
         return ProbeResult(
             url=final_url,
             closed=True,
             skipped=False,
             http_status=status,
             reason=f"http {status}",
-            page_title=_extract_title(response.text or ""),
+            page_title=page_title,
         )
     if status >= 400:
         return ProbeResult(
@@ -250,8 +374,6 @@ def probe_vacancy_url(
             reason=f"http {status}",
         )
 
-    html = response.text or ""
-    page_title = _extract_title(html)
     closed_reason = _body_closed(html)
     if closed_reason:
         return ProbeResult(
