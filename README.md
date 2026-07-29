@@ -73,7 +73,7 @@ Then add `TELEGRAM_API_ID`, `TELEGRAM_API_HASH`, and `TELEGRAM_SESSION` as repos
 | `TELEGRAM_SESSION` | for TG chats | StringSession from `scripts/telegram_login.py` |
 | `CAREER_AGENT_TOKEN` | for Sync | Fine-grained PAT: Issues + Projects |
 | `SMTP_USER` | for daily email + IMAP | Gmail address (e.g. `vil4max@gmail.com`) |
-| `SMTP_PASS` | for daily email + IMAP | [Gmail App Password](https://myaccount.google.com/apppasswords) |
+| `SMTP_PASS` | for daily email + IMAP | [Gmail App Password](https://myaccount.google.com/apppasswords) (16 chars; spaces ok) |
 | `SMTP_FROM` | optional | From address (defaults to `SMTP_USER`) |
 
 Remove unused repo secrets if present: `GEMINI_API_KEY`, `OPENAI_API_KEY`.
@@ -137,6 +137,7 @@ Daily email needs `SMTP_USER` + `SMTP_PASS` (Gmail App Password) and Sync enable
 IMAP recruiter poll reuses the same `SMTP_USER` / `SMTP_PASS` App Password (`imap.gmail.com`).
 Default folder is `[Gmail]/All Mail` so archived Spark/Gmail mail is included.
 It updates matched Project cards (`Replied` / `Screening` / `Archived`+`Rejected HR`) and dedupes via `database/email_seen.json`.
+If the workflow fails with `AUTHENTICATIONFAILED` / Invalid credentials, regenerate the App Password and update `SMTP_PASS` (IMAP access must stay enabled in Gmail settings).
 
 ## Identity
 

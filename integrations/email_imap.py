@@ -6,11 +6,18 @@ import email.utils
 import imaplib
 import os
 import re
+import time
 from dataclasses import dataclass
 from email.message import Message
 from typing import Iterable
 
 from integrations.email_smtp import smtp_password, smtp_user
+
+_AUTH_HINT = (
+    "Gmail IMAP authentication failed. Regenerate a Gmail App Password at "
+    "https://myaccount.google.com/apppasswords and update the SMTP_PASS "
+    "repository secret (16 characters; spaces are ignored)."
+)
 
 
 def imap_host() -> str:
@@ -137,53 +144,81 @@ def _search_uids(client: imaplib.IMAP4_SSL, criteria: str) -> list[str]:
     return [uid.decode("ascii") if isinstance(uid, bytes) else str(uid) for uid in data[0].split()]
 
 
+def _is_auth_failure(exc: BaseException) -> bool:
+    text = str(exc).lower()
+    return "authenticationfailed" in text or "invalid credentials" in text
+
+
+def _fetch_with_client(
+    connection: imaplib.IMAP4_SSL,
+    *,
+    limit: int,
+    since_days: int,
+) -> list[InboundMail]:
+    folder = imap_folder()
+    status, _ = connection.select(quote_mailbox(folder), readonly=True)
+    if status != "OK":
+        raise RuntimeError(f"IMAP select failed for folder {folder!r}")
+
+    uids = _search_uids(connection, f"(SINCE {_imap_since_date(since_days)})")
+    if not uids:
+        uids = _search_uids(connection, "ALL")
+    if limit > 0:
+        uids = uids[-limit:]
+
+    mails: list[InboundMail] = []
+    for uid in uids:
+        status, data = connection.fetch(uid, "(RFC822)")
+        if status != "OK" or not data:
+            continue
+        raw = None
+        for item in data:
+            if isinstance(item, tuple) and len(item) >= 2 and isinstance(item[1], bytes):
+                raw = item[1]
+                break
+        if raw is None:
+            continue
+        parsed = parse_message(raw, uid=uid)
+        if parsed:
+            mails.append(parsed)
+    return mails
+
+
 def fetch_recent_mail(
     *,
     limit: int = 40,
     since_days: int = 7,
     client: imaplib.IMAP4_SSL | None = None,
+    login_attempts: int = 3,
 ) -> list[InboundMail]:
     if not credentials_configured():
         raise RuntimeError("IMAP not configured (need SMTP_USER + SMTP_PASS)")
 
-    owns_client = client is None
-    connection = client or imaplib.IMAP4_SSL(imap_host(), imap_port())
-    try:
-        if owns_client:
+    if client is not None:
+        return _fetch_with_client(client, limit=limit, since_days=since_days)
+
+    attempts = max(1, login_attempts)
+    last_error: BaseException | None = None
+    for attempt in range(attempts):
+        connection = imaplib.IMAP4_SSL(imap_host(), imap_port())
+        try:
             connection.login(smtp_user(), smtp_password())
-        folder = imap_folder()
-        status, _ = connection.select(quote_mailbox(folder), readonly=True)
-        if status != "OK":
-            raise RuntimeError(f"IMAP select failed for folder {folder!r}")
-
-        uids = _search_uids(connection, f"(SINCE {_imap_since_date(since_days)})")
-        if not uids:
-            uids = _search_uids(connection, "ALL")
-        if limit > 0:
-            uids = uids[-limit:]
-
-        mails: list[InboundMail] = []
-        for uid in uids:
-            status, data = connection.fetch(uid, "(RFC822)")
-            if status != "OK" or not data:
+            return _fetch_with_client(connection, limit=limit, since_days=since_days)
+        except imaplib.IMAP4.error as exc:
+            last_error = exc
+            if _is_auth_failure(exc) and attempt + 1 < attempts:
+                time.sleep(2**attempt)
                 continue
-            raw = None
-            for item in data:
-                if isinstance(item, tuple) and len(item) >= 2 and isinstance(item[1], bytes):
-                    raw = item[1]
-                    break
-            if raw is None:
-                continue
-            parsed = parse_message(raw, uid=uid)
-            if parsed:
-                mails.append(parsed)
-        return mails
-    finally:
-        if owns_client:
+            if _is_auth_failure(exc):
+                raise RuntimeError(_AUTH_HINT) from exc
+            raise
+        finally:
             try:
                 connection.logout()
             except Exception:
                 pass
+    assert last_error is not None
+    raise RuntimeError(_AUTH_HINT) from last_error
 
 
 def _imap_since_date(since_days: int) -> str:

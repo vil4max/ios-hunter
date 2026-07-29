@@ -43,12 +43,19 @@ def main() -> int:
         )
         return 1
 
-    result = run_mail_sync(
-        settings,
-        dry_run=args.dry_run,
-        limit=args.limit,
-        since_days=args.since_days,
-    )
+    try:
+        result = run_mail_sync(
+            settings,
+            dry_run=args.dry_run,
+            limit=args.limit,
+            since_days=args.since_days,
+        )
+    except RuntimeError as exc:
+        message = str(exc)
+        if "IMAP authentication failed" in message or "IMAP not configured" in message:
+            print(message, file=sys.stderr)
+            return 1
+        raise
     notified = notify_imap_poll(result, board_url=settings.project_board_url)
     mutations = result.mutations or []
     updates = sum(1 for m in mutations if m.action in {"updated", "would_update"})
