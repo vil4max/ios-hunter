@@ -52,6 +52,7 @@ def test_probe_marks_http_404_closed(monkeypatch) -> None:
         status_code = 404
         url = "https://example.com/missing"
         text = "<title>Page Not Found</title>"
+        headers: dict[str, str] = {}
 
     class FakeSession:
         def get(self, *args, **kwargs):
@@ -65,11 +66,137 @@ def test_probe_marks_http_404_closed(monkeypatch) -> None:
     assert result.reason == "http 404"
 
 
+def test_probe_skips_cloudflare_challenge_404() -> None:
+    class FakeResponse:
+        status_code = 404
+        url = "https://example.com/job"
+        text = (
+            "<html><title>Just a moment...</title>"
+            "<script>window._cf_chl_opt={}</script>"
+            + ("z" * 5500)
+            + "</html>"
+        )
+        headers = {"cf-mitigated": "challenge"}
+
+    class FakeSession:
+        def get(self, *args, **kwargs):
+            return FakeResponse()
+
+    result = probe_vacancy_url(
+        "https://example.com/job",
+        session=FakeSession(),
+    )
+    assert result.closed is False
+    assert result.skipped is True
+    assert "bot wall" in result.reason
+
+
+def test_probe_zone3000_html_404_keeps_open_when_api_lists_slug() -> None:
+    vacancy_url = (
+        "https://zone3000.net/vacancies/"
+        "middle-----senior-mobile-ios-developer-in-mobile-system-team---1204-"
+    )
+    slug = "middle-----senior-mobile-ios-developer-in-mobile-system-team---1204-"
+
+    class HtmlResponse:
+        status_code = 404
+        url = vacancy_url
+        text = "<title>Not Found</title>"
+        headers: dict[str, str] = {}
+
+    class ApiResponse:
+        status_code = 200
+        url = "https://zone3000.net/api/vacancies"
+        text = "[]"
+        headers: dict[str, str] = {}
+
+        def json(self):
+            return [
+                {
+                    "id": 380,
+                    "title": "Middle + / Senior Mobile iOS Developer in Mobile System Team (#1204)",
+                    "url": slug,
+                    "remote": 1,
+                }
+            ]
+
+    class FakeSession:
+        def get(self, request_url, *args, **kwargs):
+            if "api/vacancies" in request_url:
+                return ApiResponse()
+            return HtmlResponse()
+
+    result = probe_vacancy_url(vacancy_url, session=FakeSession())
+    assert result.closed is False
+    assert result.skipped is False
+    assert result.reason == "open (zone3000 api)"
+
+
+def test_probe_zone3000_html_404_closed_when_api_missing_slug() -> None:
+    vacancy_url = "https://zone3000.net/vacancies/old-ios-role---1-"
+
+    class HtmlResponse:
+        status_code = 404
+        url = vacancy_url
+        text = "<title>Not Found</title>"
+        headers: dict[str, str] = {}
+
+    class ApiResponse:
+        status_code = 200
+        url = "https://zone3000.net/api/vacancies"
+        text = "[]"
+        headers: dict[str, str] = {}
+
+        def json(self):
+            return [{"id": 1, "title": "Support", "url": "support", "remote": 1}]
+
+    class FakeSession:
+        def get(self, request_url, *args, **kwargs):
+            if "api/vacancies" in request_url:
+                return ApiResponse()
+            return HtmlResponse()
+
+    result = probe_vacancy_url(vacancy_url, session=FakeSession())
+    assert result.closed is True
+    assert result.reason == "zone3000 api: vacancy missing"
+
+
+def test_probe_zone3000_skips_when_api_also_blocked() -> None:
+    vacancy_url = "https://zone3000.net/vacancies/some-ios-role---2-"
+
+    class HtmlResponse:
+        status_code = 404
+        url = vacancy_url
+        text = "<title>Not Found</title>"
+        headers: dict[str, str] = {}
+
+    class ApiResponse:
+        status_code = 403
+        url = "https://zone3000.net/api/vacancies"
+        text = "<html><title>Just a moment...</title><script>window._cf_chl_opt={}</script></html>"
+        headers = {"cf-mitigated": "challenge"}
+
+        def json(self):
+            raise ValueError("not json")
+
+    class FakeSession:
+        def get(self, request_url, *args, **kwargs):
+            if "api/vacancies" in request_url:
+                return ApiResponse()
+            return HtmlResponse()
+
+    result = probe_vacancy_url(vacancy_url, session=FakeSession())
+    assert result.closed is False
+    assert result.skipped is True
+    assert "zone3000 api blocked" in result.reason
+
+
 def test_probe_marks_title_mismatch_closed(monkeypatch) -> None:
     class FakeResponse:
         status_code = 200
         url = "https://jobs.dou.ua/companies/x/vacancies/1/"
         text = "<html><h1>Blockchain Developer</h1><body>відгукнутися</body></html>"
+        headers: dict[str, str] = {}
 
     class FakeSession:
         def get(self, *args, **kwargs):
@@ -89,6 +216,7 @@ def test_probe_keeps_matching_ios_title_open() -> None:
         status_code = 200
         url = "https://jobs.dou.ua/companies/x/vacancies/1/"
         text = "<html><h1>Senior iOS Developer</h1><body>відгукнутися</body></html>"
+        headers: dict[str, str] = {}
 
     class FakeSession:
         def get(self, *args, **kwargs):

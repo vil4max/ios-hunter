@@ -8,7 +8,9 @@ import requests
 
 _DEFAULT_TIMEOUT = 30
 _MAX_ATTEMPTS = 3
-_BOT_WALL_MAX_LENGTH = 4000
+# Cloudflare challenge HTML is typically ~5–15 KiB; keep a high ceiling so
+# long vacancy pages that merely mention a vendor are not false positives.
+_BOT_WALL_MAX_LENGTH = 24_000
 _BOT_WALL_MARKERS = re.compile(
     r"(?i)("
     r"_Incapsula_Resource|"

@@ -123,10 +123,22 @@ def test_fetch_text_rejects_bot_walls(monkeypatch: pytest.MonkeyPatch, body: str
 
 
 def test_long_page_mentioning_cloudflare_is_not_a_bot_wall(monkeypatch: pytest.MonkeyPatch) -> None:
-    body = "Just a moment..." + ("x" * 5000)
+    # Real vacancy pages may mention Cloudflare; only challenge markers count.
+    body = "We use Cloudflare for CDN protection. " + ("x" * 5000)
     _record_get(monkeypatch, [FakeResponse(text=body)])
 
     assert http_client.fetch_text("https://example.com") == body
+
+
+def test_cloudflare_challenge_page_is_bot_wall() -> None:
+    body = (
+        "<!DOCTYPE html><html><head><title>Just a moment...</title></head>"
+        "<body><script>window._cf_chl_opt={};</script>"
+        + ("y" * 5500)
+        + "</body></html>"
+    )
+    assert len(body) > 4000
+    assert http_client.looks_like_bot_wall(body) is True
 
 
 def test_fetch_text_allowing_bot_wall_returns_none_on_403(monkeypatch: pytest.MonkeyPatch) -> None:
