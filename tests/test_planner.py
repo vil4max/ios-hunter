@@ -103,13 +103,16 @@ def test_planner_prioritizes_follow_ups_and_stale() -> None:
             follow_up=date(2026, 7, 20),
         ),
         _card(item_id="arch", status="Archived", title="Old"),
+        _card(item_id="hist", status="History", title="Very old"),
     ]
     plan = build_plan(cards, _settings(), today=today)
     assert plan.today_tasks[0].item_id == "follow"
     assert any(c.item_id == "stale" for c in plan.needs_attention)
     assert any(c.item_id == "inbox" for c in plan.new_vacancies)
     assert plan.status_counts.get("Archived") == 1
+    assert plan.status_counts.get("History") == 1
     assert all(c.item_id != "arch" for c in plan.today_tasks)
+    assert all(c.item_id != "hist" for c in plan.today_tasks)
     assert all(c.item_id != "applied" for c in plan.today_tasks)
     assert [c.item_id for c in plan.upcoming_interviews] == ["screen-soon"]
     assert "applied" not in [c.item_id for c in plan.upcoming_interviews]

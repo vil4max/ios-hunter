@@ -427,16 +427,54 @@ def test_daily_dashboard_formatter_still_works() -> None:
         needs_attention=[],
         pending_follow_ups=[],
         upcoming_interviews=[],
-        status_counts={"Inbox": 1, "Applied": 0},
-        cards=[card],
+        status_counts={"Inbox": 1, "Applied": 0, "Archived": 2},
+        cards=[
+            card,
+            ProjectCard(
+                item_id="old",
+                issue_number=1,
+                title="Legacy",
+                url="",
+                issue_url="",
+                company="OldCo",
+                source="",
+                canonical_url="",
+                status="Archived",
+                priority="",
+                offer_probability="",
+                follow_up=None,
+                applied_at=None,
+                created_at=datetime(2024, 3, 1, tzinfo=_KYIV),
+                updated_at=None,
+            ),
+            ProjectCard(
+                item_id="new-arch",
+                issue_number=2,
+                title="Recent",
+                url="",
+                issue_url="",
+                company="NewCo",
+                source="",
+                canonical_url="",
+                status="Archived",
+                priority="",
+                offer_probability="",
+                follow_up=None,
+                applied_at=None,
+                created_at=datetime(2026, 2, 1, tzinfo=_KYIV),
+                updated_at=None,
+            ),
+        ],
     )
     now = datetime(2026, 7, 15, 7, 0, tzinfo=_KYIV)
     message = format_daily_dashboard(plan, board_url="https://board", now=now)
     assert "Career Agent · 2026-07-15" in message
     assert "Acme — iOS Engineer" in message
+    assert "Archived 2026: 1" in message
+    assert "History (before 2026): 1" in message
 
 
-def test_full_daily_report_includes_collect_summary() -> None:
+def test_full_daily_report_is_human_summary() -> None:
     from collector.types import SourceResult
     from reporter.daily import build_collect_day_summary, format_full_daily_report
 
@@ -457,14 +495,51 @@ def test_full_daily_report_includes_collect_summary() -> None:
         created_at=None,
         updated_at=None,
     )
+    focus = ProjectCard(
+        item_id="2",
+        issue_number=4,
+        title="Senior iOS",
+        url="https://example.com/old",
+        issue_url="https://github.com/a/b/issues/4",
+        company="Beta",
+        source="test",
+        canonical_url="https://example.com/old",
+        status="Applied",
+        priority="P1",
+        offer_probability="Medium",
+        follow_up=None,
+        applied_at=None,
+        created_at=None,
+        updated_at=None,
+    )
     plan = DailyPlan(
-        today_tasks=[card],
+        today_tasks=[focus, card],
         new_vacancies=[card],
         needs_attention=[],
-        pending_follow_ups=[],
+        pending_follow_ups=[focus],
         upcoming_interviews=[],
-        status_counts={"Inbox": 1, "Applied": 0},
-        cards=[card],
+        status_counts={"Inbox": 1, "Applied": 1, "Archived": 1},
+        cards=[
+            card,
+            focus,
+            ProjectCard(
+                item_id="arch",
+                issue_number=9,
+                title="Old Archived",
+                url="",
+                issue_url="",
+                company="Zeta",
+                source="",
+                canonical_url="",
+                status="Archived",
+                priority="",
+                offer_probability="",
+                follow_up=None,
+                applied_at=None,
+                created_at=datetime(2023, 1, 1, tzinfo=_KYIV),
+                updated_at=None,
+            ),
+        ],
     )
     now = datetime(2026, 7, 15, 18, 0, tzinfo=_KYIV)
     seen = {
@@ -503,9 +578,81 @@ def test_full_daily_report_includes_collect_summary() -> None:
     ]
     summary = build_collect_day_summary(seen, sources, now=now)
     message = format_full_daily_report(plan, summary, board_url="https://board", now=now)
-    assert "Career Agent · 2026-07-15" in message
-    assert "Collect summary (today)" in message
-    assert "New in seen today: 1" in message
-    assert "Beta — Senior iOS" in message
-    assert "Failed: Broken" in message
-    assert "Sources: 1 healthy / 0 degraded / 1 failed" in message
+    assert "📬 Career Agent · 15.07.2026" in message
+    assert "🔍 Сбор за день" in message
+    assert "Fail: Broken" in message
+    assert "🆕 Новых сегодня: 1" in message
+    assert "📝 Beta — Senior iOS · Applied" in message
+    assert "ещё Inbox" not in message
+    assert "https://example.com/new" not in message
+    assert message.count("https://") == 1
+    assert message.strip().endswith("🔗 https://board")
+    assert "📝 Beta — Senior iOS · Applied" in message
+    assert "offer:Medium" not in message
+
+
+def test_new_today_shows_inbox_vs_moved() -> None:
+    from reporter.daily import CollectDaySummary, format_full_daily_report
+
+    inbox = ProjectCard(
+        item_id="1",
+        issue_number=1,
+        title="Senior iOS Developer",
+        url="https://jobs.dou.ua/companies/breeze/vacancies/365262/",
+        issue_url="",
+        company="Breeze",
+        source="dou",
+        canonical_url="https://jobs.dou.ua/companies/breeze/vacancies/365262",
+        status="Inbox",
+        priority="",
+        offer_probability="",
+        follow_up=None,
+        applied_at=None,
+        created_at=None,
+        updated_at=None,
+    )
+    applied = ProjectCard(
+        item_id="2",
+        issue_number=2,
+        title="Senior iOS Engineer",
+        url="https://ua.indeed.com/viewjob?jk=abc",
+        issue_url="",
+        company="Robots & Pencils",
+        source="indeed",
+        canonical_url="https://ua.indeed.com/viewjob?jk=abc",
+        status="Applied",
+        priority="",
+        offer_probability="",
+        follow_up=None,
+        applied_at=None,
+        created_at=None,
+        updated_at=None,
+    )
+    plan = DailyPlan(
+        today_tasks=[applied],
+        new_vacancies=[inbox],
+        needs_attention=[],
+        pending_follow_ups=[],
+        upcoming_interviews=[],
+        status_counts={"Inbox": 1, "Applied": 1},
+        cards=[inbox, applied],
+    )
+    summary = CollectDaySummary(
+        new_today_count=3,
+        new_today=(
+            ("Breeze", "Senior iOS Developer", "https://jobs.dou.ua/companies/breeze/vacancies/365262"),
+            ("Robots & Pencils", "Senior iOS Engineer", "https://ua.indeed.com/viewjob?jk=abc"),
+            ("Ghost Co", "iOS Dev", "https://example.com/ghost"),
+        ),
+        seen_total=10,
+        sources_total=10,
+        sources_healthy=10,
+        jobs_found=5,
+    )
+    now = datetime(2026, 7, 29, 18, 0, tzinfo=_KYIV)
+    message = format_full_daily_report(plan, summary, board_url="https://board", now=now)
+    assert "🆕 Новых сегодня: 3" in message
+    assert "📥 Breeze — Senior iOS Developer · Inbox" in message
+    assert "📝 Robots & Pencils — Senior iOS Engineer · Applied" in message
+    assert "⚠️ Ghost Co — iOS Dev · нет карточки" in message
+    assert "📥 Inbox 1 · 📝 Applied 1" in message or "📥 Inbox 1" in message

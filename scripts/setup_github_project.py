@@ -79,6 +79,7 @@ def update_status() -> None:
         ("Technical", "YELLOW", "Technical interview booked or in progress"),
         ("Post-Tech", "YELLOW", "Waiting after technical"),
         ("Archived", "GRAY", "Closed; set Close Reason + Closed Stage"),
+        ("History", "GRAY", "Old archived items moved out of active archive"),
     ]
     existing = current_status_options()
     single_select_options = []

@@ -163,7 +163,7 @@ def build_plan(cards: list[ProjectCard], settings: Settings, *, today: date | No
 
     ranked: list[tuple[int, ProjectCard]] = []
     for card in cards:
-        if card.status == "Archived":
+        if card.status in {"Archived", "History"}:
             continue
 
         age = _age_days(card, today)
@@ -221,7 +221,7 @@ def load_cards_from_github(client: GitHubClient, settings: Settings) -> list[Pro
 def archived_canonical_urls(cards: list[ProjectCard]) -> set[str]:
     urls: set[str] = set()
     for card in cards:
-        if card.status != "Archived":
+        if card.status not in {"Archived", "History"}:
             continue
         for raw in (card.canonical_url, card.url):
             key = canonicalize_url(raw) if raw else ""
@@ -233,7 +233,7 @@ def archived_canonical_urls(cards: list[ProjectCard]) -> set[str]:
 def archived_role_keys(cards: list[ProjectCard]) -> set[tuple[str, str]]:
     roles: set[tuple[str, str]] = set()
     for card in cards:
-        if card.status != "Archived":
+        if card.status not in {"Archived", "History"}:
             continue
         company = (card.company or "").strip()
         title = (card.title or "").strip()

@@ -5,12 +5,43 @@ from datetime import date, datetime
 from typing import Any
 from zoneinfo import ZoneInfo
 
-from analytics.metrics import summarize_funnel
 from collector.types import STATUS_DEGRADED, STATUS_FAILED, STATUS_HEALTHY, SourceResult
 from integrations.telegram import send_message
+from parser.normalize import canonicalize_url, role_key
 from planner.plan import DailyPlan, ProjectCard
 
 _KYIV = ZoneInfo("Europe/Kyiv")
+_ARCHIVE_ACTIVE_YEAR = 2026
+_FOCUS_LIMIT = 6
+_NEW_TODAY_LIMIT = 8
+_FOLLOW_UP_LIMIT = 5
+
+_STATUS_EMOJI: dict[str, str] = {
+    "Inbox": "📥",
+    "Applied": "📝",
+    "Replied": "💬",
+    "Screening": "🔎",
+    "Post-Screen": "🧪",
+    "Technical": "⚙️",
+    "Post-Tech": "🔬",
+    "Archived": "📦",
+}
+_MISSING_BOARD_EMOJI = "⚠️"
+_BOARD_STATUS_ORDER: tuple[str, ...] = (
+    "Inbox",
+    "Applied",
+    "Replied",
+    "Screening",
+    "Post-Screen",
+    "Technical",
+    "Post-Tech",
+)
+
+
+def status_emoji(status: str | None) -> str:
+    if not status:
+        return _MISSING_BOARD_EMOJI
+    return _STATUS_EMOJI.get(status, "•")
 
 
 @dataclass(frozen=True)
@@ -58,6 +89,36 @@ def _parse_seen_day(value: str | None, *, tz: ZoneInfo = _KYIV) -> date | None:
     if stamp.tzinfo is None:
         stamp = stamp.replace(tzinfo=ZoneInfo("UTC"))
     return stamp.astimezone(tz).date()
+
+
+def _card_year(card: ProjectCard) -> int | None:
+    for value in (card.created_at, card.updated_at):
+        if value is None:
+            continue
+        if value.tzinfo is not None:
+            return value.astimezone(_KYIV).year
+        return value.year
+    if card.applied_at is not None:
+        return card.applied_at.year
+    return None
+
+
+def split_archived_counts(
+    cards: list[ProjectCard],
+    *,
+    active_year: int = _ARCHIVE_ACTIVE_YEAR,
+) -> tuple[int, int]:
+    archived_active = 0
+    history = 0
+    for card in cards:
+        if card.status != "Archived":
+            continue
+        year = _card_year(card)
+        if year is not None and year < active_year:
+            history += 1
+        else:
+            archived_active += 1
+    return archived_active, history
 
 
 def build_collect_day_summary(
@@ -163,15 +224,63 @@ def format_daily_dashboard(
     blocks.append("")
     blocks.append("Pipeline statistics")
     for status, count in plan.status_counts.items():
-        if count:
+        if count and status not in {"Archived", "History"}:
             blocks.append(f"· {status}: {count}")
-    if not any(plan.status_counts.values()):
-        blocks.append("· —")
+    archived_2026, history = split_archived_counts(plan.cards)
+    if archived_2026 or history or plan.status_counts.get("Archived") or plan.status_counts.get("History"):
+        blocks.append(f"· Archived {_ARCHIVE_ACTIVE_YEAR}: {archived_2026}")
+        blocks.append(f"· History (before {_ARCHIVE_ACTIVE_YEAR}): {history}")
+    if not any(v for k, v in plan.status_counts.items() if k not in {"Archived", "History"} and v):
+        if not archived_2026 and not history:
+            blocks.append("· —")
 
     blocks.append("")
     blocks.append("Daily summary")
-    blocks.append(summarize_funnel(plan))
+    inbox = plan.status_counts.get("Inbox", 0)
+    applied = plan.status_counts.get("Applied", 0)
+    blocks.append(
+        f"Inbox {inbox}, Applied {applied}, "
+        f"Archived {_ARCHIVE_ACTIVE_YEAR} {archived_2026}, "
+        f"History {history}, attention {len(plan.needs_attention)}, "
+        f"follow-ups due {len(plan.pending_follow_ups)}."
+    )
     return "\n".join(blocks)
+
+
+def match_board_status(
+    company: str,
+    title: str,
+    url: str,
+    cards: list[ProjectCard],
+) -> str | None:
+    canon = canonicalize_url(url)
+    wanted_role = role_key(company, title)
+    for card in cards:
+        for raw in (card.canonical_url, card.url):
+            if canon and raw and canonicalize_url(raw) == canon:
+                return card.status or None
+        if role_key(card.company, card.title) == wanted_role:
+            return card.status or None
+    return None
+
+
+def annotate_new_today(
+    new_today: tuple[tuple[str, str, str], ...],
+    cards: list[ProjectCard],
+) -> list[tuple[str, str, str | None]]:
+    annotated: list[tuple[str, str, str | None]] = []
+    for company, title, url in new_today:
+        annotated.append((company, title, match_board_status(company, title, url, cards)))
+    return annotated
+
+
+def _bullet_names(items: list[str], *, empty: str, limit: int) -> list[str]:
+    if not items:
+        return [f"  {empty}"]
+    lines = [f"  {name}" for name in items[:limit]]
+    if len(items) > limit:
+        lines.append(f"  … +{len(items) - limit}")
+    return lines
 
 
 def format_full_daily_report(
@@ -181,9 +290,115 @@ def format_full_daily_report(
     board_url: str = "",
     now: datetime | None = None,
 ) -> str:
-    dashboard = format_daily_dashboard(plan, board_url=board_url, now=now)
-    collect = format_collect_day_summary(summary)
-    return f"{dashboard}\n\n{collect}\n"
+    stamp = (now or datetime.now(_KYIV)).astimezone(_KYIV)
+    lines: list[str] = [
+        f"📬 Career Agent · {stamp.strftime('%d.%m.%Y')}",
+        "",
+        "🔍 Сбор за день",
+    ]
+
+    source_line = (
+        f"✅ Источники: {summary.sources_healthy} OK"
+        f" · {summary.sources_degraded} degraded"
+        f" · {summary.sources_failed} fail"
+        f" (из {summary.sources_total})"
+    )
+    lines.append(source_line)
+    if summary.failed_source_names:
+        lines.append("   Fail: " + ", ".join(summary.failed_source_names))
+    if summary.degraded_source_names:
+        lines.append("   Degraded: " + ", ".join(summary.degraded_source_names))
+    lines.append(
+        f"📊 Снимок: {summary.jobs_found} ролей · seen {summary.seen_total}"
+    )
+
+    annotated_new = annotate_new_today(summary.new_today, plan.cards)
+    lines.extend(["", f"🆕 Новых сегодня: {summary.new_today_count}"])
+    if annotated_new:
+        for company, title, status in annotated_new[:_NEW_TODAY_LIMIT]:
+            emoji = status_emoji(status)
+            label = status or "нет карточки"
+            lines.append(f"  {emoji} {company} — {title} · {label}")
+        if summary.new_today_count > _NEW_TODAY_LIMIT:
+            lines.append(f"  … +{summary.new_today_count - _NEW_TODAY_LIMIT}")
+    else:
+        lines.append("  —")
+
+    active_bits: list[str] = []
+    for status in _BOARD_STATUS_ORDER:
+        count = plan.status_counts.get(status, 0)
+        if count:
+            active_bits.append(f"{status_emoji(status)} {status} {count}")
+    lines.extend(
+        [
+            "",
+            "🗂️ Доска",
+            " · ".join(active_bits) if active_bits else "активных колонок нет",
+        ]
+    )
+
+    focus = [
+        f"{status_emoji(card.status)} {card.display_title} · {card.status}"
+        for card in plan.today_tasks
+        if card.status != "Inbox"
+    ]
+    lines.extend(["", "🎯 Фокус"])
+    lines.extend(_bullet_names(focus, empty="нет активных задач", limit=_FOCUS_LIMIT))
+
+    inbox_names = [
+        f"{status_emoji('Inbox')} {card.display_title}"
+        for card in plan.new_vacancies
+    ]
+    lines.extend(["", f"{status_emoji('Inbox')} Inbox"])
+    lines.extend(_bullet_names(inbox_names, empty="пусто", limit=_NEW_TODAY_LIMIT))
+
+    if plan.needs_attention:
+        lines.extend(["", "⚠️ Attention"])
+        lines.extend(
+            _bullet_names(
+                [
+                    f"{status_emoji(card.status)} {card.display_title} · {card.status}"
+                    for card in plan.needs_attention
+                ],
+                empty="нет",
+                limit=_FOCUS_LIMIT,
+            )
+        )
+    else:
+        lines.extend(["", "⚠️ Attention: нет"])
+
+    if plan.pending_follow_ups:
+        lines.extend(["", "📌 Follow-up due"])
+        lines.extend(
+            _bullet_names(
+                [
+                    f"{status_emoji(card.status)} {card.display_title} · {card.status}"
+                    for card in plan.pending_follow_ups
+                ],
+                empty="нет",
+                limit=_FOLLOW_UP_LIMIT,
+            )
+        )
+    else:
+        lines.extend(["", "📌 Follow-up due: нет"])
+
+    if plan.upcoming_interviews:
+        lines.extend(["", "🎤 Interviews"])
+        lines.extend(
+            _bullet_names(
+                [
+                    f"{status_emoji(card.status)} {card.display_title} · {card.status}"
+                    for card in plan.upcoming_interviews
+                ],
+                empty="нет",
+                limit=_FOLLOW_UP_LIMIT,
+            )
+        )
+
+    if board_url:
+        lines.extend(["", f"🔗 {board_url}"])
+    lines.append("")
+    return "\n".join(lines)
 
 
 def notify_daily_dashboard(

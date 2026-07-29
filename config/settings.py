@@ -30,6 +30,7 @@ STATUS_WORKFLOW: tuple[str, ...] = (
     "Technical",
     "Post-Tech",
     "Archived",
+    "History",
 )
 
 ACTIVE_PIPELINE_STATUSES: frozenset[str] = frozenset(
