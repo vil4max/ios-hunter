@@ -73,12 +73,6 @@ on:
         description: Closed Stage (when Archived)
         required: false
         type: string
-  push:
-    branches:
-      - "cursor/tango-applied-crm-6315"
-    paths:
-      - ".github/workflows/crm-manual-card.yml"
-      - "database/crm_upsert_once.json"
 
 permissions:
   contents: read

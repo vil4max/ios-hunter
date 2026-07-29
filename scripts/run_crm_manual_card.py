@@ -32,20 +32,11 @@ def _from_workflow_inputs() -> dict[str, str]:
     return {key: (os.environ.get(env) or "").strip() for key, env in mapping.items()}
 
 
-def _from_once_file() -> dict[str, str]:
-    path = ROOT / "database" / "crm_upsert_once.json"
-    data = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(data, dict):
-        raise SystemExit(f"Expected object in {path}")
-    return {str(k): str(v).strip() if v is not None else "" for k, v in data.items()}
-
-
 def main() -> int:
     os.environ.setdefault("CAREER_AGENT_SYNC_ENABLED", "1")
-    if os.environ.get("EVENT_NAME") == "workflow_dispatch":
-        raw = _from_workflow_inputs()
-    else:
-        raw = _from_once_file()
+    if os.environ.get("EVENT_NAME") != "workflow_dispatch":
+        raise SystemExit("Expected workflow_dispatch event")
+    raw = _from_workflow_inputs()
 
     company = raw.get("company") or ""
     title = raw.get("title") or ""
