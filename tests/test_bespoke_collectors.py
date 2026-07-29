@@ -593,6 +593,31 @@ def test_luxoft_parses_specialization_jobs(stub) -> None:
     assert result.jobs[0]["location"] == "Kyiv, Ukraine"
 
 
+def test_luxoft_resolves_location_from_job_json_ld(stub) -> None:
+    listing = (
+        '<a class="jobs__list__job" href="/jobs/senior-mobile-engineer-ios-swift-24568">'
+        "<h2>Senior Mobile Engineer - iOS Swift</h2>"
+        "<p>iOS (Objective-C/Swift)</p></a>"
+    )
+    detail = (
+        "<html><script type=\"application/ld+json\">"
+        '{"@type":"JobPosting","title":"Senior Mobile Engineer - iOS Swift",'
+        '"jobLocation":{"@type":"Place","address":{"@type":"PostalAddress",'
+        '"addressLocality":"Kuala Lumpur","addressCountry":"MY"}}}'
+        "</script></html>"
+    )
+
+    def handler(url: str, **_kwargs: object) -> str:
+        if "senior-mobile-engineer-ios-swift-24568" in url and "specialization" not in url:
+            return detail
+        return listing
+
+    stub(text=handler)
+    result = bespoke.collect_luxoft()
+    assert result.status == "healthy"
+    assert result.jobs == []
+
+
 def test_luxoft_reports_failure(stub) -> None:
     stub(text=_raiser("down"))
 

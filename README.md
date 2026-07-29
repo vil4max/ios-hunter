@@ -109,7 +109,7 @@ Telegram only on new vacancies (list + OK)
 | Workflow | When |
 |----------|------|
 | **Collect iOS Jobs** | Manual or via hourly trigger — collect, sync, Telegram if new |
-| **Hourly Collect Trigger** | Every hour UTC; dispatches Collect only Kyiv 09:00–18:00 |
+| **Hourly Collect Trigger** | Every hour at :17 UTC; dispatches Collect only Kyiv 09:00–18:00 |
 | **Daily Vacancy Liveness** | Every day 04:00 UTC (incl. weekends) — probe active board URLs, archive closed, Telegram status |
 | **Daily Email Report** | Every day 15:00 UTC (≈18:00 Kyiv) — full CRM + collect summary to email |
 | **CI** | Push / PR — pytest |

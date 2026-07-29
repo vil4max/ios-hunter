@@ -146,6 +146,22 @@ _IOS_DENY = re.compile(
     r")(?![a-z0-9])"
 )
 
+_APPLE_CORE = re.compile(
+    r"(?i)(?<![a-z0-9])("
+    r"ios|swift|swiftui|uikit|"
+    r"objective[\s\-]?c|objc|obj[\s\-]?c|"
+    r"appkit|cocoa(?:pods|touch)?"
+    r")(?![a-z0-9])"
+)
+
+_CPP_STACK = re.compile(
+    r"(?i)(?<![a-z0-9])(c\+\+|cpp|c\s*plus\s*plus)(?![a-z0-9])"
+)
+
+_WINDOWS_MACOS_DESKTOP = re.compile(
+    r"(?i)windows\s*/\s*mac(?:os|\s*os)"
+)
+
 _DOMAIN_DENY = re.compile(
     r"(?i)(?<![a-z0-9а-яіїєґ])("
     r"igaming|i[\s\-]?gaming|"
@@ -162,9 +178,14 @@ _DOMAIN_DENY = re.compile(
 
 def is_ios_job(title: str, description: str | None = None) -> bool:
     haystack = f"{title} {description or ''}"
-    if _IOS_DENY.search(title or ""):
+    title_text = title or ""
+    if _IOS_DENY.search(title_text):
         return False
     if _DOMAIN_DENY.search(haystack):
+        return False
+    if _CPP_STACK.search(title_text) and not _APPLE_CORE.search(title_text):
+        return False
+    if _WINDOWS_MACOS_DESKTOP.search(title_text) and not _APPLE_CORE.search(title_text):
         return False
     return _IOS_ANCHOR.search(haystack) is not None
 

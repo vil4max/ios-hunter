@@ -3,8 +3,9 @@ name: Hourly Collect Trigger
 on:
   workflow_dispatch:
   schedule:
-    # Every hour UTC; Kyiv 09:00-18:00 gate skips nights (narrow cron was unreliable on GHA).
-    - cron: "0 * * * *"
+    # :17 past each UTC hour — avoids GHA top-of-hour queue delay.
+    # Kyiv 09:00-18:00 gate still skips nights.
+    - cron: "17 * * * *"
 
 permissions:
   actions: write

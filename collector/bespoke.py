@@ -653,6 +653,62 @@ def _luxoft_location(anchor: Any) -> str | None:
     return text or None
 
 
+_LUXOFT_COUNTRY_CODES = {
+    "MY": "Malaysia",
+    "IN": "India",
+    "EG": "Egypt",
+    "PL": "Poland",
+    "UA": "Ukraine",
+    "DE": "Germany",
+    "RO": "Romania",
+    "BG": "Bulgaria",
+    "PT": "Portugal",
+    "MX": "Mexico",
+    "US": "United States",
+    "GB": "United Kingdom",
+    "UK": "United Kingdom",
+}
+
+
+def _luxoft_location_from_detail(job_url: str) -> str | None:
+    try:
+        html = fetch_text(job_url)
+    except Exception:  # noqa: BLE001
+        return None
+    from bs4 import BeautifulSoup
+
+    document = BeautifulSoup(html, "lxml")
+    for script in document.select('script[type="application/ld+json"]'):
+        raw = (script.string or script.get_text() or "").strip()
+        if not raw:
+            continue
+        try:
+            payload = json.loads(raw)
+        except json.JSONDecodeError:
+            continue
+        nodes = payload if isinstance(payload, list) else [payload]
+        for node in nodes:
+            if not isinstance(node, dict):
+                continue
+            if str(node.get("@type") or "") != "JobPosting":
+                continue
+            place = node.get("jobLocation")
+            if isinstance(place, list):
+                place = place[0] if place else None
+            if not isinstance(place, dict):
+                continue
+            address = place.get("address")
+            if not isinstance(address, dict):
+                continue
+            city = str(address.get("addressLocality") or "").strip()
+            country_raw = str(address.get("addressCountry") or "").strip()
+            country = _LUXOFT_COUNTRY_CODES.get(country_raw.upper(), country_raw)
+            label = ", ".join(part for part in (city, country) if part)
+            if label:
+                return label
+    return None
+
+
 def collect_luxoft() -> SourceResult:
     company = "Luxoft"
     started = time.perf_counter()
@@ -693,7 +749,9 @@ def collect_luxoft() -> SourceResult:
             if not is_ios_job(title):
                 title = raw.split(" iOS ")[0].strip() or title
             location = _luxoft_location(anchor)
-            if not is_relevant_job_location(location):
+            if not location:
+                location = _luxoft_location_from_detail(absolute)
+            if not location or not is_relevant_job_location(location):
                 continue
             jobs.append(
                 {

@@ -4,7 +4,6 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from database.seen import seen_key
-from config.schedule import format_next_check_line
 from integrations.notify import CollectReportStats
 from integrations.telegram import TELEGRAM_MAX_LENGTH, send_message
 from parser.normalize import Vacancy
@@ -87,11 +86,8 @@ def _status_block(stats: CollectReportStats, now: datetime | None = None) -> lis
     stamp = _time_label(now)
     status = _collect_status_lines(stats)
     if len(status) == 1 and status[0] == _HEALTHY_STATUS:
-        lines = [f"{_HEALTHY_STATUS} · {stamp}"]
-    else:
-        lines = [*status, f"🕐 {stamp}"]
-    lines.extend(["", format_next_check_line(now)])
-    return lines
+        return [f"{_HEALTHY_STATUS} · {stamp}"]
+    return [*status, f"🕐 {stamp}"]
 
 
 def _footer(

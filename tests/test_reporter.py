@@ -76,12 +76,11 @@ def test_hourly_lists_new_vacancies_only() -> None:
         "2. Beta — Swift Developer\n"
         "   https://example.com/b\n"
         "\n"
-        "🟢 Система в порядке · 2026-07-15 11:00\n"
-        "\n"
-        "⏭ Следующая проверка в 12:00"
+        "🟢 Система в порядке · 2026-07-15 11:00"
     )
     assert "🔗" not in message
     assert "github.com" not in message
+    assert "Следующая проверка" not in message
 
 
 def test_hourly_telegram_vacancy_is_compact() -> None:
@@ -114,15 +113,14 @@ def test_hourly_telegram_vacancy_is_compact() -> None:
         "1. SmartTek Solutions — Senior iOS Engineer\n"
         "   https://t.me/itrecruit_ua/123\n"
         "\n"
-        "🟢 Система в порядке · 2026-07-15 11:00\n"
-        "\n"
-        "⏭ Следующая проверка в 12:00"
+        "🟢 Система в порядке · 2026-07-15 11:00"
     )
     assert "🔗" not in message
     assert "https://board" not in message
     assert "📝" not in message
     assert "📅" not in message
     assert "📡" not in message
+    assert "Следующая проверка" not in message
 
 
 def test_hourly_heartbeat_when_no_new() -> None:
@@ -149,13 +147,12 @@ def test_hourly_heartbeat_when_no_new() -> None:
     assert message == (
         "📭 Новых вакансий нет\n"
         "\n"
-        "🟢 Система в порядке · 2026-07-15 11:00\n"
-        "\n"
-        "⏭ Следующая проверка в 12:00"
+        "🟢 Система в порядке · 2026-07-15 11:00"
     )
     assert "Живые" not in message
     assert "Сбор OK" not in message
     assert "📊" not in message
+    assert "Следующая проверка" not in message
 
 
 def test_hourly_heartbeat_reports_partial_failures() -> None:
@@ -179,10 +176,9 @@ def test_hourly_heartbeat_reports_partial_failures() -> None:
         "\n"
         "⚠️ Поиск по сайтам: SoftServe\n"
         "⚠️ Telegram: remotejobss\n"
-        "🕐 2026-07-15 11:00\n"
-        "\n"
-        "⏭ Следующая проверка в 12:00"
+        "🕐 2026-07-15 11:00"
     )
+    assert "Следующая проверка" not in message
     assert "@remotejobss" not in message
     assert "Binary Studio" not in message
     assert "🔕" not in message
@@ -301,10 +297,9 @@ def test_notify_heartbeat_has_no_live_block(monkeypatch: pytest.MonkeyPatch) -> 
     assert sent == [
         "📭 Новых вакансий нет\n"
         "\n"
-        "🟢 Система в порядке · 2026-07-27 23:00\n"
-        "\n"
-        "⏭ Следующая проверка завтра в 9:00"
+        "🟢 Система в порядке · 2026-07-27 23:00"
     ]
+    assert "Следующая проверка" not in sent[0]
 
 
 def test_exclude_archived_vacancies_by_url_and_role_key() -> None:

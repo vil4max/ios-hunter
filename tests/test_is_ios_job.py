@@ -23,6 +23,12 @@ def test_is_ios_job_rejects_unrelated() -> None:
     assert not is_ios_job("Admiral Studios SEO Specialist")
     assert not is_ios_job("Manual QA Engineer", "Crypto Casino portfolios and scenarios")
     assert not is_ios_job("UI/UX Designer")
+    assert not is_ios_job("Middle C++ Developer (Windows/macOS)")
+    assert not is_ios_job("C++ Developer Windows/macOS")
+    assert not is_ios_job("Senior CPP Engineer (Windows / Mac OS)")
+    assert is_ios_job("Principal macOS Platform Engineer")
+    assert is_ios_job("macOS Developer (Swift / AppKit)")
+    assert is_ios_job("iOS/C++ Engineer")
 
 
 def test_is_ios_job_rejects_qa_and_test_noise() -> None:
