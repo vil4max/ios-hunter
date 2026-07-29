@@ -5,11 +5,28 @@
     "company": "Ashby",
     "subject": "Thanks for Applying to Welltech!"
   },
+  "<0100019fae421337-73691b9b-7460-4262-9a26-5fe8b43f9d52-000000@email.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-29T16:38:11+00:00",
+    "company": "Hirify (via Polar)",
+    "subject": "Your Hirify Plus 3 month order confirmation"
+  },
+  "<0100019fae4f1141-e9523532-7923-4307-a37b-dd6ad34e2e32-000000@email.amazonses.com>": {
+    "kind": "application_ack",
+    "processed_at": "2026-07-29T16:38:11+00:00",
+    "subject": "ElevenLabs | Application Received"
+  },
   "<0101019faa3ac02b-d5c9e8e3-ef86-43ea-9392-8ff92655359d-000000@us-west-2.amazonses.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
     "company": "Makeup.ua",
     "subject": "Виконуємо бажання: акції, знижки, товари знову в наявності"
+  },
+  "<0102019fae41f5e3-dd1e1193-89ff-40dd-90a1-f78779eebea3-000000@eu-west-1.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-29T16:38:11+00:00",
+    "company": "Igor from Hirify",
+    "subject": "Вы купили Hirify Plus! 🤗"
   },
   "<0107019fa9d51843-5bf640bc-163e-4a74-81ee-22be2579400a-000000@eu-central-1.amazonses.com>": {
     "kind": "ignore",
@@ -23,6 +40,12 @@
     "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg0e320",
     "company": "Breeze",
     "subject": "We have received your application!"
+  },
+  "<0LDhSECupVB_ssz3pWy5Jw@notifications.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-29T16:38:11+00:00",
+    "company": "Google",
+    "subject": "Security alert"
   },
   "<115422669.10612570.1785242587239@email.apple.com>": {
     "kind": "ignore",
@@ -41,6 +64,12 @@
     "processed_at": "2026-07-29T13:41:50+00:00",
     "company": "Xcode Cloud",
     "subject": "App -- Build 60 succeeded (main)"
+  },
+  "<1785336888235.d7984ce7-430b-43dc-a3b1-2c7d7d6369e8@48628701m.contact.elevenlabs.io>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-29T16:38:11+00:00",
+    "company": "ElevenLabs",
+    "subject": "Your free characters are ready ✅"
   },
   "<1845256517.451084532.1785242576627@email.apple.com>": {
     "kind": "ignore",
@@ -103,6 +132,18 @@
     "company": "N-iX",
     "subject": "Thank you for your application!"
   },
+  "<20260729150128.3.35bea907703251a6@mg-d1.substack.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-29T16:38:11+00:00",
+    "company": "Jacob’s Tech Tavern",
+    "subject": "Designing The Perfect Modular Architecture"
+  },
+  "<20260729162232.3.4d07ff942b0b137b@mg2.substack.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-29T16:38:11+00:00",
+    "company": "The Pragmatic Engineer",
+    "subject": "Formal methods with Hillel Wayne"
+  },
   "<2032248378.42868428.1785241368085@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -114,6 +155,12 @@
     "processed_at": "2026-07-29T13:41:50+00:00",
     "company": "GlobalLogic",
     "subject": "Max: your job alert for IOS Developer in Kyiv City, Ukraine has\r\n been created"
+  },
+  "<3m-A2lLOlKtj2TgaHyGW7g@notifications.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-29T16:38:11+00:00",
+    "company": "Google",
+    "subject": "Security alert"
   },
   "<4ae036a3-e346-4d10-8c0d-051f985c0a58@Spark>": {
     "kind": "ignore",
@@ -175,6 +222,18 @@
     "company": "Hiring BetterMe",
     "subject": "Hiring Team Re: Senior iOS Engineer | Portfolio"
   },
+  "<CANdYtcNyFzONY5hzafbOhNXRNvxaBJjdPcFNUhnvUZyB=DocDg@mail.gmail.com>": {
+    "kind": "rejected_hr",
+    "processed_at": "2026-07-29T16:38:11+00:00",
+    "company": "Tom Cook",
+    "subject": "Regarding the Open Position at Out of the Box Systems"
+  },
+  "<EfxM2aNeMDnAj-KHQo846A@notifications.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-29T16:38:11+00:00",
+    "company": "Google",
+    "subject": "Security alert"
+  },
   "<J9OBteO-QAe2STwePabweg@geopod-ismtpd-3>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -198,6 +257,12 @@
     "processed_at": "2026-07-29T13:41:50+00:00",
     "company": "Jooble",
     "subject": "🙂 Готові робити перший відгук?"
+  },
+  "<RwDHuuPeQeqe9VeJmq62jQ@geopod-ismtpd-6>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-29T16:38:11+00:00",
+    "company": "ЛУН",
+    "subject": "Нові ЖК на ЛУН: ЖК  SELECT Паркове місто, КМ Лісова Гавань і ще  3 ЖК - нові проєкти і старти продажів Києва і області"
   },
   "<X5QURU4PWTU4.BL4TQN8XOB9K3@jobseekerflowchart-service-default-58dd746fd8-zk26g>": {
     "kind": "ignore",
@@ -223,6 +288,12 @@
     "company": "Workable",
     "subject": "Thanks for applying to Northstrat"
   },
+  "<iAIW_rStFoBPCFFbFMEvdA@notifications.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-29T16:38:11+00:00",
+    "company": "Google",
+    "subject": "Security alert"
+  },
   "<j-cUStkz_gm8KUWM6nWmFA@notifications.google.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -234,6 +305,18 @@
     "processed_at": "2026-07-29T13:41:50+00:00",
     "company": "Max Vilchevskiy",
     "subject": "[vil4max/ios-hunter] Run failed: CI - main (843c29d)"
+  },
+  "<vil4max/ios-hunter/check-suites/CS_kwDOTEBwK88AAAATO2_ctA/1785342377@github.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-29T16:38:11+00:00",
+    "company": "Max Vilchevskiy",
+    "subject": "[vil4max/ios-hunter] Run failed: Daily Email Report - main\r\n (03c2202)"
+  },
+  "<vil4max/ios-hunter/check-suites/CS_kwDOTEBwK88AAAATOrSEiw/1785339298@github.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-29T16:38:11+00:00",
+    "company": "Max Vilchevskiy",
+    "subject": "[vil4max/ios-hunter] Run failed: IMAP Recruiter Poll - main\r\n (dd4eb45)"
   },
   "<wSnnZrfISI6SuxCusya9WA@geopod-ismtpd-5>": {
     "kind": "ignore",
