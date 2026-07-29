@@ -63,6 +63,19 @@ def _telegram_status_line(stats: CollectReportStats) -> str:
 _HEALTHY_STATUS = "🟢 Система в порядке"
 
 
+def _new_vacancies_header(total: int) -> str:
+    """Title line for new-vacancy alerts: emoji + count + Russian noun form."""
+    n = abs(total) % 100
+    n1 = n % 10
+    if n1 == 1 and n != 11:
+        word = "новая вакансия"
+    elif 2 <= n1 <= 4 and not (12 <= n <= 14):
+        word = "новые вакансии"
+    else:
+        word = "новых вакансий"
+    return f"📬 +{total} {word}"
+
+
 def _collect_status_lines(stats: CollectReportStats) -> list[str]:
     lines: list[str] = []
     if _site_failed_names(stats):
@@ -140,7 +153,7 @@ def format_hourly_new_vacancies(
     index_offset: int = 0,
 ) -> str:
     total = total_count if total_count is not None else len(vacancies)
-    header = f"📬 +{total}"
+    header = _new_vacancies_header(total)
     if part is not None and parts is not None and parts > 1:
         header = f"{header} ({part}/{parts})"
     lines = [header, ""]
@@ -156,7 +169,7 @@ def format_hourly_new_vacancies(
             stats=stats,
             board_url=board_url,
             now=now,
-            include_board=True,
+            include_board=False,
         )
     )
     return "\n".join(lines)
