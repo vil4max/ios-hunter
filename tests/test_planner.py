@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import date, datetime, timezone
 
 from config.settings import Settings
-from planner.plan import ProjectCard, _split_company_title, build_plan, parse_project_item
+from planner.plan import ProjectCard, _split_company_title, archived_age_days, build_plan, is_stale_archived, parse_project_item
 
 
 def _settings() -> Settings:
@@ -116,3 +116,20 @@ def test_planner_prioritizes_follow_ups_and_stale() -> None:
     assert all(c.item_id != "applied" for c in plan.today_tasks)
     assert [c.item_id for c in plan.upcoming_interviews] == ["screen-soon"]
     assert "applied" not in [c.item_id for c in plan.upcoming_interviews]
+
+
+def test_stale_archived_uses_earliest_reference_date() -> None:
+    today = date(2026, 7, 29)
+    stale = _card(
+        status="Archived",
+        applied_at=date(2026, 3, 1),
+        updated_at=datetime(2026, 7, 20, tzinfo=timezone.utc),
+    )
+    fresh = _card(
+        status="Archived",
+        applied_at=date(2026, 6, 1),
+        updated_at=datetime(2026, 7, 20, tzinfo=timezone.utc),
+    )
+    assert archived_age_days(stale, today) == 150
+    assert is_stale_archived(stale, today)
+    assert not is_stale_archived(fresh, today)

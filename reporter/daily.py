@@ -8,10 +8,14 @@ from zoneinfo import ZoneInfo
 from collector.types import STATUS_DEGRADED, STATUS_FAILED, STATUS_HEALTHY, SourceResult
 from integrations.telegram import send_message
 from parser.normalize import canonicalize_url, role_key
-from planner.plan import DailyPlan, ProjectCard
+from planner.plan import (
+    ARCHIVE_HISTORY_MIN_DAYS,
+    DailyPlan,
+    ProjectCard,
+    is_stale_archived,
+)
 
 _KYIV = ZoneInfo("Europe/Kyiv")
-_ARCHIVE_ACTIVE_YEAR = 2026
 _FOCUS_LIMIT = 6
 _NEW_TODAY_LIMIT = 8
 _FOLLOW_UP_LIMIT = 5
@@ -91,34 +95,23 @@ def _parse_seen_day(value: str | None, *, tz: ZoneInfo = _KYIV) -> date | None:
     return stamp.astimezone(tz).date()
 
 
-def _card_year(card: ProjectCard) -> int | None:
-    for value in (card.created_at, card.updated_at):
-        if value is None:
-            continue
-        if value.tzinfo is not None:
-            return value.astimezone(_KYIV).year
-        return value.year
-    if card.applied_at is not None:
-        return card.applied_at.year
-    return None
-
-
 def split_archived_counts(
     cards: list[ProjectCard],
     *,
-    active_year: int = _ARCHIVE_ACTIVE_YEAR,
+    today: date | None = None,
+    min_days: int = ARCHIVE_HISTORY_MIN_DAYS,
 ) -> tuple[int, int]:
-    archived_active = 0
-    history = 0
+    stamp = today or date.today()
+    archived_recent = 0
+    stale_archived = 0
     for card in cards:
         if card.status != "Archived":
             continue
-        year = _card_year(card)
-        if year is not None and year < active_year:
-            history += 1
+        if is_stale_archived(card, stamp, min_days=min_days):
+            stale_archived += 1
         else:
-            archived_active += 1
-    return archived_active, history
+            archived_recent += 1
+    return archived_recent, stale_archived
 
 
 def build_collect_day_summary(
@@ -226,12 +219,20 @@ def format_daily_dashboard(
     for status, count in plan.status_counts.items():
         if count and status not in {"Archived", "History"}:
             blocks.append(f"· {status}: {count}")
-    archived_2026, history = split_archived_counts(plan.cards)
-    if archived_2026 or history or plan.status_counts.get("Archived") or plan.status_counts.get("History"):
-        blocks.append(f"· Archived {_ARCHIVE_ACTIVE_YEAR}: {archived_2026}")
-        blocks.append(f"· History (before {_ARCHIVE_ACTIVE_YEAR}): {history}")
+    archived_recent, stale_archived = split_archived_counts(plan.cards, today=stamp.date())
+    history_status = plan.status_counts.get("History", 0)
+    if (
+        archived_recent
+        or stale_archived
+        or history_status
+        or plan.status_counts.get("Archived")
+    ):
+        blocks.append(f"· Archived (recent): {archived_recent}")
+        blocks.append(f"· Archived ({ARCHIVE_HISTORY_MIN_DAYS}d+ stale): {stale_archived}")
+        if history_status:
+            blocks.append(f"· History: {history_status}")
     if not any(v for k, v in plan.status_counts.items() if k not in {"Archived", "History"} and v):
-        if not archived_2026 and not history:
+        if not archived_recent and not stale_archived and not history_status:
             blocks.append("· —")
 
     blocks.append("")
@@ -240,8 +241,9 @@ def format_daily_dashboard(
     applied = plan.status_counts.get("Applied", 0)
     blocks.append(
         f"Inbox {inbox}, Applied {applied}, "
-        f"Archived {_ARCHIVE_ACTIVE_YEAR} {archived_2026}, "
-        f"History {history}, attention {len(plan.needs_attention)}, "
+        f"Archived recent {archived_recent}, "
+        f"Archived stale {stale_archived}, "
+        f"History {history_status}, attention {len(plan.needs_attention)}, "
         f"follow-ups due {len(plan.pending_follow_ups)}."
     )
     return "\n".join(blocks)

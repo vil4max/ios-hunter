@@ -12,6 +12,8 @@ from config.settings import (
 from parser.normalize import canonicalize_url, role_key, Vacancy
 from project_sync.github_client import GitHubClient
 
+ARCHIVE_HISTORY_MIN_DAYS = 100
+
 
 def _parse_date(value: str | None) -> date | None:
     if not value:
@@ -142,15 +144,51 @@ class DailyPlan:
     cards: list[ProjectCard] = field(default_factory=list)
 
 
+def _stamp_date(stamp: datetime) -> date:
+    if stamp.tzinfo is not None:
+        stamp = stamp.astimezone(timezone.utc)
+    return stamp.date()
+
+
+def archived_reference_date(card: ProjectCard) -> date | None:
+    candidates: list[date] = []
+    if card.applied_at is not None:
+        candidates.append(card.applied_at)
+    if card.created_at is not None:
+        candidates.append(_stamp_date(card.created_at))
+    if card.updated_at is not None:
+        candidates.append(_stamp_date(card.updated_at))
+    if not candidates:
+        return None
+    return min(candidates)
+
+
+def archived_age_days(card: ProjectCard, today: date) -> int | None:
+    ref = archived_reference_date(card)
+    if ref is None:
+        return None
+    return (today - ref).days
+
+
+def is_stale_archived(
+    card: ProjectCard,
+    today: date,
+    *,
+    min_days: int = ARCHIVE_HISTORY_MIN_DAYS,
+) -> bool:
+    if card.status != "Archived":
+        return False
+    age = archived_age_days(card, today)
+    return age is not None and age >= min_days
+
+
 def _age_days(card: ProjectCard, today: date) -> int | None:
     stamp = card.updated_at or card.created_at
     if stamp is None and card.applied_at is not None:
         return (today - card.applied_at).days
     if stamp is None:
         return None
-    if stamp.tzinfo is not None:
-        stamp = stamp.astimezone(timezone.utc).replace(tzinfo=None)
-    return (today - stamp.date()).days
+    return (today - _stamp_date(stamp)).days
 
 
 def build_plan(cards: list[ProjectCard], settings: Settings, *, today: date | None = None) -> DailyPlan:

@@ -34,6 +34,7 @@ playground.xcworkspace
 database/jobs.db
 database/jobs.json
 database/history.json
+database/djinni_archive_scraped.json
 
 # Legacy local SQLite
 /data/
