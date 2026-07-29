@@ -458,24 +458,53 @@ def test_infopulse_reports_failure(stub) -> None:
     assert bespoke.collect_infopulse().status == "failed"
 
 
-def test_softserve_builds_titles_from_slugs(stub) -> None:
-    stub(
-        text=(
-            '<a href="/en-us/vacancies/senior-ios-engineer-12345"></a>'
-            '<a href="/en-us/vacancies/senior-ios-engineer-12345"></a>'
-            '<a href="/en-us/vacancies/_payload-thing"></a>'
-            '<a href="/en-us/vacancies/database-admin-777"></a>'
-        )
+def test_softserve_filters_ios_jobs(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(
+        bespoke,
+        "_fetch_softserve_vacancies",
+        lambda: [
+            {
+                "id": 12345,
+                "name": "Senior iOS Engineer",
+                "urlSegment": "senior-ios-engineer-12345",
+                "city": "Ukraine",
+            },
+            {
+                "id": 12345,
+                "name": "Senior iOS Engineer",
+                "urlSegment": "senior-ios-engineer-12345",
+                "city": "Ukraine",
+            },
+            {
+                "id": 777,
+                "name": "Database Admin",
+                "urlSegment": "database-admin-777",
+                "city": "Poland",
+            },
+            {
+                "id": 888,
+                "name": "Senior Mobile Robotics Engineer",
+                "urlSegment": "senior-mobile-robotics-engineer-888",
+                "city": "Ukraine",
+            },
+        ],
     )
 
     result = bespoke.collect_softserve()
 
-    assert result.items_scanned == 2
-    assert result.jobs[0]["title"] == "senior ios engineer"
+    assert result.status == "healthy"
+    assert result.items_scanned == 4
+    assert len(result.jobs) == 1
+    assert result.jobs[0]["title"] == "Senior iOS Engineer"
+    assert result.jobs[0]["url"] == (
+        "https://career.softserveinc.com/en-us/vacancies/senior-ios-engineer-12345"
+    )
+    assert result.jobs[0]["location"] == "Ukraine"
+    assert result.jobs[0]["source_job_id"] == "12345"
 
 
-def test_softserve_reports_failure(stub) -> None:
-    stub(text=_raiser("anti-bot challenge"))
+def test_softserve_reports_failure(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(bespoke, "_fetch_softserve_vacancies", _raiser("anti-bot challenge"))
 
     result = bespoke.collect_softserve()
 
@@ -483,12 +512,13 @@ def test_softserve_reports_failure(stub) -> None:
     assert "anti-bot" in (result.error or "")
 
 
-def test_softserve_treats_bot_wall_as_empty(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(bespoke, "fetch_text_allowing_bot_wall", lambda url, **_k: None)
+def test_softserve_empty_catalog_is_healthy(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(bespoke, "_fetch_softserve_vacancies", lambda: [])
 
     result = bespoke.collect_softserve()
 
     assert result.status == "healthy"
+    assert result.items_scanned == 0
     assert result.jobs == []
 
 
@@ -666,11 +696,7 @@ def test_zone3000_filters_ios_jobs(monkeypatch: pytest.MonkeyPatch) -> None:
             "remote": 0,
         },
     ]
-    monkeypatch.setattr(
-        bespoke,
-        "fetch_text_allowing_bot_wall",
-        lambda url, **_kwargs: json.dumps(payload),
-    )
+    monkeypatch.setattr(bespoke, "_fetch_zone3000_api_text", lambda: json.dumps(payload))
 
     result = bespoke.collect_zone3000()
 
@@ -687,8 +713,8 @@ def test_zone3000_filters_ios_jobs(monkeypatch: pytest.MonkeyPatch) -> None:
     assert result.jobs[0]["source_job_id"] == "380"
 
 
-def test_zone3000_treats_bot_wall_as_empty(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(bespoke, "fetch_text_allowing_bot_wall", lambda url, **_kwargs: None)
+def test_zone3000_empty_list_is_healthy(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(bespoke, "_fetch_zone3000_api_text", lambda: "[]")
 
     result = bespoke.collect_zone3000()
 
@@ -698,6 +724,6 @@ def test_zone3000_treats_bot_wall_as_empty(monkeypatch: pytest.MonkeyPatch) -> N
 
 
 def test_zone3000_reports_failure(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(bespoke, "fetch_text_allowing_bot_wall", _raiser("api down"))
+    monkeypatch.setattr(bespoke, "_fetch_zone3000_api_text", _raiser("api down"))
 
     assert bespoke.collect_zone3000().status == "failed"

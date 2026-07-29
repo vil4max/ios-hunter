@@ -28,6 +28,8 @@ def offline(monkeypatch: pytest.MonkeyPatch) -> None:
                 monkeypatch.setattr(module, name, refuse)
     monkeypatch.setattr(dou, "_fetch_text", refuse)
     monkeypatch.setattr(indeed, "_fetch_search_html", refuse)
+    monkeypatch.setattr(bespoke, "_fetch_zone3000_api_text", refuse)
+    monkeypatch.setattr(bespoke, "_fetch_softserve_vacancies", refuse)
     monkeypatch.setattr(dou, "collect_dou_ios_rss", lambda: _stub_result("dou-ios-rss", "DOU iOS/macOS"))
     monkeypatch.setattr(companies, "collect_dou_ios_rss", lambda: _stub_result("dou-ios-rss", "DOU iOS/macOS"))
     monkeypatch.setattr(companies, "collect_telegram_channels", lambda: [])

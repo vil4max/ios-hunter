@@ -25,6 +25,109 @@ _NEXT_DATA = re.compile(
 )
 _RBI_MAX_DETAIL_PAGES = 60
 _RBI_MAX_WORKERS = 6
+_IMPERSONATE_CANDIDATES = ("chrome131", "chrome124", "chrome120")
+_ZONE3000_API_URL = "https://zone3000.net/api/vacancies"
+_ZONE3000_LIST_URL = "https://zone3000.net/vacancies"
+_SOFTSERVE_LIST_URL = "https://career.softserveinc.com/en-us/vacancies"
+_SOFTSERVE_PAYLOAD_URL = "https://career.softserveinc.com/en-us/vacancies/_payload.json"
+_SOFTSERVE_API_URL = "https://career.softserveinc.com/api/frontend/vacancies"
+_SOFTSERVE_MAX_PAGES = 40
+
+
+def _fetch_zone3000_api_text() -> str:
+    from curl_cffi import requests as curl_requests
+
+    headers = {
+        "Accept": "application/json, text/plain, */*",
+        "Referer": _ZONE3000_LIST_URL,
+    }
+    last_error: Exception | None = None
+    for impersonate in _IMPERSONATE_CANDIDATES:
+        try:
+            response = curl_requests.get(
+                _ZONE3000_API_URL,
+                impersonate=impersonate,
+                headers=headers,
+                timeout=30,
+            )
+            if response.status_code >= 400:
+                last_error = RuntimeError(
+                    f"HTTP {response.status_code} for {_ZONE3000_API_URL}"
+                )
+                continue
+            text = response.text or ""
+            if text.lstrip().startswith("["):
+                return text
+            last_error = RuntimeError("ZONE3000 API returned non-list payload")
+        except Exception as error:  # noqa: BLE001
+            last_error = error
+    raise RuntimeError(
+        str(last_error) if last_error else f"failed to fetch {_ZONE3000_API_URL}"
+    )
+
+
+def _fetch_softserve_vacancies() -> list[dict[str, Any]]:
+    from curl_cffi import requests as curl_requests
+
+    last_error: Exception | None = None
+    for impersonate in _IMPERSONATE_CANDIDATES:
+        try:
+            session = curl_requests.Session(impersonate=impersonate)
+            warm = session.get(
+                _SOFTSERVE_PAYLOAD_URL,
+                headers={
+                    "Accept": "application/json",
+                    "Referer": _SOFTSERVE_LIST_URL,
+                    "Accept-Language": "en-US,en;q=0.9",
+                },
+                timeout=30,
+            )
+            if warm.status_code >= 400:
+                last_error = RuntimeError(
+                    f"HTTP {warm.status_code} warming SoftServe session"
+                )
+                continue
+
+            items: list[dict[str, Any]] = []
+            page = 1
+            last_page = 1
+            while page <= last_page and page <= _SOFTSERVE_MAX_PAGES:
+                response = session.get(
+                    _SOFTSERVE_API_URL,
+                    params={"query": "*?", "page": page},
+                    headers={
+                        "Accept": "application/json, text/plain, */*",
+                        "Referer": _SOFTSERVE_LIST_URL,
+                        "Accept-Language": "en-US,en;q=0.9",
+                    },
+                    timeout=30,
+                )
+                if response.status_code >= 400:
+                    raise RuntimeError(
+                        f"HTTP {response.status_code} for SoftServe vacancies page {page}"
+                    )
+                payload = response.json()
+                data = (
+                    payload.get("data")
+                    if isinstance(payload.get("data"), dict)
+                    else payload
+                )
+                vacancies = data.get("vacancies") if isinstance(data, dict) else None
+                if not isinstance(vacancies, list):
+                    raise RuntimeError("SoftServe API missing vacancies list")
+                items.extend(item for item in vacancies if isinstance(item, dict))
+                meta = payload.get("meta") if isinstance(payload.get("meta"), dict) else {}
+                try:
+                    last_page = max(1, int(meta.get("last_page") or page))
+                except (TypeError, ValueError):
+                    last_page = page
+                page += 1
+            return items
+        except Exception as error:  # noqa: BLE001
+            last_error = error
+    raise RuntimeError(
+        str(last_error) if last_error else "failed to fetch SoftServe vacancies"
+    )
 
 
 def _ok(
@@ -468,29 +571,35 @@ def collect_infopulse() -> SourceResult:
 def collect_softserve() -> SourceResult:
     company = "SoftServe"
     started = time.perf_counter()
-    list_url = "https://career.softserveinc.com/en-us/vacancies"
     try:
-        html = fetch_text_allowing_bot_wall(list_url)
-        if html is None:
-            return _ok(company, list_url, [], started, scanned=0)
+        items = _fetch_softserve_vacancies()
         jobs: list[dict[str, Any]] = []
         seen: set[str] = set()
-        for match in re.finditer(r'href="(/en-us/vacancies/[a-z0-9-]+)"', html, re.IGNORECASE):
-            path = match.group(1)
-            if "_payload" in path:
+        for item in items:
+            title = str(item.get("name") or "").strip()
+            slug = str(item.get("urlSegment") or "").strip().lstrip("/")
+            if not title or not slug:
                 continue
-            job_url = urljoin("https://career.softserveinc.com/", path)
+            job_url = f"{_SOFTSERVE_LIST_URL.rstrip('/')}/{slug}"
             if job_url in seen:
                 continue
             seen.add(job_url)
-            title = title_from_slug(path)
-            title = re.sub(r"\d+$", "", title).strip()
             if not is_ios_job(title):
                 continue
-            jobs.append({"company": company, "title": title, "url": job_url, "source": "company"})
-        return _ok(company, list_url, jobs, started, scanned=len(seen))
+            location = str(item.get("city") or "").strip() or None
+            jobs.append(
+                {
+                    "company": company,
+                    "title": title,
+                    "url": job_url,
+                    "source": "company",
+                    "source_job_id": str(item.get("id")) if item.get("id") is not None else None,
+                    "location": location,
+                }
+            )
+        return _ok(company, _SOFTSERVE_LIST_URL, jobs, started, scanned=len(items))
     except Exception as error:  # noqa: BLE001
-        return _fail(company, list_url, error, started)
+        return _fail(company, _SOFTSERVE_LIST_URL, error, started)
 
 
 def collect_globallogic() -> SourceResult:
@@ -688,19 +797,8 @@ def collect_mwdn() -> SourceResult:
 def collect_zone3000() -> SourceResult:
     company = "ZONE3000"
     started = time.perf_counter()
-    url = "https://zone3000.net/api/vacancies"
-    list_url = "https://zone3000.net/vacancies"
     try:
-        text = fetch_text_allowing_bot_wall(
-            url,
-            headers={
-                "Accept": "application/json, text/plain, */*",
-                "Referer": list_url,
-            },
-        )
-        if text is None:
-            return _ok(company, url, [], started, scanned=0)
-        payload = json.loads(text)
+        payload = json.loads(_fetch_zone3000_api_text())
         items = payload if isinstance(payload, list) else []
         jobs: list[dict[str, Any]] = []
         for item in items:
@@ -712,7 +810,7 @@ def collect_zone3000() -> SourceResult:
             slug = str(item.get("url") or "").strip().lstrip("/")
             if not slug:
                 continue
-            job_url = f"{list_url.rstrip('/')}/{slug}"
+            job_url = f"{_ZONE3000_LIST_URL.rstrip('/')}/{slug}"
             location = "Remote" if item.get("remote") else None
             jobs.append(
                 {
@@ -724,6 +822,6 @@ def collect_zone3000() -> SourceResult:
                     "location": location,
                 }
             )
-        return _ok(company, url, jobs, started, scanned=len(items))
+        return _ok(company, _ZONE3000_API_URL, jobs, started, scanned=len(items))
     except Exception as error:  # noqa: BLE001
-        return _fail(company, url, error, started)
+        return _fail(company, _ZONE3000_API_URL, error, started)
