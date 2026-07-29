@@ -34,6 +34,7 @@ from collector.dou_catalog import (
 )
 from collector.djinni import collect_djinni
 from collector.epam import collect_epam
+from collector.indeed import collect_indeed
 from collector.generic import (
     collect_breezy,
     collect_html_regex,
@@ -476,6 +477,7 @@ def _python_collectors() -> list[Callable[[], SourceResult]]:
         lambda: collect_recruitee("Playrix", "playrix"),
         lambda: collect_smartrecruiters("Playtech", "playtech"),
         collect_djinni,
+        collect_indeed,
         collect_dou_ios_rss,
     ]
 

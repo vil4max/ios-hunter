@@ -5,10 +5,10 @@ from collections import Counter
 
 import pytest
 
-from collector import bespoke, companies, djinni, dou, epam, generic
+from collector import bespoke, companies, djinni, dou, epam, generic, indeed
 from collector.types import STATUS_FAILED, SourceResult
 
-_NETWORK_MODULES = (companies, generic, bespoke, epam, djinni)
+_NETWORK_MODULES = (companies, generic, bespoke, epam, djinni, indeed)
 
 
 class Offline(RuntimeError):
@@ -27,6 +27,7 @@ def offline(monkeypatch: pytest.MonkeyPatch) -> None:
             if hasattr(module, name):
                 monkeypatch.setattr(module, name, refuse)
     monkeypatch.setattr(dou, "_fetch_text", refuse)
+    monkeypatch.setattr(indeed, "_fetch_search_html", refuse)
     monkeypatch.setattr(dou, "collect_dou_ios_rss", lambda: _stub_result("dou-ios-rss", "DOU iOS/macOS"))
     monkeypatch.setattr(companies, "collect_dou_ios_rss", lambda: _stub_result("dou-ios-rss", "DOU iOS/macOS"))
     monkeypatch.setattr(companies, "collect_telegram_channels", lambda: [])
