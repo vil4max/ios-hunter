@@ -28,7 +28,17 @@ def imap_port() -> int:
 
 
 def imap_folder() -> str:
-    return os.environ.get("IMAP_FOLDER", "").strip() or "INBOX"
+    return os.environ.get("IMAP_FOLDER", "").strip() or "[Gmail]/All Mail"
+
+
+def quote_mailbox(name: str) -> str:
+    folder = (name or "").strip() or "[Gmail]/All Mail"
+    if folder.startswith('"') and folder.endswith('"'):
+        return folder
+    if re.search(r'[\s\[\]]', folder) or '"' in folder:
+        escaped = folder.replace("\\", "\\\\").replace('"', '\\"')
+        return f'"{escaped}"'
+    return folder
 
 
 def credentials_configured() -> bool:
@@ -141,9 +151,10 @@ def fetch_recent_mail(
     try:
         if owns_client:
             connection.login(smtp_user(), smtp_password())
-        status, _ = connection.select(imap_folder(), readonly=True)
+        folder = imap_folder()
+        status, _ = connection.select(quote_mailbox(folder), readonly=True)
         if status != "OK":
-            raise RuntimeError(f"IMAP select failed for folder {imap_folder()!r}")
+            raise RuntimeError(f"IMAP select failed for folder {folder!r}")
 
         uids = _search_uids(connection, f"(SINCE {_imap_since_date(since_days)})")
         if not uids:

@@ -93,7 +93,7 @@ Repository variables:
 | `SMTP_PORT` | optional SMTP port (default `587`) |
 | `IMAP_HOST` | optional IMAP host (default `imap.gmail.com`) |
 | `IMAP_PORT` | optional IMAP port (default `993`) |
-| `IMAP_FOLDER` | optional folder (default `INBOX`) |
+| `IMAP_FOLDER` | Mailbox to poll (default `[Gmail]/All Mail` — includes Archive; use `INBOX` for inbox-only) |
 
 ## Pipeline
 
@@ -134,7 +134,9 @@ python3 scripts/run_imap_poll.py --dry-run
 
 Daily email needs `SMTP_USER` + `SMTP_PASS` (Gmail App Password) and Sync enabled. Without SMTP secrets the script exits with an error. Without Telegram secrets, Telegram messages print to stdout.
 
-IMAP recruiter poll reuses the same `SMTP_USER` / `SMTP_PASS` App Password (`imap.gmail.com`). It updates matched Project cards (`Replied` / `Screening` / `Archived`+`Rejected HR`) and dedupes via `database/email_seen.json`.
+IMAP recruiter poll reuses the same `SMTP_USER` / `SMTP_PASS` App Password (`imap.gmail.com`).
+Default folder is `[Gmail]/All Mail` so archived Spark/Gmail mail is included.
+It updates matched Project cards (`Replied` / `Screening` / `Archived`+`Rejected HR`) and dedupes via `database/email_seen.json`.
 
 ## Identity
 

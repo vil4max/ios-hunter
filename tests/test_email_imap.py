@@ -17,6 +17,13 @@ def test_imap_credentials_reuse_smtp(monkeypatch: pytest.MonkeyPatch) -> None:
     assert email_imap.credentials_configured() is True
     assert email_imap.imap_host() == "imap.gmail.com"
     assert email_imap.imap_port() == 993
+    assert email_imap.imap_folder() == "[Gmail]/All Mail"
+
+
+def test_quote_mailbox_gmail_all_mail() -> None:
+    assert email_imap.quote_mailbox("[Gmail]/All Mail") == '"[Gmail]/All Mail"'
+    assert email_imap.quote_mailbox("INBOX") == "INBOX"
+    assert email_imap.quote_mailbox('"[Gmail]/All Mail"') == '"[Gmail]/All Mail"'
 
 
 def test_parse_message_plain() -> None:
