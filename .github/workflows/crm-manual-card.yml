@@ -101,40 +101,6 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
-      - name: Resolve card fields
-        id: card
-        run: |
-          set -euo pipefail
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            {
-              echo "company=${{ inputs.company }}"
-              echo "title=${{ inputs.title }}"
-              echo "url=${{ inputs.url }}"
-              echo "status=${{ inputs.status }}"
-              echo "channel=${{ inputs.channel }}"
-              echo "source=${{ inputs.source }}"
-              echo "applied_at=${{ inputs.applied_at }}"
-              echo "salary=${{ inputs.salary }}"
-              echo "summary=${{ inputs.summary }}"
-              echo "recruiter=${{ inputs.recruiter }}"
-              echo "close_reason=${{ inputs.close_reason }}"
-              echo "closed_stage=${{ inputs.closed_stage }}"
-            } >> "$GITHUB_OUTPUT"
-          else
-            python3 - <<'PY' >> "$GITHUB_OUTPUT"
-          import json
-          from pathlib import Path
-          data = json.loads(Path("database/crm_upsert_once.json").read_text(encoding="utf-8"))
-          for key in (
-              "company", "title", "url", "status", "channel", "source",
-              "applied_at", "salary", "summary", "recruiter",
-              "close_reason", "closed_stage",
-          ):
-              value = data.get(key) or ""
-              print(f"{key}={value}")
-          PY
-          fi
-
       - name: Upsert CRM card
         env:
           CAREER_AGENT_TOKEN: ${{ secrets.CAREER_AGENT_TOKEN }}
@@ -143,36 +109,17 @@ jobs:
           CAREER_PROJECT_OWNER: ${{ vars.CAREER_PROJECT_OWNER }}
           CAREER_PROJECT_NUMBER: ${{ vars.CAREER_PROJECT_NUMBER }}
           PROJECT_BOARD_URL: ${{ vars.PROJECT_BOARD_URL }}
-        run: |
-          set -euo pipefail
-          args=(
-            --company "${{ steps.card.outputs.company }}"
-            --title "${{ steps.card.outputs.title }}"
-            --url "${{ steps.card.outputs.url }}"
-            --status "${{ steps.card.outputs.status }}"
-          )
-          if [ -n "${{ steps.card.outputs.channel }}" ]; then
-            args+=(--channel "${{ steps.card.outputs.channel }}")
-          fi
-          if [ -n "${{ steps.card.outputs.source }}" ]; then
-            args+=(--source "${{ steps.card.outputs.source }}")
-          fi
-          if [ -n "${{ steps.card.outputs.applied_at }}" ]; then
-            args+=(--applied-at "${{ steps.card.outputs.applied_at }}")
-          fi
-          if [ -n "${{ steps.card.outputs.salary }}" ]; then
-            args+=(--salary "${{ steps.card.outputs.salary }}")
-          fi
-          if [ -n "${{ steps.card.outputs.summary }}" ]; then
-            args+=(--summary "${{ steps.card.outputs.summary }}")
-          fi
-          if [ -n "${{ steps.card.outputs.recruiter }}" ]; then
-            args+=(--recruiter "${{ steps.card.outputs.recruiter }}")
-          fi
-          if [ -n "${{ steps.card.outputs.close_reason }}" ]; then
-            args+=(--close-reason "${{ steps.card.outputs.close_reason }}")
-          fi
-          if [ -n "${{ steps.card.outputs.closed_stage }}" ]; then
-            args+=(--closed-stage "${{ steps.card.outputs.closed_stage }}")
-          fi
-          python3 scripts/add_manual_card.py "${args[@]}"
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_COMPANY: ${{ inputs.company }}
+          INPUT_TITLE: ${{ inputs.title }}
+          INPUT_URL: ${{ inputs.url }}
+          INPUT_STATUS: ${{ inputs.status }}
+          INPUT_CHANNEL: ${{ inputs.channel }}
+          INPUT_SOURCE: ${{ inputs.source }}
+          INPUT_APPLIED_AT: ${{ inputs.applied_at }}
+          INPUT_SALARY: ${{ inputs.salary }}
+          INPUT_SUMMARY: ${{ inputs.summary }}
+          INPUT_RECRUITER: ${{ inputs.recruiter }}
+          INPUT_CLOSE_REASON: ${{ inputs.close_reason }}
+          INPUT_CLOSED_STAGE: ${{ inputs.closed_stage }}
+        run: python3 scripts/run_crm_manual_card.py
