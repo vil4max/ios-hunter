@@ -1,4 +1,9 @@
 {
+  "https://app.notion.com/p/Senior-Mobile-Developer-SwiftUI-Kotlin-39cf48ec69e880d89bebe94588bacd6e": {
+    "title": "Senior Mobile Developer (SwiftUI & Kotlin)",
+    "company": "Credit Booster",
+    "first_seen": "2026-07-14T00:00:00+00:00"
+  },
   "https://career.intellias.com/vacancy/middle-ios-app-developer-30446": {
     "title": "Middle iOS App Developer",
     "company": "Intellias",
@@ -8,6 +13,18 @@
     "title": "Senior IOS Engineer",
     "company": "Intellias",
     "first_seen": "2026-07-10T08:29:48+00:00"
+  },
+  "https://career.luxoft.com/jobs/regularsenior-ios-developer-mobile-apps-25898": {
+    "title": "Regular/Senior iOS Developer (Mobile Apps)",
+    "company": "Luxoft",
+    "first_seen": "2026-07-29T10:54:17+00:00",
+    "disposition": "dropped"
+  },
+  "https://career.luxoft.com/jobs/senior-mobile-engineer-ios-swift-24568": {
+    "title": "Senior Mobile Engineer - iOS Swift",
+    "company": "Luxoft",
+    "first_seen": "2026-07-29T10:54:07+00:00",
+    "disposition": "dropped"
   },
   "https://careers.n-ix.com/jobs/4912838101?gh_jid=4912838101": {
     "title": "Lead iOS Engineer",
@@ -112,7 +129,8 @@
   "https://jobs.dou.ua/companies/developex/vacancies/365694": {
     "title": "Middle C++ Developer (Windows/macOS)",
     "company": "Developex",
-    "first_seen": "2026-07-29T06:34:12+00:00"
+    "first_seen": "2026-07-29T06:34:12+00:00",
+    "disposition": "dropped"
   },
   "https://jobs.dou.ua/companies/mobilunity/vacancies/367008": {
     "title": "iOS Engineer",
@@ -208,7 +226,8 @@
     "title": "Senior iOS Engineer",
     "company": "Robots & Pencils",
     "first_seen": "2026-07-29T00:00:00+00:00",
-    "applied_at": "2026-07-29"
+    "applied_at": "2026-07-29",
+    "disposition": "dropped"
   },
   "https://www.dataart.team/vacancies/iOS00038": {
     "title": "iOS Developer, Mobile Ticketing Platform",
