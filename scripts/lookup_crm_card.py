@@ -56,8 +56,10 @@ def main() -> int:
         canonicalize_url(str(raw.get("url") or "")),
         str(raw.get("company") or "").strip().casefold(),
         str(raw.get("title") or "").strip().casefold(),
-        str(raw.get("query") or "").strip().casefold(),
     ]
+    query = str(raw.get("query") or "").strip().casefold()
+    if query:
+        needles.extend(part.strip() for part in query.split("|") if part.strip())
     needles = [n for n in needles if n]
 
     settings = load_settings()
@@ -99,10 +101,10 @@ def main() -> int:
                 name = (node.get("field") or {}).get("name")
                 if not name:
                     continue
-                if "name" in node and node.get("name") is not None and "options" in (node.get("field") or {}):
-                    extra[str(name)] = str(node["name"])
-                elif "text" in node and node["text"] is not None:
+                if "text" in node and node["text"] is not None:
                     extra[str(name)] = str(node["text"])
+                elif "name" in node and node["name"] is not None and "date" not in node:
+                    extra[str(name)] = str(node["name"])
                 elif "date" in node and node["date"] is not None:
                     extra[str(name)] = str(node["date"])
             matches.append(
