@@ -323,5 +323,11 @@
     "processed_at": "2026-07-29T13:41:50+00:00",
     "company": "Legium.pro",
     "subject": "Ваша электронная подпись скоро перестанет действовать"
+  },
+  "<CAFeboWLQjNJZYGe1qxd7a0-5aS64zYE9M_u4hmeVdiGK1KPbWA@mail.gmail.com>": {
+    "kind": "application_ack",
+    "processed_at": "2026-07-30T07:03:00+00:00",
+    "company": "Prequel",
+    "subject": "Application for IOS Developer at Prequel"
   }
 }

@@ -91,3 +91,24 @@ def test_classify_noise_newsletter() -> None:
         body_text="Here are new jobs based on your preferences.",
     )
     assert event.kind == KIND_IGNORE
+
+
+def test_classify_prequel_showing_interest_ack() -> None:
+    event = classify_from_headers(
+        message_id="<84c8f9b2@prequelapp.com>",
+        subject="Application for IOS Developer at Prequel",
+        from_header="Natasha Grigorova <n.grigorova@prequelapp.com>",
+        body_text=(
+            "Hey Max,\n\n"
+            "Thanks so much for showing interest in the iOS Developer role!\n"
+            "Just a quick heads-up: we've had a lot of applications come in, so it's "
+            "taking a little longer than we expected to go through them all. "
+            "But don't worry, we're on it and will get back to you as soon as we can.\n\n"
+            "Really appreciate your patience – we'll be in touch soon!\n\n"
+            "Warm wishes,\nNatasha Grigorova\nPrequel\n"
+        ),
+    )
+    assert event.kind == KIND_APPLICATION_ACK
+    assert event.company == "Prequel"
+    assert "iOS" in event.role_hint or "IOS" in event.role_hint
+    assert event.recruiter.startswith("Natasha")
