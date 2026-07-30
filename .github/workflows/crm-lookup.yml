@@ -1,0 +1,40 @@
+name: CRM Lookup
+
+# Cloud-agent PAT lacks Projects scope; Actions CAREER_AGENT_TOKEN has it.
+on:
+  push:
+    paths:
+      - "database/crm_lookup_once.json"
+      - "scripts/lookup_crm_card.py"
+      - ".github/workflows/crm-lookup.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: crm-lookup-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  lookup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Lookup CRM card
+        env:
+          CAREER_AGENT_TOKEN: ${{ secrets.CAREER_AGENT_TOKEN }}
+          CAREER_AGENT_SYNC_ENABLED: ${{ vars.CAREER_AGENT_SYNC_ENABLED }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          CAREER_PROJECT_OWNER: ${{ vars.CAREER_PROJECT_OWNER }}
+          CAREER_PROJECT_NUMBER: ${{ vars.CAREER_PROJECT_NUMBER }}
+          PROJECT_BOARD_URL: ${{ vars.PROJECT_BOARD_URL }}
+        run: python3 scripts/lookup_crm_card.py
