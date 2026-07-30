@@ -63,6 +63,16 @@ _APPLYING_TO = re.compile(
     re.I,
 )
 
+# "Application for iOS Developer at Prequel"
+_APPLICATION_FOR_AT = re.compile(
+    r"application\s+for\s+(.+?)\s+at\s+([A-Z][A-Za-z0-9&.'\- ]{1,40})",
+    re.I,
+)
+
+_PERSON_NAME = re.compile(
+    r"^[A-ZА-ЯІЇЄҐ][a-zа-яіїєґ'’-]+(?:\s+[A-ZА-ЯІЇЄҐ][a-zа-яіїєґ'’-]+)+$"
+)
+
 _REJECT_PATTERNS = (
     re.compile(r"unfortunately", re.I),
     re.compile(r"not\s+(be\s+)?(able\s+to\s+)?proceed", re.I),
@@ -94,6 +104,11 @@ _SCREENING_PATTERNS = (
 _ACK_PATTERNS = (
     re.compile(r"thanks?\s+for\s+apply", re.I),
     re.compile(r"thank\s+you\s+for\s+(your\s+)?(application|interest|applying)", re.I),
+    re.compile(
+        r"thanks?\s+(so\s+much\s+)?for\s+(showing\s+)?(your\s+)?interest",
+        re.I,
+    ),
+    re.compile(r"appreciate\s+your\s+(interest|patience|application)", re.I),
     re.compile(r"application\s+(has\s+been\s+)?received", re.I),
     re.compile(r"we\s+have\s+received\s+your\s+application", re.I),
     re.compile(r"successfully\s+submitted", re.I),
@@ -185,6 +200,13 @@ def extract_company(mail: InboundMail) -> str:
         if pattern.search(hay):
             return company
 
+    app_at = _APPLICATION_FOR_AT.search(mail.subject or "")
+    if app_at:
+        name = re.sub(r"\s+", " ", app_at.group(2)).strip(" -–,.")
+        name = re.split(r"[.!?\n|]", name, maxsplit=1)[0].strip()
+        if 2 <= len(name) <= 60 and name.lower() not in {"us", "our", "the", "your"}:
+            return name
+
     applying = _APPLYING_TO.search(f"{mail.subject}\n{mail.body_text[:800]}")
     if applying:
         name = re.sub(r"\s+", " ", applying.group(1)).strip(" -–,.")
@@ -204,7 +226,8 @@ def extract_company(mail: InboundMail) -> str:
     name = (mail.from_name or "").strip()
     if name and not re.search(r"recruit|talent|hr team|careers|noreply|no-reply|hiring team", name, re.I):
         cleaned = re.sub(r"\s*(recruitment|talent|hr|team)\s*$", "", name, flags=re.I).strip()
-        if cleaned and len(cleaned) <= 40:
+        # Prefer corporate From domains over a personal "First Last" display name.
+        if cleaned and len(cleaned) <= 40 and not _PERSON_NAME.match(cleaned):
             return cleaned
 
     if any(domain == ats or domain.endswith("." + ats) for ats in _ATS_DOMAINS):
@@ -213,6 +236,8 @@ def extract_company(mail: InboundMail) -> str:
     if domain and domain not in {"gmail.com", "googlemail.com", "outlook.com", "yahoo.com"}:
         label = parts[0] if parts else domain
         if label and label not in {"mail", "email", "jobs", "careers", "noreply", "no-reply"}:
+            # prequelapp.com → Prequel (strip common product suffixes)
+            label = re.sub(r"(app|apps|hq|inc|io)$", "", label, flags=re.I) or label
             return label.replace("-", " ").title()
     return ""
 
@@ -228,12 +253,26 @@ def _clean_role(raw: str) -> str:
 
 
 def extract_role_hint(mail: InboundMail) -> str:
+    app_at = _APPLICATION_FOR_AT.search(mail.subject or "")
+    if app_at:
+        role = _clean_role(app_at.group(1))
+        if role:
+            return role
     hay = f"{mail.body_text[:2000]}\n{mail.subject}"
     for pattern in (_ROLE_FOR_POSITION, _ROLE_SENIORITY):
         match = pattern.search(hay)
         if not match:
             continue
         role = _clean_role(match.group(1))
+        if role:
+            return role
+    interest = re.search(
+        r"(?:interest|showing interest)\s+in\s+(?:the\s+)?(.+?)\s+role",
+        hay,
+        re.I,
+    )
+    if interest:
+        role = _clean_role(interest.group(1))
         if role:
             return role
     return ""
