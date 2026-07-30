@@ -28,6 +28,11 @@
     "company": "MyGreenhouse",
     "subject": "Show recruiters you’re really interested with Dream Job"
   },
+  "<0100019fb2500824-378a0094-e26c-413a-bb79-e296a0f6c71a-000000@email.amazonses.com>": {
+    "kind": "application_ack",
+    "processed_at": "2026-07-30T10:05:42+00:00",
+    "subject": "ElevenLabs | Job Application"
+  },
   "<0101019faa3ac02b-d5c9e8e3-ef86-43ea-9392-8ff92655359d-000000@us-west-2.amazonses.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -185,6 +190,19 @@
     "processed_at": "2026-07-30T07:21:26+00:00",
     "company": "Wispr Flow",
     "subject": "Updates to our Privacy Policy and Terms of Service"
+  },
+  "<20260730082330.9f6369b3b7b17a62@creator.patreon.com>": {
+    "kind": "replied",
+    "processed_at": "2026-07-30T10:05:42+00:00",
+    "company": "iOS (Swift) jobs",
+    "subject": "DebugSwift"
+  },
+  "<20260730092940.32be1192a9c36e08@mg.dou.ua>": {
+    "kind": "replied",
+    "processed_at": "2026-07-30T10:05:45+00:00",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg0hv0M",
+    "company": "LineUp",
+    "subject": "Личное сообщение от пользователя Alina Morgach на DOU"
   },
   "<2032248378.42868428.1785241368085@email.apple.com>": {
     "kind": "ignore",
@@ -365,6 +383,18 @@
     "processed_at": "2026-07-29T13:41:50+00:00",
     "company": "Workable",
     "subject": "Thanks for applying to Northstrat"
+  },
+  "<dd13b16e-45ab-5dea-b36f-baa4293ee268@mail.uber.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-30T10:05:42+00:00",
+    "company": "Электронные квитанции Uber",
+    "subject": "Ваша поездка с Uber: четверг, день"
+  },
+  "<f49fc712-6020-5942-990f-7d2d973c3961@mail.uber.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-30T10:05:45+00:00",
+    "company": "Электронные квитанции Uber",
+    "subject": "Ваша поездка с Uber: четверг, день"
   },
   "<iAIW_rStFoBPCFFbFMEvdA@notifications.google.com>": {
     "kind": "ignore",
