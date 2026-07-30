@@ -16,6 +16,18 @@
     "processed_at": "2026-07-29T16:38:11+00:00",
     "subject": "ElevenLabs | Application Received"
   },
+  "<0100019faf93d213-453fb7fa-f1c1-4a42-8217-4573af9e538b-000000@email.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-30T06:59:59+00:00",
+    "company": "JobCopilot",
+    "subject": "Fresh job openings this week 🔎"
+  },
+  "<0100019fb19db0c7-c2524972-9500-4282-8565-9530384202cd-000000@email.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-30T06:59:59+00:00",
+    "company": "MyGreenhouse",
+    "subject": "Show recruiters you’re really interested with Dream Job"
+  },
   "<0101019faa3ac02b-d5c9e8e3-ef86-43ea-9392-8ff92655359d-000000@us-west-2.amazonses.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -46,6 +58,12 @@
     "processed_at": "2026-07-29T16:38:11+00:00",
     "company": "Google",
     "subject": "Security alert"
+  },
+  "<1004944868.7743497.1785389263636@lor1-app159092.prod.linkedin.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-30T06:59:59+00:00",
+    "company": "LinkedIn Job Alerts",
+    "subject": "Senior IOS AI-Enabled Developer at Tango"
   },
   "<115422669.10612570.1785242587239@email.apple.com>": {
     "kind": "ignore",
@@ -107,6 +125,18 @@
     "company": "Отклик с Indeed",
     "subject": "Отклик на вакансию Senior iOS Engineer через Indeed"
   },
+  "<1junu70l8mnqi800@indeed.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-30T06:59:59+00:00",
+    "company": "Indeed",
+    "subject": "iOS: Senior IOS AI-Enabled Developer у TangoMe і ще 8 нових вакансій"
+  },
+  "<1juo0lqm6i1bc800@indeed.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-30T06:59:59+00:00",
+    "company": "Indeed",
+    "subject": "ios developer: Senior IOS AI-Enabled Developer у TangoMe і ще 4 нові вакансії"
+  },
   "<20260728154930.3.ec4ca0e2efd05417@mg-d0.substack.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -143,6 +173,18 @@
     "processed_at": "2026-07-29T16:38:11+00:00",
     "company": "The Pragmatic Engineer",
     "subject": "Formal methods with Hillel Wayne"
+  },
+  "<20260729172805.5634ba7b9484af64@mg.pointfree.co>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-30T06:59:59+00:00",
+    "company": "Point-Free",
+    "subject": "New in SQLiteData: Sectioned queries"
+  },
+  "<20260729182902.245df3abe2769ee3@cio107418.mail.wispr.ai>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-30T06:59:59+00:00",
+    "company": "Wispr Flow",
+    "subject": "Updates to our Privacy Policy and Terms of Service"
   },
   "<2032248378.42868428.1785241368085@email.apple.com>": {
     "kind": "ignore",
@@ -192,6 +234,30 @@
     "company": "JobLeads",
     "subject": "There are 5 new jobs matching your saved search for July 29: Senior iOS Developer"
   },
+  "<6a6ab817.7cb0f90e.288d71.3adeSMTPIN_ADDED_MISSING@mx.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-30T06:59:59+00:00",
+    "company": "JobLeads",
+    "subject": "There are 5 new jobs matching your saved search for July 29: Senior iOS Developer"
+  },
+  "<6a6ac7c0.b5a1b8ec.2ec0b7.fec7SMTPIN_ADDED_BROKEN@mx.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-30T06:59:59+00:00",
+    "company": "Jooble",
+    "subject": "CHER17 шукає Програміст ERP BAS і 9 інших нових робіт"
+  },
+  "<6a6aea97.84df9198.2595a5.8bf3SMTPIN_ADDED_BROKEN@mx.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-30T06:59:59+00:00",
+    "company": "Jooble",
+    "subject": "🔔 Максим, PixelPerfect Promotions шукає Web програміст (можна без досвіду) і 6 більше нових робіт"
+  },
+  "<72cc87b2-223f-4eaa-8968-b4c8f41a1dd7@cdg3s51mta0074.xt.local>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-30T06:59:59+00:00",
+    "company": "ZEEKR EU",
+    "subject": "The Zeekr 9X is here"
+  },
   "<7542eabb-48d0-4b17-b747-4ad8f5f0ca6d@ms4-767489bc99-flth5>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -204,6 +270,12 @@
     "company": "ZONE3000.net",
     "subject": "Thank you for your resume  —  ZONE3000"
   },
+  "<84c8f9b2bcd6b8b08dc77b62b64b561a@jobleads.com>": {
+    "kind": "replied",
+    "processed_at": "2026-07-30T06:59:59+00:00",
+    "company": "JobLeads",
+    "subject": "Fresh match: Senior iOS Engineer  —  Remote, Build Scalable Apps, United States seeking someone like you"
+  },
   "<8fdea58a-59a7-4770-a0c5-73e416b2d679@workablemail.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -215,6 +287,12 @@
     "processed_at": "2026-07-29T13:41:50+00:00",
     "company": "Jooble",
     "subject": "🎯 Цей день настав — ми шукаємо вам роботу"
+  },
+  "<CAFeboWLQjNJZYGe1qxd7a0-5aS64zYE9M_u4hmeVdiGK1KPbWA@mail.gmail.com>": {
+    "kind": "application_ack",
+    "processed_at": "2026-07-30T07:03:00+00:00",
+    "company": "Prequel",
+    "subject": "Application for IOS Developer at Prequel"
   },
   "<CALtcTpMYJ4SfNCUuH0a9JHEdo-Z8GO4ZYPxxSqQKmndGna_HMQ@mail.gmail.com>": {
     "kind": "replied",
