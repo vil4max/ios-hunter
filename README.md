@@ -130,6 +130,8 @@ python3 scripts/seed_project_from_seen.py --dry-run
 python3 scripts/run_vacancy_liveness.py --dry-run
 python3 scripts/run_daily_report.py
 python3 scripts/run_imap_poll.py --dry-run
+python3 scripts/run_hirify_sync.py --dry-run
+python3 scripts/run_hirify_sync.py --xlsx ~/Downloads/my_applications_2026-07-29.xlsx
 ```
 
 Daily email needs `SMTP_USER` + `SMTP_PASS` (Gmail App Password) and Sync enabled. Without SMTP secrets the script exits with an error. Without Telegram secrets, Telegram messages print to stdout.
@@ -138,6 +140,8 @@ IMAP recruiter poll reuses the same `SMTP_USER` / `SMTP_PASS` App Password (`ima
 Default folder is `[Gmail]/All Mail` so archived Spark/Gmail mail is included.
 It updates matched Project cards (`Replied` / `Screening` / `Archived`+`Rejected HR`) and dedupes via `database/email_seen.json`.
 If the workflow fails with `AUTHENTICATIONFAILED` / Invalid credentials, regenerate the App Password and update `SMTP_PASS` (IMAP access must stay enabled in Gmail settings).
+
+Hirify Applications sync is local-first: export Excel from https://hirify.me/applications, then run `scripts/run_hirify_sync.py` (defaults to latest `~/Downloads/my_applications_*.xlsx`). Stages map into CRM with no-downgrade; fingerprints live in `database/hirify_seen.json`.
 
 ## Identity
 

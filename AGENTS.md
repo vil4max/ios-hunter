@@ -25,6 +25,9 @@ Standard commands live in `README.md` ("Local debug") and `CONTRIBUTING.md`
   `CAREER_AGENT_TOKEN` + `CAREER_AGENT_SYNC_ENABLED=1`).
 - IMAP recruiter poll (CRM from inbox): `python3 scripts/run_imap_poll.py [--dry-run]`.
   Reuses `SMTP_USER`/`SMTP_PASS` App Password; writes `database/email_seen.json`.
+- Hirify Applications → CRM (local): export Excel on hirify.me/applications, then
+  `python3 scripts/run_hirify_sync.py [--xlsx PATH] [--dry-run]`. Dedupes via
+  `database/hirify_seen.json`.
 - To avoid mutating the tracked `database/seen.json`, run with
   `SEEN_PATH=/tmp/seen.json python3 scripts/run_pipeline.py`.
 - Collector coverage report: `python3 scripts/collector_parity.py`.
