@@ -1,10 +1,16 @@
 name: IMAP Recruiter Poll
 
+# Cloud-agent PAT cannot workflow_dispatch and has no SMTP_* secrets locally.
+# Push database/imap_poll_once.json to run an on-demand poll (same idea as CRM Manual Card).
 on:
   workflow_dispatch:
   schedule:
     # :47 past each UTC hour — offset from collect (:17).
     - cron: "47 * * * *"
+  push:
+    paths:
+      - "database/imap_poll_once.json"
+      - ".github/workflows/imap-poll.yml"
 
 permissions:
   contents: write
@@ -32,6 +38,16 @@ jobs:
         id: gate
         run: |
           set -euo pipefail
+          if [ "${{ github.event_name }}" = "push" ]; then
+            if [ -f database/imap_poll_once.json ]; then
+              echo "skip_gate=false" >> "$GITHUB_OUTPUT"
+              echo "Once-file trigger — gate bypassed"
+            else
+              echo "skip_gate=true" >> "$GITHUB_OUTPUT"
+              echo "Once-file missing (clear/delete push) — skip poll"
+            fi
+            exit 0
+          fi
           if [ "${{ github.event_name }}" != "schedule" ]; then
             echo "skip_gate=false" >> "$GITHUB_OUTPUT"
             echo "Manual trigger — gate bypassed"
@@ -62,15 +78,18 @@ jobs:
           EMAIL_SEEN_PATH: database/email_seen.json
         run: python3 scripts/run_imap_poll.py
 
-      - name: Commit email seen store
+      - name: Commit email seen store / clear once-file
         if: steps.gate.outputs.skip_gate != 'true'
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add database/email_seen.json
+          if [ -f database/imap_poll_once.json ]; then
+            git rm -f database/imap_poll_once.json
+          fi
           if git diff --staged --quiet; then
-            echo "No email_seen changes to commit."
+            echo "No email_seen / once-file changes to commit."
             exit 0
           fi
           git commit -m "chore(email_seen): record processed recruiter mail [skip ci]"
