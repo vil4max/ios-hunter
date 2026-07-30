@@ -34,7 +34,6 @@ from collector.dou_catalog import (
 )
 from collector.djinni import collect_djinni
 from collector.epam import collect_epam
-from collector.indeed import collect_indeed
 from collector.generic import (
     collect_breezy,
     collect_html_regex,
@@ -317,11 +316,18 @@ def _python_collectors() -> list[Callable[[], SourceResult]]:
         lambda: collect_greenhouse("Innovecs", "innovecs"),
         lambda: collect_teamtailor("Levi9", "https://jobs.ua.levi9.com/jobs.json"),
         lambda: collect_teamtailor("Avenga", "https://career.avenga.com/jobs.json"),
-        lambda: collect_html_regex(
+        lambda: collect_soup_links(
             "CHI Software",
             "https://chisw.com/careers/vacancies/",
-            "https://chisw.com/",
-            r"https://chisw\.com/vacancies/([a-z0-9-]+)/",
+            base_url="https://chisw.com/",
+            selector="a[href*='/vacancies/']",
+            title_selector="h3.title",
+            skip_exact={
+                "https://chisw.com/careers/vacancies/",
+                "https://chisw.com/careers/vacancies",
+                "https://chisw.com/vacancies/",
+                "https://chisw.com/vacancies",
+            },
         ),
         lambda: collect_html_regex(
             "Sombra",
@@ -486,7 +492,6 @@ def _python_collectors() -> list[Callable[[], SourceResult]]:
         lambda: collect_recruitee("Playrix", "playrix"),
         lambda: collect_smartrecruiters("Playtech", "playtech"),
         collect_djinni,
-        collect_indeed,
         collect_dou_ios_rss,
     ]
 
