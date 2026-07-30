@@ -1,18 +1,18 @@
-name: Hourly Collect Trigger
+name: Collect Schedule Trigger
 
 on:
   workflow_dispatch:
   schedule:
-    # :17 past each UTC hour — avoids GHA top-of-hour queue delay.
-    # Kyiv 09:00-18:00 gate still skips nights.
-    - cron: "17 * * * *"
+    # Kyiv 09/12/15/18 — UTC offsets shift with DST (EET +2 / EEST +3).
+    # Candidate UTC hours at :17; Europe/Kyiv gate keeps only the four slots.
+    - cron: "17 6,7,9,10,12,13,15,16 * * *"
 
 permissions:
   actions: write
   contents: read
 
 concurrency:
-  group: hourly-collect-trigger-${{ github.repository }}
+  group: collect-schedule-trigger-${{ github.repository }}
   cancel-in-progress: false
 
 jobs:
@@ -26,16 +26,26 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Kyiv business-hours gate
+      - name: Kyiv collect-slot gate
         id: gate
         run: |
           set -euo pipefail
           if [ "${{ github.event_name }}" != "schedule" ]; then
             echo "skip_gate=false" >> "$GITHUB_OUTPUT"
-            echo "Manual trigger — gate bypassed"
+            echo "final_slot=false" >> "$GITHUB_OUTPUT"
+            echo "Manual trigger — gate bypassed (collect + IMAP)"
             exit 0
           fi
-          if python3 scripts/should_run_collect.py; then
+          set +e
+          output="$(python3 scripts/should_run_collect.py)"
+          status=$?
+          set -e
+          echo "$output"
+          kyiv_hour="$(printf '%s\n' "$output" | awk -F= '/^kyiv_hour=/{print $2; exit}')"
+          final_slot="$(printf '%s\n' "$output" | awk -F= '/^final_slot=/{print $2; exit}')"
+          echo "kyiv_hour=${kyiv_hour}" >> "$GITHUB_OUTPUT"
+          echo "final_slot=${final_slot:-false}" >> "$GITHUB_OUTPUT"
+          if [ "$status" -eq 0 ]; then
             echo "skip_gate=false" >> "$GITHUB_OUTPUT"
           else
             echo "skip_gate=true" >> "$GITHUB_OUTPUT"
@@ -52,13 +62,65 @@ jobs:
           max_attempts=5
           delay=15
           while true; do
-            echo "Dispatch attempt ${attempt}/${max_attempts}"
+            echo "Dispatch Collect attempt ${attempt}/${max_attempts}"
             if gh workflow run "Collect iOS Jobs" --repo "${repo}" --ref main; then
               echo "Collect iOS Jobs dispatched successfully"
-              exit 0
+              break
             fi
             if [ "${attempt}" -ge "${max_attempts}" ]; then
               echo "Failed to dispatch Collect iOS Jobs after ${max_attempts} attempts" >&2
+              exit 1
+            fi
+            echo "Dispatch failed; retrying in ${delay}s"
+            sleep "${delay}"
+            attempt=$((attempt + 1))
+            delay=$((delay * 2))
+          done
+
+      - name: Trigger IMAP Recruiter Poll
+        if: steps.gate.outputs.skip_gate != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          repo="${{ github.repository }}"
+          attempt=1
+          max_attempts=5
+          delay=15
+          while true; do
+            echo "Dispatch IMAP attempt ${attempt}/${max_attempts}"
+            if gh workflow run "IMAP Recruiter Poll" --repo "${repo}" --ref main; then
+              echo "IMAP Recruiter Poll dispatched successfully"
+              break
+            fi
+            if [ "${attempt}" -ge "${max_attempts}" ]; then
+              echo "Failed to dispatch IMAP Recruiter Poll after ${max_attempts} attempts" >&2
+              exit 1
+            fi
+            echo "Dispatch failed; retrying in ${delay}s"
+            sleep "${delay}"
+            attempt=$((attempt + 1))
+            delay=$((delay * 2))
+          done
+
+      - name: Trigger Daily Email Report
+        if: steps.gate.outputs.skip_gate != 'true' && steps.gate.outputs.final_slot == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          repo="${{ github.repository }}"
+          attempt=1
+          max_attempts=5
+          delay=15
+          while true; do
+            echo "Dispatch Daily Email attempt ${attempt}/${max_attempts}"
+            if gh workflow run "Daily Email Report" --repo "${repo}" --ref main; then
+              echo "Daily Email Report dispatched successfully"
+              exit 0
+            fi
+            if [ "${attempt}" -ge "${max_attempts}" ]; then
+              echo "Failed to dispatch Daily Email Report after ${max_attempts} attempts" >&2
               exit 1
             fi
             echo "Dispatch failed; retrying in ${delay}s"

@@ -2,7 +2,7 @@
 
 iOS Hunter is evolving into **Career Agent**: collect iOS/Swift vacancies, sync them to a GitHub Project board, and report ops status on Telegram.
 
-Production runs on GitHub Actions. GitHub Project is the operational source of truth for vacancy status. Telegram gets a short OK during Kyiv business hours (09:00–18:00), and the vacancy list only when something new lands in Inbox.
+Production runs on GitHub Actions. GitHub Project is the operational source of truth for vacancy status. Telegram gets a short OK on the Kyiv collect slots (09:00 / 12:00 / 15:00 / 18:00), and the vacancy list only when something new lands in Inbox.
 
 See `docs/architecture/career-agent.md` and `docs/github-setup-guide.md`.
 
@@ -111,11 +111,11 @@ Telegram only on new vacancies (list + OK)
 
 | Workflow | When |
 |----------|------|
-| **Collect iOS Jobs** | Manual or via hourly trigger — collect, sync, Telegram if new |
-| **Hourly Collect Trigger** | Every hour at :17 UTC; dispatches Collect only Kyiv 09:00–18:00 |
+| **Collect iOS Jobs** | Manual or via schedule trigger — collect, sync, Telegram if new |
+| **Collect Schedule Trigger** | Kyiv 09/12/15/18 (UTC candidates at :17); dispatches Collect + IMAP; at 18 also Daily Email |
 | **Daily Vacancy Liveness** | Every day 04:00 UTC (incl. weekends) — probe active board URLs, archive closed, Telegram status |
-| **Daily Email Report** | Every day 15:00 UTC (≈18:00 Kyiv) — full CRM + collect summary to email |
-| **IMAP Recruiter Poll** | Every hour at :47 UTC (Kyiv 09:00–18:00) — classify recruiter mail, update CRM, Telegram |
+| **Daily Email Report** | Final Kyiv 18:00 slot (via schedule trigger) or manual — full CRM + collect summary to email |
+| **IMAP Recruiter Poll** | Same Kyiv slots as Collect (via schedule trigger) or manual — classify recruiter mail, update CRM, Telegram |
 | **CI** | Push / PR — pytest |
 
 ## Local debug

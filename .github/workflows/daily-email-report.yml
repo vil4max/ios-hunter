@@ -2,9 +2,8 @@ name: Daily Email Report
 
 on:
   workflow_dispatch:
-  schedule:
-    # 15:00 UTC ≈ 18:00 Kyiv (EEST) / 17:00 Kyiv (EET).
-    - cron: "0 15 * * *"
+  # Final Kyiv 18:00 slot dispatches this from Collect Schedule Trigger.
+  # Keep workflow_dispatch for manual runs.
 
 permissions:
   contents: read
