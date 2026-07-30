@@ -24,6 +24,11 @@
     "company": "N-iX",
     "first_seen": "2026-07-10T08:29:48+00:00"
   },
+  "https://chisw.com/careers": {
+    "title": "Careers application (iOS/Mobile)",
+    "company": "CHI Software",
+    "first_seen": "2026-07-30T00:00:00+00:00"
+  },
   "https://djinni.co/jobs/807553-swift-mid-level-experience-ios-developer": {
     "title": "Swift / mid-level experience iOS Developer",
     "company": "WE wilke experience",
@@ -32,7 +37,8 @@
   "https://djinni.co/jobs/825947-trainee-ios-developer": {
     "title": "Trainee iOS developer",
     "company": "Cloud Works",
-    "first_seen": "2026-07-30T09:45:29+00:00"
+    "first_seen": "2026-07-30T09:45:29+00:00",
+    "disposition": "dropped"
   },
   "https://djinni.co/jobs/833474-farmer-ios": {
     "title": "Farmer IOS",
@@ -117,7 +123,8 @@
   "https://jobs.ashbyhq.com/elevenlabs/3b46a40a-e51d-47d3-b623-75a4d03a05b4": {
     "title": "iOS Developer",
     "company": "ElevenLabs",
-    "first_seen": "2026-07-29T00:00:00+00:00"
+    "first_seen": "2026-07-29T00:00:00+00:00",
+    "disposition": "dropped"
   },
   "https://jobs.ashbyhq.com/kissmyapps/8a3df316-6232-4bd8-bf94-19f7ea918be5": {
     "title": "iOS Engineer",
