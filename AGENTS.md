@@ -35,3 +35,13 @@ Standard commands live in `README.md` ("Local debug") and `CONTRIBUTING.md`
   `python3 scripts/discover_dou_companies.py [--enrich-sites]`.
   Seed file: `database/dou_companies.json`. Collect reads it and adds DOU company
   feeds (active vacancies, capped by `DOU_SEED_FEED_LIMIT`, default 300).
+
+### Career CRM once-file sync (cloud)
+
+Cloud-agent PAT often lacks Projects scope; board writes go through Actions via
+once-files (`database/crm_upsert_once.json`, `database/crm_lookup_once.json`) and
+workflows `CRM Manual Card` / `CRM Lookup`.
+
+**Push these CRM-only once-file commits straight to `main`** (no feature branch /
+PR). Lookup existing card first when possible, upsert reject/apply in place, then
+clear the once-file on `main` so later pushes no-op.
