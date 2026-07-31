@@ -5,6 +5,7 @@ from zoneinfo import ZoneInfo
 
 from config.schedule import (
     due_collect_slot,
+    due_collect_slot_for_local_kick,
     format_next_check_line,
     is_collect_business_hour,
     is_final_collect_slot,
@@ -20,6 +21,15 @@ def test_due_collect_slot_catchup() -> None:
     assert due_collect_slot(datetime(2026, 7, 28, 11, 15, tzinfo=_KYIV)) == 9
     assert due_collect_slot(datetime(2026, 7, 28, 12, 0, tzinfo=_KYIV)) == 12
     assert due_collect_slot(datetime(2026, 7, 28, 18, 5, tzinfo=_KYIV)) == 18
+
+
+def test_due_collect_slot_for_local_kick_waits_lag() -> None:
+    assert due_collect_slot_for_local_kick(datetime(2026, 7, 28, 9, 0, tzinfo=_KYIV)) is None
+    assert due_collect_slot_for_local_kick(datetime(2026, 7, 28, 9, 14, tzinfo=_KYIV)) is None
+    assert due_collect_slot_for_local_kick(datetime(2026, 7, 28, 9, 15, tzinfo=_KYIV)) == 9
+    assert due_collect_slot_for_local_kick(datetime(2026, 7, 28, 12, 14, tzinfo=_KYIV)) is None
+    assert due_collect_slot_for_local_kick(datetime(2026, 7, 28, 12, 15, tzinfo=_KYIV)) == 12
+    assert due_collect_slot_for_local_kick(datetime(2026, 7, 28, 8, 59, tzinfo=_KYIV)) is None
 
 
 def test_is_collect_business_hour_window() -> None:

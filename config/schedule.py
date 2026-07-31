@@ -6,6 +6,7 @@ from zoneinfo import ZoneInfo
 KYIV = ZoneInfo("Europe/Kyiv")
 COLLECT_HOURS = (9, 12, 15, 18)
 FINAL_COLLECT_HOUR = 18
+COLLECT_KICK_LAG_MINUTES = 15
 BUSINESS_HOUR_START = COLLECT_HOURS[0]
 BUSINESS_HOUR_END = COLLECT_HOURS[-1]
 BUSINESS_HOURS = COLLECT_HOURS
@@ -30,6 +31,20 @@ def due_collect_slot(now: datetime | None = None) -> int | None:
         start = datetime(stamp.year, stamp.month, stamp.day, hour, 0, tzinfo=KYIV)
         if stamp >= start:
             due = hour
+    return due
+
+
+def due_collect_slot_for_local_kick(now: datetime | None = None) -> int | None:
+    """Due slot only after COLLECT_KICK_LAG_MINUTES past slot start (local GHA lag kick)."""
+    stamp = _as_kyiv(now)
+    due = due_collect_slot(stamp)
+    if due is None:
+        return None
+    ready_at = datetime(
+        stamp.year, stamp.month, stamp.day, due, 0, tzinfo=KYIV
+    ) + timedelta(minutes=COLLECT_KICK_LAG_MINUTES)
+    if stamp < ready_at:
+        return None
     return due
 
 

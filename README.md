@@ -118,6 +118,22 @@ Telegram only on new vacancies (list + OK)
 | **IMAP Recruiter Poll** | After Collect completes (`workflow_run`) or manual — classify recruiter mail, update CRM, Telegram |
 | **CI** | Push / PR — pytest |
 
+## Local Collect kick (GHA lag kludge)
+
+If GitHub Actions `schedule` is late and a Kyiv slot (09/12/15/18) is still unmarked after 15 minutes, a Mac launchd agent can dispatch **Collect iOS Jobs** via `gh`. This is a backup nudge only — not a replacement for remote cron, and it does not run the pipeline locally. IMAP still follows Collect via `workflow_run`.
+
+Requires Mac timezone `Europe/Kyiv`, `gh` auth, and a clean fetch of `origin/main`.
+
+```bash
+chmod +x scripts/kick_collect_if_due.sh scripts/install_collect_kick_launchd.sh
+./scripts/install_collect_kick_launchd.sh install   # 09:15 / 12:15 / 15:15 / 18:15 local
+./scripts/install_collect_kick_launchd.sh status
+./scripts/install_collect_kick_launchd.sh uninstall
+./scripts/kick_collect_if_due.sh                    # manual dry check + maybe dispatch
+```
+
+Log: `~/Library/Logs/ios-hunter-collect-kick.log`
+
 ## Local debug
 
 ```bash
@@ -132,6 +148,7 @@ python3 scripts/run_daily_report.py
 python3 scripts/run_imap_poll.py --dry-run
 python3 scripts/run_hirify_sync.py --dry-run
 python3 scripts/run_hirify_sync.py --xlsx ~/Downloads/my_applications_2026-07-29.xlsx
+python3 scripts/should_kick_collect.py
 ```
 
 Daily email needs `SMTP_USER` + `SMTP_PASS` (Gmail App Password) and Sync enabled. Without SMTP secrets the script exits with an error. Without Telegram secrets, Telegram messages print to stdout.
