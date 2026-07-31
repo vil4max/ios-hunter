@@ -2,8 +2,11 @@ name: IMAP Recruiter Poll
 
 on:
   workflow_dispatch:
-  # Scheduled via .github/workflows/hourly-trigger.yml together with Collect
-  # (Kyiv 09/12/15/18). Keep workflow_dispatch for manual polls.
+  # After Collect finishes (board already updated), so mail CRM never races Inbox seed.
+  workflow_run:
+    workflows: ["Collect iOS Jobs"]
+    types:
+      - completed
 
 permissions:
   contents: write
@@ -15,6 +18,11 @@ concurrency:
 
 jobs:
   poll:
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_run' &&
+       github.event.workflow_run.conclusion != 'cancelled' &&
+       github.event.workflow_run.conclusion != 'skipped')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,23 +35,7 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
-      - name: Kyiv business-hours gate
-        id: gate
-        run: |
-          set -euo pipefail
-          if [ "${{ github.event_name }}" != "schedule" ]; then
-            echo "skip_gate=false" >> "$GITHUB_OUTPUT"
-            echo "Manual trigger — gate bypassed"
-            exit 0
-          fi
-          if python3 scripts/should_run_collect.py; then
-            echo "skip_gate=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "skip_gate=true" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Poll IMAP and sync CRM
-        if: steps.gate.outputs.skip_gate != 'true'
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -62,7 +54,6 @@ jobs:
         run: python3 scripts/run_imap_poll.py
 
       - name: Commit email seen store
-        if: steps.gate.outputs.skip_gate != 'true'
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"

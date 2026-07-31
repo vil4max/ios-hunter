@@ -33,7 +33,7 @@ Collect (Kyiv 09/12/15/18)
   → Project Sync (private Draft Inbox if new URL)
   → dual-write seen.json
   → Telegram each run: datetime · OK · (новых нет | list)
-  → IMAP recruiter poll (same slots; board update from mail)
+  → IMAP recruiter poll (after Collect completes; board update from mail)
 
 Vacancy liveness (daily 04:00 UTC, incl. weekends)
   → probe active Project card URLs

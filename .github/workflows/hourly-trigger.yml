@@ -34,7 +34,7 @@ jobs:
           if [ "${{ github.event_name }}" != "schedule" ]; then
             echo "skip_gate=false" >> "$GITHUB_OUTPUT"
             echo "final_slot=false" >> "$GITHUB_OUTPUT"
-            echo "Manual trigger — gate bypassed (collect + IMAP)"
+            echo "Manual trigger — gate bypassed (collect; IMAP follows via workflow_run)"
             exit 0
           fi
           set +e
@@ -78,31 +78,8 @@ jobs:
             delay=$((delay * 2))
           done
 
-      - name: Trigger IMAP Recruiter Poll
-        if: steps.gate.outputs.skip_gate != 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          repo="${{ github.repository }}"
-          attempt=1
-          max_attempts=5
-          delay=15
-          while true; do
-            echo "Dispatch IMAP attempt ${attempt}/${max_attempts}"
-            if gh workflow run "IMAP Recruiter Poll" --repo "${repo}" --ref main; then
-              echo "IMAP Recruiter Poll dispatched successfully"
-              break
-            fi
-            if [ "${attempt}" -ge "${max_attempts}" ]; then
-              echo "Failed to dispatch IMAP Recruiter Poll after ${max_attempts} attempts" >&2
-              exit 1
-            fi
-            echo "Dispatch failed; retrying in ${delay}s"
-            sleep "${delay}"
-            attempt=$((attempt + 1))
-            delay=$((delay * 2))
-          done
+      # IMAP Recruiter Poll starts via workflow_run after Collect iOS Jobs completes
+      # (see .github/workflows/imap-poll.yml) — never in parallel with Collect.
 
       - name: Trigger Daily Email Report
         if: steps.gate.outputs.skip_gate != 'true' && steps.gate.outputs.final_slot == 'true'

@@ -3,7 +3,7 @@ name: Collect iOS Jobs
 on:
   workflow_dispatch:
   # Scheduled Kyiv 09/12/15/18 via .github/workflows/hourly-trigger.yml
-  # (ubuntu → workflow_dispatch; same trigger also starts IMAP poll).
+  # (ubuntu → workflow_dispatch). IMAP Recruiter Poll follows via workflow_run.
 
 permissions:
   contents: write

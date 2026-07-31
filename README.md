@@ -112,10 +112,10 @@ Telegram only on new vacancies (list + OK)
 | Workflow | When |
 |----------|------|
 | **Collect iOS Jobs** | Manual or via schedule trigger — collect, sync, Telegram if new |
-| **Collect Schedule Trigger** | Hourly :17 UTC in daytime band; Kyiv due-slot 09/12/15/18 with catch-up + slot dedupe; Collect + IMAP; at 18 also Daily Email |
+| **Collect Schedule Trigger** | Hourly :17 UTC in daytime band; Kyiv due-slot 09/12/15/18 with catch-up + slot dedupe; Collect; at 18 also Daily Email |
 | **Daily Vacancy Liveness** | Every day 04:00 UTC (incl. weekends) — probe active board URLs, archive closed, Telegram status |
 | **Daily Email Report** | Final Kyiv 18:00 slot (via schedule trigger) or manual — full CRM + collect summary to email |
-| **IMAP Recruiter Poll** | Same Kyiv slots as Collect (via schedule trigger) or manual — classify recruiter mail, update CRM, Telegram |
+| **IMAP Recruiter Poll** | After Collect completes (`workflow_run`) or manual — classify recruiter mail, update CRM, Telegram |
 | **CI** | Push / PR — pytest |
 
 ## Local debug
