@@ -45,11 +45,6 @@
     "company": "Trident Media",
     "first_seen": "2026-07-27T19:26:23+00:00"
   },
-  "https://djinni.co/jobs/835201-senior-ios-engineer": {
-    "title": "Senior iOS Engineer",
-    "company": "N-iX",
-    "first_seen": "2026-07-31T12:15:36+00:00"
-  },
   "https://djinni.co/jobs/835500-mobile-sdk-developer-ios-android-react-native": {
     "title": "Mobile SDK Developer (iOS/Android/React Native)",
     "company": "limaz",
@@ -100,10 +95,20 @@
     "company": "AgileEngine",
     "first_seen": "2026-07-30T06:44:39+00:00"
   },
+  "https://djinni.co/jobs/840456-senior-ios-engineer": {
+    "title": "Senior iOS Engineer",
+    "company": "Hire With Haven",
+    "first_seen": "2026-07-31T15:17:06+00:00"
+  },
   "https://explore-jobs.ciklum.com/en/sites/ciklum-career/job/3982": {
     "title": "iOS Engineer",
     "company": "Ciklum",
     "first_seen": "2026-07-31T08:17:44+00:00"
+  },
+  "https://explore-jobs.ciklum.com/en/sites/ciklum-career/job/4054": {
+    "title": "Senior iOS Engineer",
+    "company": "Ciklum",
+    "first_seen": "2026-07-31T15:17:06+00:00"
   },
   "https://gen-tech.breezy.hr/p/beb01cda1666-ios-developer": {
     "title": "IOS Developer",
@@ -145,6 +150,11 @@
     "title": "Senior iOS Developer",
     "company": "Breeze",
     "first_seen": "2026-07-29T06:34:12+00:00"
+  },
+  "https://jobs.dou.ua/companies/ciklum/vacancies/368093": {
+    "title": "iOS Engineer (3982)",
+    "company": "Ciklum",
+    "first_seen": "2026-07-31T15:17:06+00:00"
   },
   "https://jobs.dou.ua/companies/developex/vacancies/365694": {
     "title": "Middle C++ Developer (Windows/macOS)",
