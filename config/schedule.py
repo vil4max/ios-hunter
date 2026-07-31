@@ -18,12 +18,27 @@ def _as_kyiv(now: datetime | None = None) -> datetime:
     return stamp.astimezone(KYIV)
 
 
+def due_collect_slot(now: datetime | None = None) -> int | None:
+    """Latest Kyiv collect hour that has already started today.
+
+    Used as catch-up for GitHub Actions schedule lag: after 09:00 and before
+    12:00 the due slot stays 9 so a late cron can still dispatch collect.
+    """
+    stamp = _as_kyiv(now)
+    due: int | None = None
+    for hour in COLLECT_HOURS:
+        start = datetime(stamp.year, stamp.month, stamp.day, hour, 0, tzinfo=KYIV)
+        if stamp >= start:
+            due = hour
+    return due
+
+
 def is_collect_business_hour(now: datetime | None = None) -> bool:
-    return _as_kyiv(now).hour in COLLECT_HOURS
+    return due_collect_slot(now) is not None
 
 
 def is_final_collect_slot(now: datetime | None = None) -> bool:
-    return _as_kyiv(now).hour == FINAL_COLLECT_HOUR
+    return due_collect_slot(now) == FINAL_COLLECT_HOUR
 
 
 def next_scheduled_collect(now: datetime | None = None) -> datetime:

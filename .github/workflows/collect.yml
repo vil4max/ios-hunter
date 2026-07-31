@@ -50,14 +50,17 @@ jobs:
           PROJECT_BOARD_URL: ${{ vars.PROJECT_BOARD_URL }}
         run: python3 scripts/run_pipeline.py
 
+      - name: Mark Kyiv collect slot completed
+        run: python3 scripts/mark_collect_slot.py
+
       - name: Commit seen store
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add database/seen.json database/source_baseline.json
+          git add database/seen.json database/source_baseline.json database/collect_slots.json
           if git diff --staged --quiet; then
-            echo "No seen/baseline changes to commit."
+            echo "No seen/baseline/slot changes to commit."
             exit 0
           fi
           git commit -m "chore(seen): record notified vacancies [skip ci]"

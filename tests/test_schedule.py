@@ -4,6 +4,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from config.schedule import (
+    due_collect_slot,
     format_next_check_line,
     is_collect_business_hour,
     is_final_collect_slot,
@@ -13,19 +14,26 @@ from config.schedule import (
 _KYIV = ZoneInfo("Europe/Kyiv")
 
 
+def test_due_collect_slot_catchup() -> None:
+    assert due_collect_slot(datetime(2026, 7, 28, 8, 59, tzinfo=_KYIV)) is None
+    assert due_collect_slot(datetime(2026, 7, 28, 9, 0, tzinfo=_KYIV)) == 9
+    assert due_collect_slot(datetime(2026, 7, 28, 11, 15, tzinfo=_KYIV)) == 9
+    assert due_collect_slot(datetime(2026, 7, 28, 12, 0, tzinfo=_KYIV)) == 12
+    assert due_collect_slot(datetime(2026, 7, 28, 18, 5, tzinfo=_KYIV)) == 18
+
+
 def test_is_collect_business_hour_window() -> None:
     assert is_collect_business_hour(datetime(2026, 7, 28, 2, 0, tzinfo=_KYIV)) is False
     assert is_collect_business_hour(datetime(2026, 7, 28, 9, 0, tzinfo=_KYIV)) is True
-    assert is_collect_business_hour(datetime(2026, 7, 28, 10, 30, tzinfo=_KYIV)) is False
-    assert is_collect_business_hour(datetime(2026, 7, 28, 12, 0, tzinfo=_KYIV)) is True
-    assert is_collect_business_hour(datetime(2026, 7, 28, 15, 0, tzinfo=_KYIV)) is True
+    assert is_collect_business_hour(datetime(2026, 7, 28, 10, 30, tzinfo=_KYIV)) is True
     assert is_collect_business_hour(datetime(2026, 7, 28, 18, 0, tzinfo=_KYIV)) is True
-    assert is_collect_business_hour(datetime(2026, 7, 28, 19, 0, tzinfo=_KYIV)) is False
 
 
 def test_is_final_collect_slot() -> None:
     assert is_final_collect_slot(datetime(2026, 7, 28, 15, 0, tzinfo=_KYIV)) is False
+    assert is_final_collect_slot(datetime(2026, 7, 28, 17, 30, tzinfo=_KYIV)) is False
     assert is_final_collect_slot(datetime(2026, 7, 28, 18, 0, tzinfo=_KYIV)) is True
+    assert is_final_collect_slot(datetime(2026, 7, 28, 19, 0, tzinfo=_KYIV)) is True
 
 
 def test_next_scheduled_collect_same_day() -> None:
