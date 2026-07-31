@@ -89,6 +89,12 @@
     "company": "Xcode Cloud",
     "subject": "App -- Build 64 succeeded (main)"
   },
+  "<1064633414.12014993.1785503672448@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-31T15:18:16+00:00",
+    "company": "Xcode Cloud",
+    "subject": "App -- Build 71 succeeded (main)"
+  },
   "<1070531124.111932659.1785498315202@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T12:16:26+00:00",
@@ -101,11 +107,23 @@
     "company": "Maksim Vilchevskiy via TestFlight",
     "subject": "OneCart Family 1.4 (64) for iOS is now available to test."
   },
+  "<1102011859.68031699.1785503229688@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-31T15:18:16+00:00",
+    "company": "Maksim Vilchevskiy via TestFlight",
+    "subject": "OneCart Family 1.4 (70) for iOS is now available to test."
+  },
   "<115422669.10612570.1785242587239@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
     "company": "Xcode Cloud",
     "subject": "App -- Build 61 succeeded (main)"
+  },
+  "<118353075.890906.1785500553540@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-31T15:18:16+00:00",
+    "company": "Xcode Cloud",
+    "subject": "App -- Build 69 succeeded (main)"
   },
   "<1188800191.24499.1785315983309@lva2-app65324.prod.linkedin.com>": {
     "kind": "ignore",
@@ -118,6 +136,12 @@
     "processed_at": "2026-07-31T08:17:55+00:00",
     "company": "Xcode Cloud",
     "subject": "App -- Build 63 failed (main)"
+  },
+  "<1428624547.258995433.1785500245657@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-31T15:18:16+00:00",
+    "company": "iTunes Store",
+    "subject": "You will be charged for your iCloud+ plan in 7 days"
   },
   "<147206802.10607885.1785241364616@email.apple.com>": {
     "kind": "ignore",
@@ -154,6 +178,12 @@
     "processed_at": "2026-07-29T16:38:11+00:00",
     "company": "ElevenLabs",
     "subject": "Your free characters are ready ✅"
+  },
+  "<1785509690983.54f0f621-72cf-4503-b11a-95f5d6ad5f75@48628701m.contact.elevenlabs.io>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-31T15:18:16+00:00",
+    "company": "ElevenLabs",
+    "subject": "Meet Eleven v3"
   },
   "<1845256517.451084532.1785242576627@email.apple.com>": {
     "kind": "ignore",
@@ -314,6 +344,12 @@
     "company": "Maksim Vilchevskiy via TestFlight",
     "subject": "OneCart Family 1.4 (60) for iOS is now available to test."
   },
+  "<2064833765.11997902.1785503225884@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-31T15:18:16+00:00",
+    "company": "Xcode Cloud",
+    "subject": "App -- Build 70 succeeded (main)"
+  },
   "<2113424185.64164345.1785460331691@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:18:00+00:00",
@@ -337,6 +373,12 @@
     "processed_at": "2026-07-31T08:17:51+00:00",
     "company": "Xcode Cloud",
     "subject": "RegionalCheck -- Build 37 failed (main)"
+  },
+  "<26240520.68426824.1785500557761@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-31T15:18:16+00:00",
+    "company": "Maksim Vilchevskiy via TestFlight",
+    "subject": "OneCart Family 1.4 (69) for iOS is now available to test."
   },
   "<31031001.20260731070143.6a6c4857588bd9.06931419@mndr1.justjoin.it>": {
     "kind": "ignore",
@@ -386,6 +428,12 @@
     "processed_at": "2026-07-31T08:17:51+00:00",
     "company": "Xcode Cloud",
     "subject": "RegionalCheck -- Build 39 succeeded (main)"
+  },
+  "<68uk6k4ed4i8h590ddzhohpzeq7n2b9hngmge@kit-mail3.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-31T15:18:16+00:00",
+    "company": "omar",
+    "subject": "swift-lenient-codable v1.1.0  —  dictionary leniency is here"
   },
   "<6a68d29f.ca60d3e2.10e816.17f6notifications@youtube.com>": {
     "kind": "ignore",
@@ -459,6 +507,24 @@
     "company": "JobLeads",
     "subject": "There are 5 new jobs matching your saved search for July 30: Senior iOS Developer"
   },
+  "<6a6c9e8b32c5a_1271160-44e@sharedworker-5d944dcb75-tvd72.mail>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-31T15:18:16+00:00",
+    "company": "GitHub",
+    "subject": "[GitHub] Repository transfer from @vil4max (vil4max/agents-kit)"
+  },
+  "<6a6c9e8c18bcb_1051160625f9@flexworker-c9b647c7c-ftzlg.mail>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-31T15:18:16+00:00",
+    "company": "GitHub",
+    "subject": "[GitHub] Repository transfer from @vil4max\r\n (vil4max/ios-agent-harness)"
+  },
+  "<6a6ca37eba201_20f5019325f0@acclaim-worker-6485f7679b-npkhp.mail>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-31T15:18:16+00:00",
+    "company": "Credly",
+    "subject": "Credly account created"
+  },
   "<6a8f378d-a961-4eb9-b3d6-e8fadfed1512@atl1s07mta0304.xt.local>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:55+00:00",
@@ -506,6 +572,12 @@
     "processed_at": "2026-07-31T12:16:26+00:00",
     "company": "Xcode Cloud",
     "subject": "App -- Build 68 succeeded (main)"
+  },
+  "<986914982.63694321.1785503676549@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-31T15:18:16+00:00",
+    "company": "Maksim Vilchevskiy via TestFlight",
+    "subject": "OneCart Family 1.4 (71) for iOS is now available to test."
   },
   "<BDRTDK4PWTU4.TIDP6VTKG8F31@jobseekerflowchart-service-default-58dd746fd8-zk26g>": {
     "kind": "ignore",
@@ -634,6 +706,12 @@
     "processed_at": "2026-07-30T10:05:42+00:00",
     "company": "Электронные квитанции Uber",
     "subject": "Ваша поездка с Uber: четверг, день"
+  },
+  "<efu_V3TUQ7-LXSaWif8qzw@geopod-ismtpd-11>": {
+    "kind": "ignore",
+    "processed_at": "2026-07-31T15:18:16+00:00",
+    "company": "MyHeritage",
+    "subject": "🌱  Grow your family tree in a few easy steps"
   },
   "<f49fc712-6020-5942-990f-7d2d973c3961@mail.uber.com>": {
     "kind": "ignore",
