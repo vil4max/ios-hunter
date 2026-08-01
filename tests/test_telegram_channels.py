@@ -133,6 +133,33 @@ Swift, UIKit, 4+ years
 Название компании: Beta Apps
 """.strip()
 
+COMPOUND_SEEKING = """
+#ищуработу
+Senior iOS Developer
+Swift, UIKit
+#вакансия
+""".strip()
+
+COMPOUND_SEEKING_UNDERSCORE = """
+#ищу_работу
+iOS Developer
+Swift, SwiftUI
+""".strip()
+
+CONCAT_RESUME = """
+#mobile#resume
+Senior iOS Developer
+Swift, UIKit
+""".strip()
+
+VACANCY_WITH_SALARY_EXPECTATION = """
+#вакансия
+Senior iOS Developer
+Ожидания по зарплате: от 300000 до 400000
+Swift, UIKit
+Название компании: Acme Mobile
+""".strip()
+
 
 def test_is_ios_job_rejects_studios_substring() -> None:
     assert not is_ios_job(STUDIOS_SEO)
@@ -153,12 +180,17 @@ def test_is_candidate_post_detects_seeking() -> None:
     assert is_candidate_post(MOBILE_JOBS_RESUME) is True
     assert is_candidate_post(MOBILE_JOBS_RESUME_HASH) is True
     assert is_candidate_post(ISHCHUT_VACANCY) is False
+    assert is_candidate_post(COMPOUND_SEEKING) is True
+    assert is_candidate_post(COMPOUND_SEEKING_UNDERSCORE) is True
+    assert is_candidate_post(CONCAT_RESUME) is True
+    assert is_candidate_post(VACANCY_WITH_SALARY_EXPECTATION) is False
 
 
 def test_looks_like_vacancy() -> None:
     assert looks_like_vacancy(VACANCY_IOS) is True
     assert looks_like_vacancy(GREETING) is False
     assert looks_like_vacancy(TOPIC_ONLY_IOS) is False
+    assert looks_like_vacancy(ITFREELANCERS_IOS) is True
 
 
 def test_should_keep_only_ios_hiring_posts() -> None:
@@ -178,6 +210,10 @@ def test_should_keep_only_ios_hiring_posts() -> None:
     assert should_keep_message(MOBILE_JOBS_RESUME_HASH) is False
     assert should_keep_message(TOPIC_ONLY_IOS) is False
     assert should_keep_message(ISHCHUT_VACANCY) is True
+    assert should_keep_message(COMPOUND_SEEKING) is False
+    assert should_keep_message(COMPOUND_SEEKING_UNDERSCORE) is False
+    assert should_keep_message(CONCAT_RESUME) is False
+    assert should_keep_message(VACANCY_WITH_SALARY_EXPECTATION) is True
 
 
 def test_remotejobss_parses_role_and_company() -> None:

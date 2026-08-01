@@ -20,14 +20,22 @@ TELEGRAM_CHANNELS: tuple[str, ...] = (
 
 _LOOKBACK = 100
 
-_CANDIDATE_MARKERS: tuple[str, ...] = (
-    "#candidates",
-    "#candidate",
-    "#резюме",
-    "#resume",
-    "#cv",
-    "#ищу",
-    "#candidatebench",
+_HASHTAG_TOKEN_RE = re.compile(r"#([\w]+)", flags=re.UNICODE)
+
+_CANDIDATE_HASHTAGS: frozenset[str] = frozenset(
+    {
+        "candidates",
+        "candidate",
+        "резюме",
+        "resume",
+        "resumes",
+        "cv",
+        "ищу",
+        "candidatebench",
+    }
+)
+
+_CANDIDATE_PHRASES: tuple[str, ...] = (
     "looking for new opportunities",
     "looking for opportunities",
     "open to work",
@@ -39,10 +47,6 @@ _CANDIDATE_MARKERS: tuple[str, ...] = (
     "шукаю роботу",
     "шукаю проєкт",
     "шукаю проект",
-    "ожидания по зарплате",
-    "очікування по зарплаті",
-    "обо мне",
-    "про мене",
     "available candidate",
     "propose partnership",
     "white-label",
@@ -50,17 +54,23 @@ _CANDIDATE_MARKERS: tuple[str, ...] = (
     "outsourcing & outstaffing",
 )
 
-_VACANCY_MARKERS: tuple[str, ...] = (
-    "#вакансія",
-    "#вакансия",
-    "#vacancy",
-    "#job",
-    "#jobs",
-    "#hiring",
-    "#itjobs",
-    "#remote_jobs",
-    "#remotejobs",
-    "#techjobs",
+_VACANCY_HASHTAGS: frozenset[str] = frozenset(
+    {
+        "вакансія",
+        "вакансия",
+        "vacancy",
+        "job",
+        "jobs",
+        "hiring",
+        "itjobs",
+        "remote_jobs",
+        "remotejobs",
+        "techjobs",
+        "ищут",
+    }
+)
+
+_VACANCY_PHRASES: tuple[str, ...] = (
     "вакансія",
     "вакансия",
     "job opportunity",
@@ -114,23 +124,32 @@ def credentials_configured() -> bool:
     )
 
 
-def _contains_marker(text_lower: str, marker: str) -> bool:
-    if marker.startswith("#"):
-        return (
-            re.search(rf"(?<![\w#]){re.escape(marker)}(?!\w)", text_lower, flags=re.UNICODE)
-            is not None
-        )
-    return marker in text_lower
+def _iter_hashtags(text_lower: str) -> list[str]:
+    return _HASHTAG_TOKEN_RE.findall(text_lower)
+
+
+def _is_candidate_hashtag(tag: str) -> bool:
+    if tag in _CANDIDATE_HASHTAGS:
+        return True
+    if tag.startswith("резюме") or tag.startswith("resume"):
+        return True
+    if tag.startswith("ищу") and not tag.startswith("ищут"):
+        return True
+    return False
 
 
 def is_candidate_post(text: str) -> bool:
     lowered = text.lower()
-    return any(_contains_marker(lowered, marker) for marker in _CANDIDATE_MARKERS)
+    if any(_is_candidate_hashtag(tag) for tag in _iter_hashtags(lowered)):
+        return True
+    return any(phrase in lowered for phrase in _CANDIDATE_PHRASES)
 
 
 def looks_like_vacancy(text: str) -> bool:
     lowered = text.lower()
-    return any(_contains_marker(lowered, marker) for marker in _VACANCY_MARKERS)
+    if any(tag in _VACANCY_HASHTAGS for tag in _iter_hashtags(lowered)):
+        return True
+    return any(phrase in lowered for phrase in _VACANCY_PHRASES)
 
 
 def should_keep_message(text: str) -> bool:
