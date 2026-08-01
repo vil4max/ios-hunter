@@ -10,7 +10,7 @@
 | Python `collector/epam.py` | EPAM sitemap discovery + vacancy `__NEXT_DATA__` (location + remote) |
 | Python `collector/dou.py` | DOU iOS/macOS category RSS + per-company vacancy feeds |
 | Python `collector/dou_catalog.py` | Periodic DOU companies catalog → `database/dou_companies.json` seed |
-| Python `collector/telegram_channels.py` | Telegram chats (MTProto / Telethon): `@itrecruit_ua`, `@remotejobss`, `@itfreelancers` |
+| Python `collector/telegram_channels.py` | Telegram chats (MTProto / Telethon): `@itrecruit_ua`, `@remotejobss`, `@itfreelancers`, `@mobile_jobs` |
 
 Retired: **JetSoftPro** (DNS dead). Swift collector removed (migrated to Python).
 

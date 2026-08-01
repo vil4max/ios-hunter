@@ -112,6 +112,7 @@ def _vacancy_label(vacancy: Vacancy) -> str:
         "itrecruit_ua",
         "remotejobss",
         "itfreelancers",
+        "mobile_jobs",
     }
     if company and not skip_company and not (is_telegram and company.lower().startswith("telegram @")):
         return f"{company} — {title}" if title else company

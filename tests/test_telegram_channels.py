@@ -80,6 +80,39 @@ We're looking for a detail-oriented QA Engineer.
 ‼️‼️
 """.strip()
 
+MOBILE_JOBS_IOS = """
+#вакансия
+Senior iOS Developer
+Город: Москва
+Формат работы: удаленка
+Занятость: полная
+Зарплатная вилка: от 300000 до 400000
+Описание вакансии: Swift, UIKit, SwiftUI, 5+ years
+Название компании: Acme Mobile
+Контакты: @hr_acme
+""".strip()
+
+MOBILE_JOBS_ANDROID = """
+#вакансия
+Senior Android Developer
+Город: Санкт-Петербург
+Формат работы: офис
+Занятость: полная
+Зарплатная вилка: от 250000 до 350000
+Описание вакансии: Kotlin, Jetpack Compose
+Название компании: Droid Corp
+Контакты: hr@droid.example
+""".strip()
+
+MOBILE_JOBS_RESUME = """
+#ищу
+iOS Developer
+Формат работы: удаленка
+Занятость: полная
+Ожидания по зарплате: от 250000
+Обо мне: Swift, SwiftUI, https://github.com/example
+""".strip()
+
 
 def test_is_ios_job_rejects_studios_substring() -> None:
     assert not is_ios_job(STUDIOS_SEO)
@@ -115,6 +148,9 @@ def test_should_keep_only_ios_hiring_posts() -> None:
     assert should_keep_message(REMOTEJOBSS_IOS) is True
     assert should_keep_message(ITFREELANCERS_IOS) is True
     assert should_keep_message(ITFREELANCERS_QA) is False
+    assert should_keep_message(MOBILE_JOBS_IOS) is True
+    assert should_keep_message(MOBILE_JOBS_ANDROID) is False
+    assert should_keep_message(MOBILE_JOBS_RESUME) is False
 
 
 def test_remotejobss_parses_role_and_company() -> None:
@@ -130,6 +166,16 @@ def test_itfreelancers_keeps_english_ios_hiring() -> None:
     assert job is not None
     assert "Swift" in job["title"] or "iOS" in job["title"]
     assert job_from_message("itfreelancers", 51, ITFREELANCERS_QA) is None
+
+
+def test_mobile_jobs_parses_ios_vacancy_and_drops_resume() -> None:
+    job = job_from_message("mobile_jobs", 10, MOBILE_JOBS_IOS)
+    assert job is not None
+    assert job["title"] == "Senior iOS Developer"
+    assert job["company"] == "Acme Mobile"
+    assert job["url"] == "https://t.me/mobile_jobs/10"
+    assert job_from_message("mobile_jobs", 11, MOBILE_JOBS_ANDROID) is None
+    assert job_from_message("mobile_jobs", 12, MOBILE_JOBS_RESUME) is None
 
 
 def test_job_from_message_builds_telegram_url_and_date() -> None:

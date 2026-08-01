@@ -15,6 +15,7 @@ TELEGRAM_CHANNELS: tuple[str, ...] = (
     "itrecruit_ua",
     "remotejobss",
     "itfreelancers",
+    "mobile_jobs",
 )
 
 _LOOKBACK = 100
@@ -96,6 +97,7 @@ _COMPANY_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(r"(?im)^(.{2,80}?)\s+are hiring\b"),
     re.compile(r"(?im)^[^\w#]*company\s*[:\-]\s*(.+)$"),
     re.compile(r"(?im)^[^\w#]*компані[яя]\s*[:\-]\s*(.+)$"),
+    re.compile(r"(?im)^[^\w#]*название\s+компании\s*[:\-]\s*(.+)$"),
 )
 
 

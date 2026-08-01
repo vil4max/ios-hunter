@@ -742,5 +742,10 @@
     "name": "Telegram @remotejobss",
     "best_scanned": 0,
     "last_scanned": 0
+  },
+  "telegram:mobile_jobs": {
+    "name": "Telegram @mobile_jobs",
+    "best_scanned": 0,
+    "last_scanned": 0
   }
 }
