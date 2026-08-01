@@ -52,6 +52,24 @@
     "company": "duolingo",
     "subject": "Duo ведь не молодеет... 🫠"
   },
+  "<0100019fbc57e075-9de31db7-bfb2-4a83-8c20-d21bf90f0270-000000@email.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-01T15:16:20+00:00",
+    "company": "Linear",
+    "subject": "New login to Linear"
+  },
+  "<0100019fbc58c160-54d0e7a0-353b-47b1-a6d5-db5243be3f79-000000@email.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-01T15:16:20+00:00",
+    "company": "Slack",
+    "subject": "Slack account sign in from a new device"
+  },
+  "<0100019fbced7cbb-ad021ae2-8831-487e-aef9-ded334de9a2a-000000@email.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-01T15:16:21+00:00",
+    "company": "Graeme @ MCP Market",
+    "subject": "Welcome to MCP Market"
+  },
   "<0101019faa3ac02b-d5c9e8e3-ef86-43ea-9392-8ff92655359d-000000@us-west-2.amazonses.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -76,6 +94,12 @@
     "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg0e320",
     "company": "Breeze",
     "subject": "We have received your application!"
+  },
+  "<0811dc41-651f-4db8-b8a3-290d10392352@facebookmail.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-01T15:16:21+00:00",
+    "company": "Facebook",
+    "subject": "Это вы только что выполнили вход на новом устройстве здесь: Kyiv?"
   },
   "<0LDhSECupVB_ssz3pWy5Jw@notifications.google.com>": {
     "kind": "ignore",
@@ -160,6 +184,12 @@
     "processed_at": "2026-07-31T12:16:26+00:00",
     "company": "Xcode Cloud",
     "subject": "App -- Build 67 succeeded (main)"
+  },
+  "<14eef37f-930f-48d8-9ac1-cf72fb5ac216@mtasv.net>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-01T15:16:20+00:00",
+    "company": "Spark",
+    "subject": "New email account login in Spark"
   },
   "<153893442.11264589.1785416463688@email.apple.com>": {
     "kind": "ignore",
@@ -392,6 +422,12 @@
     "company": "Freedom24",
     "subject": "До 24% в USD с Nasdaq-100"
   },
+  "<216afa7e-c003-4e2d-bb4a-627d1233f686@mtasv.net>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-01T15:16:21+00:00",
+    "company": "Spark",
+    "subject": "New email account login in Spark"
+  },
   "<255114072.11269199.1785415554683@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:51+00:00",
@@ -440,6 +476,12 @@
     "company": "Max",
     "subject": "Senior iOS Engineer | Portfolio"
   },
+  "<527654742.120925002.1785589494326@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-01T15:16:21+00:00",
+    "company": "App Store Connect",
+    "subject": "Review of your DriveCheckUA (iOS) submission is complete."
+  },
   "<53691ef1a273664cab89730700e471edaf7ab2a4.ap5579@workablemail.com>": {
     "kind": "application_ack",
     "processed_at": "2026-07-31T08:17:55+00:00",
@@ -452,6 +494,12 @@
     "processed_at": "2026-07-31T08:17:51+00:00",
     "company": "Xcode Cloud",
     "subject": "RegionalCheck -- Build 39 succeeded (main)"
+  },
+  "<612c041c-0c74-469e-8c93-91833e4c3f59@mtasv.net>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-01T15:16:20+00:00",
+    "company": "Spark",
+    "subject": "New email account login in Spark"
   },
   "<652831457.515253596.1785526244112@email.apple.com>": {
     "kind": "ignore",
@@ -561,6 +609,24 @@
     "company": "JobLeads",
     "subject": "There are 5 new jobs matching your saved search for July 31: Senior iOS Developer"
   },
+  "<6a6da703ae828_d21160398088@sharedworker-778dc5fbf7-spnr2.mail>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-01T15:16:20+00:00",
+    "company": "GitHub",
+    "subject": "[GitHub] A personal access token (classic) has been added to your\r\n account"
+  },
+  "<6a6dca6d9ca38_16c671160728ab@sharedworker-778dc5fbf7-4xrhv.mail>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-01T15:16:21+00:00",
+    "company": "GitHub",
+    "subject": "[GitHub] A third-party OAuth application has been added to your\r\n account"
+  },
+  "<6a6dcef6574f5_fa11605732b7@sharedworker-778dc5fbf7-q45p7.mail>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-01T15:16:21+00:00",
+    "company": "GitHub",
+    "subject": "[GitHub] A new SSH authentication public key was added to your\r\n account"
+  },
   "<6a8f378d-a961-4eb9-b3d6-e8fadfed1512@atl1s07mta0304.xt.local>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:55+00:00",
@@ -584,6 +650,18 @@
     "processed_at": "2026-07-29T13:41:50+00:00",
     "company": "ZONE3000.net",
     "subject": "Thank you for your resume  —  ZONE3000"
+  },
+  "<7KOF-oHBXrsuo3VCo51mvg@notifications.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-01T15:16:20+00:00",
+    "company": "Google",
+    "subject": "Security alert"
+  },
+  "<7upslEsOxCcL6hSTX7uPpw@notifications.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-01T15:16:20+00:00",
+    "company": "Google",
+    "subject": "Security alert"
   },
   "<84c8f9b2bcd6b8b08dc77b62b64b561a@jobleads.com>": {
     "kind": "replied",
@@ -749,17 +827,35 @@
     "company": "Workable",
     "subject": "Thanks for applying to Northstrat"
   },
+  "<dBlXPwCpRd-AeWsMvejjqA@geopod-ismtpd-14>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-01T15:16:20+00:00",
+    "company": "Anthropic",
+    "subject": "Want to connect to Xcode?"
+  },
   "<dd13b16e-45ab-5dea-b36f-baa4293ee268@mail.uber.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-30T10:05:42+00:00",
     "company": "Электронные квитанции Uber",
     "subject": "Ваша поездка с Uber: четверг, день"
   },
+  "<ec08c4aa-c733-4f00-b5f5-8a568e69c84a@mtasv.net>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-01T15:16:21+00:00",
+    "company": "ClearVPN",
+    "subject": "😉Your  one-time code"
+  },
   "<efu_V3TUQ7-LXSaWif8qzw@geopod-ismtpd-11>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T15:18:16+00:00",
     "company": "MyHeritage",
     "subject": "🌱  Grow your family tree in a few easy steps"
+  },
+  "<f48b8bd6-972e-4768-bee2-393a45fd1cc0@atl1s07mta0306.xt.local>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-01T15:16:21+00:00",
+    "company": "The Economist",
+    "subject": "Why over-55s are the new problem generation"
   },
   "<f49fc712-6020-5942-990f-7d2d973c3961@mail.uber.com>": {
     "kind": "ignore",
@@ -779,11 +875,23 @@
     "company": "Google",
     "subject": "Security alert"
   },
+  "<p9u4v4oeplb9h2q8vnziqhpmdo8drcrhv8@convertkit-mail4.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-01T15:16:21+00:00",
+    "company": "Paul Solt",
+    "subject": "My timer app finally works on iPhone"
+  },
   "<r8umwn772nfoh36x9qwa2hdxod6x6f7h27kge@kit-mail3.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:51+00:00",
     "company": "Antoine from RocketSim",
     "subject": "RocketSim 16.4: Testing agents and adapting to Xcode 27"
+  },
+  "<rGU9a2o4jx4DHOR4HIUNEw@notifications.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-01T15:16:20+00:00",
+    "company": "Google",
+    "subject": "Security alert"
   },
   "<tj1to7-0rztmd-6g@smtp-pulse.com>": {
     "kind": "ignore",
