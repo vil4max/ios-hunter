@@ -26,6 +26,7 @@ _CANDIDATE_MARKERS: tuple[str, ...] = (
     "#резюме",
     "#resume",
     "#cv",
+    "#ищу",
     "#candidatebench",
     "looking for new opportunities",
     "looking for opportunities",
@@ -33,9 +34,15 @@ _CANDIDATE_MARKERS: tuple[str, ...] = (
     "open for opportunities",
     "ищу работу",
     "ищу роботу",
+    "ищу позицию",
+    "ищу позицію",
     "шукаю роботу",
     "шукаю проєкт",
     "шукаю проект",
+    "ожидания по зарплате",
+    "очікування по зарплаті",
+    "обо мне",
+    "про мене",
     "available candidate",
     "propose partnership",
     "white-label",
@@ -50,8 +57,6 @@ _VACANCY_MARKERS: tuple[str, ...] = (
     "#job",
     "#jobs",
     "#hiring",
-    "#ios",
-    "#swift",
     "#itjobs",
     "#remote_jobs",
     "#remotejobs",
@@ -109,14 +114,23 @@ def credentials_configured() -> bool:
     )
 
 
+def _contains_marker(text_lower: str, marker: str) -> bool:
+    if marker.startswith("#"):
+        return (
+            re.search(rf"(?<![\w#]){re.escape(marker)}(?!\w)", text_lower, flags=re.UNICODE)
+            is not None
+        )
+    return marker in text_lower
+
+
 def is_candidate_post(text: str) -> bool:
     lowered = text.lower()
-    return any(marker in lowered for marker in _CANDIDATE_MARKERS)
+    return any(_contains_marker(lowered, marker) for marker in _CANDIDATE_MARKERS)
 
 
 def looks_like_vacancy(text: str) -> bool:
     lowered = text.lower()
-    return any(marker in lowered for marker in _VACANCY_MARKERS)
+    return any(_contains_marker(lowered, marker) for marker in _VACANCY_MARKERS)
 
 
 def should_keep_message(text: str) -> bool:

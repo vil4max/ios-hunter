@@ -113,6 +113,26 @@ iOS Developer
 Обо мне: Swift, SwiftUI, https://github.com/example
 """.strip()
 
+MOBILE_JOBS_RESUME_HASH = """
+#резюме
+Senior iOS Developer
+Формат работы: удаленка
+Swift, UIKit, SwiftUI
+""".strip()
+
+TOPIC_ONLY_IOS = """
+#ios #swift
+Senior iOS Developer
+Kyiv, remote
+""".strip()
+
+ISHCHUT_VACANCY = """
+#ищут Senior iOS Developer
+#вакансия
+Swift, UIKit, 4+ years
+Название компании: Beta Apps
+""".strip()
+
 
 def test_is_ios_job_rejects_studios_substring() -> None:
     assert not is_ios_job(STUDIOS_SEO)
@@ -130,11 +150,15 @@ def test_extract_company_from_hiring_line() -> None:
 def test_is_candidate_post_detects_seeking() -> None:
     assert is_candidate_post(CANDIDATE_IOS) is True
     assert is_candidate_post(VACANCY_IOS) is False
+    assert is_candidate_post(MOBILE_JOBS_RESUME) is True
+    assert is_candidate_post(MOBILE_JOBS_RESUME_HASH) is True
+    assert is_candidate_post(ISHCHUT_VACANCY) is False
 
 
 def test_looks_like_vacancy() -> None:
     assert looks_like_vacancy(VACANCY_IOS) is True
     assert looks_like_vacancy(GREETING) is False
+    assert looks_like_vacancy(TOPIC_ONLY_IOS) is False
 
 
 def test_should_keep_only_ios_hiring_posts() -> None:
@@ -151,6 +175,9 @@ def test_should_keep_only_ios_hiring_posts() -> None:
     assert should_keep_message(MOBILE_JOBS_IOS) is True
     assert should_keep_message(MOBILE_JOBS_ANDROID) is False
     assert should_keep_message(MOBILE_JOBS_RESUME) is False
+    assert should_keep_message(MOBILE_JOBS_RESUME_HASH) is False
+    assert should_keep_message(TOPIC_ONLY_IOS) is False
+    assert should_keep_message(ISHCHUT_VACANCY) is True
 
 
 def test_remotejobss_parses_role_and_company() -> None:
