@@ -46,6 +46,12 @@
     "company": "Linear",
     "subject": "Changelog: Coding sessions on mobile"
   },
+  "<0100019fbbf7f8d6-06692a30-602c-46a6-bfa1-3aff2e65d6ec-000000@email.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-01T06:30:43+00:00",
+    "company": "duolingo",
+    "subject": "Duo ведь не молодеет... 🫠"
+  },
   "<0101019faa3ac02b-d5c9e8e3-ef86-43ea-9392-8ff92655359d-000000@us-west-2.amazonses.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -251,6 +257,18 @@
     "company": "Ciklum",
     "subject": "iOS: iOS Engineer у Ciklum і ще 12 нових вакансій"
   },
+  "<1jut4p2ukmn6l80e@indeed.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-01T06:30:43+00:00",
+    "company": "Ciklum",
+    "subject": "ios developer: iOS Engineer у Ciklum і ще 6 нових вакансій"
+  },
+  "<1jut93lv5kfvu800@indeed.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-01T06:30:43+00:00",
+    "company": "Ciklum",
+    "subject": "iOS: iOS Engineer у Ciklum і ще 11 нових вакансій"
+  },
   "<20260728154930.3.ec4ca0e2efd05417@mg-d0.substack.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -337,6 +355,12 @@
     "processed_at": "2026-07-31T12:16:26+00:00",
     "company": "iOS (Swift) jobs",
     "subject": "Swift Concurrency from Zero to Hero"
+  },
+  "<20260731212908.02f184d46e463d68@cio79999.news.railway.app>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-01T06:30:43+00:00",
+    "company": "Railway",
+    "subject": "Railway plugin for ChatGPT, dev.new preview, new observability panels"
   },
   "<2032248378.42868428.1785241368085@email.apple.com>": {
     "kind": "ignore",
@@ -428,6 +452,12 @@
     "processed_at": "2026-07-31T08:17:51+00:00",
     "company": "Xcode Cloud",
     "subject": "RegionalCheck -- Build 39 succeeded (main)"
+  },
+  "<652831457.515253596.1785526244112@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-01T06:30:43+00:00",
+    "company": "Анастасия Вильчевская",
+    "subject": "“Візит до Бакумець І. В.” added to “Семья” calendar."
   },
   "<68uk6k4ed4i8h590ddzhohpzeq7n2b9hngmge@kit-mail3.com>": {
     "kind": "ignore",
@@ -525,6 +555,12 @@
     "company": "Credly",
     "subject": "Credly account created"
   },
+  "<6a6d388a.082e4fc6.1d6919.d914SMTPIN_ADDED_MISSING@mx.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-01T06:30:43+00:00",
+    "company": "JobLeads",
+    "subject": "There are 5 new jobs matching your saved search for July 31: Senior iOS Developer"
+  },
   "<6a8f378d-a961-4eb9-b3d6-e8fadfed1512@atl1s07mta0304.xt.local>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:55+00:00",
@@ -578,6 +614,12 @@
     "processed_at": "2026-07-31T15:18:16+00:00",
     "company": "Maksim Vilchevskiy via TestFlight",
     "subject": "OneCart Family 1.4 (71) for iOS is now available to test."
+  },
+  "<98ec0a85f07b439c62a854262706b001@jobleads.com>": {
+    "kind": "replied",
+    "processed_at": "2026-08-01T06:30:43+00:00",
+    "company": "JobLeads",
+    "subject": "Your skills + this role = Remote iOS Engineer | High-Impact,\r\n AI-Driven Mobile, United States"
   },
   "<BDRTDK4PWTU4.TIDP6VTKG8F31@jobseekerflowchart-service-default-58dd746fd8-zk26g>": {
     "kind": "ignore",
@@ -656,6 +698,12 @@
     "processed_at": "2026-07-29T13:41:50+00:00",
     "company": "Google",
     "subject": "Security alert"
+  },
+  "<a68b27a2f781814f793a5abd290d36a5@jobleads.com>": {
+    "kind": "replied",
+    "processed_at": "2026-08-01T06:30:43+00:00",
+    "company": "JobLeads",
+    "subject": "Max: Senior-level positions to be assigned by  …"
   },
   "<b5af49b1ac170c880e5fca4640222ef7.ums@oracle.com>": {
     "kind": "replied",
@@ -736,6 +784,12 @@
     "processed_at": "2026-07-31T08:17:51+00:00",
     "company": "Antoine from RocketSim",
     "subject": "RocketSim 16.4: Testing agents and adapting to Xcode 27"
+  },
+  "<tj1to7-0rztmd-6g@smtp-pulse.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-01T06:30:43+00:00",
+    "company": "Checkbox",
+    "subject": "Чек - ФОП КОВАЛЕВСЬКА ДАР'Я ОЛЕКСАНДРІВНА"
   },
   "<vil4max/ios-hunter/check-suites/CS_kwDOTEBwK88AAAATNr0sIQ/1785321245@github.com>": {
     "kind": "ignore",
