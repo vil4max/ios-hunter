@@ -299,6 +299,18 @@
     "company": "Ciklum",
     "subject": "iOS: iOS Engineer у Ciklum і ще 11 нових вакансій"
   },
+  "<1juvejeg0pg5j800@indeed.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-02T06:16:49+00:00",
+    "company": "Indeed",
+    "subject": "ios developer: Senior IOS AI-Enabled Developer у TangoMe і ще 3 нові вакансії"
+  },
+  "<1juvm0uremn5f800@indeed.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-02T06:16:49+00:00",
+    "company": "Ciklum",
+    "subject": "iOS: iOS Engineer у Ciklum і ще 10 нових вакансій"
+  },
   "<20260728154930.3.ec4ca0e2efd05417@mg-d0.substack.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -392,6 +404,12 @@
     "company": "Railway",
     "subject": "Railway plugin for ChatGPT, dev.new preview, new observability panels"
   },
+  "<20260801191242.ae775cbf83f51121@cio107418.mail.wispr.ai>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-02T06:16:49+00:00",
+    "company": "Wispr Flow",
+    "subject": "Your July Flow State recap 🦀"
+  },
   "<2032248378.42868428.1785241368085@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -452,6 +470,12 @@
     "company": "Xcode Cloud",
     "subject": "RegionalCheck -- Build 36 failed (main)"
   },
+  "<33a9a92e-0d33-42fe-9c72-a3647cff8c69@mail.uber.com>": {
+    "kind": "replied",
+    "processed_at": "2026-08-02T06:16:49+00:00",
+    "company": "Uber",
+    "subject": "Максим, вы включили двухэтапную аутентификацию"
+  },
   "<3F.1A.22074.6AE5B6A6@i-01b5cfbe31b72afc1.mta1vrest.sd.prd.sparkpost>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:51+00:00",
@@ -481,6 +505,12 @@
     "processed_at": "2026-08-01T15:16:21+00:00",
     "company": "App Store Connect",
     "subject": "Review of your DriveCheckUA (iOS) submission is complete."
+  },
+  "<531069026.22253283.1785648464547@lor1-app161563.prod.linkedin.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-02T06:16:49+00:00",
+    "company": "Ciklum",
+    "subject": "iOS Developer (Remote) at Hire Feed"
   },
   "<53691ef1a273664cab89730700e471edaf7ab2a4.ap5579@workablemail.com>": {
     "kind": "application_ack",
@@ -686,6 +716,12 @@
     "processed_at": "2026-07-31T12:16:26+00:00",
     "company": "Xcode Cloud",
     "subject": "App -- Build 68 succeeded (main)"
+  },
+  "<93.7D.58010.DBE2E6A6@i-054112290dca11470.mta1vrest.sd.prd.sparkpost>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-02T06:16:49+00:00",
+    "company": "Runkeeper",
+    "subject": "Предупреждение о деактивации учетной записи Runkeeper"
   },
   "<986914982.63694321.1785503676549@email.apple.com>": {
     "kind": "ignore",
