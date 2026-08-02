@@ -105,10 +105,29 @@ _ACK_PATTERNS = (
 _RECRUITER_HINTS = (
     re.compile(r"recruit", re.I),
     re.compile(r"talent\s+acquisition", re.I),
-    re.compile(r"\bhr\b", re.I),
-    re.compile(r"hiring", re.I),
+    re.compile(r"\bhr\s+(team|department|manager|bp)\b", re.I),
+    re.compile(r"\bhr@", re.I),
+    re.compile(r"\bhiring\b", re.I),
     re.compile(r"careers?@", re.I),
     re.compile(r"jobs?@", re.I),
+)
+
+_SERVICE_NOISE_PATTERNS = (
+    re.compile(r"two[- ]?(step|factor)\s+(verif|auth)", re.I),
+    re.compile(r"\b2[- ]?step\s+verif", re.I),
+    re.compile(r"\b2fa\b", re.I),
+    re.compile(r"двухэтапн\w*\s+аутентификац", re.I),
+    re.compile(r"двухфакторн\w*\s+аутентификац", re.I),
+    re.compile(r"включил[аи]?\s+двухэтапн", re.I),
+    re.compile(r"password\s+(reset|changed|updated)", re.I),
+    re.compile(r"reset\s+your\s+password", re.I),
+    re.compile(r"security\s+(alert|code|notification|notice)", re.I),
+    re.compile(r"verification\s+code", re.I),
+    re.compile(r"код\s+подтверждения", re.I),
+    re.compile(r"confirm\s+your\s+(email|account)", re.I),
+    re.compile(r"signed\s+in\s+from\s+a\s+new", re.I),
+    re.compile(r"new\s+sign[- ]?in\s+(to|on)\s+your", re.I),
+    re.compile(r"ssh\s+(key|authentication)", re.I),
 )
 
 _ROLE_STOP = {
@@ -271,6 +290,19 @@ def classify_mail(mail: InboundMail) -> MailEvent:
     snippet = _snippet(mail)
 
     if re.search(r"jooble\.", mail.from_addr, re.I) or re.search(r"\bjooble\b", mail.subject, re.I):
+        return MailEvent(
+            kind=KIND_IGNORE,
+            company=company,
+            role_hint=role_hint,
+            recruiter=recruiter,
+            confidence=0.95,
+            snippet=snippet,
+            subject=mail.subject,
+            from_addr=mail.from_addr,
+            message_id=mail.message_id,
+        )
+
+    if _matches_any(hay, _SERVICE_NOISE_PATTERNS):
         return MailEvent(
             kind=KIND_IGNORE,
             company=company,

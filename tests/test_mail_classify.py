@@ -91,3 +91,28 @@ def test_classify_noise_newsletter() -> None:
         body_text="Here are new jobs based on your preferences.",
     )
     assert event.kind == KIND_IGNORE
+
+
+def test_classify_ignores_uber_two_step_auth() -> None:
+    event = classify_from_headers(
+        message_id="<33a9a92e-0d33-42fe-9c72-a3647cff8c69@mail.uber.com>",
+        subject="Максим, вы включили двухэтапную аутентификацию",
+        from_header="Uber <uber@mail.uber.com>",
+        body_text=(
+            "Максим, вы включили двухэтапную аутентификацию в аккаунте Uber. "
+            "Если это были не вы, свяжитесь с нами. "
+            "More: https://www.uber.com/us/en/careers/recruiting/"
+        ),
+    )
+    assert event.kind == KIND_IGNORE
+    assert event.company == "Uber"
+
+
+def test_classify_ignores_english_two_factor_security_mail() -> None:
+    event = classify_from_headers(
+        message_id="<tf@accounts.example.com>",
+        subject="Two-factor authentication turned on",
+        from_header="Example Security <security@example.com>",
+        body_text="You turned on two-factor authentication for your account.",
+    )
+    assert event.kind == KIND_IGNORE
