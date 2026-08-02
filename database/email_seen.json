@@ -161,11 +161,23 @@
     "company": "LinkedIn",
     "subject": "Max, please verify your new device"
   },
+  "<125688245.82968983.1785656175238@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-02T09:16:18+00:00",
+    "company": "Maksim Vilchevskiy via TestFlight",
+    "subject": "OneCart Family 1.4 (73) for iOS is now available to test."
+  },
   "<1263448367.11481393.1785436712927@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:55+00:00",
     "company": "Xcode Cloud",
     "subject": "App -- Build 63 failed (main)"
+  },
+  "<1266772052.12621382.1785655465146@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-02T09:16:18+00:00",
+    "company": "Apple Developer",
+    "subject": "Apple CloudKit: Your sandbox database schema was modified."
   },
   "<1428624547.258995433.1785500245657@email.apple.com>": {
     "kind": "ignore",
@@ -197,6 +209,12 @@
     "company": "Xcode Cloud",
     "subject": "RegionalCheck -- Build 38 failed (main)"
   },
+  "<1597218402.12619041.1785656177498@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-02T09:16:18+00:00",
+    "company": "Xcode Cloud",
+    "subject": "App -- Build 73 succeeded (main)"
+  },
   "<1726539393.104144514.1785417585369@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:51+00:00",
@@ -221,6 +239,12 @@
     "company": "ElevenLabs",
     "subject": "Meet Eleven v3"
   },
+  "<1816317745.12617426.1785653263832@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-02T09:16:18+00:00",
+    "company": "Xcode Cloud",
+    "subject": "App -- Build 72 succeeded (main)"
+  },
   "<1845256517.451084532.1785242576627@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -232,6 +256,12 @@
     "processed_at": "2026-07-31T12:16:26+00:00",
     "company": "Maksim Vilchevskiy via TestFlight",
     "subject": "OneCart Family 1.4 (67) for iOS is now available to test."
+  },
+  "<1913591449.503450337.1785653272885@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-02T09:16:18+00:00",
+    "company": "Maksim Vilchevskiy via TestFlight",
+    "subject": "OneCart Family 1.4 (72) for iOS is now available to test."
   },
   "<1juknftnapfud800@indeed.com>": {
     "kind": "ignore",
@@ -446,6 +476,12 @@
     "company": "Spark",
     "subject": "New email account login in Spark"
   },
+  "<234428603.12623012.1785658833242@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-02T09:16:18+00:00",
+    "company": "Xcode Cloud",
+    "subject": "RegionalCheck -- Build 40 failed (main)"
+  },
   "<255114072.11269199.1785415554683@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:51+00:00",
@@ -457,6 +493,12 @@
     "processed_at": "2026-07-31T15:18:16+00:00",
     "company": "Maksim Vilchevskiy via TestFlight",
     "subject": "OneCart Family 1.4 (69) for iOS is now available to test."
+  },
+  "<29867631.12622311.1785655630145@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-02T09:16:18+00:00",
+    "company": "Apple Developer",
+    "subject": "Apple CloudKit: Your database schema was promoted to production."
   },
   "<31031001.20260731070143.6a6c4857588bd9.06931419@mndr1.justjoin.it>": {
     "kind": "ignore",
@@ -758,6 +800,12 @@
     "processed_at": "2026-07-29T16:38:11+00:00",
     "company": "Tom Cook",
     "subject": "Regarding the Open Position at Out of the Box Systems"
+  },
+  "<Czl7D27u0z6zlvc0m_EpHQ@notifications.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-02T09:16:18+00:00",
+    "company": "Google",
+    "subject": "Security alert"
   },
   "<DBAP193MB111600F647BB770CAE16D2ECEFC92@DBAP193MB1116.EURP193.PROD.OUTLOOK.COM>": {
     "kind": "screening",
