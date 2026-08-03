@@ -233,6 +233,12 @@
     "company": "Spark",
     "subject": "New email account login in Spark"
   },
+  "<1528539339.18887.1785753418147@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-03T12:16:24+00:00",
+    "company": "Xcode Cloud",
+    "subject": "RegionalCheck -- Build 45 succeeded (main)"
+  },
   "<1537547284.84109347.1785662911868@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-02T15:19:23+00:00",
@@ -251,6 +257,18 @@
     "company": "Xcode Cloud",
     "subject": "App -- Build 73 succeeded (main)"
   },
+  "<1616459635.12485.1785758798764@task-spot-j1rp.europe-west3-c.c.dah-backend-production.internal>": {
+    "kind": "rejected_hr",
+    "processed_at": "2026-08-03T12:16:24+00:00",
+    "company": "S2",
+    "subject": "Квитанція на оплату ОСББ «О.ПЧІЛКИ 5»"
+  },
+  "<1697054995.12831.1785758775773@task-spot-69q1.europe-west3-c.c.dah-backend-production.internal>": {
+    "kind": "rejected_hr",
+    "processed_at": "2026-08-03T12:16:24+00:00",
+    "company": "S4",
+    "subject": "Квитанція на оплату ОСББ «О.ПЧІЛКИ 5»"
+  },
   "<1726539393.104144514.1785417585369@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:51+00:00",
@@ -262,6 +280,12 @@
     "processed_at": "2026-07-31T08:17:51+00:00",
     "company": "Maksim Vilchevskiy via TestFlight",
     "subject": "OneCart Family 1.4 (62) for iOS is now available to test."
+  },
+  "<1760508911.1890032.1785748904921@lincoln-v1-547d75cfd-kgxkw>": {
+    "kind": "rejected_hr",
+    "processed_at": "2026-08-03T12:16:24+00:00",
+    "company": "FOP_CREDIT",
+    "subject": "Кредит «всеБІЗНЕС» від ПУМБ - завантаження документів"
   },
   "<1785336888235.d7984ce7-430b-43dc-a3b1-2c7d7d6369e8@48628701m.contact.elevenlabs.io>": {
     "kind": "ignore",
@@ -310,6 +334,12 @@
     "processed_at": "2026-08-02T15:19:23+00:00",
     "company": "Maksim Vilchevskiy via TestFlight",
     "subject": "OneCart Family 1.4 (74) for iOS is now available to test."
+  },
+  "<1953535352.5527297.1785750427660@lincoln-v1-547d75cfd-nw7gg>": {
+    "kind": "rejected_hr",
+    "processed_at": "2026-08-03T12:16:24+00:00",
+    "company": "FOP_CREDIT",
+    "subject": "Кредит «всеБІЗНЕС» від ПУМБ - завантаження документів"
   },
   "<1juknftnapfud800@indeed.com>": {
     "kind": "ignore",
@@ -512,6 +542,12 @@
     "company": "Xcode Cloud",
     "subject": "App -- Build 70 succeeded (main)"
   },
+  "<2065412307.1408311.1785753425568@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-03T12:16:24+00:00",
+    "company": "Maksim Vilchevskiy via TestFlight",
+    "subject": "DriveCheckUA 2.0 (45) for iOS is now available to test."
+  },
   "<2113424185.64164345.1785460331691@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:18:00+00:00",
@@ -536,6 +572,12 @@
     "company": "Spark",
     "subject": "New email account login in Spark"
   },
+  "<22223994.5533423.1785755349938@lincoln-v1-547d75cfd-nw7gg>": {
+    "kind": "rejected_hr",
+    "processed_at": "2026-08-03T12:16:24+00:00",
+    "company": "microcredit",
+    "subject": "Кредит «всеБІЗНЕС» від ПУМБ"
+  },
   "<234428603.12623012.1785658833242@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-02T09:16:18+00:00",
@@ -553,6 +595,12 @@
     "processed_at": "2026-07-31T15:18:16+00:00",
     "company": "Maksim Vilchevskiy via TestFlight",
     "subject": "OneCart Family 1.4 (69) for iOS is now available to test."
+  },
+  "<293762641.14003.1785752274188@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-03T12:16:24+00:00",
+    "company": "Xcode Cloud",
+    "subject": "RegionalCheck -- Build 44 failed (main)"
   },
   "<29867631.12622311.1785655630145@email.apple.com>": {
     "kind": "ignore",
@@ -807,6 +855,12 @@
     "company": "Google",
     "subject": "Security alert"
   },
+  "<824658633.299928.1785752259223@ltx1-app201001.prod.linkedin.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-03T12:16:24+00:00",
+    "company": "LinkedIn",
+    "subject": "Max, please verify your new device"
+  },
   "<82626277.12638886.1785665644898@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-02T15:19:23+00:00",
@@ -965,6 +1019,12 @@
     "company": "Ciklum",
     "subject": "Thanks for applying — we’ve got it"
   },
+  "<c0ffc7b0-8f2b-11f1-ada1-1f9d6ce77c22@ms4-6bdbcbd8d9-8xt7c>": {
+    "kind": "rejected_hr",
+    "processed_at": "2026-08-03T12:16:24+00:00",
+    "company": "Банк ПУМБ",
+    "subject": "Ваша думка має значення - поділіться з нами"
+  },
   "<calendar-aeda3d15-0243-4ad9-9153-254d380193ba@google.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:51+00:00",
@@ -1042,6 +1102,12 @@
     "processed_at": "2026-07-29T13:41:50+00:00",
     "company": "Google",
     "subject": "Security alert"
+  },
+  "<lK6GkCziQ4GWuU4oAL4gMg@geopod-ismtpd-3>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-03T12:16:24+00:00",
+    "company": "ChatGPT",
+    "subject": "Start with any question"
   },
   "<p9u4v4oeplb9h2q8vnziqhpmdo8drcrhv8@convertkit-mail4.com>": {
     "kind": "ignore",
