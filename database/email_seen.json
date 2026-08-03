@@ -602,6 +602,12 @@
     "company": "Max",
     "subject": "Senior iOS Engineer | Portfolio"
   },
+  "<526f2215-3b1ef133-1785741335-215475332264787-8938@outbound.intercom.djinni.co>": {
+    "kind": "screening",
+    "processed_at": "2026-08-03T09:17:12+00:00",
+    "company": "Djinni",
+    "subject": "Топ-найми липня"
+  },
   "<527654742.120925002.1785589494326@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-01T15:16:21+00:00",
@@ -1054,6 +1060,12 @@
     "processed_at": "2026-08-01T15:16:20+00:00",
     "company": "Google",
     "subject": "Security alert"
+  },
+  "<rrnu7KiyRFuc0N_rYhmYIA@geopod-ismtpd-11>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-03T09:17:12+00:00",
+    "company": "Spotify",
+    "subject": "New login to Spotify"
   },
   "<tj1to7-0rztmd-6g@smtp-pulse.com>": {
     "kind": "ignore",
