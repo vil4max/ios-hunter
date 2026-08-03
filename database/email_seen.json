@@ -530,6 +530,13 @@
     "company": "Wispr Flow",
     "subject": "Your July Flow State recap 🦀"
   },
+  "<20260803125159.ba69d60462c4f9a3@gh-mail.n-ix.com>": {
+    "kind": "application_ack",
+    "processed_at": "2026-08-03T15:16:29+00:00",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg0h5UQ",
+    "company": "N-iX",
+    "subject": "Thank you for your interest in N-iX"
+  },
   "<2032248378.42868428.1785241368085@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -818,6 +825,12 @@
     "processed_at": "2026-08-01T15:16:21+00:00",
     "company": "GitHub",
     "subject": "[GitHub] A new SSH authentication public key was added to your\r\n account"
+  },
+  "<6a70a5e2.666420a4.25118e.5a67@mx.google.com>": {
+    "kind": "screening",
+    "processed_at": "2026-08-03T15:16:29+00:00",
+    "company": "vil4max",
+    "subject": "Career Agent  ·  2026-08-03"
   },
   "<6a8f378d-a961-4eb9-b3d6-e8fadfed1512@atl1s07mta0304.xt.local>": {
     "kind": "ignore",
