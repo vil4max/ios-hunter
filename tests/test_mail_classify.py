@@ -148,11 +148,42 @@ def test_classify_ignores_djinni_digest() -> None:
     assert event.kind == KIND_IGNORE
 
 
-def test_classify_reject_requires_hiring_context() -> None:
+def test_classify_reject_requires_application_signal() -> None:
     event = classify_from_headers(
         message_id="<bank@example.com>",
         subject="Account update",
         from_header="Bank <alerts@example.com>",
         body_text="Unfortunately we cannot proceed with your request at this time.",
+    )
+    assert event.kind == KIND_IGNORE
+
+
+def test_classify_reject_with_application_words() -> None:
+    event = classify_from_headers(
+        message_id="<hr@acme.io>",
+        subject="Update on your application",
+        from_header="People Team <people@acme.io>",
+        body_text="Unfortunately we will not be moving forward with your application.",
+    )
+    assert event.kind == KIND_REJECTED_HR
+
+
+def test_classify_ukrainian_reject_with_vidhuk() -> None:
+    event = classify_from_headers(
+        message_id="<hr@softco.ua>",
+        subject="Щодо вашого відгуку",
+        from_header="HR SoftCo <hr@softco.ua>",
+        body_text="Дякуємо за відгук. На жаль, ми не будемо продовжувати процес.",
+    )
+    assert event.kind == KIND_REJECTED_HR
+    assert event.company
+
+
+def test_classify_ignores_unfortunately_without_application_words() -> None:
+    event = classify_from_headers(
+        message_id="<ops@vendor.com>",
+        subject="Service notice",
+        from_header="Vendor Ops <ops@vendor.com>",
+        body_text="На жаль, сервіс тимчасово недоступний. К сожалению, есть задержка.",
     )
     assert event.kind == KIND_IGNORE

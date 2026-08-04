@@ -112,6 +112,33 @@ _RECRUITER_HINTS = (
     re.compile(r"jobs?@", re.I),
 )
 
+_APPLICATION_SIGNALS = (
+    re.compile(r"\bjob\s+application\b", re.I),
+    re.compile(r"\byour\b.{0,40}\bapplication\b", re.I),
+    re.compile(r"\bapplication\s+to\b", re.I),
+    re.compile(r"\bapplication\s+(has\s+been\s+)?received\b", re.I),
+    re.compile(r"\bupdate\s+on\s+your\s+application\b", re.I),
+    re.compile(r"\bregarding\s+your\s+application\b", re.I),
+    re.compile(r"\bregarding\s+(the\s+)?(open\s+)?position\b", re.I),
+    re.compile(r"\bthanks?\s+for\s+apply", re.I),
+    re.compile(r"\bthank\s+you\s+for\s+(your\s+)?(application|applying|interest)\b", re.I),
+    re.compile(r"\bthanks?\s+for\s+(your\s+)?interest\b", re.I),
+    re.compile(r"\b(we\s+)?received\s+your\s+application\b", re.I),
+    re.compile(r"\bmoving\s+forward\s+with\s+your\s+application\b", re.I),
+    re.compile(r"\byour\s+(cv|resume|portfolio)\b", re.I),
+    re.compile(r"\breviewed\s+your\s+(cv|resume|portfolio|profile)\b", re.I),
+    re.compile(r"\bcandidacy\b", re.I),
+    re.compile(r"\bвідгук", re.I),
+    re.compile(r"\bотклик", re.I),
+    re.compile(r"\bзаявк", re.I),
+    re.compile(r"\bваканс", re.I),
+    re.compile(r"\bрезюме\b", re.I),
+    re.compile(r"\bкандидатур", re.I),
+    re.compile(r"дякуємо\s+за\s+(відгук|заявку|інтерес)", re.I),
+    re.compile(r"спасибо\s+за\s+(отклик|интерес|заявку)", re.I),
+    re.compile(r"ваш[ау]?\s+(відгук|заявк|отклик)", re.I),
+)
+
 _SERVICE_NOISE_PATTERNS = (
     re.compile(r"two[- ]?(step|factor)\s+(verif|auth)", re.I),
     re.compile(r"\b2[- ]?step\s+verif", re.I),
@@ -285,15 +312,10 @@ def _is_ats_domain(domain: str) -> bool:
     return any(domain == ats or domain.endswith("." + ats) for ats in _ATS_DOMAINS)
 
 
-def _has_hiring_context(mail: InboundMail) -> bool:
-    hay = _blob(mail)
+def _has_sender_hiring_signal(mail: InboundMail) -> bool:
+    hay = f"{mail.from_name}\n{mail.from_addr}\n{mail.subject}"
     if _matches_any(hay, _RECRUITER_HINTS):
         return True
-    if _APPLYING_TO.search(f"{mail.subject}\n{mail.body_text[:800]}"):
-        return True
-    for pattern, _company in _SUBJECT_COMPANY:
-        if pattern.search(hay):
-            return True
     domain = _domain(mail.from_addr)
     if domain in _DOMAIN_COMPANY:
         return True
@@ -309,8 +331,26 @@ def _has_hiring_context(mail: InboundMail) -> bool:
     return False
 
 
-def _looks_recruiter_mail(mail: InboundMail) -> bool:
-    return _has_hiring_context(mail)
+def _has_application_signal(mail: InboundMail) -> bool:
+    hay = _blob(mail)
+    if _matches_any(hay, _APPLICATION_SIGNALS):
+        return True
+    if _matches_any(hay, _ACK_PATTERNS):
+        return True
+    if _APPLYING_TO.search(f"{mail.subject}\n{mail.body_text[:800]}"):
+        return True
+    return False
+
+
+def _is_application_thread(mail: InboundMail) -> bool:
+    if _has_application_signal(mail):
+        return True
+    hay = _blob(mail)
+    if _has_sender_hiring_signal(mail) and _matches_any(
+        hay, _REJECT_PATTERNS + _SCREENING_PATTERNS + _ACK_PATTERNS
+    ):
+        return True
+    return False
 
 
 def _ignore_event(
@@ -362,10 +402,11 @@ def classify_mail(mail: InboundMail) -> MailEvent:
             confidence=0.95,
         )
 
-    hiring = _has_hiring_context(mail)
+    application_thread = _is_application_thread(mail)
 
     if any(pattern.search(mail.from_addr) for pattern in _NOISE_FROM) and not (
-        hiring and _matches_any(hay, _ACK_PATTERNS + _REJECT_PATTERNS + _SCREENING_PATTERNS)
+        application_thread
+        and _matches_any(hay, _ACK_PATTERNS + _REJECT_PATTERNS + _SCREENING_PATTERNS)
     ):
         return _ignore_event(
             mail,
@@ -376,7 +417,7 @@ def classify_mail(mail: InboundMail) -> MailEvent:
             confidence=0.9,
         )
 
-    if hiring and _matches_any(hay, _REJECT_PATTERNS):
+    if application_thread and _matches_any(hay, _REJECT_PATTERNS):
         return MailEvent(
             kind=KIND_REJECTED_HR,
             company=company,
@@ -389,7 +430,7 @@ def classify_mail(mail: InboundMail) -> MailEvent:
             message_id=mail.message_id,
         )
 
-    if hiring and _matches_any(hay, _SCREENING_PATTERNS):
+    if application_thread and _matches_any(hay, _SCREENING_PATTERNS):
         return MailEvent(
             kind=KIND_SCREENING,
             company=company,
@@ -402,7 +443,7 @@ def classify_mail(mail: InboundMail) -> MailEvent:
             message_id=mail.message_id,
         )
 
-    if hiring and _matches_any(hay, _ACK_PATTERNS):
+    if application_thread and _matches_any(hay, _ACK_PATTERNS):
         return MailEvent(
             kind=KIND_APPLICATION_ACK,
             company=company,
@@ -415,7 +456,10 @@ def classify_mail(mail: InboundMail) -> MailEvent:
             message_id=mail.message_id,
         )
 
-    if hiring and company:
+    if company and (
+        _has_application_signal(mail)
+        or (_has_sender_hiring_signal(mail) and bool(role_hint))
+    ):
         return MailEvent(
             kind=KIND_REPLIED,
             company=company,
