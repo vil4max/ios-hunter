@@ -567,6 +567,11 @@
     "company": "ZEN.COM",
     "subject": "We're updating our Terms for Individual Users"
   },
+  "<20260804110040.ce9fcab41d823390@comeet-notifications.com>": {
+    "kind": "screening",
+    "processed_at": "2026-08-04T12:16:32+00:00",
+    "subject": "Your video interview with Tango"
+  },
   "<2032248378.42868428.1785241368085@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -648,6 +653,12 @@
   "<31031001.20260731070143.6a6c4857588bd9.06931419@mndr1.justjoin.it>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:18:00+00:00",
+    "company": "justjoin.it",
+    "subject": "Still interested? 👀 Don’t miss this opportunity!"
+  },
+  "<31031001.20260804070013.6a718dfd84d458.34858481@mndr1.justjoin.it>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-04T12:16:32+00:00",
     "company": "justjoin.it",
     "subject": "Still interested? 👀 Don’t miss this opportunity!"
   },
@@ -1098,6 +1109,19 @@
     "company": "Іvanna Іvanyshyn",
     "subject": "Invitation: [Newsoft] Max Vilchevskiy | Senior iOS Developer @ Mon\r\n Aug 3, 2026 16:00 - 16:30 (EEST) (vil4max@gmail.com)"
   },
+  "<cb82d0f1ac170c832114bd51705a0531.ums@oracle.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-04T12:16:29+00:00",
+    "company": "Ciklum",
+    "subject": "Quick step — verify and you’re in"
+  },
+  "<cb84dadfac170c832114bd51b88255b1.ums@oracle.com>": {
+    "kind": "application_ack",
+    "processed_at": "2026-08-04T12:16:32+00:00",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg00xno",
+    "company": "Ciklum",
+    "subject": "Thanks for applying — we’ve got it"
+  },
   "<crm.activity.12524016-0TR868@bitrix.otus.team>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:51+00:00",
@@ -1133,6 +1157,12 @@
     "processed_at": "2026-07-30T10:05:42+00:00",
     "company": "Электронные квитанции Uber",
     "subject": "Ваша поездка с Uber: четверг, день"
+  },
+  "<dd7baf88dd443a5fa679c3792f278fa104bbf14b-20390329-111820489@google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-04T12:16:32+00:00",
+    "company": "The Google Workspace",
+    "subject": "You now have exclusive access to AI features"
   },
   "<ec08c4aa-c733-4f00-b5f5-8a568e69c84a@mtasv.net>": {
     "kind": "ignore",
@@ -1175,6 +1205,12 @@
     "processed_at": "2026-07-29T13:41:50+00:00",
     "company": "Google",
     "subject": "Security alert"
+  },
+  "<jflpvfkGRqOPU-OEue5nzA@geopod-ismtpd-72>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-04T12:16:32+00:00",
+    "company": "The Brain.fm",
+    "subject": "Welcome to Brain.fm!  🥳"
   },
   "<lK6GkCziQ4GWuU4oAL4gMg@geopod-ismtpd-3>": {
     "kind": "ignore",
