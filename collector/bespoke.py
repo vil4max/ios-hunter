@@ -324,7 +324,10 @@ def collect_sigma() -> SourceResult:
 def collect_dataart() -> SourceResult:
     company = "DataArt"
     started = time.perf_counter()
-    url = "https://www.dataart.team/dataart-team/api/vacancies/filter-fields-page?skills=771"
+    url = (
+        "https://www.dataart.team/dataart-team/api/vacancies/"
+        "filter-fields-page?categories=569"
+    )
     try:
         payload = fetch_json(url)
         items = (

@@ -50,7 +50,7 @@ def _card(company: str, title: str, status: str) -> ProjectCard:
     )
 
 
-def test_format_groups_by_kind_without_board_link() -> None:
+def test_format_groups_matched_board_updates_only() -> None:
     result = MailSyncResult(
         mutations=[
             MailSyncMutation(
@@ -112,11 +112,27 @@ def test_format_groups_by_kind_without_board_link() -> None:
     assert "https://github.com" not in text
     assert text.startswith("📬 Почта")
     assert "❌ Отказ HR" in text
-    assert "💬 Reply от рекрутера" in text
-    assert "🤖 Автоответ (заявка принята)" in text
     assert "📅 Screening / interview" in text
-    assert "BetterMe — Senior iOS Engineer" in text
-    assert "⚠ нет карточки на борде" in text
     assert "CRM: Applied → Archived" in text
     assert "уже на борде: Screening" in text
-    assert text.index("❌ Отказ HR") < text.index("💬 Reply от рекрутера")
+    assert "BetterMe" not in text
+    assert "Northstrat" not in text
+    assert "⚠ нет карточки на борде" not in text
+    assert "💬 Reply от рекрутера" not in text
+    assert "🤖 Автоответ (заявка принята)" not in text
+
+
+def test_format_returns_none_when_only_unmatched() -> None:
+    result = MailSyncResult(
+        mutations=[
+            MailSyncMutation(
+                event=_event(KIND_REJECTED_HR, company="FOP_CREDIT", subject="Кредит"),
+                card=None,
+                action="unmatched",
+                previous_status="",
+                new_status="",
+                unmatched=True,
+            )
+        ]
+    )
+    assert format_imap_poll_message(result) is None

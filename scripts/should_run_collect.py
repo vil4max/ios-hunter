@@ -15,15 +15,21 @@ from config.schedule import (
     is_final_collect_slot,
 )
 from database.collect_slots import default_collect_slots_path, slot_completed
+from database.daily_email_days import default_daily_email_days_path, email_sent_for_day
 
 
 def main() -> int:
     stamp = _as_kyiv()
     due = due_collect_slot(stamp)
     day = stamp.strftime("%Y-%m-%d")
+    final_slot = is_final_collect_slot(stamp)
+    email_pending = final_slot and not email_sent_for_day(
+        default_daily_email_days_path(ROOT), day
+    )
     print(f"kyiv_hour={stamp.hour}")
     print(f"due_slot={due if due is not None else ''}")
-    print(f"final_slot={'true' if is_final_collect_slot(stamp) else 'false'}")
+    print(f"final_slot={'true' if final_slot else 'false'}")
+    print(f"dispatch_daily_email={'true' if email_pending else 'false'}")
     if due is None:
         print("Collect window: before Kyiv 09:00 — skip")
         return 1

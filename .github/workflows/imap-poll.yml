@@ -36,6 +36,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Poll IMAP and sync CRM
+        id: poll
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -54,6 +55,7 @@ jobs:
         run: python3 scripts/run_imap_poll.py
 
       - name: Commit email seen store
+        id: commit_seen
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
@@ -80,3 +82,25 @@ jobs:
           done
           echo "Failed to push email_seen after retries" >&2
           exit 1
+
+      - name: Notify failure on Telegram
+        if: failure()
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          set -euo pipefail
+          if [ -z "${TELEGRAM_TOKEN}" ] || [ -z "${TELEGRAM_CHAT_ID}" ]; then
+            echo "TELEGRAM_* missing — skip failure alert"
+            exit 0
+          fi
+          reason="unknown step"
+          if [ "${{ steps.poll.conclusion }}" = "failure" ]; then reason="IMAP poll / CRM sync"; fi
+          if [ "${{ steps.commit_seen.conclusion }}" = "failure" ]; then reason="commit email_seen"; fi
+          text="$(printf '⚠️ IMAP Recruiter Poll failed (%s)\n%s/%s/actions/runs/%s' \
+            "${reason}" \
+            "${GITHUB_SERVER_URL}" "${GITHUB_REPOSITORY}" "${GITHUB_RUN_ID}")"
+          curl -fsS -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+            --data-urlencode "text=${text}" \
+            -d "disable_web_page_preview=true" >/dev/null

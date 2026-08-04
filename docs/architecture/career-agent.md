@@ -40,8 +40,8 @@ Vacancy liveness (daily 04:00 UTC, incl. weekends)
   → archive Role closed when vacancy page is gone / replaced
   → Telegram status (count + company — title)
 
-Daily email (Kyiv 18:00 final slot)
-  → full CRM + collect summary
+Daily email (after Kyiv 18:00 Collect succeeds)
+  → full CRM + collect summary (deduped per day)
 
 Ops status / Applied → Screening: GitHub Project board (no daily Telegram CRM dump)
 ```

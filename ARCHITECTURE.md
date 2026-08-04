@@ -52,6 +52,6 @@ GitHub Actions (daily 04:00 UTC, incl. weekends)
 ## Schedule
 
 - **Collect → IMAP (sequential):** Kyiv 09/12/15/18 via `hourly-trigger.yml` → Collect iOS Jobs; IMAP Recruiter Poll starts only after Collect completes (`workflow_run`)
-- **Daily email:** same trigger at Kyiv 18:00 → Daily Email Report (final slot)
+- **Daily email:** Collect iOS Jobs dispatches Daily Email Report after the Kyiv 18:00 slot (deduped per day)
 - **Vacancy liveness:** `vacancy-liveness.yml` daily 04:00 UTC incl. weekends
 - **CI:** on push/PR to `main`

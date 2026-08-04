@@ -175,12 +175,12 @@ def test_hourly_heartbeat_reports_partial_failures() -> None:
         "📭 Новых вакансий нет\n"
         "\n"
         "⚠️ Поиск по сайтам: SoftServe\n"
+        "⚠️ Источники без результата: Binary Studio\n"
         "⚠️ Telegram: remotejobss\n"
         "🕐 2026-07-15 11:00"
     )
     assert "Следующая проверка" not in message
     assert "@remotejobss" not in message
-    assert "Binary Studio" not in message
     assert "🔕" not in message
     assert "Система в порядке" not in message
 

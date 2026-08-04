@@ -27,7 +27,7 @@ def test_second_identical_run_sends_zero_created(monkeypatch) -> None:
     )
     seen: dict = {}
 
-    sent_count, marked, _ = process_new_vacancies(
+    sent_count, marked, _, notify_ok = process_new_vacancies(
         vacancies,
         seen,
         seed_only=False,
@@ -36,9 +36,10 @@ def test_second_identical_run_sends_zero_created(monkeypatch) -> None:
     )
     assert sent_count == 1
     assert marked == 1
+    assert notify_ok is True
     assert alerts == [1]
 
-    sent_count_2, marked_2, _ = process_new_vacancies(
+    sent_count_2, marked_2, _, notify_ok_2 = process_new_vacancies(
         vacancies,
         seen,
         seed_only=False,
@@ -47,6 +48,7 @@ def test_second_identical_run_sends_zero_created(monkeypatch) -> None:
     )
     assert sent_count_2 == 0
     assert marked_2 == 0
+    assert notify_ok_2 is True
     assert alerts == [1, 0]
 
 
@@ -62,9 +64,10 @@ def test_seed_only_marks_without_sending(monkeypatch) -> None:
     vacancies = [make_vacancy(url="https://example.com/jobs/seed")]
     seen: dict = {}
 
-    sent_count, marked, _ = process_new_vacancies(vacancies, seen, seed_only=True)
+    sent_count, marked, _, notify_ok = process_new_vacancies(vacancies, seen, seed_only=True)
     assert sent_count == 0
     assert marked == 1
+    assert notify_ok is True
     assert calls == []
     assert "https://example.com/jobs/seed" in seen
 
@@ -102,7 +105,7 @@ def test_multiple_new_vacancies_one_hourly_alert(monkeypatch) -> None:
         make_vacancy(url="https://example.com/jobs/2", title="Swift Developer"),
     ]
     seen: dict = {}
-    sent, marked, _ = process_new_vacancies(
+    sent, marked, _, notify_ok = process_new_vacancies(
         vacancies,
         seen,
         seed_only=False,
@@ -111,6 +114,7 @@ def test_multiple_new_vacancies_one_hourly_alert(monkeypatch) -> None:
 
     assert sent == 2
     assert marked == 2
+    assert notify_ok is True
     assert len(alerts) == 1
     assert alerts[0][0] == 2
     assert alerts[0][1] == CollectReportStats(
@@ -131,7 +135,43 @@ def test_no_new_vacancies_still_invokes_notifier(monkeypatch) -> None:
     monkeypatch.setattr("scripts.run_pipeline.notify_hourly_inbox", fake_hourly)
     monkeypatch.delenv("CAREER_AGENT_SYNC_ENABLED", raising=False)
 
-    sent, marked, _ = process_new_vacancies([], {}, seed_only=False)
+    sent, marked, _, notify_ok = process_new_vacancies([], {}, seed_only=False)
     assert sent == 0
     assert marked == 0
+    assert notify_ok is True
     assert alerts == [0]
+
+
+def test_telegram_notify_failure_returns_notify_ok_false(monkeypatch) -> None:
+    def boom(*_args, **_kwargs):
+        raise RuntimeError("telegram down")
+
+    monkeypatch.setattr("scripts.run_pipeline.notify_hourly_inbox", boom)
+    monkeypatch.delenv("CAREER_AGENT_SYNC_ENABLED", raising=False)
+
+    sent, marked, _, notify_ok = process_new_vacancies(
+        [make_vacancy(url="https://example.com/jobs/fail")],
+        {},
+        seed_only=False,
+    )
+    assert sent == 0
+    assert marked == 0
+    assert notify_ok is False
+
+
+def test_degraded_sources_pass_into_hourly_stats(monkeypatch) -> None:
+    alerts: list[CollectReportStats] = []
+
+    def fake_hourly(sync_result, fresh, *, stats, board_url="", now=None, live=None, excluded_urls=None):
+        alerts.append(stats)
+
+    monkeypatch.setattr("scripts.run_pipeline.notify_hourly_inbox", fake_hourly)
+    monkeypatch.delenv("CAREER_AGENT_SYNC_ENABLED", raising=False)
+
+    process_new_vacancies(
+        [],
+        {},
+        seed_only=False,
+        source_health={"degraded_source_names": ("DataArt",), "sites_ok": 11, "sites_total": 12},
+    )
+    assert alerts[0].degraded_source_names == ("DataArt",)

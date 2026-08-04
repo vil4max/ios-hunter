@@ -116,3 +116,43 @@ def test_classify_ignores_english_two_factor_security_mail() -> None:
         body_text="You turned on two-factor authentication for your account.",
     )
     assert event.kind == KIND_IGNORE
+
+
+def test_classify_ignores_osbb_receipt() -> None:
+    event = classify_from_headers(
+        message_id="<osbb@s2.example>",
+        subject="Квитанція на оплату ОСББ «О.ПЧІЛКИ 5»",
+        from_header="S2 <noreply@s2.example>",
+        body_text="На жаль, термін оплати добігає кінця. Квитанція у вкладенні.",
+    )
+    assert event.kind == KIND_IGNORE
+
+
+def test_classify_ignores_pumb_credit_docs() -> None:
+    event = classify_from_headers(
+        message_id="<fop@pumb.ua>",
+        subject="Кредит «всеБІЗНЕС» від ПУМБ - завантаження документів",
+        from_header="FOP_CREDIT <fop_credit@pumb.ua>",
+        body_text="Завантаження документів для кредиту всеБІЗНЕС.",
+    )
+    assert event.kind == KIND_IGNORE
+
+
+def test_classify_ignores_djinni_digest() -> None:
+    event = classify_from_headers(
+        message_id="<digest@djinni.co>",
+        subject="Топ-найми липня",
+        from_header="Djinni <digest@djinni.co>",
+        body_text="Senior Front-End Developer interview opportunities this month.",
+    )
+    assert event.kind == KIND_IGNORE
+
+
+def test_classify_reject_requires_hiring_context() -> None:
+    event = classify_from_headers(
+        message_id="<bank@example.com>",
+        subject="Account update",
+        from_header="Bank <alerts@example.com>",
+        body_text="Unfortunately we cannot proceed with your request at this time.",
+    )
+    assert event.kind == KIND_IGNORE

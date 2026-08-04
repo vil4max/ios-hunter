@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import argparse
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -12,6 +13,7 @@ if str(ROOT) not in sys.path:
 from collector.companies import collect_all
 from config.schedule import KYIV
 from config.settings import load_settings
+from database.daily_email_days import default_daily_email_days_path, email_sent_for_day
 from database.seen import default_seen_path, load_seen
 from database.source_health import classify_degraded, default_baseline_path, load_baseline
 from integrations.email_smtp import credentials_configured, report_email_to, send_email
@@ -21,6 +23,14 @@ from reporter.daily import build_collect_day_summary, format_full_daily_report
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description="Send Career Agent daily email report.")
+    parser.add_argument(
+        "--send-claimed",
+        action="store_true",
+        help="Send after the day was claimed+committed (skip local claim check).",
+    )
+    args = parser.parse_args()
+
     settings = load_settings()
     if not settings.configured_for_sync:
         print(
@@ -38,6 +48,18 @@ def main() -> int:
         return 1
 
     now = datetime.now(KYIV)
+    day = now.strftime("%Y-%m-%d")
+    email_days_path = default_daily_email_days_path(ROOT)
+    if not args.send_claimed and email_sent_for_day(email_days_path, day):
+        print(f"Daily email already sent for {day} — skip")
+        return 0
+    if args.send_claimed and not email_sent_for_day(email_days_path, day):
+        print(
+            f"Daily email day {day} is not claimed — refuse send-claimed",
+            file=sys.stderr,
+        )
+        return 1
+
     client = GitHubClient(settings.github_token)
     cards = load_cards_from_github(client, settings)
     plan = build_plan(cards, settings)
@@ -55,7 +77,7 @@ def main() -> int:
         board_url=settings.project_board_url,
         now=now,
     )
-    subject = f"Career Agent · {now.strftime('%Y-%m-%d')}"
+    subject = f"Career Agent · {day}"
     send_email(subject=subject, body=body)
     print(f"Daily email sent to {report_email_to()}")
     print(

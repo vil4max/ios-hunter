@@ -37,8 +37,8 @@ def format_imap_poll_message(
     mutations = [
         m
         for m in (result.mutations or [])
-        if m.action in {"updated", "would_update", "unmatched"}
-        or (m.action == "noop" and m.event.kind in _KIND_HEADER)
+        if m.action in {"updated", "would_update"}
+        or (m.action == "noop" and m.card is not None and m.event.kind in _KIND_HEADER)
     ]
     if not mutations:
         return None
@@ -60,16 +60,11 @@ def format_imap_poll_message(
             continue
         lines.append("")
         lines.append(_KIND_HEADER[kind])
-        shown = 0
-        for mutation in group:
-            if mutation.unmatched and shown >= unmatched_limit:
-                continue
+        for mutation in group[:unmatched_limit]:
             lines.extend(_format_item(mutation))
-            if mutation.unmatched:
-                shown += 1
-        extra_unmatched = sum(1 for m in group if m.unmatched) - shown
-        if extra_unmatched > 0:
-            lines.append(f"… ещё {extra_unmatched}")
+        extra = len(group) - unmatched_limit
+        if extra > 0:
+            lines.append(f"… ещё {extra}")
 
     return "\n".join(lines).rstrip()
 

@@ -22,6 +22,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Refresh daily email day marker
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          if git cat-file -e "origin/main:database/daily_email_days.json" 2>/dev/null; then
+            git checkout origin/main -- database/daily_email_days.json
+            echo "Refreshed database/daily_email_days.json from origin/main"
+          fi
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -33,7 +42,7 @@ jobs:
           set -euo pipefail
           if [ "${{ github.event_name }}" != "schedule" ]; then
             echo "skip_gate=false" >> "$GITHUB_OUTPUT"
-            echo "final_slot=false" >> "$GITHUB_OUTPUT"
+            echo "dispatch_daily_email=false" >> "$GITHUB_OUTPUT"
             echo "Manual trigger — gate bypassed (collect; IMAP follows via workflow_run)"
             exit 0
           fi
@@ -43,9 +52,9 @@ jobs:
           set -e
           echo "$output"
           kyiv_hour="$(printf '%s\n' "$output" | awk -F= '/^kyiv_hour=/{print $2; exit}')"
-          final_slot="$(printf '%s\n' "$output" | awk -F= '/^final_slot=/{print $2; exit}')"
+          dispatch_daily_email="$(printf '%s\n' "$output" | awk -F= '/^dispatch_daily_email=/{print $2; exit}')"
           echo "kyiv_hour=${kyiv_hour}" >> "$GITHUB_OUTPUT"
-          echo "final_slot=${final_slot:-false}" >> "$GITHUB_OUTPUT"
+          echo "dispatch_daily_email=${dispatch_daily_email:-false}" >> "$GITHUB_OUTPUT"
           if [ "$status" -eq 0 ]; then
             echo "skip_gate=false" >> "$GITHUB_OUTPUT"
           else
@@ -53,6 +62,7 @@ jobs:
           fi
 
       - name: Trigger Collect iOS Jobs
+        id: dispatch_collect
         if: steps.gate.outputs.skip_gate != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
@@ -82,7 +92,8 @@ jobs:
       # (see .github/workflows/imap-poll.yml) — never in parallel with Collect.
 
       - name: Trigger Daily Email Report
-        if: steps.gate.outputs.skip_gate != 'true' && steps.gate.outputs.final_slot == 'true'
+        id: dispatch_email
+        if: steps.gate.outputs.dispatch_daily_email == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

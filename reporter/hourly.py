@@ -71,10 +71,25 @@ def _new_vacancies_header(total: int) -> str:
     return f"📬 +{total} {word}"
 
 
+def _degraded_status_line(stats: CollectReportStats) -> str | None:
+    if not stats.degraded_source_names:
+        return None
+    shown = ", ".join(stats.degraded_source_names[:4])
+    extra = (
+        f" (+{len(stats.degraded_source_names) - 4})"
+        if len(stats.degraded_source_names) > 4
+        else ""
+    )
+    return f"⚠️ Источники без результата: {shown}{extra}"
+
+
 def _collect_status_lines(stats: CollectReportStats) -> list[str]:
     lines: list[str] = []
     if _site_failed_names(stats):
         lines.append(_sites_status_line(stats))
+    degraded = _degraded_status_line(stats)
+    if degraded:
+        lines.append(degraded)
     if _telegram_failed_names(stats):
         lines.append(_telegram_status_line(stats))
     if not lines:

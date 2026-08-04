@@ -169,7 +169,7 @@ def process_new_vacancies(
     duplicates_removed: int = 0,
     failed_source_names: list[str] | tuple[str, ...] | None = None,
     source_health: dict[str, object] | None = None,
-) -> tuple[int, int, SyncResult]:
+) -> tuple[int, int, SyncResult, bool]:
     settings = load_settings()
     now = utc_now()
     failed = tuple(failed_source_names or ())
@@ -206,7 +206,9 @@ def process_new_vacancies(
         telegram_ok_names=tuple(
             str(name) for name in (health.get("telegram_ok_names") or ())
         ),
-        degraded_source_names=(),
+        degraded_source_names=tuple(
+            str(name) for name in (health.get("degraded_source_names") or ())
+        ),
     )
 
     if seed_only:
@@ -215,12 +217,12 @@ def process_new_vacancies(
             sync_result = ProjectSync(settings).seed_archived(fresh)
             ok_urls = {item.canonical_url for item in sync_result.created + sync_result.existing}
             marked = _mark_urls(seen, fresh, ok_urls, first_seen=now)
-            return 0, marked, sync_result
+            return 0, marked, sync_result, True
         marked = 0
         for vacancy in fresh:
             if mark_seen(seen, vacancy, first_seen=now):
                 marked += 1
-        return 0, marked, sync_result
+        return 0, marked, sync_result, True
 
     if settings.configured_for_sync:
         sync_result = ProjectSync(settings).sync_vacancies(fresh, status_name="Inbox")
@@ -233,10 +235,10 @@ def process_new_vacancies(
             )
         except Exception as error:
             print(f"Telegram send failed: {error}", file=sys.stderr)
-            return 0, 0, sync_result
+            return 0, 0, sync_result, False
         ok_urls = {item.canonical_url for item in sync_result.created + sync_result.existing}
         marked = _mark_urls(seen, fresh, ok_urls, first_seen=now)
-        return sync_result.created_count, marked, sync_result
+        return sync_result.created_count, marked, sync_result, True
 
     sync_result = SyncResult(
         skipped_disabled=True,
@@ -260,13 +262,13 @@ def process_new_vacancies(
         )
     except Exception as error:
         print(f"Telegram send failed: {error}", file=sys.stderr)
-        return 0, 0, sync_result
+        return 0, 0, sync_result, False
 
     marked = 0
     for vacancy in fresh:
         if mark_seen(seen, vacancy, first_seen=now):
             marked += 1
-    return len(fresh), marked, sync_result
+    return len(fresh), marked, sync_result, True
 
 
 def main() -> int:
@@ -300,7 +302,7 @@ def main() -> int:
         live_urls=live_urls,
         purgeable_companies=purgeable_companies,
     )
-    sent, marked, sync_result = process_new_vacancies(
+    sent, marked, sync_result, notify_ok = process_new_vacancies(
         vacancies,
         seen,
         seed_only=seed_only,
@@ -326,8 +328,11 @@ def main() -> int:
         f"Newly marked seen: {marked}\n"
         f"Seed only: {seed_only}\n"
         f"Seen total: {len(seen)}\n"
+        f"Notify ok: {notify_ok}\n"
         f"Runtime: {runtime:.1f}s"
     )
+    if not notify_ok:
+        return 1
     return 0
 
 

@@ -4,10 +4,12 @@ on:
   workflow_dispatch:
   # Scheduled Kyiv 09/12/15/18 via .github/workflows/hourly-trigger.yml
   # (ubuntu → workflow_dispatch). IMAP Recruiter Poll follows via workflow_run.
+  # Final Kyiv slot 18 may also dispatch Daily Email (deduped with schedule trigger).
 
 permissions:
   contents: write
   issues: write
+  actions: write
 
 concurrency:
   group: collect-ios-jobs-${{ github.repository }}
@@ -24,6 +26,15 @@ jobs:
       - name: Prepare directories
         run: mkdir -p database
 
+      - name: Refresh daily email day marker
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          if git cat-file -e "origin/main:database/daily_email_days.json" 2>/dev/null; then
+            git checkout origin/main -- database/daily_email_days.json
+            echo "Refreshed database/daily_email_days.json from origin/main"
+          fi
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -33,6 +44,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run Python pipeline
+        id: pipe
         env:
           SEEN_PATH: database/seen.json
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
@@ -51,9 +63,11 @@ jobs:
         run: python3 scripts/run_pipeline.py
 
       - name: Mark Kyiv collect slot completed
+        id: slot
         run: python3 scripts/mark_collect_slot.py
 
       - name: Commit seen store
+        id: commit_seen
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
@@ -80,3 +94,54 @@ jobs:
           done
           echo "Failed to push seen/baseline after retries" >&2
           exit 1
+
+      - name: Trigger Daily Email Report
+        id: dispatch_email
+        if: steps.slot.outputs.dispatch_daily_email == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          repo="${{ github.repository }}"
+          attempt=1
+          max_attempts=5
+          delay=15
+          while true; do
+            echo "Dispatch Daily Email attempt ${attempt}/${max_attempts}"
+            if gh workflow run "Daily Email Report" --repo "${repo}" --ref main; then
+              echo "Daily Email Report dispatched successfully"
+              exit 0
+            fi
+            if [ "${attempt}" -ge "${max_attempts}" ]; then
+              echo "Failed to dispatch Daily Email Report after ${max_attempts} attempts" >&2
+              exit 1
+            fi
+            echo "Dispatch failed; retrying in ${delay}s"
+            sleep "${delay}"
+            attempt=$((attempt + 1))
+            delay=$((delay * 2))
+          done
+
+      - name: Notify failure on Telegram
+        if: failure()
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          set -euo pipefail
+          if [ -z "${TELEGRAM_TOKEN}" ] || [ -z "${TELEGRAM_CHAT_ID}" ]; then
+            echo "TELEGRAM_* missing — skip failure alert"
+            exit 0
+          fi
+          reason="unknown step"
+          if [ "${{ steps.pipe.conclusion }}" = "failure" ]; then reason="pipeline / Telegram notify"; fi
+          if [ "${{ steps.slot.conclusion }}" = "failure" ]; then reason="mark collect slot"; fi
+          if [ "${{ steps.commit_seen.conclusion }}" = "failure" ]; then reason="commit seen/slots"; fi
+          if [ "${{ steps.dispatch_email.conclusion }}" = "failure" ]; then reason="dispatch Daily Email"; fi
+          text="$(printf '⚠️ Collect iOS Jobs failed (%s)\n%s/%s/actions/runs/%s' \
+            "${reason}" \
+            "${GITHUB_SERVER_URL}" "${GITHUB_REPOSITORY}" "${GITHUB_RUN_ID}")"
+          curl -fsS -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+            --data-urlencode "text=${text}" \
+            -d "disable_web_page_preview=true" >/dev/null

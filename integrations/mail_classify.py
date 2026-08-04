@@ -130,6 +130,21 @@ _SERVICE_NOISE_PATTERNS = (
     re.compile(r"ssh\s+(key|authentication)", re.I),
 )
 
+_BILLING_NOISE_PATTERNS = (
+    re.compile(r"\bквитанц", re.I),
+    re.compile(r"\bосбб\b", re.I),
+    re.compile(r"\bоплат[аиуы]?\b", re.I),
+    re.compile(r"\bкредит\b", re.I),
+    re.compile(r"\bпумб\b", re.I),
+    re.compile(r"privatbank|приватбанк|monobank|ощадбанк", re.I),
+    re.compile(r"\binvoice\b", re.I),
+    re.compile(r"\breceipt\b", re.I),
+    re.compile(r"завантаження\s+документ", re.I),
+    re.compile(r"топ[- ]?найми", re.I),
+    re.compile(r"\bdjinni\b", re.I),
+    re.compile(r"@djinni\.co", re.I),
+)
+
 _ROLE_STOP = {
     "your",
     "our",
@@ -229,10 +244,6 @@ def extract_company(mail: InboundMail) -> str:
     if any(domain == ats or domain.endswith("." + ats) for ats in _ATS_DOMAINS):
         return ""
 
-    if domain and domain not in {"gmail.com", "googlemail.com", "outlook.com", "yahoo.com"}:
-        label = parts[0] if parts else domain
-        if label and label not in {"mail", "email", "jobs", "careers", "noreply", "no-reply"}:
-            return label.replace("-", " ").title()
     return ""
 
 
@@ -270,16 +281,58 @@ def _matches_any(text: str, patterns: tuple[re.Pattern[str], ...]) -> bool:
     return any(pattern.search(text) for pattern in patterns)
 
 
-def _looks_recruiter_mail(mail: InboundMail) -> bool:
+def _is_ats_domain(domain: str) -> bool:
+    return any(domain == ats or domain.endswith("." + ats) for ats in _ATS_DOMAINS)
+
+
+def _has_hiring_context(mail: InboundMail) -> bool:
     hay = _blob(mail)
     if _matches_any(hay, _RECRUITER_HINTS):
         return True
-    if _matches_any(hay, _ACK_PATTERNS + _REJECT_PATTERNS + _SCREENING_PATTERNS):
+    if _APPLYING_TO.search(f"{mail.subject}\n{mail.body_text[:800]}"):
         return True
+    for pattern, _company in _SUBJECT_COMPANY:
+        if pattern.search(hay):
+            return True
     domain = _domain(mail.from_addr)
     if domain in _DOMAIN_COMPANY:
         return True
+    parts = domain.split(".")
+    if len(parts) >= 3:
+        parent = ".".join(parts[-2:])
+        if parent in _DOMAIN_COMPANY:
+            return True
+    if _is_ats_domain(domain):
+        return True
+    if re.search(r"(jobs?|careers?|recruit)", mail.from_addr, re.I):
+        return True
     return False
+
+
+def _looks_recruiter_mail(mail: InboundMail) -> bool:
+    return _has_hiring_context(mail)
+
+
+def _ignore_event(
+    mail: InboundMail,
+    *,
+    company: str,
+    role_hint: str,
+    recruiter: str,
+    snippet: str,
+    confidence: float,
+) -> MailEvent:
+    return MailEvent(
+        kind=KIND_IGNORE,
+        company=company,
+        role_hint=role_hint,
+        recruiter=recruiter,
+        confidence=confidence,
+        snippet=snippet,
+        subject=mail.subject,
+        from_addr=mail.from_addr,
+        message_id=mail.message_id,
+    )
 
 
 def classify_mail(mail: InboundMail) -> MailEvent:
@@ -290,47 +343,40 @@ def classify_mail(mail: InboundMail) -> MailEvent:
     snippet = _snippet(mail)
 
     if re.search(r"jooble\.", mail.from_addr, re.I) or re.search(r"\bjooble\b", mail.subject, re.I):
-        return MailEvent(
-            kind=KIND_IGNORE,
+        return _ignore_event(
+            mail,
             company=company,
             role_hint=role_hint,
             recruiter=recruiter,
-            confidence=0.95,
             snippet=snippet,
-            subject=mail.subject,
-            from_addr=mail.from_addr,
-            message_id=mail.message_id,
+            confidence=0.95,
         )
 
-    if _matches_any(hay, _SERVICE_NOISE_PATTERNS):
-        return MailEvent(
-            kind=KIND_IGNORE,
+    if _matches_any(hay, _SERVICE_NOISE_PATTERNS) or _matches_any(hay, _BILLING_NOISE_PATTERNS):
+        return _ignore_event(
+            mail,
             company=company,
             role_hint=role_hint,
             recruiter=recruiter,
-            confidence=0.95,
             snippet=snippet,
-            subject=mail.subject,
-            from_addr=mail.from_addr,
-            message_id=mail.message_id,
+            confidence=0.95,
         )
 
-    if any(pattern.search(mail.from_addr) for pattern in _NOISE_FROM) and not _matches_any(
-        hay, _ACK_PATTERNS + _REJECT_PATTERNS + _SCREENING_PATTERNS
+    hiring = _has_hiring_context(mail)
+
+    if any(pattern.search(mail.from_addr) for pattern in _NOISE_FROM) and not (
+        hiring and _matches_any(hay, _ACK_PATTERNS + _REJECT_PATTERNS + _SCREENING_PATTERNS)
     ):
-        return MailEvent(
-            kind=KIND_IGNORE,
+        return _ignore_event(
+            mail,
             company=company,
             role_hint=role_hint,
             recruiter=recruiter,
-            confidence=0.9,
             snippet=snippet,
-            subject=mail.subject,
-            from_addr=mail.from_addr,
-            message_id=mail.message_id,
+            confidence=0.9,
         )
 
-    if _matches_any(hay, _REJECT_PATTERNS):
+    if hiring and _matches_any(hay, _REJECT_PATTERNS):
         return MailEvent(
             kind=KIND_REJECTED_HR,
             company=company,
@@ -343,7 +389,7 @@ def classify_mail(mail: InboundMail) -> MailEvent:
             message_id=mail.message_id,
         )
 
-    if _matches_any(hay, _SCREENING_PATTERNS):
+    if hiring and _matches_any(hay, _SCREENING_PATTERNS):
         return MailEvent(
             kind=KIND_SCREENING,
             company=company,
@@ -356,7 +402,7 @@ def classify_mail(mail: InboundMail) -> MailEvent:
             message_id=mail.message_id,
         )
 
-    if _matches_any(hay, _ACK_PATTERNS):
+    if hiring and _matches_any(hay, _ACK_PATTERNS):
         return MailEvent(
             kind=KIND_APPLICATION_ACK,
             company=company,
@@ -369,7 +415,7 @@ def classify_mail(mail: InboundMail) -> MailEvent:
             message_id=mail.message_id,
         )
 
-    if _looks_recruiter_mail(mail) and company:
+    if hiring and company:
         return MailEvent(
             kind=KIND_REPLIED,
             company=company,
@@ -382,16 +428,13 @@ def classify_mail(mail: InboundMail) -> MailEvent:
             message_id=mail.message_id,
         )
 
-    return MailEvent(
-        kind=KIND_IGNORE,
+    return _ignore_event(
+        mail,
         company=company,
         role_hint=role_hint,
         recruiter=recruiter,
-        confidence=0.4,
         snippet=snippet,
-        subject=mail.subject,
-        from_addr=mail.from_addr,
-        message_id=mail.message_id,
+        confidence=0.4,
     )
 
 

@@ -2,7 +2,7 @@
 
 iOS Hunter is evolving into **Career Agent**: collect iOS/Swift vacancies, sync them to a GitHub Project board, and report ops status on Telegram.
 
-Production runs on GitHub Actions. GitHub Project is the operational source of truth for vacancy status. Telegram gets a short OK on the Kyiv collect slots (09:00 / 12:00 / 15:00 / 18:00), and the vacancy list only when something new lands in Inbox.
+Production runs on GitHub Actions. GitHub Project is the operational source of truth for vacancy status. Telegram gets a short OK on the Kyiv collect slots (09:00 / 12:00 / 15:00 / 18:00), and the vacancy list only when something new lands in Inbox. Live ops channels are Telegram, the daily email (after the Kyiv 18:00 collect), and the Project board — `reports/*.md` are static audit notes, not runtime dashboards.
 
 See `docs/architecture/career-agent.md` and `docs/github-setup-guide.md`.
 
@@ -111,10 +111,10 @@ Telegram only on new vacancies (list + OK)
 
 | Workflow | When |
 |----------|------|
-| **Collect iOS Jobs** | Manual or via schedule trigger — collect, sync, Telegram if new |
-| **Collect Schedule Trigger** | Hourly :17 UTC in daytime band; Kyiv due-slot 09/12/15/18 with catch-up + slot dedupe; Collect; at 18 also Daily Email |
+| **Collect iOS Jobs** | Manual or via schedule trigger — collect, sync, Telegram; after Kyiv 18:00 slot also dispatches Daily Email |
+| **Collect Schedule Trigger** | Hourly :17 UTC in daytime band; Kyiv due-slot 09/12/15/18 with catch-up + slot dedupe; Collect only |
 | **Daily Vacancy Liveness** | Every day 04:00 UTC (incl. weekends) — probe active board URLs, archive closed, Telegram status |
-| **Daily Email Report** | Final Kyiv 18:00 slot (via schedule trigger) or manual — full CRM + collect summary to email |
+| **Daily Email Report** | Kyiv 18:00 via Collect and/or schedule trigger (even if Collect already ran/failed) — claim day on `main` before SMTP; manual `force` re-sends |
 | **IMAP Recruiter Poll** | After Collect completes (`workflow_run`) or manual — classify recruiter mail, update CRM, Telegram |
 | **CI** | Push / PR — pytest |
 

@@ -2,11 +2,17 @@ name: Daily Email Report
 
 on:
   workflow_dispatch:
-  # Final Kyiv 18:00 slot dispatches this from Collect Schedule Trigger.
-  # Keep workflow_dispatch for manual runs.
+    inputs:
+      force:
+        description: "Re-send today even if already claimed"
+        required: false
+        default: "false"
+        type: boolean
+  # Claimed from Collect (slot 18) and/or Collect Schedule Trigger (final_slot),
+  # independent of collect success. Keep workflow_dispatch for manual runs.
 
 permissions:
-  contents: read
+  contents: write
   issues: read
 
 concurrency:
@@ -18,6 +24,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Refresh daily email day marker
+        id: refresh
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          if git cat-file -e "origin/main:database/daily_email_days.json" 2>/dev/null; then
+            git checkout origin/main -- database/daily_email_days.json
+            echo "Refreshed database/daily_email_days.json from origin/main"
+          else
+            mkdir -p database
+            printf '%s\n' '{' '  "days": []' '}' > database/daily_email_days.json
+            echo "Initialized empty database/daily_email_days.json"
+          fi
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -27,7 +49,45 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
+      - name: Claim daily email day
+        id: claim
+        env:
+          DAILY_EMAIL_FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force || 'false' }}
+        run: python3 scripts/claim_daily_email_day.py
+
+      - name: Commit claim marker
+        id: commit_claim
+        if: steps.claim.outputs.claimed == 'true'
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add database/daily_email_days.json
+          if git diff --staged --quiet; then
+            echo "No daily_email_days changes to commit."
+            exit 0
+          fi
+          git commit -m "chore(daily_email): claim report day [skip ci]"
+          branch="${GITHUB_REF_NAME}"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin "$branch"
+            if ! git diff --quiet || ! git diff --cached --quiet; then
+              git stash push --include-untracked -m "daily-email-ci-dirty-${attempt}" || true
+            fi
+            if git rebase "origin/$branch" && git push origin "HEAD:$branch"; then
+              echo "Pushed daily_email_days claim on attempt ${attempt}"
+              exit 0
+            fi
+            echo "Push race on attempt ${attempt}, retrying..."
+            git rebase --abort 2>/dev/null || true
+            sleep $((attempt * 2))
+          done
+          echo "Failed to push daily_email_days after retries" >&2
+          exit 1
+
       - name: Send daily email report
+        id: send
+        if: steps.claim.outputs.claimed == 'true'
         env:
           SEEN_PATH: database/seen.json
           SMTP_HOST: ${{ vars.SMTP_HOST }}
@@ -42,4 +102,27 @@ jobs:
           CAREER_PROJECT_OWNER: ${{ vars.CAREER_PROJECT_OWNER }}
           CAREER_PROJECT_NUMBER: ${{ vars.CAREER_PROJECT_NUMBER }}
           PROJECT_BOARD_URL: ${{ vars.PROJECT_BOARD_URL }}
-        run: python3 scripts/run_daily_report.py
+        run: python3 scripts/run_daily_report.py --send-claimed
+
+      - name: Notify failure on Telegram
+        if: failure()
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          set -euo pipefail
+          if [ -z "${TELEGRAM_TOKEN}" ] || [ -z "${TELEGRAM_CHAT_ID}" ]; then
+            echo "TELEGRAM_* missing — skip failure alert"
+            exit 0
+          fi
+          reason="unknown"
+          if [ "${{ steps.claim.conclusion }}" = "failure" ]; then reason="claim day"; fi
+          if [ "${{ steps.commit_claim.conclusion }}" = "failure" ]; then reason="commit claim marker"; fi
+          if [ "${{ steps.send.conclusion }}" = "failure" ]; then reason="SMTP send (day already claimed — use force to retry)"; fi
+          text="$(printf '⚠️ Daily Email Report failed (%s)\n%s/%s/actions/runs/%s' \
+            "${reason}" \
+            "${GITHUB_SERVER_URL}" "${GITHUB_REPOSITORY}" "${GITHUB_RUN_ID}")"
+          curl -fsS -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+            --data-urlencode "text=${text}" \
+            -d "disable_web_page_preview=true" >/dev/null

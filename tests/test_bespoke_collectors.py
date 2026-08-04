@@ -262,6 +262,27 @@ def test_dataart_builds_urls_from_slug(stub) -> None:
 
     assert result.items_scanned == 3
     assert result.jobs[0]["url"] == "https://www.dataart.team/vacancies/ios-developer"
+    assert "categories=569" in result.source_url
+    assert "skills=771" not in result.source_url
+
+
+def test_dataart_android_only_mobile_page_is_healthy_not_empty_scan(stub) -> None:
+    stub(
+        payload={
+            "vacancies": {
+                "items": [
+                    {"title": "Senior Android Developer", "slug": "ADR00037"},
+                    {"title": "Android Technical Lead", "slug": "ADR00045"},
+                ]
+            }
+        }
+    )
+
+    result = bespoke.collect_dataart()
+
+    assert result.status == "healthy"
+    assert result.items_scanned == 2
+    assert result.jobs == []
 
 
 def test_dataart_reads_flat_items(stub) -> None:
