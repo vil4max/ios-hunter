@@ -82,6 +82,12 @@
     "company": "Graeme",
     "subject": "Need help getting setup?"
   },
+  "<0100019fc953a05d-39ce685d-32e2-410d-bbda-3a72c8994a7a-000000@email.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-04T06:20:40+00:00",
+    "company": "JobCopilot",
+    "subject": "New jobs matching your preferences 👇"
+  },
   "<0101019faa3ac02b-d5c9e8e3-ef86-43ea-9392-8ff92655359d-000000@us-west-2.amazonses.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -431,6 +437,12 @@
     "company": "N-iX",
     "subject": "iOS: Senior IOS AI-Enabled Developer у TangoMe і ще 12 нових вакансій"
   },
+  "<1jv4ofb0lnfpe801@indeed.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-04T06:20:40+00:00",
+    "company": "Indeed",
+    "subject": "iOS: Senior IOS AI-Enabled Developer у TangoMe і ще 14 нових вакансій"
+  },
   "<20260728154930.3.ec4ca0e2efd05417@mg-d0.substack.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -537,6 +549,24 @@
     "company": "N-iX",
     "subject": "Thank you for your interest in N-iX"
   },
+  "<20260803154357.c9511f610235cc79@mg.pointfree.co>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-04T06:20:40+00:00",
+    "company": "Point-Free",
+    "subject": "New Point-Free Video: WWDC26: SQLiteData Codability"
+  },
+  "<20260803160108.3.98a6429ccb02de55.sbddphdc@mg2.substack.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-04T06:20:40+00:00",
+    "company": "Substack",
+    "subject": "The Weight of Other People's Words"
+  },
+  "<20260803163015.a97a4648abdd9a7d@cioeu83579.zen.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-04T06:20:40+00:00",
+    "company": "ZEN.COM",
+    "subject": "We're updating our Terms for Individual Users"
+  },
   "<2032248378.42868428.1785241368085@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -642,6 +672,12 @@
   "<3m-A2lLOlKtj2TgaHyGW7g@notifications.google.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T16:38:11+00:00",
+    "company": "Google",
+    "subject": "Security alert"
+  },
+  "<434q1J-hNkZ7oFBOW7We_w@notifications.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-04T06:20:40+00:00",
     "company": "Google",
     "subject": "Security alert"
   },
@@ -862,6 +898,12 @@
     "company": "Google",
     "subject": "Security alert"
   },
+  "<7fPgXch5joNZrh0Bj7qvCQ@notifications.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-04T06:20:40+00:00",
+    "company": "Google",
+    "subject": "Security alert"
+  },
   "<7upslEsOxCcL6hSTX7uPpw@notifications.google.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-01T15:16:20+00:00",
@@ -1038,6 +1080,18 @@
     "company": "Банк ПУМБ",
     "subject": "Ваша думка має значення - поділіться з нами"
   },
+  "<c3luZXJpc2UuRU1BSUw6NzhlYjhjYzgtYTBkYi00MDE0LWJhYmYtOTc0MDIwZTk0NTUyOjU0MzFiMzRiLWY5MzMtNDU0Zi04OGFkLTQwMGI2ZGY4NmNiZS4xOTc5OTU4MA==@modivo.ua>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-04T06:20:40+00:00",
+    "company": "MODIVO.UA",
+    "subject": "Зміни до регламенту магазину та Політики конфіденційності"
+  },
+  "<c3luZXJpc2UuRU1BSUw6ZjBkMzNiMjgtNjM2Ny00ZTlkLWFhYTItZDFmZGIwNjFiYjRkOjU0MzFiMzRiLWY5MzMtNDU0Zi04OGFkLTQwMGI2ZGY4NmNiZS4xOTc5NjQwMA==@modivo.ua>": {
+    "kind": "rejected_hr",
+    "processed_at": "2026-08-04T06:20:40+00:00",
+    "company": "MODIVO.UA",
+    "subject": "Ми змінюємося на краще заради вас"
+  },
   "<calendar-aeda3d15-0243-4ad9-9153-254d380193ba@google.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:51+00:00",
@@ -1103,6 +1157,12 @@
     "processed_at": "2026-07-30T10:05:45+00:00",
     "company": "Электронные квитанции Uber",
     "subject": "Ваша поездка с Uber: четверг, день"
+  },
+  "<ff02dc5f-c2c2-4567-a082-89d3eb65c2ab@ind1s01mta0007.xt.local>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-04T06:20:40+00:00",
+    "company": "Atlassian",
+    "subject": "Billing account changes for Ukrainian customers"
   },
   "<iAIW_rStFoBPCFFbFMEvdA@notifications.google.com>": {
     "kind": "ignore",
