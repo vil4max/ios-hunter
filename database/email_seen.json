@@ -191,6 +191,12 @@
     "company": "Xcode Cloud",
     "subject": "App -- Build 69 succeeded (main)"
   },
+  "<1188537156.781128.1785932265793@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-05T15:16:43+00:00",
+    "company": "iTunes Store",
+    "subject": "You will be charged for your iCloud+ plan in 2 days"
+  },
   "<1188800191.24499.1785315983309@lva2-app65324.prod.linkedin.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -628,6 +634,12 @@
     "company": "iOS (Swift) jobs",
     "subject": "Polymarket's Android App Is Written in Swift"
   },
+  "<20260805144436.3ede04d358a4baae@cioeu83579.zen.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-05T15:16:43+00:00",
+    "company": "ZEN.COM",
+    "subject": "📍 Внесіть готівку на ZEN, платіть усюди"
+  },
   "<2032248378.42868428.1785241368085@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -663,6 +675,12 @@
     "processed_at": "2026-07-31T08:17:51+00:00",
     "company": "Freedom24",
     "subject": "До 24% в USD с Nasdaq-100"
+  },
+  "<21645-2297090523355156055-63a0f81f-7664-424a-a0c4-a0598d3ce75e@carrotquest-mail.io>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-05T15:16:43+00:00",
+    "company": "Freedom24",
+    "subject": "Двойная выгода от платины: 3% в USD фикс + доход от роста"
   },
   "<216afa7e-c003-4e2d-bb4a-627d1233f686@mtasv.net>": {
     "kind": "ignore",
@@ -1369,5 +1387,11 @@
     "processed_at": "2026-07-29T13:41:50+00:00",
     "company": "Legium.pro",
     "subject": "Ваша электронная подпись скоро перестанет действовать"
+  },
+  "<xao4SSq7T42sm_vYIgz-RQ@geopod-ismtpd-16>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-05T15:16:43+00:00",
+    "company": "ЛУН",
+    "subject": "Нові ЖК на ЛУН: ЖК Соборний  2026, ЖК Левадний і ще 4 ЖК  - нові проєкти і старти продажів Києва і області"
   }
 }
