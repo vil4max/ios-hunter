@@ -88,6 +88,12 @@
     "company": "JobCopilot",
     "subject": "New jobs matching your preferences 👇"
   },
+  "<0100019fcde1e26e-f34f60b5-c9a3-42f6-8c6e-5c5a00f32b25-000000@email.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-05T06:16:27+00:00",
+    "company": "Daniel from FlowDeck",
+    "subject": "One less trip to Xcode"
+  },
   "<0101019faa3ac02b-d5c9e8e3-ef86-43ea-9392-8ff92655359d-000000@us-west-2.amazonses.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -99,6 +105,12 @@
     "processed_at": "2026-07-29T16:38:11+00:00",
     "company": "Igor from Hirify",
     "subject": "Вы купили Hirify Plus! 🤗"
+  },
+  "<0102019fce1403ff-4392860b-5dde-4024-a268-b4a81dc4475f-000000@eu-west-1.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-05T06:16:27+00:00",
+    "company": "monobank",
+    "subject": "Ваш договір по Дія Картці"
   },
   "<0107019fa9d51843-5bf640bc-163e-4a74-81ee-22be2579400a-000000@eu-central-1.amazonses.com>": {
     "kind": "ignore",
@@ -449,6 +461,20 @@
     "company": "Indeed",
     "subject": "iOS: Senior IOS AI-Enabled Developer у TangoMe і ще 14 нових вакансій"
   },
+  "<1jv7d67pntna5806@indeed.com>": {
+    "kind": "replied",
+    "processed_at": "2026-08-05T06:16:31+00:00",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg00xno",
+    "company": "Ciklum",
+    "subject": "ios developer: Senior IOS AI-Enabled Developer у TangoMe і ще 5 нових вакансій"
+  },
+  "<1jv7h9o0jh7eo804@indeed.com>": {
+    "kind": "replied",
+    "processed_at": "2026-08-05T06:16:34+00:00",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg00xno",
+    "company": "Ciklum",
+    "subject": "iOS: Senior IOS AI-Enabled Developer у TangoMe і ще 14 нових вакансій"
+  },
   "<20260728154930.3.ec4ca0e2efd05417@mg-d0.substack.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -583,6 +609,18 @@
     "processed_at": "2026-08-04T15:16:29+00:00",
     "company": "iOS (Swift) jobs",
     "subject": "Expanding Animations in SwiftUI Lists"
+  },
+  "<20260804154344.ee6eb005b6a15ff7@creator.patreon.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-05T06:16:27+00:00",
+    "company": "iOS (Swift) jobs",
+    "subject": "Recent iOS/Swift publications"
+  },
+  "<20260804192427.f79eac062c5b941e@mg.pointfree.co>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-05T06:16:27+00:00",
+    "company": "Point-Free",
+    "subject": "Type-safe JSON and JSONB in StructuredQueries"
   },
   "<2032248378.42868428.1785241368085@email.apple.com>": {
     "kind": "ignore",
@@ -897,6 +935,12 @@
     "company": "vil4max",
     "subject": "Career Agent  ·  2026-08-03"
   },
+  "<6a72024f.b5fd3087.217f3e.d28f@mx.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-05T06:16:27+00:00",
+    "company": "Ciklum",
+    "subject": "Career Agent  ·  2026-08-04"
+  },
   "<6a8f378d-a961-4eb9-b3d6-e8fadfed1512@atl1s07mta0304.xt.local>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:55+00:00",
@@ -920,6 +964,12 @@
     "processed_at": "2026-07-29T13:41:50+00:00",
     "company": "ZONE3000.net",
     "subject": "Thank you for your resume  —  ZONE3000"
+  },
+  "<7962e63c75d8269b278a1de83199d696@scrubster.com.ua>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-05T06:16:27+00:00",
+    "company": "Scrubster Store",
+    "subject": "На сайте  scrubster.com.ua  появились товары из вашего списка ожидания"
   },
   "<7KOF-oHBXrsuo3VCo51mvg@notifications.google.com>": {
     "kind": "ignore",
@@ -1064,6 +1114,12 @@
     "processed_at": "2026-07-29T13:41:50+00:00",
     "company": "Jooble",
     "subject": "🙂 Готові робити перший відгук?"
+  },
+  "<PUevunE7Se2MhgH5LGazqQ@geopod-ismtpd-6>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-05T06:16:34+00:00",
+    "company": "The Brain.fm",
+    "subject": "[Motivation] How are you feeling today?  🚀"
   },
   "<RwDHuuPeQeqe9VeJmq62jQ@geopod-ismtpd-6>": {
     "kind": "ignore",
