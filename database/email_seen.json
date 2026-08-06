@@ -94,6 +94,12 @@
     "company": "Daniel from FlowDeck",
     "subject": "One less trip to Xcode"
   },
+  "<0100019fd5fda840-2e0acba4-b057-4bd3-9009-d865c3dc72b2-000000@email.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-06T12:17:26+00:00",
+    "company": "Slack",
+    "subject": "vil4max-cursor‘s free trial of Slack Pro ends in seven days"
+  },
   "<0101019faa3ac02b-d5c9e8e3-ef86-43ea-9392-8ff92655359d-000000@us-west-2.amazonses.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -184,6 +190,12 @@
     "processed_at": "2026-07-31T08:17:55+00:00",
     "company": "Maksim Vilchevskiy via TestFlight",
     "subject": "OneCart Family 1.4 (64) for iOS is now available to test."
+  },
+  "<11.50.49819.860547A6@i-0dcae1139d500ecaf.mta3vrest.sd.prd.sparkpost>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-06T12:17:26+00:00",
+    "company": "Spark",
+    "subject": "Your Spark Pro trial ends in 2 days"
   },
   "<1102011859.68031699.1785503229688@email.apple.com>": {
     "kind": "ignore",
@@ -677,6 +689,12 @@
     "company": "ZEN.COM",
     "subject": "📍 Внесіть готівку на ZEN, платіть усюди"
   },
+  "<20260806095835.0901aaa7e1c9e1eb@creator.patreon.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-06T12:17:26+00:00",
+    "company": "iOS (Swift) jobs",
+    "subject": "Apple/Swift news"
+  },
   "<2032248378.42868428.1785241368085@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -1062,6 +1080,12 @@
     "company": "Google",
     "subject": "Security alert"
   },
+  "<8001556f-f832-4b9b-a682-4e8812bd86e0@alibaba.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-06T12:17:26+00:00",
+    "company": "AlchemyPay News",
+    "subject": "What's new on Alchemy Pay in July"
+  },
   "<824658633.299928.1785752259223@ltx1-app201001.prod.linkedin.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-03T12:16:24+00:00",
@@ -1073,6 +1097,12 @@
     "processed_at": "2026-08-02T15:19:23+00:00",
     "company": "Xcode Cloud",
     "subject": "RegionalCheck -- Build 43 succeeded (main)"
+  },
+  "<82b79cc3-518c-482e-b0c7-aac978cb5778@vodokanal.kiev.ua>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-06T12:17:26+00:00",
+    "company": "Київводоканал",
+    "subject": "Повідомлення – рахунок ПрАТ «Київводоканал»"
   },
   "<84c8f9b2bcd6b8b08dc77b62b64b561a@jobleads.com>": {
     "kind": "replied",
@@ -1116,6 +1146,11 @@
     "company": "Xcode Cloud",
     "subject": "RegionalCheck -- Build 42 succeeded (main)"
   },
+  "<97d95eaa27dc0f0742226e1e738b97ae@ikonka.com.ua>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-06T12:17:26+00:00",
+    "subject": "Нам интересно мнение о Вашей последней покупке"
+  },
   "<986914982.63694321.1785503676549@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T15:18:16+00:00",
@@ -1139,6 +1174,12 @@
     "processed_at": "2026-07-30T07:21:26+00:00",
     "company": "Natasha Grigorova",
     "subject": "Application for IOS Developer at Prequel"
+  },
+  "<CALjvW69Kb6iR+ZwNj3Kfow4k_0Q5roq54CtqLuP_sHC3E+8qYQ@mail.gmail.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-06T12:17:26+00:00",
+    "company": "Marina Balushok",
+    "subject": "Test assignment_Tango"
   },
   "<CALtcTpMYJ4SfNCUuH0a9JHEdo-Z8GO4ZYPxxSqQKmndGna_HMQ@mail.gmail.com>": {
     "kind": "replied",
