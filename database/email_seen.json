@@ -125,6 +125,12 @@
     "company": "Breeze",
     "subject": "We have received your application!"
   },
+  "<010f019fd2929e02-02aa6acd-4735-4bba-ab15-466b1325bacb-000000@us-east-2.amazonses.com>": {
+    "kind": "rejected_hr",
+    "processed_at": "2026-08-06T06:17:09+00:00",
+    "company": "Expedia Workday Notifications",
+    "subject": "Thank you for your interest in Expedia Group"
+  },
   "<0811dc41-651f-4db8-b8a3-290d10392352@facebookmail.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-01T15:16:21+00:00",
@@ -136,6 +142,12 @@
     "processed_at": "2026-07-29T16:38:11+00:00",
     "company": "Google",
     "subject": "Security alert"
+  },
+  "<0c7e1e14-5968-4d80-8f4f-7bb83dcc9657@ms4-b54f48755-zh4tr>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-06T06:17:13+00:00",
+    "company": "WOG",
+    "subject": "Тримай до +2 грн/л бонусами на WOG"
   },
   "<1004944868.7743497.1785389263636@lor1-app159092.prod.linkedin.com>": {
     "kind": "ignore",
@@ -178,6 +190,12 @@
     "processed_at": "2026-07-31T15:18:16+00:00",
     "company": "Maksim Vilchevskiy via TestFlight",
     "subject": "OneCart Family 1.4 (70) for iOS is now available to test."
+  },
+  "<112351919.3629965.1785967045889@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-06T06:17:09+00:00",
+    "company": "Apple",
+    "subject": "Your receipt from Apple."
   },
   "<115422669.10612570.1785242587239@email.apple.com>": {
     "kind": "ignore",
@@ -353,6 +371,12 @@
     "company": "Maksim Vilchevskiy via TestFlight",
     "subject": "OneCart Family 1.4 (67) for iOS is now available to test."
   },
+  "<1891519014.3602609.1785979707800@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-06T06:17:13+00:00",
+    "company": "App Store Connect",
+    "subject": "Review of your DriveCheckUA (iOS) submission is complete."
+  },
   "<1913591449.503450337.1785653272885@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-02T09:16:18+00:00",
@@ -480,6 +504,19 @@
     "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg00xno",
     "company": "Ciklum",
     "subject": "iOS: Senior IOS AI-Enabled Developer у TangoMe і ще 14 нових вакансій"
+  },
+  "<1jva07tgijuep80i@indeed.com>": {
+    "kind": "screening",
+    "processed_at": "2026-08-06T06:17:09+00:00",
+    "company": "N-iX",
+    "subject": "ios developer: Senior IOS AI-Enabled Developer у TangoMe і ще 7 нових вакансій"
+  },
+  "<1jva5s8kjolpr801@indeed.com>": {
+    "kind": "replied",
+    "processed_at": "2026-08-06T06:17:13+00:00",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg1Z2Hs",
+    "company": "N-iX",
+    "subject": "iOS: Middle Mobile AQA Engineer у N-iX і ще 10 нових вакансій"
   },
   "<20260728154930.3.ec4ca0e2efd05417@mg-d0.substack.com>": {
     "kind": "ignore",
@@ -971,6 +1008,12 @@
     "company": "Ciklum",
     "subject": "Career Agent  ·  2026-08-04"
   },
+  "<6a7353cf.b5fd3087.217f3e.14b2@mx.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-06T06:17:09+00:00",
+    "company": "N-iX",
+    "subject": "Career Agent  ·  2026-08-05"
+  },
   "<6a8f378d-a961-4eb9-b3d6-e8fadfed1512@atl1s07mta0304.xt.local>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:55+00:00",
@@ -1127,6 +1170,12 @@
     "company": "Google",
     "subject": "Security alert"
   },
+  "<HPzvQUF9SwyurGurzZy11A@geopod-ismtpd-4>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-06T06:17:13+00:00",
+    "company": "The Brain.fm",
+    "subject": "[Motivation] We're here to help!  🙌"
+  },
   "<J9OBteO-QAe2STwePabweg@geopod-ismtpd-3>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -1168,6 +1217,12 @@
     "processed_at": "2026-08-05T12:16:31+00:00",
     "company": "Google",
     "subject": "Security alert"
+  },
+  "<WLdlubp4QimfBVEuC_G5fw@geopod-ismtpd-22>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-06T06:17:09+00:00",
+    "company": "ChatGPT",
+    "subject": "Writing help, whenever you need it"
   },
   "<X5QURU4PWTU4.BL4TQN8XOB9K3@jobseekerflowchart-service-default-58dd746fd8-zk26g>": {
     "kind": "ignore",
@@ -1322,11 +1377,23 @@
     "company": "Google",
     "subject": "Security alert"
   },
+  "<j7xjMx4OPSDrD4VhUZklOpS5IX1MTUMxhHVDY91L4@azbyka.ru>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-06T06:17:09+00:00",
+    "company": "Азбука веры",
+    "subject": "Пароль на \"Азбуке веры\" успешно сброшен"
+  },
   "<jflpvfkGRqOPU-OEue5nzA@geopod-ismtpd-72>": {
     "kind": "ignore",
     "processed_at": "2026-08-04T12:16:32+00:00",
     "company": "The Brain.fm",
     "subject": "Welcome to Brain.fm!  🥳"
+  },
+  "<k9MjSGVJmFzsy9B9smlmIcgi2apd1jL0ZAVTBAygl8s@azbyka.ru>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-06T06:17:09+00:00",
+    "company": "Азбука веры",
+    "subject": "Сброс пароля на \"Азбуке веры\""
   },
   "<lK6GkCziQ4GWuU4oAL4gMg@geopod-ismtpd-3>": {
     "kind": "ignore",
