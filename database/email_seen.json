@@ -530,6 +530,20 @@
     "company": "N-iX",
     "subject": "iOS: Middle Mobile AQA Engineer у N-iX і ще 10 нових вакансій"
   },
+  "<1jvchc8h7ians803@indeed.com>": {
+    "kind": "screening",
+    "processed_at": "2026-08-07T06:16:50+00:00",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg1Z2Hs",
+    "company": "N-iX",
+    "subject": "ios developer: iOS Engineer у Ciklum і ще 5 нових вакансій"
+  },
+  "<1jvckhlhupffe800@indeed.com>": {
+    "kind": "replied",
+    "processed_at": "2026-08-07T06:16:50+00:00",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg1Z2Hs",
+    "company": "N-iX",
+    "subject": "iOS: Middle Mobile AQA Engineer у N-iX і ще 12 нових вакансій"
+  },
   "<202606081221.10bipa0t5cjqvj@shared-p100-i7.d.sp1-brevo.net>": {
     "kind": "ignore",
     "processed_at": "2026-08-06T15:21:31+00:00",
@@ -707,6 +721,24 @@
     "company": "Wispr Flow",
     "subject": "The dictation accuracy you trust, now for meetings"
   },
+  "<20260806160943.5d624b20afab1fb7@creator.patreon.com>": {
+    "kind": "screening",
+    "processed_at": "2026-08-07T06:16:46+00:00",
+    "company": "iOS (Swift) jobs",
+    "subject": "Hidden Prompts in Résumés: Still in Use, Still a Bad Bet"
+  },
+  "<20260806170531.afd0ff3a2d91eeb1@creator.patreon.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-07T06:16:46+00:00",
+    "company": "iOS (Swift) jobs",
+    "subject": "Apple iCloud Private Relay Can Expose Real IPs Through WebKit Proxy Bypasses"
+  },
+  "<20260807032131.3.98a6429ccb02de55.5cokhlg3@mg-d1.substack.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-07T06:16:50+00:00",
+    "company": "Substack",
+    "subject": "Swift Bits: Swift Package Plugins on CI and 2 more"
+  },
   "<2032248378.42868428.1785241368085@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -838,6 +870,12 @@
     "processed_at": "2026-07-31T08:17:51+00:00",
     "company": "Xcode Cloud",
     "subject": "App -- Build 62 succeeded (main)"
+  },
+  "<4G10LaKKQEOGUcKO9zCmDw@geopod-ismtpd-59>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-07T06:16:50+00:00",
+    "company": "The Brain.fm",
+    "subject": "[Motivation] It's easy to get started!  🔥"
   },
   "<4ae036a3-e346-4d10-8c0d-051f985c0a58@Spark>": {
     "kind": "ignore",
@@ -1128,6 +1166,12 @@
     "company": "JobLeads",
     "subject": "Fresh match: Senior iOS Engineer  —  Remote, Build Scalable Apps, United States seeking someone like you"
   },
+  "<84fbcb8a-900d-4e85-82f2-30a875991c63@atl1s07mta0606.xt.local>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-07T06:16:46+00:00",
+    "company": "Edward Carr at The Economist",
+    "subject": "Why AI is a risk to Communist China"
+  },
   "<860949.109474088.1785911647861@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-05T12:16:31+00:00",
@@ -1358,6 +1402,12 @@
     "company": "Ciklum",
     "subject": "Thanks for applying — we’ve got it"
   },
+  "<cc23fa23-0902-49dc-949b-29b38005bf5a@mtasv.net>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-07T06:16:46+00:00",
+    "company": "Serhii Zinchenko",
+    "subject": "Intro Interview between Serhii Zinchenko and Max Vilchevskiy"
+  },
   "<crm.activity.12524016-0TR868@bitrix.otus.team>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:51+00:00",
@@ -1436,6 +1486,12 @@
     "company": "Atlassian",
     "subject": "Billing account changes for Ukrainian customers"
   },
+  "<fmpyOps3TNy3PBlfBRs1IA@geopod-ismtpd-2>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-07T06:16:46+00:00",
+    "company": "Arc",
+    "subject": "New Arc jobs - Ios Developer - PT/FT - LATAM/EU"
+  },
   "<iAIW_rStFoBPCFFbFMEvdA@notifications.google.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T16:38:11+00:00",
@@ -1508,6 +1564,12 @@
     "company": "Checkbox",
     "subject": "Чек - ФОП КОВАЛЕВСЬКА ДАР'Я ОЛЕКСАНДРІВНА"
   },
+  "<vJGwozEgQyyeuFQe_lQqDA@geopod-ismtpd-3>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-07T06:16:50+00:00",
+    "company": "Steve Kaufmann",
+    "subject": "Why reading in some languages is harder than in others"
+  },
   "<vil4max/ios-hunter/check-suites/CS_kwDOTEBwK88AAAATNr0sIQ/1785321245@github.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -1525,6 +1587,12 @@
     "processed_at": "2026-07-29T16:38:11+00:00",
     "company": "Max Vilchevskiy",
     "subject": "[vil4max/ios-hunter] Run failed: IMAP Recruiter Poll - main\r\n (dd4eb45)"
+  },
+  "<vil4max/ios-hunter/check-suites/CS_kwDOTEBwK88AAAATqCnZEw/1786036615@github.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-07T06:16:46+00:00",
+    "company": "Max Vilchevskiy",
+    "subject": "[vil4max/ios-hunter] Run failed: Collect Schedule Trigger - main\r\n (bbb5f2d)"
   },
   "<wSnnZrfISI6SuxCusya9WA@geopod-ismtpd-5>": {
     "kind": "ignore",
