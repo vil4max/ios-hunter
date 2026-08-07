@@ -835,6 +835,12 @@
     "company": "justjoin.it",
     "subject": "Still interested? 👀 Don’t miss this opportunity!"
   },
+  "<3207ffe3-97e6-497f-8c9b-0d5112c22acc@ms4-b54f48755-gsbfx>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-07T09:16:39+00:00",
+    "company": "Світ Чаю",
+    "subject": "🌡️ Рятуємось від +30°C: крижана матча зі знижкою!"
+  },
   "<331684591.11253900.1785413669184@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:51+00:00",
@@ -1231,6 +1237,18 @@
     "company": "Jooble",
     "subject": "🎯 Цей день настав — ми шукаємо вам роботу"
   },
+  "<CAFeboWKQU-dAWoUmjCuVecJ+cmQ-6hL_thSYz4M5aQuLn7Qbsg@mail.gmail.com>": {
+    "kind": "rejected_hr",
+    "processed_at": "2026-08-07T09:16:39+00:00",
+    "company": "our iOS role",
+    "subject": "Re: Application for IOS Developer at Prequel"
+  },
+  "<CAFeboWKa2_FYrEX-G0uFXs6LpUqQmzc-Pnj21=XQzpQo9bF7tQ@mail.gmail.com>": {
+    "kind": "rejected_hr",
+    "processed_at": "2026-08-07T09:16:39+00:00",
+    "company": "our iOS role",
+    "subject": "Application for IOS Developer at Prequel"
+  },
   "<CAFeboWLQjNJZYGe1qxd7a0-5aS64zYE9M_u4hmeVdiGK1KPbWA@mail.gmail.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-30T07:21:26+00:00",
@@ -1438,6 +1456,19 @@
     "company": "Anthropic",
     "subject": "Want to connect to Xcode?"
   },
+  "<daf24210ac170c832114bd51c1abfbdc.ums@oracle.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-07T09:16:39+00:00",
+    "company": "Ciklum",
+    "subject": "Quick step — verify and you’re in"
+  },
+  "<daf34507ac170c880e5fca46317d17fc.ums@oracle.com>": {
+    "kind": "application_ack",
+    "processed_at": "2026-08-07T09:16:39+00:00",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg00xno",
+    "company": "Ciklum",
+    "subject": "Thanks for applying — we’ve got it"
+  },
   "<dd13b16e-45ab-5dea-b36f-baa4293ee268@mail.uber.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-30T10:05:42+00:00",
@@ -1467,6 +1498,12 @@
     "processed_at": "2026-07-31T15:18:16+00:00",
     "company": "MyHeritage",
     "subject": "🌱  Grow your family tree in a few easy steps"
+  },
+  "<f27ad919-9db6-49c4-9881-c9ad5cd6deae@Spark>": {
+    "kind": "rejected_hr",
+    "processed_at": "2026-08-07T09:16:39+00:00",
+    "company": "our iOS role",
+    "subject": "Re: Application for IOS Developer at Prequel"
   },
   "<f48b8bd6-972e-4768-bee2-393a45fd1cc0@atl1s07mta0306.xt.local>": {
     "kind": "ignore",
@@ -1599,6 +1636,12 @@
     "processed_at": "2026-07-29T13:41:50+00:00",
     "company": "Legium.pro",
     "subject": "Ваша электронная подпись скоро перестанет действовать"
+  },
+  "<xBE_-VLWQkimcOMjFU5JCQ@geopod-ismtpd-2>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-07T09:16:39+00:00",
+    "company": "ChatGPT",
+    "subject": "More access to advanced tools"
   },
   "<xao4SSq7T42sm_vYIgz-RQ@geopod-ismtpd-16>": {
     "kind": "ignore",
