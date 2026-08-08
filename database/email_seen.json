@@ -100,6 +100,12 @@
     "company": "Slack",
     "subject": "vil4max-cursor‘s free trial of Slack Pro ends in seven days"
   },
+  "<0100019fe0047bb1-2f51155c-3ccd-4a77-a55b-58bec668498b-000000@email.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-08T12:21:34+00:00",
+    "company": "duolingo",
+    "subject": "Duo ведь не молодеет... 🫠"
+  },
   "<0101019faa3ac02b-d5c9e8e3-ef86-43ea-9392-8ff92655359d-000000@us-west-2.amazonses.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -263,6 +269,12 @@
     "company": "iTunes Store",
     "subject": "You will be charged for your iCloud+ plan in 7 days"
   },
+  "<143872137.2135106.1786170327266@lincoln-v1-547d75cfd-kgxkw>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-08T12:21:34+00:00",
+    "company": "microcredit",
+    "subject": "Договір Кредит «всеБІЗНЕС»"
+  },
   "<1441836872.127958468.1785664018961@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-02T15:19:23+00:00",
@@ -376,6 +388,12 @@
     "processed_at": "2026-08-04T15:16:29+00:00",
     "company": "ElevenLabs",
     "subject": "Create your own voice today"
+  },
+  "<1786184036404_128160_1151_1622.sc-10_43_5_248-inbound0@notify.mexc.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-08T12:21:34+00:00",
+    "company": "MEXC",
+    "subject": "Action Required: MEXC Is Winding Down Services in the Netherlands"
   },
   "<1816317745.12617426.1785653263832@email.apple.com>": {
     "kind": "ignore",
@@ -1167,6 +1185,12 @@
     "company": "ZEEKR EU",
     "subject": "The Zeekr 9X is here"
   },
+  "<7356f84e-bb63-446b-92f1-a9803e3aa5d0@atl1s07mta0607.xt.local>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-08T12:21:34+00:00",
+    "company": "The Economist",
+    "subject": "How dementia is being defeated"
+  },
   "<7542eabb-48d0-4b17-b747-4ad8f5f0ca6d@ms4-767489bc99-flth5>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -1393,6 +1417,12 @@
     "processed_at": "2026-07-29T13:41:50+00:00",
     "company": "Jooble",
     "subject": "🙂 Готові робити перший відгук?"
+  },
+  "<NDKH7rySRP-HyR0X4VYrqw@geopod-ismtpd-42>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-08T12:21:34+00:00",
+    "company": "The Brain.fm",
+    "subject": "🚨  URGENT: you're missing out!  🚨"
   },
   "<PUevunE7Se2MhgH5LGazqQ@geopod-ismtpd-6>": {
     "kind": "ignore",
