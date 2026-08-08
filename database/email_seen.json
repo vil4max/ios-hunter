@@ -1466,6 +1466,12 @@
     "company": "Google",
     "subject": "Security alert"
   },
+  "<ZLLpNUsmTjiPI_qZK47n8Q@geopod-ismtpd-9>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-08T15:18:06+00:00",
+    "company": "MyHeritage",
+    "subject": "Profile pages: the hub for all your info about each relative"
+  },
   "<a68b27a2f781814f793a5abd290d36a5@jobleads.com>": {
     "kind": "replied",
     "processed_at": "2026-08-01T06:30:43+00:00",
@@ -1649,6 +1655,12 @@
     "processed_at": "2026-08-07T06:16:46+00:00",
     "company": "Arc",
     "subject": "New Arc jobs - Ios Developer - PT/FT - LATAM/EU"
+  },
+  "<fwM8mU4TT1WG0pID2n4fMg@geopod-ismtpd-2>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-08T15:18:06+00:00",
+    "company": "Appmetamask",
+    "subject": "Please Verify Your Email Address"
   },
   "<iAIW_rStFoBPCFFbFMEvdA@notifications.google.com>": {
     "kind": "ignore",
