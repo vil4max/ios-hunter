@@ -305,6 +305,12 @@
     "company": "Xcode Cloud",
     "subject": "RegionalCheck -- Build 38 failed (main)"
   },
+  "<1583856094.19613826.1786127548290@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-08T06:16:43+00:00",
+    "company": "Анастасия Вильчевская",
+    "subject": "“Мне на маникюр 15:00” added to “Семья” calendar."
+  },
   "<1597218402.12619041.1785656177498@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-02T09:16:18+00:00",
@@ -322,6 +328,12 @@
     "processed_at": "2026-08-03T12:16:24+00:00",
     "company": "S4",
     "subject": "Квитанція на оплату ОСББ «О.ПЧІЛКИ 5»"
+  },
+  "<1706303414.32392854.1786146161972@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-08T06:16:43+00:00",
+    "company": "Apple",
+    "subject": "Your invoice from Apple."
   },
   "<1726539393.104144514.1785417585369@email.apple.com>": {
     "kind": "ignore",
@@ -544,6 +556,20 @@
     "company": "N-iX",
     "subject": "iOS: Middle Mobile AQA Engineer у N-iX і ще 12 нових вакансій"
   },
+  "<1jvf1p5vsp3ru800@indeed.com>": {
+    "kind": "replied",
+    "processed_at": "2026-08-08T06:16:43+00:00",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg1Z2Hs",
+    "company": "N-iX",
+    "subject": "iOS: Middle Mobile AQA Engineer у N-iX і ще 12 нових вакансій"
+  },
+  "<1jvf6jfqai8hd800@indeed.com>": {
+    "kind": "screening",
+    "processed_at": "2026-08-08T06:16:43+00:00",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg1Z2Hs",
+    "company": "N-iX",
+    "subject": "ios developer: Middle Mobile AQA Engineer у N-iX і ще 3 нові вакансії"
+  },
   "<202606081221.10bipa0t5cjqvj@shared-p100-i7.d.sp1-brevo.net>": {
     "kind": "ignore",
     "processed_at": "2026-08-06T15:21:31+00:00",
@@ -739,6 +765,23 @@
     "company": "Substack",
     "subject": "Swift Bits: Swift Package Plugins on CI and 2 more"
   },
+  "<20260807124134.329a9892976634ec@cioeu80164.posthog.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-08T06:16:43+00:00",
+    "company": "Sara at PostHog",
+    "subject": "Well, it worked on my machine..."
+  },
+  "<20260807143346.deb905eddd881060@comeet-notifications.com>": {
+    "kind": "screening",
+    "processed_at": "2026-08-08T06:16:43+00:00",
+    "subject": "Your video interview with Tango"
+  },
+  "<20260807233907.66fb5ad8e4662526@cio79999.news.railway.app>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-08T06:16:43+00:00",
+    "company": "Railway",
+    "subject": "Cloud Agents Beta,  Postgres Automatic CVE Patching, Railway Mobile App for\r\n Android"
+  },
   "<2032248378.42868428.1785241368085@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -799,6 +842,12 @@
     "company": "Xcode Cloud",
     "subject": "RegionalCheck -- Build 40 failed (main)"
   },
+  "<23c9b476-b9ac-40c0-aca7-a1f5de9fae4b@mtasv.net>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-08T06:16:43+00:00",
+    "company": "Serhii Zinchenko",
+    "subject": "Intro Interview  между Serhii Zinchenko и Макс Вильчевский"
+  },
   "<255114072.11269199.1785415554683@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:51+00:00",
@@ -852,6 +901,12 @@
     "processed_at": "2026-08-02T06:16:49+00:00",
     "company": "Uber",
     "subject": "Максим, вы включили двухэтапную аутентификацию"
+  },
+  "<3525754b-877c-43a9-a603-69bec5111eb3@Spark>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-08T06:16:43+00:00",
+    "company": "vil4max",
+    "subject": "Accepted: Your video interview with Tango"
   },
   "<3F.1A.22074.6AE5B6A6@i-01b5cfbe31b72afc1.mta1vrest.sd.prd.sparkpost>": {
     "kind": "ignore",
@@ -1093,6 +1148,12 @@
     "processed_at": "2026-08-06T15:21:31+00:00",
     "company": "N-iX",
     "subject": "Career Agent  ·  2026-08-06"
+  },
+  "<6a75f629.af4834b4.254dba.c8c1@mx.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-08T06:16:43+00:00",
+    "company": "N-iX",
+    "subject": "Career Agent  ·  2026-08-07"
   },
   "<6a8f378d-a961-4eb9-b3d6-e8fadfed1512@atl1s07mta0304.xt.local>": {
     "kind": "ignore",
@@ -1351,6 +1412,12 @@
     "company": "Google",
     "subject": "Security alert"
   },
+  "<SvVZU9kBTHSLqvnv3HNSVw@geopod-ismtpd-45>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-08T06:16:43+00:00",
+    "company": "The Brain.fm",
+    "subject": "[Motivation] Uh, oh! Reply to get help!  🚨"
+  },
   "<WLdlubp4QimfBVEuC_G5fw@geopod-ismtpd-22>": {
     "kind": "ignore",
     "processed_at": "2026-08-06T06:17:09+00:00",
@@ -1394,6 +1461,12 @@
     "processed_at": "2026-08-03T12:16:24+00:00",
     "company": "Банк ПУМБ",
     "subject": "Ваша думка має значення - поділіться з нами"
+  },
+  "<c3luZXJpc2UuRU1BSUw6NDE1YjUwYTctYTFmMC00ZTVlLTgxNWMtMWRiYzMyMDk4NDA0OmRhZjFiYzc3LThmYjUtNTJiZS1hZjA3LTAxZjJlNjY3NDgzNS4xOTg2Mzk2MQ==@sportano.ua>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-08T06:16:43+00:00",
+    "company": "sportano.ua",
+    "subject": "Зміна регламенту магазину Sportano.ua"
   },
   "<c3luZXJpc2UuRU1BSUw6NzhlYjhjYzgtYTBkYi00MDE0LWJhYmYtOTc0MDIwZTk0NTUyOjU0MzFiMzRiLWY5MzMtNDU0Zi04OGFkLTQwMGI2ZGY4NmNiZS4xOTc5OTU4MA==@modivo.ua>": {
     "kind": "ignore",
@@ -1443,6 +1516,12 @@
     "processed_at": "2026-07-31T08:17:51+00:00",
     "company": "Paul Solt",
     "subject": "Codex turned my Mac app into an iPhone app in 3 days"
+  },
+  "<d3306343-3425-4be5-84e2-1df9c26857d8@mtasv.net>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-08T06:16:43+00:00",
+    "company": "Cal.com",
+    "subject": "Reminder: Intro Interview between Serhii Zinchenko and Max\r\n Vilchevskiy - Fri, Aug 7, 2026 6:00pm"
   },
   "<d4be37dfa28d2c5958f66734879e435adf547218.11r8lcf@workablemail.com>": {
     "kind": "application_ack",
@@ -1648,6 +1727,12 @@
     "processed_at": "2026-07-29T13:41:50+00:00",
     "company": "Legium.pro",
     "subject": "Ваша электронная подпись скоро перестанет действовать"
+  },
+  "<wmha7lB3SciWBAZqlpsBzA@geopod-ismtpd-3>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-08T06:16:43+00:00",
+    "company": "ШЕФ-ПІЦА",
+    "subject": "Їжа з собою:  #1310. ШЕФ-ПІЦА  - 07.08.2026 18:27"
   },
   "<xBE_-VLWQkimcOMjFU5JCQ@geopod-ismtpd-2>": {
     "kind": "ignore",
