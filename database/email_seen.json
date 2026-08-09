@@ -124,6 +124,12 @@
     "company": "monobank",
     "subject": "Ваш договір по Дія Картці"
   },
+  "<0102019fe53d711f-e3cf2317-12e5-4bf6-8a94-0196e3171bd0-000000@eu-west-1.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-09T12:16:37+00:00",
+    "company": "monobank",
+    "subject": "Квитанції"
+  },
   "<0107019fa9d51843-5bf640bc-163e-4a74-81ee-22be2579400a-000000@eu-central-1.amazonses.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -1036,6 +1042,12 @@
     "company": "Анастасия Вильчевская",
     "subject": "“Візит до Бакумець І. В.” added to “Семья” calendar."
   },
+  "<68.4A.50591.7B6687A6@i-03ab4ad38ee505750.mta3vrest.sd.prd.sparkpost>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-09T12:16:37+00:00",
+    "company": "OLX",
+    "subject": "Дякуємо, що ти з нами! Маємо для тебе дещо особливе 🎁"
+  },
   "<683941741.84326353.1785665650341@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-02T15:19:23+00:00",
@@ -1335,6 +1347,12 @@
     "processed_at": "2026-08-06T12:17:26+00:00",
     "subject": "Нам интересно мнение о Вашей последней покупке"
   },
+  "<98.07.37825.1F1287A6@i-04289caac248c2739.mta3vrest.sd.prd.sparkpost>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-09T12:16:37+00:00",
+    "company": "OLX",
+    "subject": "😱 Отримайте до 16 разів більше переглядів"
+  },
   "<986914982.63694321.1785503676549@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T15:18:16+00:00",
@@ -1406,6 +1424,12 @@
     "processed_at": "2026-07-31T08:17:51+00:00",
     "company": "Assistant Chisw",
     "subject": "CHI Software \"Contacting the CHI Software\""
+  },
+  "<E9.67.00589.EDE287A6@i-09f62d4b144eae0c8.mta3vrest.sd.prd.sparkpost>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-09T12:16:37+00:00",
+    "company": "OLX",
+    "subject": "🔥 Секрет швидкого продажу на OLX"
   },
   "<EfxM2aNeMDnAj-KHQo846A@notifications.google.com>": {
     "kind": "ignore",
