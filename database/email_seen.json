@@ -588,6 +588,19 @@
     "company": "N-iX",
     "subject": "ios developer: Middle Mobile AQA Engineer у N-iX і ще 3 нові вакансії"
   },
+  "<1jvhf67j22kim004@indeed.com>": {
+    "kind": "rejected_hr",
+    "processed_at": "2026-08-09T06:27:13+00:00",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg1Z2Hs",
+    "company": "N-iX",
+    "subject": "ios developer: Middle Mobile AQA Engineer у N-iX і ще 2 нові вакансії"
+  },
+  "<1jvhkofbkka7g801@indeed.com>": {
+    "kind": "replied",
+    "processed_at": "2026-08-09T06:27:13+00:00",
+    "company": "Indeed",
+    "subject": "iOS: Software Engineer, Platform - Lviv, Ukraine у Speechify і ще 9 нових вакансій"
+  },
   "<202606081221.10bipa0t5cjqvj@shared-p100-i7.d.sp1-brevo.net>": {
     "kind": "ignore",
     "processed_at": "2026-08-06T15:21:31+00:00",
@@ -799,6 +812,12 @@
     "processed_at": "2026-08-08T06:16:43+00:00",
     "company": "Railway",
     "subject": "Cloud Agents Beta,  Postgres Automatic CVE Patching, Railway Mobile App for\r\n Android"
+  },
+  "<20260809022033.3.98a6429ccb02de55.1y5xva93@mg-d1.substack.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-09T06:27:13+00:00",
+    "company": "Substack",
+    "subject": "The Alley Behind Moreno's Bodega"
   },
   "<2032248378.42868428.1785241368085@email.apple.com>": {
     "kind": "ignore",
@@ -1173,6 +1192,12 @@
     "company": "N-iX",
     "subject": "Career Agent  ·  2026-08-07"
   },
+  "<6a7748e9.cf1b4e83.b695d.cc20@mx.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-09T06:27:10+00:00",
+    "company": "N-iX",
+    "subject": "Career Agent  ·  2026-08-08"
+  },
   "<6a8f378d-a961-4eb9-b3d6-e8fadfed1512@atl1s07mta0304.xt.local>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:55+00:00",
@@ -1387,6 +1412,12 @@
     "processed_at": "2026-07-29T16:38:11+00:00",
     "company": "Google",
     "subject": "Security alert"
+  },
+  "<GrAUWAWyR9Wk6p1WyN8iPg@geopod-ismtpd-99>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-09T06:27:13+00:00",
+    "company": "The Brain.fm",
+    "subject": "[Motivation]  Need some downtime?  😌"
   },
   "<HPzvQUF9SwyurGurzZy11A@geopod-ismtpd-4>": {
     "kind": "ignore",
