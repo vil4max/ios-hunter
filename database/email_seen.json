@@ -607,6 +607,12 @@
     "company": "Indeed",
     "subject": "iOS: Software Engineer, Platform - Lviv, Ukraine у Speechify і ще 9 нових вакансій"
   },
+  "<1jvkejquvktdl809@indeed.com>": {
+    "kind": "replied",
+    "processed_at": "2026-08-10T06:30:26+00:00",
+    "company": "Indeed",
+    "subject": "iOS: Software Engineer, Platform - Lviv, Ukraine у Speechify і ще 13 нових вакансій"
+  },
   "<202606081221.10bipa0t5cjqvj@shared-p100-i7.d.sp1-brevo.net>": {
     "kind": "ignore",
     "processed_at": "2026-08-06T15:21:31+00:00",
@@ -824,6 +830,12 @@
     "processed_at": "2026-08-09T06:27:13+00:00",
     "company": "Substack",
     "subject": "The Alley Behind Moreno's Bodega"
+  },
+  "<20260809181319.922602cb0fdb5866@boosty.to>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-10T06:30:26+00:00",
+    "company": "Boosty",
+    "subject": "Специальное предложение"
   },
   "<2032248378.42868428.1785241368085@email.apple.com>": {
     "kind": "ignore",
@@ -1210,6 +1222,24 @@
     "company": "N-iX",
     "subject": "Career Agent  ·  2026-08-08"
   },
+  "<6a7899cf.ee10049a.201000.a744@mx.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-10T06:30:26+00:00",
+    "company": "N-iX",
+    "subject": "Career Agent  ·  2026-08-09"
+  },
+  "<6a78c64c.3c33d87f.1256cd.3288SMTPIN_ADDED_MISSING@mx.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-10T06:30:26+00:00",
+    "company": "GERC.UA",
+    "subject": "Доступний рахунок на оплату ЖКП для Київ, ПЧІЛКИ ОЛЕНИ ВУЛ. Б4 КВ57 на 01.08.2026"
+  },
+  "<6a78e453.c7362cc6.3367ae.d2a9SMTPIN_ADDED_MISSING@mx.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-10T06:30:26+00:00",
+    "company": "Комуналка",
+    "subject": "Доступний рахунок на оплату ЖКП для КИЇВ, ПЧІЛКИ ОЛЕНИ ВУЛ. Б4 КВ57 на 01.08.2026"
+  },
   "<6a8f378d-a961-4eb9-b3d6-e8fadfed1512@atl1s07mta0304.xt.local>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:55+00:00",
@@ -1436,6 +1466,12 @@
     "processed_at": "2026-07-29T16:38:11+00:00",
     "company": "Google",
     "subject": "Security alert"
+  },
+  "<Gh3jhmkQSVmlWWzjF6zPow@geopod-ismtpd-75>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-10T06:30:26+00:00",
+    "company": "The Brain.fm",
+    "subject": "[Motivation]  Try this new music to get going!  ✨"
   },
   "<GrAUWAWyR9Wk6p1WyN8iPg@geopod-ismtpd-99>": {
     "kind": "ignore",
@@ -1759,11 +1795,23 @@
     "company": "Google",
     "subject": "Security alert"
   },
+  "<oqnwyvZ1SjOCp560RUOgdw@geopod-ismtpd-8>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-10T06:30:26+00:00",
+    "company": "ChatGPT",
+    "subject": "Reimagine your photos with just a few words"
+  },
   "<p9u4v4oeplb9h2q8vnziqhpmdo8drcrhv8@convertkit-mail4.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-01T15:16:21+00:00",
     "company": "Paul Solt",
     "subject": "My timer app finally works on iPhone"
+  },
+  "<qnC1RDygH1KCerFGxbhCRw@notifications.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-10T06:30:26+00:00",
+    "company": "Google",
+    "subject": "Срочно! Войдите в свой аккаунт Google, если хотите его сохранить"
   },
   "<r8umwn772nfoh36x9qwa2hdxod6x6f7h27kge@kit-mail3.com>": {
     "kind": "ignore",
