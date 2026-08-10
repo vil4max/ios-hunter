@@ -112,6 +112,12 @@
     "company": "Makeup.ua",
     "subject": "Виконуємо бажання: акції, знижки, товари знову в наявності"
   },
+  "<0101019fea977438-db399f7c-90a1-4732-8b96-e89e2e079e41-000000@us-west-2.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-10T09:16:30+00:00",
+    "company": "Slack",
+    "subject": "You have 3 more days to access Slack’s premium features"
+  },
   "<0102019fae41f5e3-dd1e1193-89ff-40dd-90a1-f78779eebea3-000000@eu-west-1.amazonses.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T16:38:11+00:00",
@@ -837,6 +843,12 @@
     "company": "Boosty",
     "subject": "Специальное предложение"
   },
+  "<20260810090852.cd80a961d0545127@creator.patreon.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-10T09:16:30+00:00",
+    "company": "iOS (Swift) jobs",
+    "subject": "Revisiting the JET iOS Modular Architecture in 2026"
+  },
   "<2032248378.42868428.1785241368085@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -1239,6 +1251,12 @@
     "processed_at": "2026-08-10T06:30:26+00:00",
     "company": "Комуналка",
     "subject": "Доступний рахунок на оплату ЖКП для КИЇВ, ПЧІЛКИ ОЛЕНИ ВУЛ. Б4 КВ57 на 01.08.2026"
+  },
+  "<6a797492.194eac7c.1b7829.1c06SMTPIN_ADDED_MISSING@mx.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-10T09:16:29+00:00",
+    "company": "Комуналка",
+    "subject": "Платіж підтверджено КИЇВ, ПЧІЛКИ ОЛЕНИ ВУЛ., Б4, КВ57"
   },
   "<6a8f378d-a961-4eb9-b3d6-e8fadfed1512@atl1s07mta0304.xt.local>": {
     "kind": "ignore",
@@ -1698,6 +1716,12 @@
     "processed_at": "2026-08-06T15:21:31+00:00",
     "company": "vil4max",
     "subject": "Re: Test assignment_Tango"
+  },
+  "<e2e9ecc5-7c8a79f7-1786346006-215475421866610-8938@outbound.intercom.djinni.co>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-10T09:16:30+00:00",
+    "company": "Djinni",
+    "subject": "Посилюється конкуренція для Fullstack"
   },
   "<e473be2e-bb45-4825-bd59-f27e145a2bda@ms4-b54f48755-pst2b>": {
     "kind": "ignore",
