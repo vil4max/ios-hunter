@@ -1467,6 +1467,12 @@
     "company": "Google",
     "subject": "Security alert"
   },
+  "<D1.33.37809.190C97A6@i-06e1e053e2b3a7fc2.mta3vrest.sd.prd.sparkpost>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-10T12:16:40+00:00",
+    "company": "OLX",
+    "subject": "Твоя знижка від OLX закінчується завтра!"
+  },
   "<DBAP193MB111600F647BB770CAE16D2ECEFC92@DBAP193MB1116.EURP193.PROD.OUTLOOK.COM>": {
     "kind": "screening",
     "processed_at": "2026-07-31T08:17:51+00:00",
