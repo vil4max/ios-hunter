@@ -155,6 +155,12 @@
     "company": "Expedia Workday Notifications",
     "subject": "Thank you for your interest in Expedia Group"
   },
+  "<0113019fecbae360-98398f5a-f345-47e1-87ca-87569f4598c4-000000@eu-west-3.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-11T06:16:32+00:00",
+    "company": "WhiteBIT Exchange",
+    "subject": "Технопара Samsung × WhiteBIT дарує призи 🖤"
+  },
   "<0811dc41-651f-4db8-b8a3-290d10392352@facebookmail.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-01T15:16:21+00:00",
@@ -619,6 +625,12 @@
     "company": "Indeed",
     "subject": "iOS: Software Engineer, Platform - Lviv, Ukraine у Speechify і ще 13 нових вакансій"
   },
+  "<1jvmq57nlmurm802@indeed.com>": {
+    "kind": "replied",
+    "processed_at": "2026-08-11T06:16:32+00:00",
+    "company": "Indeed",
+    "subject": "iOS: Software Engineer, Platform - Lviv, Ukraine у Speechify і ще 15 нових вакансій"
+  },
   "<202606081221.10bipa0t5cjqvj@shared-p100-i7.d.sp1-brevo.net>": {
     "kind": "ignore",
     "processed_at": "2026-08-06T15:21:31+00:00",
@@ -854,6 +866,24 @@
     "processed_at": "2026-08-10T15:16:27+00:00",
     "company": "iOS (Swift) jobs",
     "subject": "What's new in Swift: July 2026 Edition"
+  },
+  "<20260810162456.3.24065ce9a75e3a51.0yy4xdj6@mg-d0.substack.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-11T06:16:32+00:00",
+    "company": "Substack",
+    "subject": "Anton’s Substack recommended Those Who Swift"
+  },
+  "<20260810165148.4ecaf4016b59e3ed@mg.pointfree.co>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-11T06:16:32+00:00",
+    "company": "Point-Free",
+    "subject": "New Point-Free Video: WWDC26: SQLiteData Advanced Domain Modeling"
+  },
+  "<20260810232804.3.98a6429ccb02de55.sy6mpw4l@mg-d1.substack.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-11T06:16:32+00:00",
+    "company": "Substack",
+    "subject": "The Old Lady and the Routine"
   },
   "<2032248378.42868428.1785241368085@email.apple.com>": {
     "kind": "ignore",
@@ -1270,6 +1300,12 @@
     "company": "Комуналка",
     "subject": "Платіж підтверджено КИЇВ, ПЧІЛКИ ОЛЕНИ ВУЛ., Б4, КВ57"
   },
+  "<6a79eb55.1728eaf3.9df92.be06@mx.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-11T06:16:32+00:00",
+    "company": "N-iX",
+    "subject": "Career Agent  ·  2026-08-10"
+  },
   "<6a8f378d-a961-4eb9-b3d6-e8fadfed1512@atl1s07mta0304.xt.local>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:55+00:00",
@@ -1616,6 +1652,12 @@
     "processed_at": "2026-08-10T15:16:27+00:00",
     "company": "Prom.ua",
     "subject": "Замовлення 420644589 оплачено ✅"
+  },
+  "<b05465d0-9541-11f1-b344-53eae5a43a94@ms4-668f894948-648rr>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-11T06:16:32+00:00",
+    "company": "Prom.ua",
+    "subject": "Замовлення 420644589 вже у дорозі 📦"
   },
   "<b5af49b1ac170c880e5fca4640222ef7.ums@oracle.com>": {
     "kind": "replied",
