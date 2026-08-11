@@ -885,6 +885,18 @@
     "company": "Substack",
     "subject": "The Old Lady and the Routine"
   },
+  "<20260811120240.8ab871704a753840@cio107418.mail.wispr.ai>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-11T15:16:58+00:00",
+    "company": "Wispr Flow",
+    "subject": "First meeting recorded 🔥"
+  },
+  "<202611081102.10pkdq0t5cjqvj@shared-p100-i11.d.sp1-brevo.net>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-11T15:16:58+00:00",
+    "company": "DOU",
+    "subject": "А ви вже розказали про компанію своєї мрії? Заповнюйте дослідження DOU 📝"
+  },
   "<2032248378.42868428.1785241368085@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -1854,6 +1866,12 @@
     "processed_at": "2026-08-08T15:18:06+00:00",
     "company": "Appmetamask",
     "subject": "Please Verify Your Email Address"
+  },
+  "<gku75ng5qwb5hlq082dtrh8556lk4smh3vv2k@kit-mail3.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-11T15:16:58+00:00",
+    "company": "Antoine van der Lee",
+    "subject": "SwiftLee Weekly - Issue 336"
   },
   "<iAIW_rStFoBPCFFbFMEvdA@notifications.google.com>": {
     "kind": "ignore",
