@@ -916,6 +916,12 @@
     "company": "Wispr Flow",
     "subject": "First meeting recorded 🔥"
   },
+  "<20260812143943.eca299e579363a29@creator.patreon.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-12T15:16:37+00:00",
+    "company": "iOS (Swift) jobs",
+    "subject": "The HTTP QUERY Method"
+  },
   "<202611080850.13di66eco6cw3srj@email3.sketchfab.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-12T06:18:03+00:00",
@@ -1427,6 +1433,12 @@
     "company": "AlchemyPay News",
     "subject": "What's new on Alchemy Pay in July"
   },
+  "<804877835.48240837.1786544151518@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-12T15:16:37+00:00",
+    "company": "Apple",
+    "subject": "Your Subscription is Confirmed"
+  },
   "<824658633.299928.1785752259223@ltx1-app201001.prod.linkedin.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-03T12:16:24+00:00",
@@ -1812,6 +1824,12 @@
     "processed_at": "2026-07-29T13:41:50+00:00",
     "company": "Michael Mills",
     "subject": "Software Engineer/Developer - Northstrat"
+  },
+  "<d6GR-5cXS3WaySgqEBRwvA@geopod-ismtpd-10>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-12T15:16:37+00:00",
+    "company": "ЛУН",
+    "subject": "Нові ЖК на ЛУН: ЖК Центральний  Spectrum, ЖК Міський  - нові проєкти і старти продажів Києва і області"
   },
   "<d9ad6988-6df1-4a52-be84-994c6dab25a1@workablemail.com>": {
     "kind": "application_ack",
