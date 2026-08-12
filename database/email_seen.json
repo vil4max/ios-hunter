@@ -106,6 +106,12 @@
     "company": "duolingo",
     "subject": "Duo ведь не молодеет... 🫠"
   },
+  "<0100019ff1e8930f-0ab2f4b7-64ad-4ed5-9d49-88dd32e144bb-000000@email.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-12T06:18:00+00:00",
+    "company": "Daniel from FlowDeck",
+    "subject": "The beta ends August 15th"
+  },
   "<0101019faa3ac02b-d5c9e8e3-ef86-43ea-9392-8ff92655359d-000000@us-west-2.amazonses.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -631,6 +637,13 @@
     "company": "Indeed",
     "subject": "iOS: Software Engineer, Platform - Lviv, Ukraine у Speechify і ще 15 нових вакансій"
   },
+  "<1jvpcraegh1pf800@indeed.com>": {
+    "kind": "replied",
+    "processed_at": "2026-08-12T06:18:03+00:00",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg0h5UQ",
+    "company": "N-iX",
+    "subject": "iOS: Middle Mobile AQA Engineer у N-iX і ще 16 нових вакансій"
+  },
   "<202606081221.10bipa0t5cjqvj@shared-p100-i7.d.sp1-brevo.net>": {
     "kind": "ignore",
     "processed_at": "2026-08-06T15:21:31+00:00",
@@ -891,6 +904,12 @@
     "company": "Wispr Flow",
     "subject": "First meeting recorded 🔥"
   },
+  "<202611080850.13di66eco6cw3srj@email3.sketchfab.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-12T06:18:03+00:00",
+    "company": "Sketchfab",
+    "subject": "Sketchfab is joining KitBash"
+  },
   "<202611081102.10pkdq0t5cjqvj@shared-p100-i11.d.sp1-brevo.net>": {
     "kind": "ignore",
     "processed_at": "2026-08-11T15:16:58+00:00",
@@ -963,6 +982,12 @@
     "company": "Serhii Zinchenko",
     "subject": "Intro Interview  между Serhii Zinchenko и Макс Вильчевский"
   },
+  "<2517794.20260812030301.6a7be265a32e71.53256170@mail136-14.atl41.mandrillapp.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-12T06:18:03+00:00",
+    "company": "Djinni.co",
+    "subject": "Djinni аналітика: iOS, Серпень 2026"
+  },
   "<255114072.11269199.1785415554683@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:51+00:00",
@@ -986,6 +1011,12 @@
     "processed_at": "2026-08-02T09:16:18+00:00",
     "company": "Apple Developer",
     "subject": "Apple CloudKit: Your database schema was promoted to production."
+  },
+  "<2f01efe0-95a3-11f1-b394-532e020b7fcf@ms4-668f894948-648rr>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-12T06:18:00+00:00",
+    "company": "Prom.ua",
+    "subject": "Замовлення 420644589 доставлено 🤩"
   },
   "<31031001.20260731070143.6a6c4857588bd9.06931419@mndr1.justjoin.it>": {
     "kind": "ignore",
@@ -1317,6 +1348,12 @@
     "processed_at": "2026-08-11T06:16:32+00:00",
     "company": "N-iX",
     "subject": "Career Agent  ·  2026-08-10"
+  },
+  "<6a7b3ce5.065ebc1a.2e9a57.9549@mx.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-12T06:18:00+00:00",
+    "company": "N-iX",
+    "subject": "Career Agent  ·  2026-08-11"
   },
   "<6a8f378d-a961-4eb9-b3d6-e8fadfed1512@atl1s07mta0304.xt.local>": {
     "kind": "ignore",
