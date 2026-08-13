@@ -970,6 +970,12 @@
     "company": "DOU",
     "subject": "А ви вже розказали про компанію своєї мрії? Заповнюйте дослідження DOU 📝"
   },
+  "<202613081333.11hnqm0t5cjqvj@shared-p100-i21.d.sp1-brevo.net>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-13T15:19:19+00:00",
+    "company": "DOU",
+    "subject": "Де ви хочете працювати? Розкажіть DOU"
+  },
   "<2032248378.42868428.1785241368085@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -1065,6 +1071,12 @@
     "processed_at": "2026-08-03T12:16:24+00:00",
     "company": "Xcode Cloud",
     "subject": "RegionalCheck -- Build 44 failed (main)"
+  },
+  "<297b5ea0-c046-4c63-83d5-7110dce60a35@mtasv.net>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-13T15:19:19+00:00",
+    "company": "Cal.com",
+    "subject": "Напоминание:  Intro Interview between Serhii Zinchenko and  Макс Вильчевский - чтв, авг. 13, 2026 7:00вечера"
   },
   "<29867631.12622311.1785655630145@email.apple.com>": {
     "kind": "ignore",
@@ -1421,6 +1433,12 @@
     "company": "N-iX",
     "subject": "Career Agent  ·  2026-08-12"
   },
+  "<6a7de045.4aa243c6.999e3.2d68@mx.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-13T15:19:19+00:00",
+    "company": "LineUp",
+    "subject": "Career Agent  ·  2026-08-13"
+  },
   "<6a8f378d-a961-4eb9-b3d6-e8fadfed1512@atl1s07mta0304.xt.local>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:55+00:00",
@@ -1761,6 +1779,12 @@
     "processed_at": "2026-08-08T06:16:43+00:00",
     "company": "The Brain.fm",
     "subject": "[Motivation] Uh, oh! Reply to get help!  🚨"
+  },
+  "<VQdCdJecSSmKCpHDrZv7Cw@notifications.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-13T15:19:19+00:00",
+    "company": "Google",
+    "subject": "Security alert"
   },
   "<WLdlubp4QimfBVEuC_G5fw@geopod-ismtpd-22>": {
     "kind": "ignore",
