@@ -112,6 +112,18 @@
     "company": "Daniel from FlowDeck",
     "subject": "The beta ends August 15th"
   },
+  "<0100019ff9db5fd3-5dde7d4a-3e57-4278-aeb1-1e01fab3a0de-000000@email.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-13T09:16:41+00:00",
+    "company": "Amazon Appstore",
+    "subject": "[Reminder - Action Required] Verify your Amazon Developer Account"
+  },
+  "<0100019ffa46351a-c0b6d471-3347-44e8-be94-8f0340bf79ff-000000@email.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-13T09:16:41+00:00",
+    "company": "Slack",
+    "subject": "Your trial of Slack’s Pro subscription has ended"
+  },
   "<0101019faa3ac02b-d5c9e8e3-ef86-43ea-9392-8ff92655359d-000000@us-west-2.amazonses.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -940,6 +952,12 @@
     "company": "Microsoft",
     "subject": "Обновление условий использования"
   },
+  "<20260813110932.538570.38289.5910.51@sendr-tasks-10.klg.yp-c.yandex.net>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-13T09:16:41+00:00",
+    "company": "Английский от Яндекс Практикума",
+    "subject": "Английский — под вашу задачу"
+  },
   "<202611080850.13di66eco6cw3srj@email3.sketchfab.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-12T06:18:03+00:00",
@@ -1599,6 +1617,12 @@
     "processed_at": "2026-07-30T07:21:26+00:00",
     "company": "Natasha Grigorova",
     "subject": "Application for IOS Developer at Prequel"
+  },
+  "<CAKBszFPn43ptcn7=SCkKtf6wtrp8WHp5fZyxF=hJO8YO6dF4Ng@mail.gmail.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-13T09:16:41+00:00",
+    "company": "Sergii Khromchenko",
+    "subject": "Join Speaking Practice with Sergii Now 🌏"
   },
   "<CALjvW69Kb6iR+ZwNj3Kfow4k_0Q5roq54CtqLuP_sHC3E+8qYQ@mail.gmail.com>": {
     "kind": "ignore",
