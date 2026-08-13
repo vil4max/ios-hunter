@@ -179,6 +179,12 @@
     "company": "WhiteBIT Exchange",
     "subject": "Технопара Samsung × WhiteBIT дарує призи 🖤"
   },
+  "<0113019ff5bf573a-67e177ba-b4eb-44f0-8e73-db014c23ade5-000000@eu-west-3.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-13T06:17:08+00:00",
+    "company": "Bitfinex Alpha",
+    "subject": "Bitcoin looks quiet. Positioning doesn't."
+  },
   "<0811dc41-651f-4db8-b8a3-290d10392352@facebookmail.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-01T15:16:21+00:00",
@@ -656,6 +662,12 @@
     "company": "N-iX",
     "subject": "iOS: Middle Mobile AQA Engineer у N-iX і ще 16 нових вакансій"
   },
+  "<1jvru3ie1j93c800@indeed.com>": {
+    "kind": "replied",
+    "processed_at": "2026-08-13T06:17:08+00:00",
+    "company": "Indeed",
+    "subject": "iOS: Full-Stack Software Engineer (React Native/React/.Net) у Auditdata і ще 6 нових вакансій"
+  },
   "<202606081221.10bipa0t5cjqvj@shared-p100-i7.d.sp1-brevo.net>": {
     "kind": "ignore",
     "processed_at": "2026-08-06T15:21:31+00:00",
@@ -922,6 +934,12 @@
     "company": "iOS (Swift) jobs",
     "subject": "The HTTP QUERY Method"
   },
+  "<202608130011.d6cb4e88f7354a09b00ac37460180a1a-OBZG6ZD4JFBVALSJKJEVGQ2PJVGVKTSJINAVISKPJZKE6VKFJVAUSTD4KNWXI4A=@microsoft.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-13T06:17:08+00:00",
+    "company": "Microsoft",
+    "subject": "Обновление условий использования"
+  },
   "<202611080850.13di66eco6cw3srj@email3.sketchfab.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-12T06:18:03+00:00",
@@ -975,6 +993,12 @@
     "processed_at": "2026-08-05T15:16:43+00:00",
     "company": "Freedom24",
     "subject": "Двойная выгода от платины: 3% в USD фикс + доход от роста"
+  },
+  "<21645-2302181455045857229-4e4de213-fe49-4ad4-8542-0b81d394eec3@carrotquest-mail.io>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-13T06:17:08+00:00",
+    "company": "Freedom24",
+    "subject": "До 20% в USD на Russell 2000  - время малых компаний"
   },
   "<216afa7e-c003-4e2d-bb4a-627d1233f686@mtasv.net>": {
     "kind": "ignore",
@@ -1373,6 +1397,12 @@
     "company": "N-iX",
     "subject": "Career Agent  ·  2026-08-11"
   },
+  "<6a7c8e5b.ee10049a.252b3b.c25b@mx.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-13T06:17:08+00:00",
+    "company": "N-iX",
+    "subject": "Career Agent  ·  2026-08-12"
+  },
   "<6a8f378d-a961-4eb9-b3d6-e8fadfed1512@atl1s07mta0304.xt.local>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:55+00:00",
@@ -1533,6 +1563,18 @@
     "processed_at": "2026-08-01T06:30:43+00:00",
     "company": "JobLeads",
     "subject": "Your skills + this role = Remote iOS Engineer | High-Impact,\r\n AI-Driven Mobile, United States"
+  },
+  "<9NM4YW6WYGL_6a7cbdce60423_689a5941e52169_sprut@zendesk.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-13T06:17:08+00:00",
+    "company": "Zakaz.ua",
+    "subject": "[Zakaz.ua] Re: Бесіда з Анастасия"
+  },
+  "<9NM4YW6WYGL_6a7cbded20d08_003aefdb2977b7_sprut@zendesk.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-13T06:17:08+00:00",
+    "company": "Zakaz.ua",
+    "subject": "Оцінка звернення #1533338;"
   },
   "<BDRTDK4PWTU4.TIDP6VTKG8F31@jobseekerflowchart-service-default-58dd746fd8-zk26g>": {
     "kind": "ignore",
@@ -1806,6 +1848,12 @@
     "processed_at": "2026-07-31T08:17:51+00:00",
     "company": "i.dmitriev",
     "subject": "Набор в группу курса iOS Developer. Professional открыт"
+  },
+  "<crm.activity.12601698-WRS9MS@bitrix.otus.team>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-13T06:17:08+00:00",
+    "company": "i.dmitriev",
+    "subject": "Поспеши! В OTUS осталось всего два места на курс iOS Developer. Professional !"
   },
   "<d0u7d70ew8b0hop5m5damhzmlz5qealh2p@convertkit-mail4.com>": {
     "kind": "ignore",
