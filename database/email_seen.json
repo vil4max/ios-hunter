@@ -1019,6 +1019,18 @@
     "company": "Maksim Vilchevskiy via TestFlight",
     "subject": "DriveCheckUA 2.0 (45) for iOS is now available to test."
   },
+  "<2077409812.32095660.1786694395008@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-14T09:16:35+00:00",
+    "company": "App Store Connect",
+    "subject": "Action needed: The uploaded build for DriveCheckUA has one or more\r\n issues."
+  },
+  "<2084862932.339414.1786698975760@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-14T09:16:35+00:00",
+    "company": "Maksim Vilchevskiy via TestFlight",
+    "subject": "DriveCheckUA 2.1 (47) for iOS is now available to test."
+  },
   "<2113424185.64164345.1785460331691@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:18:00+00:00",
@@ -1145,11 +1157,23 @@
     "company": "Uber",
     "subject": "Максим, вы включили двухэтапную аутентификацию"
   },
+  "<34686257.829297.1786694496803@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-14T09:16:35+00:00",
+    "company": "Xcode Cloud",
+    "subject": "App -- Build 75 succeeded (main)"
+  },
   "<3525754b-877c-43a9-a603-69bec5111eb3@Spark>": {
     "kind": "ignore",
     "processed_at": "2026-08-08T06:16:43+00:00",
     "company": "vil4max",
     "subject": "Accepted: Your video interview with Tango"
+  },
+  "<364471976.658433.1786698967134@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-14T09:16:35+00:00",
+    "company": "Xcode Cloud",
+    "subject": "RegionalCheck -- Build 47 succeeded (main)"
   },
   "<3F.1A.22074.6AE5B6A6@i-01b5cfbe31b72afc1.mta1vrest.sd.prd.sparkpost>": {
     "kind": "ignore",
@@ -1572,6 +1596,12 @@
     "company": "App Store Connect",
     "subject": "There's an issue with your DriveCheckUA (iOS) submission."
   },
+  "<874766151.32110750.1786694488563@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-14T09:16:35+00:00",
+    "company": "Maksim Vilchevskiy via TestFlight",
+    "subject": "OneCart Family 1.4 (75) for iOS is now available to test."
+  },
   "<88938363-04ca-458c-a606-b03985fe16da@facebookmail.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T10:09:08+00:00",
@@ -1601,6 +1631,12 @@
     "processed_at": "2026-08-02T15:19:23+00:00",
     "company": "Xcode Cloud",
     "subject": "RegionalCheck -- Build 42 succeeded (main)"
+  },
+  "<965002893.821019.1786694378159@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-14T09:16:35+00:00",
+    "company": "Xcode Cloud",
+    "subject": "RegionalCheck -- Build 46 failed (main)"
   },
   "<97355390-7d3a-4d1f-9228-0448ec24dfec@Spark>": {
     "kind": "ignore",
