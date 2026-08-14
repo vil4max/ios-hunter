@@ -1,6 +1,6 @@
 # iOS Hunter
 
-iOS Hunter is evolving into **Career Agent**: collect iOS/Swift vacancies, sync them to a GitHub Project board, and report ops status on Telegram.
+iOS Hunter is a private **job-search utility** inside the wider Career Evolution System. Its bounded responsibility is to collect iOS/Swift vacancies, synchronize operational data with the Career CRM Project, and report collection status. Career direction, competency development, interview knowledge, English progress, and canonical career facts belong to their owning workspaces — not here.
 
 Production runs on GitHub Actions. GitHub Project is the operational source of truth for vacancy status. Telegram gets a short OK on the Kyiv collect slots (09:00 / 12:00 / 15:00 / 18:00), and the vacancy list only when something new lands in Inbox. Live ops channels are Telegram, the daily email (after the Kyiv 18:00 collect), and the Project board — `reports/*.md` are static audit notes, not runtime dashboards.
 
