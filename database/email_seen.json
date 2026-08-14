@@ -124,6 +124,12 @@
     "company": "Slack",
     "subject": "Your trial of Slack’s Pro subscription has ended"
   },
+  "<0100019ffd0c53c0-54427283-c1c6-48c4-8e2b-d8ba95847d7d-000000@email.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-14T06:16:56+00:00",
+    "company": "Linear",
+    "subject": "Changelog: Team initiatives"
+  },
   "<0101019faa3ac02b-d5c9e8e3-ef86-43ea-9392-8ff92655359d-000000@us-west-2.amazonses.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -232,6 +238,13 @@
     "processed_at": "2026-08-02T15:19:23+00:00",
     "company": "Xcode Cloud",
     "subject": "App -- Build 74 succeeded (main)"
+  },
+  "<1039667212.601970.1786635529986@email-sender-5897b68d5-55gjz>": {
+    "kind": "application_ack",
+    "processed_at": "2026-08-14T06:16:56+00:00",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg2a7iM",
+    "company": "Sigma Software",
+    "subject": "Thank you for applying to Sigma Software"
   },
   "<1064633414.12014993.1785503672448@email.apple.com>": {
     "kind": "ignore",
@@ -679,6 +692,18 @@
     "processed_at": "2026-08-13T06:17:08+00:00",
     "company": "Indeed",
     "subject": "iOS: Full-Stack Software Engineer (React Native/React/.Net) у Auditdata і ще 6 нових вакансій"
+  },
+  "<1jvu9h69uhb7u800@indeed.com>": {
+    "kind": "rejected_hr",
+    "processed_at": "2026-08-14T06:16:56+00:00",
+    "company": "Indeed",
+    "subject": "ios developer: Senior iOS Developer (Ad SDK Infrastructure) у Sigma Software"
+  },
+  "<1jvug26gan5pf800@indeed.com>": {
+    "kind": "replied",
+    "processed_at": "2026-08-14T06:16:56+00:00",
+    "company": "Indeed",
+    "subject": "iOS: Senior iOS Developer (Ad SDK Infrastructure) у Sigma Software і ще 13 нових вакансій"
   },
   "<202606081221.10bipa0t5cjqvj@shared-p100-i7.d.sp1-brevo.net>": {
     "kind": "ignore",
@@ -1516,6 +1541,12 @@
     "processed_at": "2026-08-02T15:19:23+00:00",
     "company": "Xcode Cloud",
     "subject": "RegionalCheck -- Build 43 succeeded (main)"
+  },
+  "<82772726-db9a-4236-acf7-33d3768eebd7@atl1s07mta0606.xt.local>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-14T06:16:56+00:00",
+    "company": "Robert Guest at The Economist",
+    "subject": "The Taliban are vile. Democracies must still engage with them"
   },
   "<82b79cc3-518c-482e-b0c7-aac978cb5778@vodokanal.kiev.ua>": {
     "kind": "ignore",
