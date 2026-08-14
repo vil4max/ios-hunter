@@ -24,6 +24,11 @@
     "company": "N-iX",
     "first_seen": "2026-08-05T15:15:41+00:00"
   },
+  "https://djinni.co/jobs/515377-ios-developer": {
+    "title": "iOS Developer",
+    "company": "Smartist",
+    "first_seen": "2026-08-14T12:18:07+00:00"
+  },
   "https://djinni.co/jobs/807553-swift-mid-level-experience-ios-developer": {
     "title": "Swift / mid-level experience iOS Developer",
     "company": "WE wilke experience",
@@ -135,6 +140,11 @@
     "company": "AgileEngine",
     "first_seen": "2026-08-14T06:16:02+00:00"
   },
+  "https://djinni.co/jobs/843033-ios-reverse-engineer-1-task": {
+    "title": "iOS Reverse Engineer - 1 Task",
+    "company": "Axissoft LLC",
+    "first_seen": "2026-08-14T12:18:07+00:00"
+  },
   "https://explore-jobs.ciklum.com/en/sites/ciklum-career/job/3982": {
     "title": "iOS Engineer",
     "company": "Ciklum",
@@ -196,6 +206,11 @@
     "company": "Developex",
     "first_seen": "2026-07-29T06:34:12+00:00",
     "disposition": "dropped"
+  },
+  "https://jobs.dou.ua/companies/devico/vacancies/367217": {
+    "title": "Senior iOS Developer (Contract/Project-based)",
+    "company": "Devico",
+    "first_seen": "2026-08-14T12:18:07+00:00"
   },
   "https://jobs.dou.ua/companies/jetmonsters/vacancies/351512": {
     "title": "Product Manager / Apps Product Lead (experience in iOS &amp; mobile apps)",
@@ -343,6 +358,11 @@
     "company": "Telegram",
     "first_seen": "2026-08-10T12:15:48+00:00"
   },
+  "https://t.me/mobile_jobs/215546": {
+    "title": "iOS Tech Lead / Maintainer форка в Telement — управлять архитектурой iOS-клиента корпоративного мессенджера",
+    "company": "Telegram",
+    "first_seen": "2026-08-14T12:18:07+00:00"
+  },
   "https://ua.indeed.com/viewjob?jk=c2955e2f46425544": {
     "title": "Senior iOS Engineer",
     "company": "Robots & Pencils",
@@ -359,5 +379,10 @@
     "title": "Senior iOS Software Engineer",
     "company": "GlobalLogic",
     "first_seen": "2026-07-10T08:29:48+00:00"
+  },
+  "https://zone3000.net/vacancies/middle-----senior-mobile-ios-developer-in-mobile-system-team---1204-": {
+    "title": "Middle + / Senior Mobile iOS Developer in Mobile System Team (#1204)",
+    "company": "ZONE3000",
+    "first_seen": "2026-08-14T12:18:07+00:00"
   }
 }
