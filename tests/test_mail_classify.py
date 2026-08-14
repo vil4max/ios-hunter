@@ -93,6 +93,27 @@ def test_classify_noise_newsletter() -> None:
     assert event.kind == KIND_IGNORE
 
 
+def test_classify_ignores_indeed_job_digest_with_known_company() -> None:
+    event = classify_from_headers(
+        message_id="<digest@indeed.com>",
+        subject="iOS: Senior IOS AI-Enabled Developer у TangoMe і ще 14 нових вакансій",
+        from_header="Indeed <jobalerts-noreply@indeed.com>",
+        body_text=(
+            "Нові вакансії для вас. Senior iOS Engineer у Ciklum та інші "
+            "рекомендовані вакансії."
+        ),
+    )
+    assert event.kind == KIND_IGNORE
+
+    subdomain_event = classify_from_headers(
+        message_id="<digest@alerts.indeed.com>",
+        subject="Senior iOS Engineer та інші нові вакансії",
+        from_header="Indeed <jobalerts@alerts.indeed.com>",
+        body_text="Рекомендовані вакансії: Senior iOS Engineer у Ciklum.",
+    )
+    assert subdomain_event.kind == KIND_IGNORE
+
+
 def test_classify_ignores_uber_two_step_auth() -> None:
     event = classify_from_headers(
         message_id="<33a9a92e-0d33-42fe-9c72-a3647cff8c69@mail.uber.com>",

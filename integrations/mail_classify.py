@@ -209,6 +209,8 @@ _NOISE_FROM = (
     re.compile(r"@jooble\.", re.I),
 )
 
+_NOISE_DOMAINS = frozenset({"indeed.com"})
+
 
 @dataclass(frozen=True)
 class MailEvent:
@@ -312,6 +314,13 @@ def _is_ats_domain(domain: str) -> bool:
     return any(domain == ats or domain.endswith("." + ats) for ats in _ATS_DOMAINS)
 
 
+def _is_noise_sender(mail: InboundMail) -> bool:
+    domain = _domain(mail.from_addr)
+    if any(domain == noise or domain.endswith("." + noise) for noise in _NOISE_DOMAINS):
+        return True
+    return any(pattern.search(mail.from_addr) for pattern in _NOISE_FROM)
+
+
 def _has_sender_hiring_signal(mail: InboundMail) -> bool:
     hay = f"{mail.from_name}\n{mail.from_addr}\n{mail.subject}"
     if _matches_any(hay, _RECRUITER_HINTS):
@@ -404,7 +413,7 @@ def classify_mail(mail: InboundMail) -> MailEvent:
 
     application_thread = _is_application_thread(mail)
 
-    if any(pattern.search(mail.from_addr) for pattern in _NOISE_FROM) and not (
+    if _is_noise_sender(mail) and not (
         application_thread
         and _matches_any(hay, _ACK_PATTERNS + _REJECT_PATTERNS + _SCREENING_PATTERNS)
     ):
