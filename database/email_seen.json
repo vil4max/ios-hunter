@@ -402,6 +402,12 @@
     "company": "S2",
     "subject": "Квитанція на оплату ОСББ «О.ПЧІЛКИ 5»"
   },
+  "<1638001296.2155198.1786708064622@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-14T12:18:51+00:00",
+    "company": "Xcode Cloud",
+    "subject": "App -- Build 76 succeeded (main)"
+  },
   "<1697054995.12831.1785758775773@task-spot-69q1.europe-west3-c.c.dah-backend-production.internal>": {
     "kind": "rejected_hr",
     "processed_at": "2026-08-03T12:16:24+00:00",
@@ -1175,6 +1181,12 @@
     "company": "Xcode Cloud",
     "subject": "RegionalCheck -- Build 47 succeeded (main)"
   },
+  "<367399566.33583426.1786707707189@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-14T12:18:51+00:00",
+    "company": "Maksim Vilchevskiy via TestFlight",
+    "subject": "DriveCheckUA 2.1 (49) for iOS is now available to test."
+  },
   "<3F.1A.22074.6AE5B6A6@i-01b5cfbe31b72afc1.mta1vrest.sd.prd.sparkpost>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:51+00:00",
@@ -1235,6 +1247,12 @@
     "company": "App Store Connect",
     "subject": "Review of your DriveCheckUA (iOS) submission is complete."
   },
+  "<529420601.33205061.1786701653644@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-14T12:18:51+00:00",
+    "company": "Maksim Vilchevskiy via TestFlight",
+    "subject": "DriveCheckUA 2.1 (48) for iOS is now available to test."
+  },
   "<531069026.22253283.1785648464547@lor1-app161563.prod.linkedin.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-02T06:16:49+00:00",
@@ -1266,6 +1284,12 @@
     "company": "Spark",
     "subject": "New email account login in Spark"
   },
+  "<621345519.34987439.1786708053732@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-14T12:18:51+00:00",
+    "company": "Maksim Vilchevskiy via TestFlight",
+    "subject": "OneCart Family 1.4 (76) for iOS is now available to test."
+  },
   "<652831457.515253596.1785526244112@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-01T06:30:43+00:00",
@@ -1283,6 +1307,12 @@
     "processed_at": "2026-08-02T15:19:23+00:00",
     "company": "Maksim Vilchevskiy via TestFlight",
     "subject": "DriveCheckUA 2.0 (43) for iOS is now available to test."
+  },
+  "<689805882.851980.1786707712944@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-14T12:18:51+00:00",
+    "company": "Xcode Cloud",
+    "subject": "RegionalCheck -- Build 49 succeeded (main)"
   },
   "<68uk6k4ed4i8h590ddzhohpzeq7n2b9hngmge@kit-mail3.com>": {
     "kind": "ignore",
@@ -1626,6 +1656,12 @@
     "company": "Runkeeper",
     "subject": "Предупреждение о деактивации учетной записи Runkeeper"
   },
+  "<958478207.662134.1786701638613@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-14T12:18:51+00:00",
+    "company": "Xcode Cloud",
+    "subject": "RegionalCheck -- Build 48 succeeded (main)"
+  },
   "<963316790.12635159.1785664019987@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-02T15:19:23+00:00",
@@ -1828,6 +1864,12 @@
     "processed_at": "2026-08-05T06:16:34+00:00",
     "company": "The Brain.fm",
     "subject": "[Motivation] How are you feeling today?  🚀"
+  },
+  "<Pi4ccXX7gJIV3nN5QBdUZg@notifications.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-14T12:18:51+00:00",
+    "company": "Google",
+    "subject": "Security alert"
   },
   "<RwDHuuPeQeqe9VeJmq62jQ@geopod-ismtpd-6>": {
     "kind": "ignore",
