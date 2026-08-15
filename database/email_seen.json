@@ -1122,6 +1122,12 @@
     "company": "Maksim Vilchevskiy via TestFlight",
     "subject": "DriveCheckUA 2.1 (47) for iOS is now available to test."
   },
+  "<2103163181.9982686.1786803270621@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-15T15:16:09+00:00",
+    "company": "Apple",
+    "subject": "Your Subscription is Expiring"
+  },
   "<2113424185.64164345.1785460331691@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:18:00+00:00",
