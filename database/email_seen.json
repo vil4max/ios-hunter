@@ -130,6 +130,12 @@
     "company": "Linear",
     "subject": "Changelog: Team initiatives"
   },
+  "<010001a000b52089-ed01c8a2-1c47-44fa-8c97-65fd002ef0d7-000000@email.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-15T06:17:16+00:00",
+    "company": "TP-Link",
+    "subject": "Deco Account Verification Code"
+  },
   "<0101019faa3ac02b-d5c9e8e3-ef86-43ea-9392-8ff92655359d-000000@us-west-2.amazonses.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -220,6 +226,13 @@
     "processed_at": "2026-08-06T06:17:13+00:00",
     "company": "WOG",
     "subject": "Тримай до +2 грн/л бонусами на WOG"
+  },
+  "<0cbe9ade1e7c6475ea9e9d0ccd27a9e4@swift.generated>": {
+    "kind": "replied",
+    "processed_at": "2026-08-15T06:17:16+00:00",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg2ittU",
+    "company": "ZONE3000.net",
+    "subject": "Thank you for your resume  —  ZONE3000"
   },
   "<1004944868.7743497.1785389263636@lor1-app159092.prod.linkedin.com>": {
     "kind": "ignore",
@@ -348,6 +361,12 @@
     "company": "Maksim Vilchevskiy via TestFlight",
     "subject": "DriveCheckUA 2.0 (42) for iOS is now available to test."
   },
+  "<1458599703.34049912.1786710776408@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-15T06:17:16+00:00",
+    "company": "Maksim Vilchevskiy via TestFlight",
+    "subject": "OneCart Family 1.4 (77) for iOS is now available to test."
+  },
   "<147206802.10607885.1785241364616@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -395,6 +414,12 @@
     "processed_at": "2026-08-02T09:16:18+00:00",
     "company": "Xcode Cloud",
     "subject": "App -- Build 73 succeeded (main)"
+  },
+  "<1610100147.2151133.1786710732383@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-15T06:17:16+00:00",
+    "company": "Xcode Cloud",
+    "subject": "App -- Build 77 succeeded (main)"
   },
   "<1616459635.12485.1785758798764@task-spot-j1rp.europe-west3-c.c.dah-backend-production.internal>": {
     "kind": "rejected_hr",
@@ -468,6 +493,12 @@
     "company": "MEXC",
     "subject": "Action Required: MEXC Is Winding Down Services in the Netherlands"
   },
+  "<1786711504423.874e5d04-7b33-46a3-b157-5ad95a83c7cd@bf07.eu1.hubspotemail.net>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-15T06:17:16+00:00",
+    "company": "Andersen",
+    "subject": "⭐ August Digest: Vacancies & Meetups for You"
+  },
   "<1816317745.12617426.1785653263832@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-02T09:16:18+00:00",
@@ -503,6 +534,12 @@
     "processed_at": "2026-08-02T15:19:23+00:00",
     "company": "Maksim Vilchevskiy via TestFlight",
     "subject": "OneCart Family 1.4 (74) for iOS is now available to test."
+  },
+  "<1945835848.6148729.1786765144495@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-15T06:17:16+00:00",
+    "company": "Apple",
+    "subject": "Your receipt from Apple."
   },
   "<1953535352.5527297.1785750427660@lincoln-v1-547d75cfd-nw7gg>": {
     "kind": "rejected_hr",
@@ -710,6 +747,18 @@
     "processed_at": "2026-08-14T06:16:56+00:00",
     "company": "Indeed",
     "subject": "iOS: Senior iOS Developer (Ad SDK Infrastructure) у Sigma Software і ще 13 нових вакансій"
+  },
+  "<1k010onk9h0af800@indeed.com>": {
+    "kind": "rejected_hr",
+    "processed_at": "2026-08-15T06:17:16+00:00",
+    "company": "Indeed",
+    "subject": "ios developer: Senior iOS Developer (Ad SDK Infrastructure) у Sigma Software"
+  },
+  "<1k012vra2h1p7800@indeed.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-15T06:17:16+00:00",
+    "company": "Indeed",
+    "subject": "iOS: Senior iOS Developer (Ad SDK Infrastructure) у Sigma Software і ще 11 нових вакансій"
   },
   "<202606081221.10bipa0t5cjqvj@shared-p100-i7.d.sp1-brevo.net>": {
     "kind": "ignore",
@@ -988,6 +1037,36 @@
     "processed_at": "2026-08-13T09:16:41+00:00",
     "company": "Английский от Яндекс Практикума",
     "subject": "Английский — под вашу задачу"
+  },
+  "<20260814131335.f1b901ee8515f532@creator.patreon.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-15T06:17:16+00:00",
+    "company": "iOS (Swift) jobs",
+    "subject": "Swift Algorithms - Apple’s Hidden Collection and Sequence APIs You Should Be Using"
+  },
+  "<20260814151908.ec0597c02d521ce9@creator.patreon.com>": {
+    "kind": "replied",
+    "processed_at": "2026-08-15T06:17:16+00:00",
+    "company": "iOS (Swift) jobs",
+    "subject": "iOS openings (on-site or hybrid):"
+  },
+  "<20260814193438.3.6e311b0b7b6ecb58@mg-d0.substack.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-15T06:17:16+00:00",
+    "company": "Jacob’s Tech Tavern",
+    "subject": "Upgrade your Tavern for 20% less (forever) 🍺"
+  },
+  "<20260814203310.0ec0b9cfe5ebbe68@cio79999.news.railway.app>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-15T06:17:16+00:00",
+    "company": "Railway",
+    "subject": "Access Groups, better template editing, Railway Agent Connectors"
+  },
+  "<20260814205044.3.98a6429ccb02de55.qxuxtisw@mg2.substack.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-15T06:17:16+00:00",
+    "company": "Substack",
+    "subject": "Stop being skeptical about AI for development with Charity Majors"
   },
   "<202611080850.13di66eco6cw3srj@email3.sketchfab.com>": {
     "kind": "ignore",
@@ -1278,6 +1357,12 @@
     "company": "Xcode Cloud",
     "subject": "RegionalCheck -- Build 39 succeeded (main)"
   },
+  "<5f18ebd2-97f0-11f1-b394-532e020b7fcf@ms4-668f894948-72p2c>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-15T06:17:16+00:00",
+    "company": "MEGOGO",
+    "subject": "🍿 «Останній бойскаут» доступний для перегляду. Чудовий вибір!"
+  },
   "<612c041c-0c74-469e-8c93-91833e4c3f59@mtasv.net>": {
     "kind": "ignore",
     "processed_at": "2026-08-01T15:16:20+00:00",
@@ -1517,6 +1602,18 @@
     "processed_at": "2026-08-13T15:19:19+00:00",
     "company": "LineUp",
     "subject": "Career Agent  ·  2026-08-13"
+  },
+  "<6a7f2fb9.044e2c06.98fc5.4ee7@mx.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-15T06:17:16+00:00",
+    "company": "Ciklum",
+    "subject": "Career Agent  ·  2026-08-14"
+  },
+  "<6a7f6aef20711_da11981051c0@sharedworker-6756657989-fc5qw.mail>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-15T06:17:16+00:00",
+    "company": "GitHub",
+    "subject": "[GitHub] Your fine-grained personal access token is about to expire"
   },
   "<6a8f378d-a961-4eb9-b3d6-e8fadfed1512@atl1s07mta0304.xt.local>": {
     "kind": "ignore",
@@ -1894,6 +1991,12 @@
     "processed_at": "2026-08-13T15:19:19+00:00",
     "company": "Google",
     "subject": "Security alert"
+  },
+  "<W3Zxooi1918TiB25Gr0wXg@notifications.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-15T06:17:16+00:00",
+    "company": "Google",
+    "subject": "Оповещение системы безопасности для аккаунта vil4nastia@gmail.com"
   },
   "<WLdlubp4QimfBVEuC_G5fw@geopod-ismtpd-22>": {
     "kind": "ignore",
