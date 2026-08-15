@@ -136,6 +136,12 @@
     "company": "TP-Link",
     "subject": "Deco Account Verification Code"
   },
+  "<010001a00410fd76-9dc54805-4464-423f-9ef8-1f4a1ac4a804-000000@email.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-15T09:16:18+00:00",
+    "company": "duolingo",
+    "subject": "Duo ведь не молодеет... 🫠"
+  },
   "<0101019faa3ac02b-d5c9e8e3-ef86-43ea-9392-8ff92655359d-000000@us-west-2.amazonses.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -1314,6 +1320,12 @@
     "company": "На Урок  | Minecraft",
     "subject": "[11  серпня] ✅ Закриваємо реєстрацію | Урок програмування: «Створюємо герб України до Дня Незалежності!»→"
   },
+  "<50.28.47886.734108A6@ccg13mail06>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-15T09:16:18+00:00",
+    "company": "service@intl.paypal.com",
+    "subject": "Ваш проверочный код PayPal"
+  },
   "<526f2215-3b1ef133-1785741335-215475332264787-8938@outbound.intercom.djinni.co>": {
     "kind": "screening",
     "processed_at": "2026-08-03T09:17:12+00:00",
@@ -1800,6 +1812,12 @@
     "company": "JobLeads",
     "subject": "Your skills + this role = Remote iOS Engineer | High-Impact,\r\n AI-Driven Mobile, United States"
   },
+  "<98vOUAC0KLOgiSChIrjwdQ@notifications.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-15T09:16:18+00:00",
+    "company": "Google",
+    "subject": "You have a recovery contact request"
+  },
   "<9NM4YW6WYGL_6a7cbdce60423_689a5941e52169_sprut@zendesk.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-13T06:17:08+00:00",
@@ -1872,6 +1890,12 @@
     "company": "Google",
     "subject": "Security alert"
   },
+  "<D-RjtBL8ZUecUpaLdE1MuA@notifications.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-15T09:16:18+00:00",
+    "company": "Google",
+    "subject": "Security alert for vil4max.usa@gmail.com"
+  },
   "<D1.33.37809.190C97A6@i-06e1e053e2b3a7fc2.mta3vrest.sd.prd.sparkpost>": {
     "kind": "ignore",
     "processed_at": "2026-08-10T12:16:40+00:00",
@@ -1925,6 +1949,18 @@
     "processed_at": "2026-08-06T06:17:13+00:00",
     "company": "The Brain.fm",
     "subject": "[Motivation] We're here to help!  🙌"
+  },
+  "<HYoCJfBIhPfQNQapOSyFZA@notifications.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-15T09:16:18+00:00",
+    "company": "Google",
+    "subject": "You’ve sent vil4max@gmail.com a recovery contact request"
+  },
+  "<Iyj0S_gUvNPWnRmNd_F-zg@notifications.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-15T09:16:18+00:00",
+    "company": "Google",
+    "subject": "Someone added you as their recovery email"
   },
   "<J9OBteO-QAe2STwePabweg@geopod-ismtpd-3>": {
     "kind": "ignore",
@@ -2004,6 +2040,12 @@
     "company": "ChatGPT",
     "subject": "Writing help, whenever you need it"
   },
+  "<X0lNpcEe-5dpmOkFUdpeEA@notifications.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-15T09:16:18+00:00",
+    "company": "Google",
+    "subject": "You’re now vil4max.usa@gmail.com’s recovery contact"
+  },
   "<X5QURU4PWTU4.BL4TQN8XOB9K3@jobseekerflowchart-service-default-58dd746fd8-zk26g>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -2015,6 +2057,12 @@
     "processed_at": "2026-07-29T13:41:50+00:00",
     "company": "Google",
     "subject": "Security alert"
+  },
+  "<YrnktaOurOsSH0USXTF2Ew@notifications.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-15T09:16:18+00:00",
+    "company": "Google",
+    "subject": "vil4max@gmail.com can now help you sign in"
   },
   "<ZLLpNUsmTjiPI_qZK47n8Q@geopod-ismtpd-9>": {
     "kind": "ignore",
