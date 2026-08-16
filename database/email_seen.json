@@ -215,6 +215,12 @@
     "company": "Bitfinex Alpha",
     "subject": "Bitcoin looks quiet. Positioning doesn't."
   },
+  "<01M04DNN5T210S9CVM1XZNM4BT@klaviyomail.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-16T06:18:46+00:00",
+    "company": "robot_dreams",
+    "subject": "Ваша реєстрація на курс AI Engineering"
+  },
   "<0811dc41-651f-4db8-b8a3-290d10392352@facebookmail.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-01T15:16:21+00:00",
@@ -766,6 +772,18 @@
     "company": "Indeed",
     "subject": "iOS: Senior iOS Developer (Ad SDK Infrastructure) у Sigma Software і ще 11 нових вакансій"
   },
+  "<1k03kt45fiplc80c@indeed.com>": {
+    "kind": "rejected_hr",
+    "processed_at": "2026-08-16T06:18:46+00:00",
+    "company": "N-iX",
+    "subject": "ios developer: Senior iOS Developer (Ad SDK Infrastructure) у Sigma Software і ще 1 нова вакансія"
+  },
+  "<1k03qounhpfte805@indeed.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-16T06:18:46+00:00",
+    "company": "Indeed",
+    "subject": "iOS: Senior iOS Developer (Ad SDK Infrastructure) у Sigma Software і ще 8 нових вакансій"
+  },
   "<202606081221.10bipa0t5cjqvj@shared-p100-i7.d.sp1-brevo.net>": {
     "kind": "ignore",
     "processed_at": "2026-08-06T15:21:31+00:00",
@@ -1074,6 +1092,24 @@
     "company": "Substack",
     "subject": "Stop being skeptical about AI for development with Charity Majors"
   },
+  "<20260815161546.9edb88ded5810120@creator.patreon.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-16T06:18:46+00:00",
+    "company": "iOS (Swift) jobs",
+    "subject": "iOS opening (USA, on-site)"
+  },
+  "<20260815161650.653b36cb9d3f773a@creator.patreon.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-16T06:18:46+00:00",
+    "company": "iOS (Swift) jobs",
+    "subject": "Migrating your iPad app from the deprecated UIRequiresFullScreen key"
+  },
+  "<20260815192038.462794a42ff6031e@info.patreon.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-16T06:18:46+00:00",
+    "company": "iOS (Swift) jobs (via Patreon)",
+    "subject": "\"iOS (on-site and hybrid) openings:\" and 2 more"
+  },
   "<202611080850.13di66eco6cw3srj@email3.sketchfab.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-12T06:18:03+00:00",
@@ -1091,6 +1127,12 @@
     "processed_at": "2026-08-13T15:19:19+00:00",
     "company": "DOU",
     "subject": "Де ви хочете працювати? Розкажіть DOU"
+  },
+  "<202615081540.11rhpq0t5cjqvj@shared-p100-i21.d.sp1-brevo.net>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-16T06:18:46+00:00",
+    "company": "DOU",
+    "subject": "Яка вона, ваша ідеальна робота?"
   },
   "<2032248378.42868428.1785241368085@email.apple.com>": {
     "kind": "ignore",
@@ -1632,6 +1674,12 @@
     "processed_at": "2026-08-15T06:17:16+00:00",
     "company": "GitHub",
     "subject": "[GitHub] Your fine-grained personal access token is about to expire"
+  },
+  "<6a8082c2.4a342cbc.1483da.49c7@mx.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-16T06:18:46+00:00",
+    "company": "Ciklum",
+    "subject": "Career Agent  ·  2026-08-15"
   },
   "<6a8f378d-a961-4eb9-b3d6-e8fadfed1512@atl1s07mta0304.xt.local>": {
     "kind": "ignore",
