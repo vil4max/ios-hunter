@@ -1890,11 +1890,23 @@
     "company": "Zakaz.ua",
     "subject": "Оцінка звернення #1533338;"
   },
+  "<BA.9E.58253.C7C518A6@i-0c19b7dfcaaac5dd7.mta3vrest.sd.prd.sparkpost>": {
+    "kind": "replied",
+    "processed_at": "2026-08-16T09:26:35+00:00",
+    "company": "OLX",
+    "subject": "Підніміть оголошення в ТОП 🌟"
+  },
   "<BDRTDK4PWTU4.TIDP6VTKG8F31@jobseekerflowchart-service-default-58dd746fd8-zk26g>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
     "company": "Jooble",
     "subject": "🎯 Цей день настав — ми шукаємо вам роботу"
+  },
+  "<CADrPisD5DmcxsDyWpjR4MM8oi=gztxJr07=PzDh9uzwbhfSL0A@mail.gmail.com>": {
+    "kind": "rejected_hr",
+    "processed_at": "2026-08-16T09:26:35+00:00",
+    "company": "Kirill Alyoshin",
+    "subject": "Заявка на курс від онлайн школи Robot dreams"
   },
   "<CAFeboWKQU-dAWoUmjCuVecJ+cmQ-6hL_thSYz4M5aQuLn7Qbsg@mail.gmail.com>": {
     "kind": "rejected_hr",
