@@ -22,7 +22,8 @@
   "https://djinni.co/jobs/515377-ios-developer": {
     "title": "iOS Developer",
     "company": "Smartist",
-    "first_seen": "2026-08-14T12:18:07+00:00"
+    "first_seen": "2026-08-14T12:18:07+00:00",
+    "disposition": "dropped"
   },
   "https://djinni.co/jobs/807553-swift-mid-level-experience-ios-developer": {
     "title": "Swift / mid-level experience iOS Developer",
@@ -143,17 +144,30 @@
   "https://djinni.co/jobs/843033-ios-reverse-engineer-1-task": {
     "title": "iOS Reverse Engineer - 1 Task",
     "company": "Axissoft LLC",
-    "first_seen": "2026-08-14T12:18:07+00:00"
+    "first_seen": "2026-08-14T12:18:07+00:00",
+    "disposition": "dropped"
   },
   "https://djinni.co/jobs/843104-ios-developer": {
     "title": "iOS Developer",
     "company": "Polytech Software",
-    "first_seen": "2026-08-15T06:15:44+00:00"
+    "first_seen": "2026-08-15T06:15:44+00:00",
+    "disposition": "dropped"
+  },
+  "https://explore-jobs.ciklum.com/en/sites/ciklum-career/job/3982": {
+    "title": "iOS Engineer - 3982",
+    "company": "Ciklum",
+    "first_seen": "2026-07-31T00:00:00+00:00",
+    "disposition": "dropped"
   },
   "https://explore-jobs.ciklum.com/en/sites/ciklum-career/job/4054": {
     "title": "Senior iOS Engineer",
     "company": "Ciklum",
     "first_seen": "2026-08-18T06:23:49+00:00"
+  },
+  "https://explore-jobs.ciklum.com/en/sites/ciklum-career/job/4079": {
+    "title": "Senior iOS Engineer",
+    "company": "Ciklum",
+    "first_seen": "2026-08-04T00:00:00+00:00"
   },
   "https://gen-tech.breezy.hr/p/beb01cda1666-ios-developer": {
     "title": "IOS Developer",
@@ -351,12 +365,14 @@
   "https://t.me/mobile_jobs/215546": {
     "title": "iOS Tech Lead / Maintainer форка в Telement — управлять архитектурой iOS-клиента корпоративного мессенджера",
     "company": "Telegram",
-    "first_seen": "2026-08-14T12:18:07+00:00"
+    "first_seen": "2026-08-14T12:18:07+00:00",
+    "disposition": "dropped"
   },
   "https://t.me/mobile_jobs/215915": {
     "title": "Вакансия: Senior Flutter Developer",
     "company": "Telegram",
-    "first_seen": "2026-08-18T09:15:38+00:00"
+    "first_seen": "2026-08-18T09:15:38+00:00",
+    "disposition": "dropped"
   },
   "https://ua.indeed.com/viewjob?jk=c2955e2f46425544": {
     "title": "Senior iOS Engineer",
