@@ -184,6 +184,12 @@
     "company": "Jobico",
     "subject": "Що нового на Jobico - липень 2026"
   },
+  "<010201a014773732-d94ab574-6e85-40c7-a906-f22b74fe0cf6-000000@eu-west-1.amazonses.com>": {
+    "kind": "application_ack",
+    "processed_at": "2026-08-18T12:18:59+00:00",
+    "company": "James - Ethena Labs",
+    "subject": "We have received your application!"
+  },
   "<0107019fa9d51843-5bf640bc-163e-4a74-81ee-22be2579400a-000000@eu-central-1.amazonses.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -2094,6 +2100,12 @@
     "company": "Google",
     "subject": "Security alert"
   },
+  "<F1HFGBTGQ2wGeKHiIM17jQ@notifications.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-18T12:18:59+00:00",
+    "company": "Google",
+    "subject": "Security alert"
+  },
   "<FD.6D.36403.BF5F18A6@i-0fbdafab2ca626ab1.mta3vrest.sd.prd.sparkpost>": {
     "kind": "ignore",
     "processed_at": "2026-08-17T06:27:14+00:00",
@@ -2214,6 +2226,12 @@
     "company": "Google",
     "subject": "Оповещение системы безопасности для аккаунта vil4nastia@gmail.com"
   },
+  "<W9lt4PdVTK2XTmTZxkGP9A@geopod-ismtpd-88>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-18T12:18:59+00:00",
+    "company": "The Brain.fm",
+    "subject": "Don't miss out! More music than ever on brain.fm"
+  },
   "<WLdlubp4QimfBVEuC_G5fw@geopod-ismtpd-22>": {
     "kind": "ignore",
     "processed_at": "2026-08-06T06:17:09+00:00",
@@ -2299,6 +2317,12 @@
     "processed_at": "2026-08-08T06:16:43+00:00",
     "company": "sportano.ua",
     "subject": "Зміна регламенту магазину Sportano.ua"
+  },
+  "<c3luZXJpc2UuRU1BSUw6NTU3NTYyOTEtODhjZC00ODBmLThiYTctMzRmOGZhZDQ0N2RkOjU0MzFiMzRiLWY5MzMtNDU0Zi04OGFkLTQwMGI2ZGY4NmNiZS4xOTk2Mzk2Mg==@modivo.ua>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-18T12:18:59+00:00",
+    "company": "MODIVO.UA",
+    "subject": "Твій код знижки у MODIVO FASHION CLUB"
   },
   "<c3luZXJpc2UuRU1BSUw6NzhlYjhjYzgtYTBkYi00MDE0LWJhYmYtOTc0MDIwZTk0NTUyOjU0MzFiMzRiLWY5MzMtNDU0Zi04OGFkLTQwMGI2ZGY4NmNiZS4xOTc5OTU4MA==@modivo.ua>": {
     "kind": "ignore",
