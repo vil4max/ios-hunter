@@ -39,6 +39,10 @@ def best_scanned(baseline: dict[str, dict[str, Any]], source_id: str) -> int:
         return 0
 
 
+_DEGRADED_DROP_RATIO = 0.4
+_DEGRADED_MIN_BEST = 8
+
+
 def classify_degraded(
     results: list[SourceResult],
     baseline: dict[str, dict[str, Any]],
@@ -50,13 +54,21 @@ def classify_degraded(
     """
     degraded: list[str] = []
     for result in results:
-        if result.status != STATUS_HEALTHY or result.items_scanned > 0:
+        if result.status != STATUS_HEALTHY:
             continue
-        if best_scanned(baseline, result.source_id) <= 0:
+        best = best_scanned(baseline, result.source_id)
+        if result.items_scanned == 0 and best > 0:
+            result.status = STATUS_DEGRADED
+            result.error = result.error or "parsed 0 items but previously parsed items"
+            degraded.append(result.source_name)
             continue
-        result.status = STATUS_DEGRADED
-        result.error = result.error or "parsed 0 items but previously parsed items"
-        degraded.append(result.source_name)
+        if best >= _DEGRADED_MIN_BEST and result.items_scanned < best * _DEGRADED_DROP_RATIO:
+            result.status = STATUS_DEGRADED
+            result.error = (
+                result.error
+                or f"parsed {result.items_scanned} items but previously parsed {best}"
+            )
+            degraded.append(result.source_name)
     return degraded
 
 

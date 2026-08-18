@@ -1,6 +1,13 @@
 from __future__ import annotations
 
-from parser.normalize import is_ios_job, is_relevant_job_location
+from parser.normalize import (
+    canonical_company,
+    is_ios_job,
+    is_relevant_job_location,
+    is_target_level,
+    normalize_raw,
+    role_key,
+)
 
 
 def test_is_ios_job_matches_title() -> None:
@@ -60,6 +67,66 @@ def test_is_ios_job_rejects_flutter_and_reverse_engineer() -> None:
     assert is_ios_job("Senior iOS Engineer (Flutter is a plus)")
 
 
+def test_is_ios_job_rejects_react_native_and_keeps_ios_plus_rn() -> None:
+    assert not is_ios_job("React Native Developer (iOS/Android)")
+    assert not is_ios_job("Senior RN Engineer")
+    assert not is_ios_job("Xamarin Developer")
+    assert not is_ios_job("Mobile Engineer", "React Native for iOS and Android")
+    assert is_ios_job("Senior iOS Engineer (React Native is a plus)")
+
+
+def test_is_ios_job_uses_description_only_for_mobile_roles() -> None:
+    assert is_ios_job("Mobile Engineer", "Build iOS apps with SwiftUI")
+    assert is_ios_job("Senior Software Engineer", "Native iOS, Swift, UIKit")
+    assert not is_ios_job("Java Backend Engineer", "Our product also has an iOS app")
+    assert not is_ios_job("Data Analyst", "Dashboards for the iOS store listing")
+
+
+def test_is_target_level_drops_junior_and_intern() -> None:
+    assert not is_target_level("Trainee iOS Software Developer")
+    assert not is_target_level("Junior iOS Developer")
+    assert not is_target_level("iOS Intern")
+    assert is_target_level("Middle iOS Engineer")
+    assert is_target_level("Senior iOS Engineer")
+    assert is_target_level("Junior / Senior iOS Engineer")
+
+
+def test_normalize_raw_drops_junior_and_non_ua_title_geo() -> None:
+    junior = normalize_raw(
+        {
+            "company": "Acme",
+            "title": "Trainee iOS Software Developer",
+            "url": "https://example.com/jobs/1",
+            "source": "djinni",
+        }
+    )
+    kazakh = normalize_raw(
+        {
+            "company": "Andersen",
+            "title": "iOS Developer (Swift) in Kazakhstan",
+            "url": "https://example.com/jobs/2",
+            "source": "company",
+        }
+    )
+    keep = normalize_raw(
+        {
+            "company": "Acme",
+            "title": "Senior iOS Engineer",
+            "url": "https://example.com/jobs/3",
+            "source": "company",
+        }
+    )
+    assert junior is None
+    assert kazakh is None
+    assert keep is not None
+
+
+def test_canonical_company_aliases_nix() -> None:
+    assert canonical_company("N-iX") == canonical_company("NIX")
+    assert canonical_company("N i X") == "n-ix"
+    assert role_key("N-iX", "Lead iOS Engineer") == role_key("NIX", "Lead iOS Engineer")
+
+
 def test_is_relevant_job_location_ukraine_and_global_remote() -> None:
     assert is_relevant_job_location("Kyiv, Ukraine")
     assert is_relevant_job_location("Ukraine")
@@ -81,3 +148,11 @@ def test_is_relevant_job_location_rejects_non_ua_geo() -> None:
     assert not is_relevant_job_location("Austin, USA")
     assert not is_relevant_job_location("Poland, Remote")
     assert not is_relevant_job_location("Львів, Краків (Польща), віддалено")
+
+
+def test_is_relevant_job_location_falls_back_to_title_and_description() -> None:
+    assert is_relevant_job_location(None, "Senior iOS Engineer · Kyiv, Ukraine")
+    assert is_relevant_job_location("", "Worldwide remote Swift team")
+    assert not is_relevant_job_location(None, "iOS Developer (Swift) in Kazakhstan")
+    assert not is_relevant_job_location("", "Office in Bengaluru, India")
+    assert is_relevant_job_location(None, "Senior iOS Engineer, remote")

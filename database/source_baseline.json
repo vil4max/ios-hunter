@@ -1,88 +1,8 @@
 {
-  "company:agiliway@agiliway.com": {
-    "name": "Agiliway",
-    "best_scanned": 10,
-    "last_scanned": 8,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:ajax systems@api.ashbyhq.com": {
-    "name": "Ajax Systems",
-    "best_scanned": 6,
-    "last_scanned": 6,
-    "last_nonzero": "2026-07-27T12:44:11+00:00"
-  },
-  "company:ajax systems@api.lever.co": {
-    "name": "Ajax Systems",
-    "best_scanned": 213,
-    "last_scanned": 204,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:altexsoft@altexsoft.com": {
-    "name": "AltexSoft",
-    "best_scanned": 7,
-    "last_scanned": 7,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:am-soft@jobs.dou.ua": {
-    "name": "AM-SOFT",
-    "best_scanned": 0,
-    "last_scanned": 0
-  },
-  "company:amdaris@boards-api.greenhouse.io": {
-    "name": "Amdaris",
-    "best_scanned": 21,
-    "last_scanned": 17,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
   "company:andersen@asite-api.andersenlab.com": {
     "name": "Andersen",
     "best_scanned": 213,
     "last_scanned": 195,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:appflame@jobs.dou.ua": {
-    "name": "appflame",
-    "best_scanned": 24,
-    "last_scanned": 13,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:apriorit@apply.workable.com": {
-    "name": "Apriorit",
-    "best_scanned": 0,
-    "last_scanned": 0
-  },
-  "company:astound digital@jobs.dou.ua": {
-    "name": "Astound Digital",
-    "best_scanned": 0,
-    "last_scanned": 0
-  },
-  "company:autodoc@jobs.dou.ua": {
-    "name": "AUTODOC",
-    "best_scanned": 1,
-    "last_scanned": 1,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:avenga@career.avenga.com": {
-    "name": "Avenga",
-    "best_scanned": 127,
-    "last_scanned": 110,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:betterme@apply.workable.com": {
-    "name": "BetterMe",
-    "best_scanned": 0,
-    "last_scanned": 0
-  },
-  "company:betterme@betterme.breezy.hr": {
-    "name": "BetterMe",
-    "best_scanned": 29,
-    "last_scanned": 29,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:boosters@jobs.dou.ua": {
-    "name": "Boosters",
-    "best_scanned": 11,
-    "last_scanned": 11,
     "last_nonzero": "2026-08-18T09:15:38+00:00"
   },
   "company:capgemini engineering@jobs.dou.ua": {
@@ -91,39 +11,10 @@
     "last_scanned": 1,
     "last_nonzero": "2026-08-18T09:15:38+00:00"
   },
-  "company:chi software@chisw.com": {
-    "name": "CHI Software",
-    "best_scanned": 76,
-    "last_scanned": 70,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
   "company:ciklum@ialmme.fa.ocs.oraclecloud.com": {
     "name": "Ciklum",
     "best_scanned": 20,
     "last_scanned": 12,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:cleveroad@jobs.dou.ua": {
-    "name": "Cleveroad",
-    "best_scanned": 0,
-    "last_scanned": 0
-  },
-  "company:computools@computools.com": {
-    "name": "Computools",
-    "best_scanned": 8,
-    "last_scanned": 8,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:creatio@jobs.dou.ua": {
-    "name": "Creatio",
-    "best_scanned": 10,
-    "last_scanned": 8,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:cs ltd.@csltd.com.ua": {
-    "name": "CS Ltd.",
-    "best_scanned": 8,
-    "last_scanned": 8,
     "last_nonzero": "2026-08-18T09:15:38+00:00"
   },
   "company:dataart@dataart.team": {
@@ -132,80 +23,10 @@
     "last_scanned": 2,
     "last_nonzero": "2026-08-18T09:15:38+00:00"
   },
-  "company:depositphotos@jobs.dou.ua": {
-    "name": "Depositphotos",
-    "best_scanned": 0,
-    "last_scanned": 0
-  },
-  "company:dev.pro@career.dev.pro": {
-    "name": "Dev.Pro",
-    "best_scanned": 34,
-    "last_scanned": 33,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:devico@devico.io": {
-    "name": "Devico",
-    "best_scanned": 8,
-    "last_scanned": 8,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:devlight@devlight.io": {
-    "name": "Devlight",
-    "best_scanned": 2,
-    "last_scanned": 2,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:eleks@api.lever.co": {
-    "name": "ELEKS",
-    "best_scanned": 42,
-    "last_scanned": 37,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:eleks@careers.eleks.com": {
-    "name": "ELEKS",
-    "best_scanned": 18,
-    "last_scanned": 18,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
   "company:epam@careers.epam.com": {
     "name": "EPAM",
     "best_scanned": 28,
     "last_scanned": 23,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:evo@jobs.dou.ua": {
-    "name": "EVO",
-    "best_scanned": 9,
-    "last_scanned": 7,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:evoplay@jobs.dou.ua": {
-    "name": "Evoplay",
-    "best_scanned": 25,
-    "last_scanned": 25,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:exoft@exoft.net": {
-    "name": "Exoft",
-    "best_scanned": 4,
-    "last_scanned": 4,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:fractal@jobs.dou.ua": {
-    "name": "FRACTAL",
-    "best_scanned": 6,
-    "last_scanned": 5,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:frog@jobs.dou.ua": {
-    "name": "Frog",
-    "best_scanned": 0,
-    "last_scanned": 0
-  },
-  "company:gameloft@api.smartrecruiters.com": {
-    "name": "Gameloft",
-    "best_scanned": 62,
-    "last_scanned": 55,
     "last_nonzero": "2026-08-18T09:15:38+00:00"
   },
   "company:geeksforless@jobs.dou.ua": {
@@ -214,50 +35,10 @@
     "last_scanned": 3,
     "last_nonzero": "2026-08-18T09:15:38+00:00"
   },
-  "company:genesis@api.ashbyhq.com": {
-    "name": "Genesis",
-    "best_scanned": 42,
-    "last_scanned": 42,
-    "last_nonzero": "2026-07-27T12:44:11+00:00"
-  },
-  "company:genesis@gen-tech.breezy.hr": {
-    "name": "Genesis",
-    "best_scanned": 122,
-    "last_scanned": 100,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:geniusee@apply.workable.com": {
-    "name": "Geniusee",
-    "best_scanned": 0,
-    "last_scanned": 0
-  },
-  "company:gismart@gismart.com": {
-    "name": "Gismart",
-    "best_scanned": 38,
-    "last_scanned": 33,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:globaldev group@apply.workable.com": {
-    "name": "Globaldev Group",
-    "best_scanned": 13,
-    "last_scanned": 10,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
   "company:globallogic@globallogic.com": {
     "name": "GlobalLogic",
     "best_scanned": 0,
     "last_scanned": 0
-  },
-  "company:grammarly@api.ashbyhq.com": {
-    "name": "Grammarly",
-    "best_scanned": 0,
-    "last_scanned": 0
-  },
-  "company:grammarly@jobs.dou.ua": {
-    "name": "Grammarly",
-    "best_scanned": 2,
-    "last_scanned": 2,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
   },
   "company:grid dynamics@griddynamics.com": {
     "name": "Grid Dynamics",
@@ -271,166 +52,16 @@
     "last_scanned": 9,
     "last_nonzero": "2026-08-18T09:15:38+00:00"
   },
-  "company:innovecs@boards-api.greenhouse.io": {
-    "name": "Innovecs",
-    "best_scanned": 17,
-    "last_scanned": 15,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:inoxoft@inoxoft.com": {
-    "name": "Inoxoft",
-    "best_scanned": 3,
-    "last_scanned": 0,
-    "last_nonzero": "2026-08-14T15:11:06+00:00"
-  },
-  "company:intellectsoft@apply.workable.com": {
-    "name": "Intellectsoft",
-    "best_scanned": 10,
-    "last_scanned": 10,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
   "company:intellias@career.intellias.com": {
     "name": "Intellias",
     "best_scanned": 2,
     "last_scanned": 1,
     "last_nonzero": "2026-08-18T09:15:38+00:00"
   },
-  "company:intersog@apply.workable.com": {
-    "name": "Intersog",
-    "best_scanned": 1,
-    "last_scanned": 1,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:intetics@apply.workable.com": {
-    "name": "Intetics",
-    "best_scanned": 130,
-    "last_scanned": 129,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:inverita@inveritasoft.com": {
-    "name": "Inverita",
-    "best_scanned": 8,
-    "last_scanned": 5,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:isd@jobs.dou.ua": {
-    "name": "ISD",
-    "best_scanned": 0,
-    "last_scanned": 0
-  },
-  "company:jooble@jobs.dou.ua": {
-    "name": "Jooble",
-    "best_scanned": 10,
-    "last_scanned": 10,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:kindgeek@apply.workable.com": {
-    "name": "KindGeek",
-    "best_scanned": 0,
-    "last_scanned": 0
-  },
-  "company:king group@jobs.dou.ua": {
-    "name": "King Group",
-    "best_scanned": 8,
-    "last_scanned": 7,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:kiss my apps@jobs.dou.ua": {
-    "name": "Kiss My Apps",
-    "best_scanned": 18,
-    "last_scanned": 17,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:kissmyapps@api.ashbyhq.com": {
-    "name": "KissMyApps",
-    "best_scanned": 27,
-    "last_scanned": 27,
-    "last_nonzero": "2026-07-27T12:44:11+00:00"
-  },
-  "company:kyivstar.tech@api.lever.co": {
-    "name": "Kyivstar.Tech",
-    "best_scanned": 125,
-    "last_scanned": 121,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:leobit@leobit.com": {
-    "name": "Leobit",
-    "best_scanned": 7,
-    "last_scanned": 6,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:levi9@jobs.ua.levi9.com": {
-    "name": "Levi9",
-    "best_scanned": 7,
-    "last_scanned": 5,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:lohika@apply.workable.com": {
-    "name": "Lohika",
-    "best_scanned": 0,
-    "last_scanned": 0
-  },
   "company:luxoft@career.luxoft.com": {
     "name": "Luxoft",
     "best_scanned": 4,
     "last_scanned": 3,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:macpaw@macpaw.com": {
-    "name": "MacPaw",
-    "best_scanned": 6,
-    "last_scanned": 6,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:magento@jobs.dou.ua": {
-    "name": "Magento",
-    "best_scanned": 0,
-    "last_scanned": 0
-  },
-  "company:metinvest digital@jobs.dou.ua": {
-    "name": "Metinvest Digital",
-    "best_scanned": 2,
-    "last_scanned": 2,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:mind studios@themindstudios.com": {
-    "name": "Mind Studios",
-    "best_scanned": 0,
-    "last_scanned": 0
-  },
-  "company:miratech@api.smartrecruiters.com": {
-    "name": "Miratech",
-    "best_scanned": 6,
-    "last_scanned": 6,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:mobidev@jobs.dou.ua": {
-    "name": "MobiDev",
-    "best_scanned": 0,
-    "last_scanned": 0
-  },
-  "company:modus x@jobs.dou.ua": {
-    "name": "MODUS X",
-    "best_scanned": 25,
-    "last_scanned": 25,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:mono@jobs.dou.ua": {
-    "name": "mono",
-    "best_scanned": 7,
-    "last_scanned": 4,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:mwdn@jobs.mwdn.com": {
-    "name": "MWDN",
-    "best_scanned": 37,
-    "last_scanned": 37,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:n-ix@boards-api.greenhouse.io": {
-    "name": "N-iX",
-    "best_scanned": 177,
-    "last_scanned": 132,
     "last_nonzero": "2026-08-18T09:15:38+00:00"
   },
   "company:n-ix@careers.n-ix.com": {
@@ -439,276 +70,16 @@
     "last_scanned": 2,
     "last_nonzero": "2026-08-18T09:15:38+00:00"
   },
-  "company:netcracker@boards-api.greenhouse.io": {
-    "name": "Netcracker",
-    "best_scanned": 27,
-    "last_scanned": 26,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:nortal@nortal.career.page": {
-    "name": "Nortal",
-    "best_scanned": 10,
-    "last_scanned": 6,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:nova digital@jobs.dou.ua": {
-    "name": "Nova Digital",
-    "best_scanned": 25,
-    "last_scanned": 24,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:onix systems@onix-systems.com": {
-    "name": "Onix Systems",
-    "best_scanned": 8,
-    "last_scanned": 8,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:otakoyi@otakoyi.software": {
-    "name": "Otakoyi",
-    "best_scanned": 3,
-    "last_scanned": 3,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:petcube@petcube.com": {
-    "name": "Petcube",
-    "best_scanned": 3,
-    "last_scanned": 3,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:plarium@jobs.dou.ua": {
-    "name": "Plarium",
-    "best_scanned": 3,
-    "last_scanned": 2,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:playrix@playrix.recruitee.com": {
-    "name": "Playrix",
-    "best_scanned": 5,
-    "last_scanned": 5,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:playtech@api.smartrecruiters.com": {
-    "name": "Playtech",
-    "best_scanned": 139,
-    "last_scanned": 130,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:playtika ukraine@jobs.dou.ua": {
-    "name": "Playtika Ukraine",
-    "best_scanned": 3,
-    "last_scanned": 3,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:preply@api.ashbyhq.com": {
-    "name": "Preply",
-    "best_scanned": 123,
-    "last_scanned": 122,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:privatbank@jobs.dou.ua": {
-    "name": "PrivatBank",
-    "best_scanned": 24,
-    "last_scanned": 15,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:qarea@qarea.com": {
-    "name": "QArea",
-    "best_scanned": 1,
-    "last_scanned": 0,
-    "last_nonzero": "2026-08-04T12:15:49+00:00"
-  },
-  "company:rbi retail innovation@rbi-ri.com.ua": {
-    "name": "RBI Retail Innovation",
-    "best_scanned": 4,
-    "last_scanned": 4,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:readdle@boards-api.greenhouse.io": {
-    "name": "Readdle",
-    "best_scanned": 13,
-    "last_scanned": 11,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:reface@jobs.dou.ua": {
-    "name": "Reface",
-    "best_scanned": 2,
-    "last_scanned": 1,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:romexsoft@apply.workable.com": {
-    "name": "Romexsoft",
-    "best_scanned": 0,
-    "last_scanned": 0
-  },
-  "company:rubygarage@jobs.dou.ua": {
-    "name": "RubyGarage",
-    "best_scanned": 0,
-    "last_scanned": 0
-  },
-  "company:samsung@jobs.dou.ua": {
-    "name": "Samsung",
-    "best_scanned": 1,
-    "last_scanned": 0,
-    "last_nonzero": "2026-08-10T15:15:40+00:00"
-  },
   "company:sigma software@career.sigma.software": {
     "name": "Sigma Software",
     "best_scanned": 46,
     "last_scanned": 43,
     "last_nonzero": "2026-08-18T09:15:38+00:00"
   },
-  "company:skelar@api.ashbyhq.com": {
-    "name": "SKELAR",
-    "best_scanned": 129,
-    "last_scanned": 129,
-    "last_nonzero": "2026-07-27T12:44:11+00:00"
-  },
-  "company:softjourn@softjourn.com": {
-    "name": "Softjourn",
-    "best_scanned": 3,
-    "last_scanned": 2,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:softline@softline.com": {
-    "name": "Softline",
-    "best_scanned": 1,
-    "last_scanned": 1,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
   "company:softserve@career.softserveinc.com": {
     "name": "SoftServe",
     "best_scanned": 256,
     "last_scanned": 245,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:software mackiev@mackiev.com": {
-    "name": "Software MacKiev",
-    "best_scanned": 0,
-    "last_scanned": 0
-  },
-  "company:solvd@api.ashbyhq.com": {
-    "name": "Solvd",
-    "best_scanned": 19,
-    "last_scanned": 19,
-    "last_nonzero": "2026-07-27T12:44:11+00:00"
-  },
-  "company:sombra@sombrainc.com": {
-    "name": "Sombra",
-    "best_scanned": 10,
-    "last_scanned": 10,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:spd technology@spd.tech": {
-    "name": "SPD Technology",
-    "best_scanned": 15,
-    "last_scanned": 10,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:squad@boards-api.greenhouse.io": {
-    "name": "SQUAD",
-    "best_scanned": 34,
-    "last_scanned": 26,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:star@star.breezy.hr": {
-    "name": "Star",
-    "best_scanned": 0,
-    "last_scanned": 0
-  },
-  "company:stfalcon@stfalcon.com": {
-    "name": "Stfalcon",
-    "best_scanned": 1,
-    "last_scanned": 1,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:supportyourapp@apply.workable.com": {
-    "name": "SupportYourApp",
-    "best_scanned": 84,
-    "last_scanned": 83,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:techmagic@jobs.dou.ua": {
-    "name": "TechMagic",
-    "best_scanned": 13,
-    "last_scanned": 9,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:trinetix@apply.workable.com": {
-    "name": "Trinetix",
-    "best_scanned": 20,
-    "last_scanned": 14,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:ubisoft@jobs.dou.ua": {
-    "name": "Ubisoft",
-    "best_scanned": 5,
-    "last_scanned": 5,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:uklon@jobs.dou.ua": {
-    "name": "Uklon",
-    "best_scanned": 25,
-    "last_scanned": 25,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:ukrsibbank@jobs.dou.ua": {
-    "name": "UKRSIBBANK",
-    "best_scanned": 13,
-    "last_scanned": 11,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:unit@jobs.dou.ua": {
-    "name": "UNIT",
-    "best_scanned": 3,
-    "last_scanned": 2,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:upstars@career.upstars.com": {
-    "name": "UPSTARS",
-    "best_scanned": 47,
-    "last_scanned": 37,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:uptech@jobs.dou.ua": {
-    "name": "Uptech",
-    "best_scanned": 2,
-    "last_scanned": 0,
-    "last_nonzero": "2026-08-12T15:15:49+00:00"
-  },
-  "company:vakoms@vakoms.com": {
-    "name": "Vakoms",
-    "best_scanned": 6,
-    "last_scanned": 5,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:wargaming@jobs.dou.ua": {
-    "name": "Wargaming",
-    "best_scanned": 2,
-    "last_scanned": 2,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:work.ua@jobs.dou.ua": {
-    "name": "Work.ua",
-    "best_scanned": 2,
-    "last_scanned": 1,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:xenoss@xenoss.io": {
-    "name": "Xenoss",
-    "best_scanned": 12,
-    "last_scanned": 12,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:yalantis@yalantis.ua": {
-    "name": "Yalantis",
-    "best_scanned": 1,
-    "last_scanned": 1,
-    "last_nonzero": "2026-08-18T09:15:38+00:00"
-  },
-  "company:zfort@zfort.com": {
-    "name": "Zfort",
-    "best_scanned": 8,
-    "last_scanned": 8,
     "last_nonzero": "2026-08-18T09:15:38+00:00"
   },
   "company:zone3000@zone3000.net": {

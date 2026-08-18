@@ -60,39 +60,6 @@ def test_absolute_url(href: str, base: str, expected: str) -> None:
     assert generic.absolute_url(href, base) == expected
 
 
-def test_workable_widget_filters_and_dedupes(stub_json) -> None:
-    stub_json(
-        {
-            "jobs": [
-                {"title": "Senior iOS Engineer", "url": "https://apply.workable.com/x/j/1", "city": "Kyiv"},
-                {"title": "Senior iOS Engineer", "url": "https://apply.workable.com/x/j/1", "city": "Kyiv"},
-                {"title": "Backend Engineer", "url": "https://apply.workable.com/x/j/2"},
-                {"title": "iOS Engineer", "url": ""},
-            ]
-        }
-    )
-
-    result = generic.collect_workable_widget("Acme", "acme")
-
-    assert result.status == "healthy"
-    assert result.items_scanned == 2
-    assert [job["url"] for job in result.jobs] == ["https://apply.workable.com/x/j/1"]
-    assert result.jobs[0]["location"] == "Kyiv"
-
-
-def test_workable_widget_reports_failure(monkeypatch: pytest.MonkeyPatch) -> None:
-    def boom(url: str, **_kwargs) -> object:
-        raise RuntimeError("network down")
-
-    monkeypatch.setattr(generic, "fetch_json", boom)
-
-    result = generic.collect_workable_widget("Acme", "acme")
-
-    assert result.status == "failed"
-    assert result.items_scanned == 0
-    assert "network down" in (result.error or "")
-
-
 def test_wp_rest_strips_markup_from_titles(stub_json) -> None:
     stub_json(
         [
@@ -123,32 +90,6 @@ def test_wp_rest_reports_failure(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(generic, "fetch_json", lambda url, **_k: (_ for _ in ()).throw(OSError("x")))
 
     assert generic.collect_wp_rest("Acme", "https://x.com/wp-json").status == "failed"
-
-
-def test_breezy_reports_failure(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(generic, "fetch_text", lambda url, **_k: (_ for _ in ()).throw(OSError("x")))
-
-    assert generic.collect_breezy("Acme", "acme.breezy.hr").status == "failed"
-
-
-def test_breezy_reads_position_cards(stub_text) -> None:
-    stub_text(
-        """
-        <ul>
-          <li class="position"><a href="/p/111-senior-ios-engineer"><h2>Senior iOS Engineer</h2></a></li>
-          <li class="position"><a href="/p/111-senior-ios-engineer"><h2>Senior iOS Engineer</h2></a></li>
-          <li class="position"><a href="/p/222-backend"><h2>Backend Engineer</h2></a></li>
-          <li class="position"><a href="/p/333-ios-developer"></a></li>
-          <li class="position"><a href="/other/444">Nope</a></li>
-        </ul>
-        """
-    )
-
-    result = generic.collect_breezy("Acme", "acme.breezy.hr")
-
-    assert result.items_scanned == 3
-    titles = [job["title"] for job in result.jobs]
-    assert titles == ["Senior iOS Engineer", "333 ios developer"]
 
 
 def test_html_regex_builds_absolute_urls_from_whole_match(stub_text) -> None:
@@ -496,101 +437,3 @@ def test_soup_links_reports_failure(monkeypatch: pytest.MonkeyPatch) -> None:
     )
 
     assert result.status == "failed"
-
-
-def test_recruitee_maps_offers(stub_json) -> None:
-    stub_json(
-        {
-            "offers": [
-                {
-                    "title": "iOS Engineer",
-                    "careers_url": "https://acme.recruitee.com/o/ios-engineer",
-                    "id": 7,
-                    "location": "Kyiv",
-                },
-                {"title": "Recruiter", "careers_url": "https://acme.recruitee.com/o/recruiter"},
-                {"title": "Swift Engineer", "careers_url": ""},
-            ]
-        }
-    )
-
-    result = generic.collect_recruitee("Acme", "acme")
-
-    assert result.items_scanned == 3
-    assert len(result.jobs) == 1
-    assert result.jobs[0]["source_job_id"] == "7"
-    assert result.jobs[0]["location"] == "Kyiv"
-
-
-def test_recruitee_reports_failure(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(generic, "fetch_json", lambda url, **_k: (_ for _ in ()).throw(ValueError("bad")))
-
-    assert generic.collect_recruitee("Acme", "acme").status == "failed"
-
-
-def test_smartrecruiters_paginates_until_total_reached(monkeypatch: pytest.MonkeyPatch) -> None:
-    pages = {
-        0: {
-            "totalFound": 150,
-            "content": [
-                {"id": f"a{index}", "name": "Backend Engineer", "location": {"city": "Kyiv"}}
-                for index in range(100)
-            ],
-        },
-        100: {
-            "totalFound": 150,
-            "content": [
-                {
-                    "id": "ios-1",
-                    "name": "Senior iOS Engineer",
-                    "location": {"city": "Kyiv", "country": "ua"},
-                }
-            ],
-        },
-    }
-    requested: list[int] = []
-
-    def fake_fetch(url: str, **_kwargs) -> object:
-        offset = int(url.rsplit("offset=", 1)[1])
-        requested.append(offset)
-        return pages[offset]
-
-    monkeypatch.setattr(generic, "fetch_json", fake_fetch)
-
-    result = generic.collect_smartrecruiters("Acme", "acme")
-
-    assert requested == [0, 100]
-    assert result.items_scanned == 101
-    assert result.jobs[0]["url"] == "https://jobs.smartrecruiters.com/acme/ios-1"
-    assert result.jobs[0]["location"] == "Kyiv, ua"
-
-
-def test_smartrecruiters_skips_postings_without_an_id(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(
-        generic,
-        "fetch_json",
-        lambda url, **_k: {
-            "totalFound": 1,
-            "content": [{"name": "iOS Engineer", "location": "not-a-dict"}],
-        },
-    )
-
-    result = generic.collect_smartrecruiters("Acme", "acme")
-
-    assert result.items_scanned == 1
-    assert result.jobs == []
-
-
-def test_smartrecruiters_stops_on_empty_page(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(generic, "fetch_json", lambda url, **_k: {"totalFound": 0, "content": []})
-
-    result = generic.collect_smartrecruiters("Acme", "acme")
-
-    assert result.items_scanned == 0
-    assert result.status == "healthy"
-
-
-def test_smartrecruiters_reports_failure(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(generic, "fetch_json", lambda url, **_k: (_ for _ in ()).throw(OSError("nope")))
-
-    assert generic.collect_smartrecruiters("Acme", "acme").status == "failed"

@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 
 from collector.telegram_channels import (
+    extract_apply_url,
     extract_company,
     extract_title,
     is_candidate_post,
@@ -252,6 +253,28 @@ def test_job_from_message_builds_telegram_url_and_date() -> None:
     assert job["source_job_id"] == "itrecruit_ua:12345"
     assert job["published_at"] == published.isoformat()
     assert "UIKit" in job["description"]
+
+
+def test_extract_apply_url_skips_telegram_hosts() -> None:
+    assert extract_apply_url("Apply: https://djinni.co/jobs/123-ios/") == "https://djinni.co/jobs/123-ios/"
+    assert extract_apply_url("See https://t.me/itrecruit_ua/99") is None
+    assert (
+        extract_apply_url("https://t.me/foo/1 and https://jobs.lever.co/acme/abc")
+        == "https://jobs.lever.co/acme/abc"
+    )
+
+
+def test_job_from_message_prefers_apply_url() -> None:
+    text = """
+#ios #вакансія
+Senior iOS Engineer
+Acme Labs шукає Senior iOS Engineer
+Apply: https://djinni.co/jobs/999-senior-ios/
+""".strip()
+    job = job_from_message("itrecruit_ua", 77, text)
+    assert job is not None
+    assert job["url"] == "https://djinni.co/jobs/999-senior-ios/"
+    assert job["source_job_id"] == "itrecruit_ua:77"
 
 
 def test_job_from_message_drops_junk() -> None:

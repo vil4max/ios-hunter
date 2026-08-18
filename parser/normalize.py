@@ -60,7 +60,7 @@ def compute_identity_key(
     source: str,
     source_job_id: str | None,
 ) -> tuple[str, str]:
-    normalized_company = normalize_token(company)
+    normalized_company = canonical_company(company)
     normalized_source = normalize_token(source)
     if source_job_id:
         raw = f"provider|{normalized_company}|{normalized_source}|{source_job_id.strip()}"
@@ -106,13 +106,13 @@ def normalize_title(title: str) -> str:
 
 
 def role_key(company: str, title: str) -> tuple[str, str]:
-    return normalize_token(company), normalize_title(title)
+    return canonical_company(company), normalize_title(title)
 
 
 def compute_hash(company: str, title: str, location: str | None) -> str:
     raw = "|".join(
         [
-            normalize_token(company),
+            canonical_company(company),
             normalize_title(title),
             normalize_token(location or ""),
         ]
@@ -122,6 +122,35 @@ def compute_hash(company: str, title: str, location: str | None) -> str:
 
 def normalize_token(value: str) -> str:
     return re.sub(r"\s+", " ", value.strip().lower())
+
+
+_COMPANY_ALIASES = {
+    "n ix": "n-ix",
+    "n i x": "n-ix",
+    "nix": "n-ix",
+    "n-ix": "n-ix",
+    "chisw": "chi software",
+    "chi software": "chi software",
+    "globallogic": "globallogic",
+    "global logic": "globallogic",
+    "softserve": "softserve",
+    "soft serve": "softserve",
+    "sigma": "sigma software",
+    "sigma software": "sigma software",
+    "onix": "onix systems",
+    "onix systems": "onix systems",
+    "zone 3000": "zone3000",
+    "zone3000": "zone3000",
+    "eleks": "eleks",
+    "grid dynamics": "grid dynamics",
+    "griddynamics": "grid dynamics",
+}
+
+
+def canonical_company(value: str) -> str:
+    token = normalize_token(value)
+    collapsed = token.replace("-", " ")
+    return _COMPANY_ALIASES.get(token) or _COMPANY_ALIASES.get(collapsed) or token
 
 
 _IOS_ANCHOR = re.compile(
@@ -148,6 +177,36 @@ _IOS_DENY = re.compile(
 )
 
 _FLUTTER_TITLE = re.compile(r"(?i)(?<![a-z0-9])flutter(?![a-z0-9])")
+
+_CROSS_PLATFORM = re.compile(
+    r"(?i)(?<![a-z0-9])("
+    r"react\s*native|\brn\b|xamarin|cordova|ionic|"
+    r"flutter"
+    r")(?![a-z0-9])"
+)
+
+_PLATFORM_PAIR = re.compile(r"(?i)\(?\s*ios\s*/\s*android\s*\)?")
+
+_BODY_ROLE = re.compile(
+    r"(?i)(?<![a-z0-9а-яіїєґ])("
+    r"mobile|native|"
+    r"software\s+(?:engineer|developer)|"
+    r"client[\s\-]?side"
+    r")(?![a-z0-9а-яіїєґ])"
+)
+
+_JUNIOR_TITLE = re.compile(
+    r"(?i)(?<![a-z0-9а-яіїєґ])("
+    r"junior|jr\.?|intern|internship|trainee|стажер|інтерн|джуніор|"
+    r"без\s+(?:досвіду|опыта)|no\s+experience|entry[\s\-]?level"
+    r")(?![a-z0-9а-яіїєґ])"
+)
+
+_SENIORISH_TITLE = re.compile(
+    r"(?i)(?<![a-z0-9а-яіїєґ])("
+    r"senior|sr\.?|lead|staff|principal|head|architect"
+    r")(?![a-z0-9а-яіїєґ])"
+)
 
 _APPLE_CORE = re.compile(
     r"(?i)(?<![a-z0-9])("
@@ -184,7 +243,9 @@ def is_ios_job(title: str, description: str | None = None) -> bool:
     title_text = title or ""
     if _IOS_DENY.search(title_text):
         return False
-    if _FLUTTER_TITLE.search(title_text) and not _APPLE_CORE.search(title_text):
+    if _FLUTTER_TITLE.search(title_text) and not _APPLE_CORE.search(_PLATFORM_PAIR.sub("", title_text)):
+        return False
+    if _CROSS_PLATFORM.search(title_text) and not _APPLE_CORE.search(_PLATFORM_PAIR.sub("", title_text)):
         return False
     if _DOMAIN_DENY.search(haystack):
         return False
@@ -192,7 +253,20 @@ def is_ios_job(title: str, description: str | None = None) -> bool:
         return False
     if _WINDOWS_MACOS_DESKTOP.search(title_text) and not _APPLE_CORE.search(title_text):
         return False
-    return _IOS_ANCHOR.search(haystack) is not None
+    if _IOS_ANCHOR.search(title_text):
+        return True
+    if description and _APPLE_CORE.search(description) and _BODY_ROLE.search(title_text):
+        if _CROSS_PLATFORM.search(description):
+            return False
+        return True
+    return False
+
+
+def is_target_level(title: str) -> bool:
+    text = title or ""
+    if _JUNIOR_TITLE.search(text) and not _SENIORISH_TITLE.search(text):
+        return False
+    return True
 
 
 _UKRAINE = re.compile(
@@ -221,8 +295,10 @@ _GLOBAL_REMOTE = re.compile(
 )
 
 
-def is_relevant_job_location(location: str | None) -> bool:
+def is_relevant_job_location(location: str | None, extra: str | None = None) -> bool:
     text = (location or "").strip()
+    if not text:
+        text = (extra or "").strip()
     if not text:
         return True
     if _UKRAINE.search(text):
@@ -258,10 +334,13 @@ def normalize_raw(raw: dict[str, Any]) -> Vacancy | None:
 
     if not is_ios_job(title, description):
         return None
+    if not is_target_level(title):
+        return None
 
     location = raw.get("location")
     location = str(location).strip() if location else None
-    if not is_relevant_job_location(location):
+    extra = " ".join(part for part in (title, description or "") if part)
+    if not is_relevant_job_location(location, extra):
         return None
     remote = raw.get("remote") or infer_remote(title, location, description)
 

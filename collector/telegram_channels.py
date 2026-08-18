@@ -6,6 +6,7 @@ import re
 import time
 from datetime import datetime, timezone
 from typing import Any
+from urllib.parse import urlsplit
 
 from parser.normalize import is_ios_job
 
@@ -106,6 +107,13 @@ _TITLE_NOISE: tuple[str, ...] = (
     "how to apply",
 )
 
+_APPLY_URL = re.compile(r"https?://[^\s)>\]]+", re.IGNORECASE)
+_SKIP_APPLY_HOSTS = (
+    "t.me",
+    "telegram.me",
+    "telegram.org",
+)
+
 _COMPANY_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(r"(?im)^(.{2,80}?)\s+шука[єе]\b"),
     re.compile(r"(?im)^(.{2,80}?)\s+is hiring\b"),
@@ -202,6 +210,18 @@ def extract_title(text: str) -> str:
     return "iOS / Swift vacancy"
 
 
+def extract_apply_url(text: str) -> str | None:
+    for match in _APPLY_URL.finditer(text or ""):
+        raw = match.group(0).rstrip(".,;\"'")
+        host = (urlsplit(raw).hostname or "").lower()
+        if not host:
+            continue
+        if any(host == skip or host.endswith(f".{skip}") for skip in _SKIP_APPLY_HOSTS):
+            continue
+        return raw
+    return None
+
+
 def extract_company(text: str) -> str | None:
     for pattern in _COMPANY_PATTERNS:
         match = pattern.search(text)
@@ -247,10 +267,11 @@ def job_from_message(
         return None
     title = extract_title(text)
     company = extract_company(text) or "Telegram"
+    apply_url = extract_apply_url(text)
     return {
         "company": company,
         "title": title,
-        "url": message_url(channel, message_id),
+        "url": apply_url or message_url(channel, message_id),
         "source": "telegram",
         "source_job_id": f"{channel}:{message_id}",
         "description": description_snippet(text, title=title, limit=4000),
@@ -305,46 +326,53 @@ def _message_published_at(message: Any) -> datetime | None:
     return None
 
 
-async def _fetch_channel_jobs(channel: str) -> list[dict[str, Any]]:
+async def _fetch_channel_jobs(client: Any, channel: str) -> list[dict[str, Any]]:
+    jobs: list[dict[str, Any]] = []
+    messages = await client.get_messages(channel, limit=_LOOKBACK)
+    for message in messages:
+        if message is None or not getattr(message, "id", None):
+            continue
+        text = (message.message or "").strip()
+        if not text and getattr(message, "raw_text", None):
+            text = str(message.raw_text).strip()
+        job = job_from_message(
+            channel,
+            int(message.id),
+            text,
+            published_at=_message_published_at(message),
+        )
+        if job:
+            jobs.append(job)
+    return jobs
+
+
+async def _collect_channels(channels: tuple[str, ...]) -> list[SourceResult]:
     from telethon import TelegramClient
     from telethon.sessions import StringSession
 
     api_id = int(os.environ["TELEGRAM_API_ID"].strip())
     api_hash = os.environ["TELEGRAM_API_HASH"].strip()
     session = os.environ["TELEGRAM_SESSION"].strip()
-
-    jobs: list[dict[str, Any]] = []
+    results: list[SourceResult] = []
     async with TelegramClient(StringSession(session), api_id, api_hash) as client:
-        messages = await client.get_messages(channel, limit=_LOOKBACK)
-        for message in messages:
-            if message is None or not getattr(message, "id", None):
-                continue
-            text = (message.message or "").strip()
-            if not text and getattr(message, "raw_text", None):
-                text = str(message.raw_text).strip()
-            job = job_from_message(
-                channel,
-                int(message.id),
-                text,
-                published_at=_message_published_at(message),
-            )
-            if job:
-                jobs.append(job)
-    return jobs
+        for channel in channels:
+            started = time.perf_counter()
+            try:
+                jobs = await _fetch_channel_jobs(client, channel)
+                results.append(_source_ok(channel, jobs, started))
+            except Exception as error:  # noqa: BLE001
+                results.append(_source_failed(channel, error, started))
+    return results
 
 
 def collect_telegram_channel(channel: str) -> SourceResult:
-    started = time.perf_counter()
-    if not credentials_configured():
-        return _source_skipped(channel, "TELEGRAM_API_ID/HASH/SESSION not set", started)
-    try:
-        jobs = asyncio.run(_fetch_channel_jobs(channel))
-        return _source_ok(channel, jobs, started)
-    except Exception as error:  # noqa: BLE001
-        return _source_failed(channel, error, started)
+    return collect_telegram_channels((channel,))[0]
 
 
 def collect_telegram_channels(
     channels: tuple[str, ...] = TELEGRAM_CHANNELS,
 ) -> list[SourceResult]:
-    return [collect_telegram_channel(channel) for channel in channels]
+    started = time.perf_counter()
+    if not credentials_configured():
+        return [_source_skipped(channel, "TELEGRAM_API_ID/HASH/SESSION not set", started) for channel in channels]
+    return asyncio.run(_collect_channels(channels))

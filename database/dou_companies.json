@@ -1,240 +1,76 @@
 {
-  "updated_at": "2026-07-28T13:32:56+00:00",
-  "source": "https://jobs.dou.ua/companies/",
+  "updated_at": "2026-08-18T00:00:00+00:00",
+  "source": "https://jobs.dou.ua/top50/",
   "companies": [
     {
-      "name": "Creatio",
-      "slug": "creatio",
+      "name": "ALLSTARSIT",
+      "slug": "allstars-it",
       "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/creatio/vacancies/"
+      "vacancies_url": "https://jobs.dou.ua/companies/allstars-it/vacancies/",
+      "vacancy_count": 1
     },
     {
-      "name": "Samsung",
-      "slug": "samsung",
+      "name": "Avenga",
+      "slug": "avenga",
       "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/samsung/vacancies/"
-    },
-    {
-      "name": "ISD",
-      "slug": "isd",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/isd/vacancies/"
+      "vacancies_url": "https://jobs.dou.ua/companies/avenga/vacancies/",
+      "vacancy_count": 1
     },
     {
       "name": "Capgemini Engineering",
       "slug": "capgemini-engineering",
       "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/capgemini-engineering/vacancies/"
+      "vacancies_url": "https://jobs.dou.ua/companies/capgemini-engineering/vacancies/",
+      "vacancy_count": 1
     },
     {
-      "name": "Frog",
-      "slug": "frog",
+      "name": "ELEKS",
+      "slug": "eleks",
       "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/frog/vacancies/"
-    },
-    {
-      "name": "AM-SOFT",
-      "slug": "art-master",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/art-master/vacancies/"
-    },
-    {
-      "name": "Astound Digital",
-      "slug": "astound",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/astound/vacancies/"
-    },
-    {
-      "name": "Magento",
-      "slug": "magento",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/magento/vacancies/"
-    },
-    {
-      "name": "mono",
-      "slug": "mono",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/mono/vacancies/"
-    },
-    {
-      "name": "Nova Digital",
-      "slug": "nova-digital",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/nova-digital/vacancies/"
-    },
-    {
-      "name": "FRACTAL",
-      "slug": "fractal",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/fractal/vacancies/"
-    },
-    {
-      "name": "AUTODOC",
-      "slug": "autodoc",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/autodoc/vacancies/"
-    },
-    {
-      "name": "MODUS X",
-      "slug": "modus-x",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/modus-x/vacancies/"
-    },
-    {
-      "name": "King Group",
-      "slug": "king-group",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/king-group/vacancies/"
-    },
-    {
-      "name": "Playtika Ukraine",
-      "slug": "playtika-ua",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/playtika-ua/vacancies/"
-    },
-    {
-      "name": "Evoplay",
-      "slug": "evoplay",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/evoplay/vacancies/"
-    },
-    {
-      "name": "Grammarly",
-      "slug": "grammarly",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/grammarly/vacancies/"
-    },
-    {
-      "name": "Uklon",
-      "slug": "uklon",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/uklon/vacancies/"
-    },
-    {
-      "name": "EVO",
-      "slug": "evo",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/evo/vacancies/"
-    },
-    {
-      "name": "Jooble",
-      "slug": "jooble",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/jooble/vacancies/"
-    },
-    {
-      "name": "Depositphotos",
-      "slug": "depositphotos",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/depositphotos/vacancies/"
-    },
-    {
-      "name": "Boosters",
-      "slug": "boosters",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/boosters/vacancies/"
-    },
-    {
-      "name": "Kiss My Apps",
-      "slug": "kiss-my-apps",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/kiss-my-apps/vacancies/"
-    },
-    {
-      "name": "appflame",
-      "slug": "appflame",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/appflame/vacancies/"
-    },
-    {
-      "name": "Reface",
-      "slug": "reface",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/reface/vacancies/"
+      "vacancies_url": "https://jobs.dou.ua/companies/eleks/vacancies/",
+      "vacancy_count": 1
     },
     {
       "name": "GeeksForLess",
       "slug": "geeksforless",
       "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/geeksforless/vacancies/"
+      "vacancies_url": "https://jobs.dou.ua/companies/geeksforless/vacancies/",
+      "vacancy_count": 1
     },
     {
-      "name": "TechMagic",
-      "slug": "techmagic",
+      "name": "Levi9",
+      "slug": "levi9",
       "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/techmagic/vacancies/"
+      "vacancies_url": "https://jobs.dou.ua/companies/levi9/vacancies/",
+      "vacancy_count": 1
     },
     {
-      "name": "MobiDev",
-      "slug": "mobidev",
+      "name": "Miratech",
+      "slug": "miratech",
       "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/mobidev/vacancies/"
+      "vacancies_url": "https://jobs.dou.ua/companies/miratech/vacancies/",
+      "vacancy_count": 1
     },
     {
-      "name": "RubyGarage",
-      "slug": "rubygarage",
+      "name": "SPD Technology",
+      "slug": "spd-technology",
       "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/rubygarage/vacancies/"
+      "vacancies_url": "https://jobs.dou.ua/companies/spd-technology/vacancies/",
+      "vacancy_count": 1
     },
     {
-      "name": "Uptech",
-      "slug": "uptech-team",
+      "name": "Svitla Systems",
+      "slug": "svitla-systems-inc",
       "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/uptech-team/vacancies/"
+      "vacancies_url": "https://jobs.dou.ua/companies/svitla-systems-inc/vacancies/",
+      "vacancy_count": 1
     },
     {
-      "name": "Cleveroad",
-      "slug": "cleveroad",
+      "name": "Trinetix",
+      "slug": "trinetix",
       "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/cleveroad/vacancies/"
-    },
-    {
-      "name": "UKRSIBBANK",
-      "slug": "ukrsibbank",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/ukrsibbank/vacancies/"
-    },
-    {
-      "name": "PrivatBank",
-      "slug": "privatbank",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/privatbank/vacancies/"
-    },
-    {
-      "name": "Plarium",
-      "slug": "plarium",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/plarium/vacancies/"
-    },
-    {
-      "name": "Ubisoft",
-      "slug": "ubisoft",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/ubisoft/vacancies/"
-    },
-    {
-      "name": "Metinvest Digital",
-      "slug": "metinvest-digital",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/metinvest-digital/vacancies/"
-    },
-    {
-      "name": "Wargaming",
-      "slug": "wargaming",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/wargaming/vacancies/"
-    },
-    {
-      "name": "Work.ua",
-      "slug": "work-ua",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/work-ua/vacancies/"
-    },
-    {
-      "name": "UNIT",
-      "slug": "unit",
-      "site_url": null,
-      "vacancies_url": "https://jobs.dou.ua/companies/unit/vacancies/"
+      "vacancies_url": "https://jobs.dou.ua/companies/trinetix/vacancies/",
+      "vacancy_count": 1
     }
   ]
 }

@@ -114,6 +114,25 @@ def test_classify_degraded_leaves_new_sources_alone() -> None:
     assert results[0].status == "healthy"
 
 
+def test_classify_degraded_flags_steep_drop_from_high_water_mark() -> None:
+    results = [_result("company:acme@acme.com", scanned=3, name="Acme")]
+    baseline = {"company:acme@acme.com": {"best_scanned": 20}}
+
+    degraded = classify_degraded(results, baseline)
+
+    assert degraded == ["Acme"]
+    assert results[0].status == "degraded"
+    assert "parsed 3 items" in (results[0].error or "")
+
+
+def test_classify_degraded_ignores_small_drops() -> None:
+    results = [_result("company:acme@acme.com", scanned=110)]
+    baseline = {"company:acme@acme.com": {"best_scanned": 127}}
+
+    assert classify_degraded(results, baseline) == []
+    assert results[0].status == "healthy"
+
+
 def test_classify_degraded_leaves_working_and_failed_sources_alone() -> None:
     working = _result("company:a@a.com", scanned=5)
     broken = _result("company:b@b.com", scanned=0, status="failed")

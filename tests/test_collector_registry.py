@@ -54,7 +54,7 @@ def _stub_result(source_id: str, name: str) -> SourceResult:
 
 
 def test_registry_is_not_empty() -> None:
-    assert len(companies._python_collectors()) > 50
+    assert len(companies._python_collectors()) > 15
 
 
 def test_every_collector_degrades_gracefully_when_the_network_is_down(offline: None) -> None:
@@ -111,7 +111,7 @@ def test_dou_seed_collectors_are_added_and_deduped(tmp_path, monkeypatch: pytest
     monkeypatch.setattr(companies, "default_seed_path", lambda _root=None: seed_path)
     monkeypatch.setenv("DOU_SEED_FEED_LIMIT", "all")
 
-    collectors = companies._dou_collectors_from_seed(skip_slugs={"skip-me"})
+    collectors = companies._dou_collectors_from_seed(skip_slugs={"skip-me"}, allowed_slugs=None)
     monkeypatch.setattr(companies, "collect_dou_company_feed", lambda name, slug: _stub_result(f"company:{slug}@jobs.dou.ua", name))
     results = [collector() for collector in collectors]
     assert {result.source_name for result in results} == {"Alpha", "Beta"}
