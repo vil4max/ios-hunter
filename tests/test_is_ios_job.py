@@ -53,6 +53,13 @@ def test_is_ios_job_rejects_igaming_and_gambling() -> None:
     assert is_ios_job("Team Lead Swift", "Health & fitness subscription apps")
 
 
+def test_is_ios_job_rejects_flutter_and_reverse_engineer() -> None:
+    assert not is_ios_job("Senior Flutter Developer")
+    assert not is_ios_job("Вакансия: Senior Flutter Developer")
+    assert not is_ios_job("iOS Reverse Engineer - 1 Task")
+    assert is_ios_job("Senior iOS Engineer (Flutter is a plus)")
+
+
 def test_is_relevant_job_location_ukraine_and_global_remote() -> None:
     assert is_relevant_job_location("Kyiv, Ukraine")
     assert is_relevant_job_location("Ukraine")

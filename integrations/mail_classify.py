@@ -150,6 +150,11 @@ _SERVICE_NOISE_PATTERNS = (
     re.compile(r"reset\s+your\s+password", re.I),
     re.compile(r"security\s+(alert|code|notification|notice)", re.I),
     re.compile(r"verification\s+code", re.I),
+    re.compile(r"one[- ]time\s+code", re.I),
+    re.compile(r"confirm\s+your\s+identity", re.I),
+    re.compile(r"code\s+will\s+expire", re.I),
+    re.compile(r"verify\s+and\s+you", re.I),
+    re.compile(r"quick\s+step", re.I),
     re.compile(r"код\s+подтверждения", re.I),
     re.compile(r"confirm\s+your\s+(email|account)", re.I),
     re.compile(r"signed\s+in\s+from\s+a\s+new", re.I),
@@ -198,15 +203,30 @@ _ROLE_SENIORITY = re.compile(
     re.I,
 )
 
+_DIGEST_NOISE_PATTERNS = (
+    re.compile(r"нових\s+ваканс", re.I),
+    re.compile(r"новых\s+ваканс", re.I),
+    re.compile(r"і\s+ще\s+\d+\s+нов", re.I),
+    re.compile(r"и\s+еще\s+\d+\s+нов", re.I),
+    re.compile(r"vacancy\s+digest", re.I),
+    re.compile(r"job\s+alert", re.I),
+    re.compile(r"jobs?\s+you\s+may\s+like", re.I),
+    re.compile(r"recommended\s+jobs", re.I),
+    re.compile(r"new\s+jobs?\s+for\s+you", re.I),
+)
+
 _NOISE_FROM = (
     re.compile(r"noreply@", re.I),
     re.compile(r"no-reply@", re.I),
+    re.compile(r"no-reply-", re.I),
     re.compile(r"newsletter@", re.I),
     re.compile(r"notifications?@", re.I),
     re.compile(r"linkedin\.com", re.I),
     re.compile(r"facebookmail\.com", re.I),
     re.compile(r"jooble\.", re.I),
     re.compile(r"@jooble\.", re.I),
+    re.compile(r"ciklumcareer@", re.I),
+    re.compile(r"no-reply-ciklumcareer@", re.I),
 )
 
 _NOISE_DOMAINS = frozenset({"indeed.com"})
@@ -401,7 +421,11 @@ def classify_mail(mail: InboundMail) -> MailEvent:
             confidence=0.95,
         )
 
-    if _matches_any(hay, _SERVICE_NOISE_PATTERNS) or _matches_any(hay, _BILLING_NOISE_PATTERNS):
+    if (
+        _matches_any(hay, _SERVICE_NOISE_PATTERNS)
+        or _matches_any(hay, _BILLING_NOISE_PATTERNS)
+        or _matches_any(hay, _DIGEST_NOISE_PATTERNS)
+    ):
         return _ignore_event(
             mail,
             company=company,

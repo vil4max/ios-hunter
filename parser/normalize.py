@@ -142,9 +142,12 @@ _IOS_DENY = re.compile(
     r"test(?:ing)?\s+(?:automation|engineer|developer)|"
     r"automation\s+(?:qa|engineer|tester)|"
     r"manual\s+qa|"
-    r"mobile\s+automation"
+    r"mobile\s+automation|"
+    r"reverse[\s\-]?engineer"
     r")(?![a-z0-9])"
 )
+
+_FLUTTER_TITLE = re.compile(r"(?i)(?<![a-z0-9])flutter(?![a-z0-9])")
 
 _APPLE_CORE = re.compile(
     r"(?i)(?<![a-z0-9])("
@@ -180,6 +183,8 @@ def is_ios_job(title: str, description: str | None = None) -> bool:
     haystack = f"{title} {description or ''}"
     title_text = title or ""
     if _IOS_DENY.search(title_text):
+        return False
+    if _FLUTTER_TITLE.search(title_text) and not _APPLE_CORE.search(title_text):
         return False
     if _DOMAIN_DENY.search(haystack):
         return False

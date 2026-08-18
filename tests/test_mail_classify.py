@@ -208,3 +208,31 @@ def test_classify_ignores_unfortunately_without_application_words() -> None:
         body_text="На жаль, сервіс тимчасово недоступний. К сожалению, есть задержка.",
     )
     assert event.kind == KIND_IGNORE
+
+
+def test_classify_ignores_ciklum_ats_otp() -> None:
+    event = classify_from_headers(
+        message_id="<otp@ciklum.com>",
+        subject="Quick step — verify and you’re in",
+        from_header="Ciklum Career <no-reply-ciklumcareer@ciklum.com>",
+        body_text=(
+            "Hi Max, You're almost there! Please use this one-time code to "
+            "confirm your identity: 741747 Note: This code will expire in 10 minutes."
+        ),
+    )
+    assert event.kind == KIND_IGNORE
+
+
+def test_classify_ciklum_apply_ack_stays_ack() -> None:
+    event = classify_from_headers(
+        message_id="<ack@ciklum.com>",
+        subject="Thanks for applying — we’ve got it",
+        from_header="Ciklum Career <no-reply-ciklumcareer@ciklum.com>",
+        body_text=(
+            "Hi Max, We received your application for iOS Engineer - 3982. "
+            "If your experience aligns with our current needs, one of our "
+            "recruiters will reach out to you soon."
+        ),
+    )
+    assert event.kind == KIND_APPLICATION_ACK
+    assert event.company == "Ciklum"
