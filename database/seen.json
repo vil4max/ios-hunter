@@ -14,15 +14,10 @@
     "company": "Sigma Software",
     "first_seen": "2026-08-13T15:18:20+00:00"
   },
-  "https://careers.n-ix.com/jobs/4912838101?gh_jid=4912838101": {
-    "title": "Lead iOS Engineer",
+  "https://careers.n-ix.com/jobs/4494044101-ios-senior": {
+    "title": "Senior iOS Engineer (#5458)",
     "company": "N-iX",
-    "first_seen": "2026-07-10T08:29:48+00:00"
-  },
-  "https://careers.n-ix.com/jobs/4920361101?gh_jid=4920361101": {
-    "title": "Middle iOS Engineer",
-    "company": "N-iX",
-    "first_seen": "2026-08-05T15:15:41+00:00"
+    "first_seen": "2026-08-18T12:18:14+00:00"
   },
   "https://djinni.co/jobs/515377-ios-developer": {
     "title": "iOS Developer",
@@ -124,6 +119,11 @@
     "title": "Junior iOS Developer",
     "company": "ADVA Soft",
     "first_seen": "2026-08-05T15:15:41+00:00"
+  },
+  "https://djinni.co/jobs/841388-middle-ios-engineer": {
+    "title": "Middle iOS Engineer",
+    "company": "N-iX",
+    "first_seen": "2026-08-18T12:18:14+00:00"
   },
   "https://djinni.co/jobs/842261-ios-developer": {
     "title": "iOS Developer",
@@ -271,11 +271,6 @@
   "https://onix-systems.com/careers/senior-ios-developer": {
     "title": "Senior iOS Developer",
     "company": "Onix Systems",
-    "first_seen": "2026-07-10T08:29:48+00:00"
-  },
-  "https://people.andersenlab.com/vacancy/2509387": {
-    "title": "iOS Developer (Swift) in Kazakhstan",
-    "company": "Andersen",
     "first_seen": "2026-07-10T08:29:48+00:00"
   },
   "https://prequel.global.huntflow.io/vacancy/senior-ios-developer-2": {
