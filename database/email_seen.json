@@ -215,6 +215,12 @@
     "company": "Bitfinex Alpha",
     "subject": "Bitcoin looks quiet. Positioning doesn't."
   },
+  "<011301a01084d729-4a71ffac-944b-41e7-9fd6-7507bef316c2-000000@eu-west-3.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-18T06:24:19+00:00",
+    "company": "WhiteBIT Exchange",
+    "subject": "Наклацай на новий смартфон!"
+  },
   "<01M04DNN5T210S9CVM1XZNM4BT@klaviyomail.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-16T06:18:46+00:00",
@@ -796,6 +802,18 @@
     "company": "N-iX",
     "subject": "ios developer: Senior iOS Developer (Ad SDK Infrastructure) у Sigma Software і ще 1 нова вакансія"
   },
+  "<1k08scsomjel9800@indeed.com>": {
+    "kind": "rejected_hr",
+    "processed_at": "2026-08-18T06:24:19+00:00",
+    "company": "N-iX",
+    "subject": "ios developer: Level Designer у Joyteractive і ще 1 нова вакансія"
+  },
+  "<1k093ckvjpegi805@indeed.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-18T06:24:19+00:00",
+    "company": "Indeed",
+    "subject": "iOS: Senior iOS Developer (Ad SDK Infrastructure) у Sigma Software і ще 18 нових вакансій"
+  },
   "<202606081221.10bipa0t5cjqvj@shared-p100-i7.d.sp1-brevo.net>": {
     "kind": "ignore",
     "processed_at": "2026-08-06T15:21:31+00:00",
@@ -1134,6 +1152,18 @@
     "company": "iOS (Swift) jobs",
     "subject": "Recent iOS/Swift publications"
   },
+  "<20260817171151.7cadd767d24e108f@mg.pointfree.co>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-18T06:24:19+00:00",
+    "company": "Point-Free",
+    "subject": "New Point-Free Video: WWDC26: SQLiteData Observation"
+  },
+  "<20260817213226.3.374cdd54bbbac796.638a9cjc@mg-d1.substack.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-18T06:24:19+00:00",
+    "company": "Substack",
+    "subject": "\"The Changing Economics of Software Engineering\" and 4 more"
+  },
   "<202611080850.13di66eco6cw3srj@email3.sketchfab.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-12T06:18:03+00:00",
@@ -1229,6 +1259,12 @@
     "processed_at": "2026-08-13T06:17:08+00:00",
     "company": "Freedom24",
     "subject": "До 20% в USD на Russell 2000  - время малых компаний"
+  },
+  "<21645-2305814014485073594-bc167c51-c6d7-4ce4-9d06-010bfb408059@carrotquest-mail.io>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-18T06:24:19+00:00",
+    "company": "Freedom24",
+    "subject": "Выбор инвесторов: топ-10 ETF до 100 евро"
   },
   "<216afa7e-c003-4e2d-bb4a-627d1233f686@mtasv.net>": {
     "kind": "ignore",
@@ -1728,6 +1764,12 @@
     "processed_at": "2026-08-17T06:27:14+00:00",
     "company": "Ciklum",
     "subject": "Career Agent  ·  2026-08-16"
+  },
+  "<6a83278f.fd0cec8d.210229.8521@mx.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-18T06:24:19+00:00",
+    "company": "Ciklum",
+    "subject": "Career Agent  ·  2026-08-17"
   },
   "<6a8f378d-a961-4eb9-b3d6-e8fadfed1512@atl1s07mta0304.xt.local>": {
     "kind": "ignore",
