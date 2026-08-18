@@ -1404,6 +1404,12 @@
     "company": "Google",
     "subject": "Security alert"
   },
+  "<449dee6a-6ec7-4902-a8a2-aef23f35a26b@ms4-668f894948-qqxph>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-18T09:16:20+00:00",
+    "company": "Світ Чаю",
+    "subject": "Ваш секретний бонус: -15% на весь асортимент 👀"
+  },
   "<498482044.11309985.1785421132387@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:51+00:00",
