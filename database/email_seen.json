@@ -403,11 +403,23 @@
     "company": "Xcode Cloud",
     "subject": "App -- Build 67 succeeded (main)"
   },
+  "<14d90918ac170c832114bd51b92701b1.ums@oracle.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-18T15:16:11+00:00",
+    "company": "Ciklum",
+    "subject": "Quick step — verify and you’re in"
+  },
   "<14eef37f-930f-48d8-9ac1-cf72fb5ac216@mtasv.net>": {
     "kind": "ignore",
     "processed_at": "2026-08-01T15:16:20+00:00",
     "company": "Spark",
     "subject": "New email account login in Spark"
+  },
+  "<1511089483.73112975.1787064184329@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-18T15:16:11+00:00",
+    "company": "iTunes Store",
+    "subject": "You will be charged for your iCloud+ plan in 20 days"
   },
   "<1528539339.18887.1785753418147@email.apple.com>": {
     "kind": "ignore",
@@ -1170,6 +1182,30 @@
     "company": "Substack",
     "subject": "\"The Changing Economics of Software Engineering\" and 4 more"
   },
+  "<20260818124142.928b10a26cbc770c@cioeu80164.posthog.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-18T15:16:11+00:00",
+    "company": "Joe at PostHog",
+    "subject": "📮 Invite: Join our beta club!"
+  },
+  "<20260818145836.3.98a6429ccb02de55.q0xagqpu@mg-d0.substack.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-18T15:16:11+00:00",
+    "company": "Substack",
+    "subject": "Gone Fishin'"
+  },
+  "<20260818145940.17bd41abf5121527@creator.patreon.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-18T15:16:11+00:00",
+    "company": "iOS (Swift) jobs",
+    "subject": "iOS openings (hybrid):"
+  },
+  "<20260818151159.c83cd14468c29f45@creator.patreon.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-18T15:16:11+00:00",
+    "company": "iOS (Swift) jobs",
+    "subject": "Introducing the Safari MCP server for web developers"
+  },
   "<202611080850.13di66eco6cw3srj@email3.sketchfab.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-12T06:18:03+00:00",
@@ -1272,6 +1308,12 @@
     "company": "Freedom24",
     "subject": "Выбор инвесторов: топ-10 ETF до 100 евро"
   },
+  "<21645-2306456536920100664-e3d6e6cb-8546-425a-9e1e-acc642984328@carrotquest-mail.io>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-18T15:16:11+00:00",
+    "company": "Freedom24",
+    "subject": "Металл с характером: до 13% в USD на росте палладия"
+  },
   "<216afa7e-c003-4e2d-bb4a-627d1233f686@mtasv.net>": {
     "kind": "ignore",
     "processed_at": "2026-08-01T15:16:21+00:00",
@@ -1331,6 +1373,12 @@
     "processed_at": "2026-08-02T09:16:18+00:00",
     "company": "Apple Developer",
     "subject": "Apple CloudKit: Your database schema was promoted to production."
+  },
+  "<2c2f25c0-9b12-11f1-8973-cd209888a168@ms4-668f894948-s2cnl>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-18T15:16:11+00:00",
+    "company": "Prom.ua",
+    "subject": "Замовлення 422017465 доставлено 🤩"
   },
   "<2f01efe0-95a3-11f1-b394-532e020b7fcf@ms4-668f894948-648rr>": {
     "kind": "ignore",
@@ -1903,6 +1951,13 @@
     "company": "Facebook",
     "subject": "Это вы только что выполнили вход на новом устройстве здесь: Kyiv?"
   },
+  "<8HP7EXVpMK4cECK2tMxIrOEzjAGi68K7I3oA8Cb8@localhost.localdomain>": {
+    "kind": "application_ack",
+    "processed_at": "2026-08-18T15:16:11+00:00",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg2-4u4",
+    "company": "N-iX",
+    "subject": "Thank you for your application!"
+  },
   "<8bad533a-8c95-4e10-b1c7-8a9e42a391ed@atl1s07mta0307.xt.local>": {
     "kind": "ignore",
     "processed_at": "2026-08-15T12:16:16+00:00",
@@ -2255,6 +2310,13 @@
     "processed_at": "2026-07-29T13:41:50+00:00",
     "company": "Google",
     "subject": "Security alert"
+  },
+  "<XjM3KADYpoKu3FCibsfuCUjubzoFYY5xdbDe9BSwHM@localhost.localdomain>": {
+    "kind": "application_ack",
+    "processed_at": "2026-08-18T15:16:09+00:00",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg2-4u4",
+    "company": "N-iX",
+    "subject": "Thank you for your application!"
   },
   "<YrnktaOurOsSH0USXTF2Ew@notifications.google.com>": {
     "kind": "ignore",
