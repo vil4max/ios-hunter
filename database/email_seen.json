@@ -1,4 +1,10 @@
 {
+  "<-QIssFSVlhW9Xa2DnIhPvA@notifications.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-19T06:21:21+00:00",
+    "company": "Google",
+    "subject": "Your video verification is no longer saved in your Google Account"
+  },
   "<0100019fadd13d4f-b8c430b5-33fe-458f-a3d9-f26a15fdb835-000000@email.amazonses.com>": {
     "kind": "application_ack",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -832,6 +838,18 @@
     "company": "Indeed",
     "subject": "iOS: Senior iOS Developer (Ad SDK Infrastructure) у Sigma Software і ще 18 нових вакансій"
   },
+  "<1k0bafjg5gh5p800@indeed.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-19T06:21:21+00:00",
+    "company": "Indeed",
+    "subject": "ios developer: Level Designer у Joyteractive"
+  },
+  "<1k0bbiuagidre800@indeed.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-19T06:21:21+00:00",
+    "company": "Indeed",
+    "subject": "iOS: Senior iOS Developer (Ad SDK Infrastructure) у Sigma Software і ще 15 нових вакансій"
+  },
   "<202606081221.10bipa0t5cjqvj@shared-p100-i7.d.sp1-brevo.net>": {
     "kind": "ignore",
     "processed_at": "2026-08-06T15:21:31+00:00",
@@ -1206,6 +1224,12 @@
     "company": "iOS (Swift) jobs",
     "subject": "Introducing the Safari MCP server for web developers"
   },
+  "<20260818180023.b2359c7fb8ba20da@mg.pointfree.co>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-19T06:21:21+00:00",
+    "company": "Point-Free",
+    "subject": "Announcing: Episode Search"
+  },
   "<202611080850.13di66eco6cw3srj@email3.sketchfab.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-12T06:18:03+00:00",
@@ -1549,6 +1573,12 @@
     "company": "Xcode Cloud",
     "subject": "RegionalCheck -- Build 39 succeeded (main)"
   },
+  "<550079698.33246345.1787072436687@insideapple.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-19T06:21:21+00:00",
+    "company": "Apple Developer",
+    "subject": "Updated Apple Developer Program License Agreement Now Available"
+  },
   "<5f18ebd2-97f0-11f1-b394-532e020b7fcf@ms4-668f894948-72p2c>": {
     "kind": "ignore",
     "processed_at": "2026-08-15T06:17:16+00:00",
@@ -1830,6 +1860,13 @@
     "processed_at": "2026-08-18T06:24:19+00:00",
     "company": "Ciklum",
     "subject": "Career Agent  ·  2026-08-17"
+  },
+  "<6a84773b.267a80c6.33372a.ae92@mx.google.com>": {
+    "kind": "replied",
+    "processed_at": "2026-08-19T06:21:21+00:00",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg2-4u4",
+    "company": "N-iX",
+    "subject": "Career Agent  ·  2026-08-18"
   },
   "<6a8f378d-a961-4eb9-b3d6-e8fadfed1512@atl1s07mta0304.xt.local>": {
     "kind": "ignore",
