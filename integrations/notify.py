@@ -42,6 +42,13 @@ _SOURCE_BY_RAW: dict[str, str] = {
 
 
 @dataclass(frozen=True)
+class SourceFailure:
+    name: str
+    url: str
+    reason: str
+
+
+@dataclass(frozen=True)
 class CollectReportStats:
     found: int
     seen_total: int
@@ -55,6 +62,7 @@ class CollectReportStats:
     telegram_skipped: int = 0
     telegram_ok_names: tuple[str, ...] = ()
     degraded_source_names: tuple[str, ...] = ()
+    failed_sources: tuple[SourceFailure, ...] = ()
 
 
 def resolve_source(vacancy: Vacancy) -> str:

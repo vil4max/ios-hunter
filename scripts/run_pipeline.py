@@ -32,7 +32,7 @@ from database.source_health import (
     save_baseline,
     update_baseline,
 )
-from integrations.notify import CollectReportStats
+from integrations.notify import CollectReportStats, SourceFailure
 from parser.deduplicate import deduplicate_with_report
 from parser.normalize import Vacancy, normalize_many
 from planner.plan import (
@@ -68,6 +68,7 @@ def summarize_source_checks(
     telegram_total = 0
     telegram_skipped = 0
     telegram_ok_names: list[str] = []
+    failed_sources: list[SourceFailure] = []
 
     for source in source_results:
         if _is_telegram_source(source):
@@ -75,6 +76,13 @@ def summarize_source_checks(
             skipped = bool(source.error and "not set" in source.error.lower())
             if source.status == STATUS_FAILED:
                 failed_names.append(source.source_name)
+                failed_sources.append(
+                    SourceFailure(
+                        name=source.source_name,
+                        url=source.source_url or "",
+                        reason=source.error or "unknown error",
+                    )
+                )
             elif skipped:
                 telegram_skipped += 1
             else:
@@ -85,6 +93,13 @@ def summarize_source_checks(
         sites_total += 1
         if source.status == STATUS_FAILED:
             failed_names.append(source.source_name)
+            failed_sources.append(
+                SourceFailure(
+                    name=source.source_name,
+                    url=source.source_url or "",
+                    reason=source.error or "unknown error",
+                )
+            )
         elif source.status == STATUS_DEGRADED:
             degraded_names.append(source.source_name)
         else:
@@ -98,6 +113,7 @@ def summarize_source_checks(
         "telegram_skipped": telegram_skipped,
         "telegram_ok_names": tuple(telegram_ok_names),
         "degraded_source_names": tuple(degraded_names),
+        "failed_sources": tuple(failed_sources),
     }
     return tuple(failed_names), health
 
@@ -208,6 +224,7 @@ def process_new_vacancies(
         degraded_source_names=tuple(
             str(name) for name in (health.get("degraded_source_names") or ())
         ),
+        failed_sources=tuple(health.get("failed_sources") or ()),
     )
 
     if seed_only:

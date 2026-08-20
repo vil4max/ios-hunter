@@ -6,6 +6,7 @@ import pytest
 
 from collector.types import CollectResult, SourceResult
 from database.source_health import load_baseline, save_baseline
+from integrations.notify import SourceFailure
 from scripts import run_pipeline
 
 
@@ -54,6 +55,28 @@ def test_collect_vacancies_marks_previously_working_source_as_degraded(
     assert health["sites_ok"] == 0
     assert purgeable == frozenset()
     assert "Source degraded (parsed 0 items): Acme" in capsys.readouterr().err
+
+
+def test_source_summary_preserves_failure_url_and_reason() -> None:
+    failed = _source(
+        "company:broken@broken.example",
+        "Broken",
+        scanned=0,
+        status="failed",
+        error="HTTP 403 for https://broken.example/jobs",
+    )
+    failed.source_url = "https://broken.example/jobs"
+
+    names, health = run_pipeline.summarize_source_checks([failed])
+
+    assert names == ("Broken",)
+    assert health["failed_sources"] == (
+        SourceFailure(
+            name="Broken",
+            url="https://broken.example/jobs",
+            reason="HTTP 403 for https://broken.example/jobs",
+        ),
+    )
 
 
 def test_collect_vacancies_does_not_flag_a_source_without_history(

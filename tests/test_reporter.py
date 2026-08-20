@@ -5,7 +5,7 @@ from zoneinfo import ZoneInfo
 
 import pytest
 
-from integrations.notify import CollectReportStats
+from integrations.notify import CollectReportStats, SourceFailure
 from integrations.telegram import TELEGRAM_MAX_LENGTH
 from planner.plan import (
     DailyPlan,
@@ -182,6 +182,77 @@ def test_hourly_heartbeat_reports_partial_failures() -> None:
     assert "@remotejobss" not in message
     assert "🔕" not in message
     assert "Система в порядке" not in message
+
+
+def test_hourly_heartbeat_explains_every_failed_site_with_its_url() -> None:
+    now = datetime(2026, 8, 20, 15, 15, tzinfo=_KYIV)
+    failures = (
+        SourceFailure(
+            name="Digis",
+            url="https://digiscorp.com/",
+            reason="official career URL unresolved",
+        ),
+        SourceFailure(
+            name="TechMagic",
+            url="https://www.techmagic.co/career/vacancies",
+            reason="HTTP 429 for https://www.techmagic.co/career/vacancies",
+        ),
+        SourceFailure(
+            name="Conscensia",
+            url="https://careers.conscensia.com/jobs?_sft_department=engineering",
+            reason="454 Client Error",
+        ),
+        SourceFailure(
+            name="Genesis",
+            url="https://www.gen.tech/career",
+            reason="HTTP 403 for https://www.gen.tech/career",
+        ),
+        SourceFailure(
+            name="Zoolatech",
+            url="https://zoolatech.com/career/vacancies/",
+            reason="HTTP 403 for https://zoolatech.com/career/vacancies/",
+        ),
+    )
+    stats = CollectReportStats(
+        found=37,
+        seen_total=40,
+        new_count=0,
+        duplicates_removed=0,
+        failed_source_names=tuple(failure.name for failure in failures),
+        failed_sources=failures,
+    )
+
+    message = format_hourly_heartbeat(stats=stats, now=now)
+
+    assert "⚠️ Не удалось проверить 5 компаний" in message
+    assert "• Digis — карьерная страница не настроена" in message
+    assert "• TechMagic — сайт временно ограничил запросы (HTTP 429)" in message
+    assert "• Conscensia — сайт отклонил автоматический запрос (HTTP 454)" in message
+    assert "• Genesis — сайт отклонил автоматический запрос (HTTP 403)" in message
+    assert "• Zoolatech — сайт отклонил автоматический запрос (HTTP 403)" in message
+    assert "(+" not in message
+    for failure in failures:
+        assert failure.url in message
+
+
+def test_hourly_heartbeat_uses_singular_company_label() -> None:
+    failure = SourceFailure(
+        name="Digis",
+        url="https://digiscorp.com/",
+        reason="official career URL unresolved",
+    )
+    stats = CollectReportStats(
+        found=0,
+        seen_total=0,
+        new_count=0,
+        duplicates_removed=0,
+        failed_source_names=(failure.name,),
+        failed_sources=(failure,),
+    )
+
+    message = format_hourly_heartbeat(stats=stats)
+
+    assert "⚠️ Не удалось проверить 1 компанию" in message
 
 
 def test_vacancies_for_alert_prefers_created_sync_items() -> None:

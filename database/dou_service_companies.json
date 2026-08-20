@@ -250,7 +250,7 @@
       "compensation_score": 99.2,
       "survey_count": 60,
       "dou_company_url": "https://jobs.dou.ua/companies/digis/",
-      "enabled": true,
+      "enabled": false,
       "company_site_url": "https://digiscorp.com/",
       "career_url": null,
       "career_url_source": null
@@ -391,9 +391,9 @@
       "survey_count": 83,
       "dou_company_url": "https://jobs.dou.ua/companies/zoolatech/",
       "enabled": true,
-      "company_site_url": "http://zoolatech.com",
-      "career_url": "http://zoolatech.com/career/",
-      "career_url_source": "discovered"
+      "company_site_url": "https://zoolatech.com/",
+      "career_url": "https://zoolatech.com/career/vacancies/",
+      "career_url_source": "override"
     },
     {
       "name": "Sombra",
@@ -545,9 +545,9 @@
       "survey_count": 36,
       "dou_company_url": "https://jobs.dou.ua/companies/conscensia/",
       "enabled": true,
-      "company_site_url": "http://www.conscensia.com/",
-      "career_url": "https://conscensia.com/careers",
-      "career_url_source": "discovered"
+      "company_site_url": "https://conscensia.com/",
+      "career_url": "https://careers.conscensia.com/jobs?_sft_department=engineering",
+      "career_url_source": "override"
     },
     {
       "name": "Adtelligent",

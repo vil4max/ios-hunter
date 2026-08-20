@@ -4,7 +4,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from database.seen import seen_key
-from integrations.notify import CollectReportStats
+from integrations.notify import CollectReportStats, SourceFailure
 from integrations.telegram import TELEGRAM_MAX_LENGTH, send_message
 from parser.normalize import Vacancy
 from project_sync.sync import SyncResult
@@ -33,13 +33,52 @@ def _site_failed_names(stats: CollectReportStats) -> list[str]:
     ]
 
 
+def _failure_reason(error: str) -> str:
+    lowered = error.lower()
+    if "official career url unresolved" in lowered:
+        return "карьерная страница не настроена"
+    for status in (429, 403, 454, 455):
+        if f"http {status}" in lowered or f"{status} client error" in lowered:
+            if status == 429:
+                return "сайт временно ограничил запросы (HTTP 429)"
+            return f"сайт отклонил автоматический запрос (HTTP {status})"
+    return error.strip() or "неизвестная ошибка"
+
+
+def _site_failures(stats: CollectReportStats) -> list[SourceFailure]:
+    return [
+        failure
+        for failure in stats.failed_sources
+        if not (
+            failure.name.startswith("Telegram @")
+            or failure.name.lower().startswith("telegram")
+        )
+    ]
+
+
+def _companies_count_label(total: int) -> str:
+    n = abs(total) % 100
+    n1 = n % 10
+    if n1 == 1 and n != 11:
+        return f"{total} компанию"
+    if 2 <= n1 <= 4 and not (12 <= n <= 14):
+        return f"{total} компании"
+    return f"{total} компаний"
+
+
 def _sites_status_line(stats: CollectReportStats) -> str:
     failed = _site_failed_names(stats)
     if not failed:
         return "✅ Поиск по сайтам: OK"
-    shown = ", ".join(failed[:4])
-    extra = f" (+{len(failed) - 4})" if len(failed) > 4 else ""
-    return f"⚠️ Поиск по сайтам: {shown}{extra}"
+    details = _site_failures(stats)
+    if not details:
+        return f"⚠️ Поиск по сайтам: {', '.join(failed)}"
+    lines = [f"⚠️ Не удалось проверить {_companies_count_label(len(details))}"]
+    for failure in details:
+        lines.append(f"• {failure.name} — {_failure_reason(failure.reason)}")
+        if failure.url:
+            lines.append(f"  {failure.url}")
+    return "\n".join(lines)
 
 
 def _telegram_status_line(stats: CollectReportStats) -> str:
