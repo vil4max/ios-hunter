@@ -239,6 +239,12 @@
     "company": "robot_dreams",
     "subject": "Ваша реєстрація на курс AI Engineering"
   },
+  "<01M0F0BFJWRFSRCPTWDR3G3QY6@klaviyomail.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-20T09:16:08+00:00",
+    "company": "Home me",
+    "subject": "Новинка, на яку ви чекали 🤍"
+  },
   "<0811dc41-651f-4db8-b8a3-290d10392352@facebookmail.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-01T15:16:21+00:00",
@@ -373,6 +379,12 @@
     "company": "Apple Developer",
     "subject": "Apple CloudKit: Your sandbox database schema was modified."
   },
+  "<1350308871.56366.1787210704184@email-sender-b494dd77-wcd86>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-20T09:16:08+00:00",
+    "company": "notifications",
+    "subject": "Your one-time-passcode"
+  },
   "<1428624547.258995433.1785500245657@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T15:18:16+00:00",
@@ -408,6 +420,12 @@
     "processed_at": "2026-07-31T12:16:26+00:00",
     "company": "Xcode Cloud",
     "subject": "App -- Build 67 succeeded (main)"
+  },
+  "<1480412918.100320.1787215631984@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-20T09:16:08+00:00",
+    "company": "Xcode Cloud",
+    "subject": "App -- Build 78 succeeded (main)"
   },
   "<14d90918ac170c832114bd51b92701b1.ums@oracle.com>": {
     "kind": "ignore",
@@ -565,6 +583,12 @@
     "company": "Maksim Vilchevskiy via TestFlight",
     "subject": "OneCart Family 1.4 (67) for iOS is now available to test."
   },
+  "<1853038623.56264623.1787215635684@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-20T09:16:08+00:00",
+    "company": "Maksim Vilchevskiy via TestFlight",
+    "subject": "OneCart Family 1.4 (78) for iOS is now available to test."
+  },
   "<1891519014.3602609.1785979707800@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-06T06:17:13+00:00",
@@ -576,6 +600,12 @@
     "processed_at": "2026-08-02T09:16:18+00:00",
     "company": "Maksim Vilchevskiy via TestFlight",
     "subject": "OneCart Family 1.4 (72) for iOS is now available to test."
+  },
+  "<1922833831.93858.1787212845040@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-20T09:16:08+00:00",
+    "company": "Apple Developer",
+    "subject": "Agreement signed: Apple Developer Program License Agreement"
   },
   "<1927067782.300382933.1785663987568@email.apple.com>": {
     "kind": "ignore",
@@ -867,6 +897,18 @@
     "processed_at": "2026-08-20T06:22:13+00:00",
     "company": "Indeed",
     "subject": "iOS: Senior iOS Developer (Ad SDK Infrastructure) у Sigma Software і ще 15 нових вакансій"
+  },
+  "<1k0f0g0sqq8qr800@indeed.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-20T09:16:08+00:00",
+    "company": "Відгук через Indeed",
+    "subject": "Відгук на вакансію Senior iOS Developer (Ad SDK Infrastructure) через Indeed"
+  },
+  "<1k0f0g2a5hrsj803.1787210238398.Railgunner@railgun--railgunner-jobsearchrailclipservice-677b5b99d4-49fmp>": {
+    "kind": "rejected_hr",
+    "processed_at": "2026-08-20T09:16:08+00:00",
+    "company": "Indeed",
+    "subject": "Вашу розсилку вакансій за запитом ios senior developer, Київ, Київ активовано"
   },
   "<202606081221.10bipa0t5cjqvj@shared-p100-i7.d.sp1-brevo.net>": {
     "kind": "ignore",
@@ -1265,6 +1307,12 @@
     "processed_at": "2026-08-20T06:22:13+00:00",
     "company": "Substack",
     "subject": "iOS 27: StateReporter"
+  },
+  "<20260820103333.926514.37081.2356.51@czwkpzwm7ssf7uox.sas.yp-c.yandex.net>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-20T09:16:08+00:00",
+    "company": "Английский от Яндекс Практикума",
+    "subject": "Квиз для отпуска"
   },
   "<202611080850.13di66eco6cw3srj@email3.sketchfab.com>": {
     "kind": "ignore",
@@ -2084,6 +2132,13 @@
     "processed_at": "2026-08-07T12:16:13+00:00",
     "company": "vil4max",
     "subject": "Re: Test assignment_Tango"
+  },
+  "<975359140.500646.1787210266296@email-sender-b494dd77-smq82>": {
+    "kind": "application_ack",
+    "processed_at": "2026-08-20T09:16:08+00:00",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg2a7iM",
+    "company": "Sigma Software",
+    "subject": "Thank you for applying to Sigma Software"
   },
   "<97d95eaa27dc0f0742226e1e738b97ae@ikonka.com.ua>": {
     "kind": "ignore",
