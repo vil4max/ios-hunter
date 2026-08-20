@@ -39,7 +39,21 @@ When there are **new** vacancies:
 🔗 https://github.com/users/you/projects/1
 ```
 
-**Pipeline status / Applied / Screening** — manage on the private [Career CRM Project](https://github.com/users/vil4max/projects/3). Telegram does **not** dump today's tasks or CRM sections.
+**Pipeline status / Applied / Interview** — manage on the private [Career CRM Project](https://github.com/users/vil4max/projects/3). Telegram does **not** dump today's tasks or CRM sections.
+
+An `Inbox` card may carry a prepared private application package without introducing another workflow status. Prepare it with an explicit CV label and optional message or screening answers:
+
+```bash
+python3 scripts/prepare_application.py --url "https://company.example/jobs/ios" --cv "Senior iOS CV"
+```
+
+Submission remains an owner-approved action. CAPTCHA, consent, compensation, relocation, and custom screening questions are never guessed or bypassed.
+
+Archive one reviewed vacancy without re-entering its company or title:
+
+```bash
+python3 scripts/archive_vacancy.py "https://company.example/jobs/ios" --note "Location mismatch"
+```
 
 DOU and Djinni vacancy browsing stays in their native apps and is not part of production collection. This repo watches official company career pages and ATS endpoints. Optional Telegram chats (`@itrecruit_ua`, `@remotejobss`, `@itfreelancers`, `@mobile_jobs`) remain a supplementary channel and do not count as company coverage.
 
@@ -160,7 +174,7 @@ Daily email needs `SMTP_USER` + `SMTP_PASS` (Gmail App Password) and Sync enable
 
 IMAP recruiter poll reuses the same `SMTP_USER` / `SMTP_PASS` App Password (`imap.gmail.com`).
 Default folder is `[Gmail]/All Mail` so archived Spark/Gmail mail is included.
-It updates matched Project cards (`Replied` / `Screening` / `Archived`+`Rejected HR`) and dedupes via `database/email_seen.json`.
+It updates matched Project cards (`Replied` / `Interview`) or moves rejected applications to the built-in Project archive with `Rejected HR`, and dedupes via `database/email_seen.json`.
 If the workflow fails with `AUTHENTICATIONFAILED` / Invalid credentials, regenerate the App Password and update `SMTP_PASS` (IMAP access must stay enabled in Gmail settings).
 
 Hirify Applications sync is local-first: export Excel from https://hirify.me/applications, then run `scripts/run_hirify_sync.py` (defaults to latest `~/Downloads/my_applications_*.xlsx`). Stages map into CRM with no-downgrade; fingerprints live in `database/hirify_seen.json`.

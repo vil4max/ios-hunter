@@ -52,6 +52,27 @@ def existing_field_names() -> set[str]:
     return names
 
 
+def field_id_by_name(name: str) -> str | None:
+    data = graphql(
+        """
+        query($id: ID!) {
+          node(id: $id) {
+            ... on ProjectV2 {
+              fields(first: 50) {
+                nodes { ... on ProjectV2FieldCommon { id name } }
+              }
+            }
+          }
+        }
+        """,
+        {"id": PROJECT_ID},
+    )
+    for node in ((data.get("node") or {}).get("fields") or {}).get("nodes") or []:
+        if isinstance(node, dict) and node.get("name") == name and node.get("id"):
+            return str(node["id"])
+    return None
+
+
 def current_status_options() -> dict[str, dict]:
     data = graphql(
         """
@@ -69,17 +90,115 @@ def current_status_options() -> dict[str, dict]:
     return {str(opt["name"]): opt for opt in options if opt.get("name")}
 
 
+def migrate_legacy_statuses() -> None:
+    options = current_status_options()
+    if "Interview" not in options:
+        transitional = [
+            {
+                "id": option["id"],
+                "name": option["name"],
+                "color": option["color"],
+                "description": option.get("description") or "",
+            }
+            for option in options.values()
+        ]
+        transitional.append(
+            {
+                "name": "Interview",
+                "color": "YELLOW",
+                "description": "Any interview or test stage in progress",
+            }
+        )
+        graphql(
+            """
+            mutation($input: UpdateProjectV2FieldInput!) {
+              updateProjectV2Field(input: $input) { projectV2Field { ... on ProjectV2FieldCommon { id } } }
+            }
+            """,
+            {"input": {"fieldId": STATUS_FIELD_ID, "singleSelectOptions": transitional}},
+        )
+
+    data = graphql(
+        """
+        query($id: ID!) {
+          node(id: $id) {
+            ... on ProjectV2 {
+              items(first: 100, archivedStates: [NOT_ARCHIVED]) {
+                nodes {
+                  id
+                  fieldValueByName(name: "Status") {
+                    ... on ProjectV2ItemFieldSingleSelectValue { name }
+                  }
+                }
+              }
+            }
+          }
+        }
+        """,
+        {"id": PROJECT_ID},
+    )
+    options = current_status_options()
+    interview_id = (options.get("Interview") or {}).get("id")
+    inbox_id = (options.get("Inbox") or {}).get("id")
+    legacy_interview = {"Screening", "Post-Screen", "Technical", "Post-Tech"}
+    for item in (((data.get("node") or {}).get("items") or {}).get("nodes") or []):
+        status = ((item.get("fieldValueByName") or {}).get("name")) or "Inbox"
+        item_id = item.get("id")
+        if not item_id:
+            continue
+        if status in {"Archived", "History"}:
+            graphql(
+                """
+                mutation($input: ArchiveProjectV2ItemInput!) {
+                  archiveProjectV2Item(input: $input) { item { id } }
+                }
+                """,
+                {"input": {"projectId": PROJECT_ID, "itemId": item_id}},
+            )
+            print(f"Archived project item: {item_id}")
+        elif status == "Ready to Apply" and inbox_id:
+            graphql(
+                """
+                mutation($input: UpdateProjectV2ItemFieldValueInput!) {
+                  updateProjectV2ItemFieldValue(input: $input) { projectV2Item { id } }
+                }
+                """,
+                {
+                    "input": {
+                        "projectId": PROJECT_ID,
+                        "itemId": item_id,
+                        "fieldId": STATUS_FIELD_ID,
+                        "value": {"singleSelectOptionId": inbox_id},
+                    }
+                },
+            )
+            print(f"Returned Ready to Apply to Inbox: {item_id}")
+        elif status in legacy_interview and interview_id:
+            graphql(
+                """
+                mutation($input: UpdateProjectV2ItemFieldValueInput!) {
+                  updateProjectV2ItemFieldValue(input: $input) { projectV2Item { id } }
+                }
+                """,
+                {
+                    "input": {
+                        "projectId": PROJECT_ID,
+                        "itemId": item_id,
+                        "fieldId": STATUS_FIELD_ID,
+                        "value": {"singleSelectOptionId": interview_id},
+                    }
+                },
+            )
+            print(f"Collapsed {status} into Interview: {item_id}")
+
+
 def update_status() -> None:
     desired = [
         ("Inbox", "BLUE", "New vacancy from collector"),
         ("Applied", "ORANGE", "Applied, waiting first reply"),
         ("Replied", "PURPLE", "Recruiter replied / async screen Qs"),
-        ("Screening", "PINK", "Screen call booked or in progress"),
-        ("Post-Screen", "PINK", "Waiting after screening"),
-        ("Technical", "YELLOW", "Technical interview booked or in progress"),
-        ("Post-Tech", "YELLOW", "Waiting after technical"),
-        ("Archived", "GRAY", "Closed; set Close Reason + Closed Stage"),
-        ("History", "GRAY", "Old archived items moved out of active archive"),
+        ("Interview", "YELLOW", "Any interview or test stage in progress"),
+        ("Offer", "GREEN", "Offer received; decision pending"),
     ]
     existing = current_status_options()
     single_select_options = []
@@ -174,6 +293,56 @@ def update_channel() -> None:
         print(f"  - {opt['name']}")
 
 
+def update_closed_stage() -> None:
+    field_id = field_id_by_name("Closed Stage")
+    if not field_id:
+        return
+    data = graphql(
+        """
+        query($id: ID!) {
+          node(id: $id) {
+            ... on ProjectV2SingleSelectField {
+              options { id name color description }
+            }
+          }
+        }
+        """,
+        {"id": field_id},
+    )
+    existing = {
+        str(option["name"]): option
+        for option in ((data.get("node") or {}).get("options") or [])
+        if option.get("name")
+    }
+    desired = [
+        ("Inbox", "BLUE", "Closed from Inbox"),
+        ("Ready to Apply", "GREEN", "Closed before application"),
+        ("Applied", "ORANGE", "Closed from Applied"),
+        ("Replied", "PURPLE", "Closed from Replied"),
+        ("Interview", "YELLOW", "Closed during interview process"),
+        ("Screening", "PINK", "Legacy: closed from Screening"),
+        ("Post-Screen", "PINK", "Legacy: closed from Post-Screen"),
+        ("Technical", "YELLOW", "Legacy: closed from Technical"),
+        ("Post-Tech", "YELLOW", "Legacy: closed from Post-Tech"),
+        ("Offer", "GREEN", "Closed at offer decision"),
+    ]
+    options = []
+    for name, color, description in desired:
+        option = {"name": name, "color": color, "description": description}
+        if name in existing and existing[name].get("id"):
+            option["id"] = existing[name]["id"]
+        options.append(option)
+    graphql(
+        """
+        mutation($input: UpdateProjectV2FieldInput!) {
+          updateProjectV2Field(input: $input) { projectV2Field { ... on ProjectV2FieldCommon { name } } }
+        }
+        """,
+        {"input": {"fieldId": field_id, "singleSelectOptions": options}},
+    )
+    print("Closed Stage options updated")
+
+
 def create_field(name: str, data_type: str, single_select_options: list[dict] | None = None) -> None:
     variables: dict = {
         "input": {
@@ -206,8 +375,10 @@ def create_field(name: str, data_type: str, single_select_options: list[dict] | 
 
 
 def main() -> int:
+    migrate_legacy_statuses()
     update_status()
     update_channel()
+    update_closed_stage()
     present = existing_field_names()
     for name in ("URL", "Company", "Source", "Canonical URL", "Recruiter", "Summary", "Salary"):
         if name in present:
@@ -270,12 +441,14 @@ def main() -> int:
             "SINGLE_SELECT",
             [
                 {"name": "Inbox", "color": "BLUE", "description": "Closed from Inbox"},
+                {"name": "Ready to Apply", "color": "GREEN", "description": "Closed before application"},
                 {"name": "Applied", "color": "ORANGE", "description": "Closed from Applied"},
                 {"name": "Replied", "color": "PURPLE", "description": "Closed from Replied"},
-                {"name": "Screening", "color": "PINK", "description": "Closed from Screening"},
-                {"name": "Post-Screen", "color": "PINK", "description": "Closed from Post-Screen"},
-                {"name": "Technical", "color": "YELLOW", "description": "Closed from Technical"},
-                {"name": "Post-Tech", "color": "YELLOW", "description": "Closed from Post-Tech"},
+                {"name": "Interview", "color": "YELLOW", "description": "Closed during interview process"},
+                {"name": "Screening", "color": "PINK", "description": "Legacy: closed from Screening"},
+                {"name": "Post-Screen", "color": "PINK", "description": "Legacy: closed from Post-Screen"},
+                {"name": "Technical", "color": "YELLOW", "description": "Legacy: closed from Technical"},
+                {"name": "Post-Tech", "color": "YELLOW", "description": "Legacy: closed from Post-Tech"},
                 {"name": "Offer", "color": "GREEN", "description": "Closed at offer decision"},
             ],
         )

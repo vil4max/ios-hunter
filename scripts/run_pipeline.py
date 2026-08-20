@@ -38,7 +38,7 @@ from parser.normalize import Vacancy, normalize_many
 from planner.plan import (
     archived_canonical_urls,
     exclude_archived_vacancies,
-    load_cards_from_github,
+    load_archived_cards_from_github,
 )
 from project_sync.github_client import GitHubClient
 from project_sync.sync import ProjectSync, SyncItemResult, SyncResult
@@ -177,7 +177,10 @@ def process_new_vacancies(
     archived_urls = dropped_urls_from_seen(seen)
     if settings.configured_for_sync:
         try:
-            cards = load_cards_from_github(GitHubClient(settings.github_token), settings)
+            cards = load_archived_cards_from_github(
+                GitHubClient(settings.github_token),
+                settings,
+            )
             archived_urls |= archived_canonical_urls(cards)
         except Exception as error:  # noqa: BLE001
             print(f"Archived exclude load failed: {error}", file=sys.stderr)

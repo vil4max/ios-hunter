@@ -94,13 +94,13 @@ def test_map_hirify_stage_matrix() -> None:
     assert map_hirify_stage("Applied").status == "Applied"
     assert map_hirify_stage("Viewed").status == "Applied"
     assert map_hirify_stage("No Response").status == "Applied"
-    assert map_hirify_stage("HR Interview").status == "Screening"
-    assert map_hirify_stage("Technical Interview").status == "Technical"
-    assert map_hirify_stage("Test Task").status == "Technical"
-    assert map_hirify_stage("Final Interview").status == "Post-Tech"
+    assert map_hirify_stage("HR Interview").status == "Interview"
+    assert map_hirify_stage("Technical Interview").status == "Interview"
+    assert map_hirify_stage("Test Task").status == "Interview"
+    assert map_hirify_stage("Final Interview").status == "Interview"
     offer = map_hirify_stage("Offer")
-    assert offer.note_only is True
-    assert offer.status is None
+    assert offer.note_only is False
+    assert offer.status == "Offer"
     rejected = map_hirify_stage("Rejected")
     assert rejected.status == "Archived"
     assert rejected.close_reason == "Rejected HR"
@@ -176,11 +176,11 @@ def test_plan_row_transition_no_downgrade() -> None:
         item_id="1",
         company="ElevenLabs",
         title="iOS Developer",
-        status="Technical",
+        status="Interview",
     )
     action, status, _, _ = plan_row_transition(_row(stage="Applied"), technical)
     assert action == "noop"
-    assert status == "Technical"
+    assert status == "Interview"
 
     applied = _card(
         item_id="2",
@@ -190,7 +190,7 @@ def test_plan_row_transition_no_downgrade() -> None:
     )
     action, status, _, _ = plan_row_transition(_row(stage="HR Interview"), applied)
     assert action == "update"
-    assert status == "Screening"
+    assert status == "Interview"
 
     action, status, reason, closed = plan_row_transition(_row(stage="Rejected"), applied)
     assert action == "update"
@@ -199,8 +199,8 @@ def test_plan_row_transition_no_downgrade() -> None:
     assert closed == "Applied"
 
     action, status, _, _ = plan_row_transition(_row(stage="Offer"), applied)
-    assert action == "note"
-    assert status == "Applied"
+    assert action == "update"
+    assert status == "Offer"
 
     action, status, _, _ = plan_row_transition(_row(stage="Applied"), None)
     assert action == "create"

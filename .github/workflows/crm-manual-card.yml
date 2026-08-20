@@ -24,10 +24,8 @@ on:
         options:
           - Applied
           - Replied
-          - Screening
-          - Post-Screen
-          - Technical
-          - Post-Tech
+          - Interview
+          - Offer
           - Archived
           - Inbox
         default: Applied

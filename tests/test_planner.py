@@ -3,7 +3,15 @@ from __future__ import annotations
 from datetime import date, datetime, timezone
 
 from config.settings import Settings
-from planner.plan import ProjectCard, _split_company_title, archived_age_days, build_plan, is_stale_archived, parse_project_item
+from planner.plan import (
+    ProjectCard,
+    _split_company_title,
+    archived_age_days,
+    archived_canonical_urls,
+    build_plan,
+    is_stale_archived,
+    parse_project_item,
+)
 
 
 def _settings() -> Settings:
@@ -57,6 +65,7 @@ def test_split_company_title_avoids_double_company() -> None:
 def test_parse_project_item_strips_duplicated_company() -> None:
     raw = {
         "id": "ITEM1",
+        "isArchived": True,
         "updatedAt": "2026-07-15T00:00:00Z",
         "fieldValues": {
             "nodes": [
@@ -72,6 +81,7 @@ def test_parse_project_item_strips_duplicated_company() -> None:
     card = parse_project_item(raw)
     assert card is not None
     assert card.display_title == "PersonalInvest — Senior iOS Engineer (AI-first B2C)"
+    assert card.is_archived is True
 
 
 def test_planner_prioritizes_follow_ups_and_stale() -> None:
@@ -86,7 +96,7 @@ def test_planner_prioritizes_follow_ups_and_stale() -> None:
         ),
         _card(
             item_id="follow",
-            status="Screening",
+            status="Interview",
             title="Call back",
             follow_up=date(2026, 7, 15),
         ),
@@ -98,7 +108,7 @@ def test_planner_prioritizes_follow_ups_and_stale() -> None:
         ),
         _card(
             item_id="screen-soon",
-            status="Screening",
+            status="Interview",
             title="Screen next week",
             follow_up=date(2026, 7, 20),
         ),
@@ -116,6 +126,19 @@ def test_planner_prioritizes_follow_ups_and_stale() -> None:
     assert all(c.item_id != "applied" for c in plan.today_tasks)
     assert [c.item_id for c in plan.upcoming_interviews] == ["screen-soon"]
     assert "applied" not in [c.item_id for c in plan.upcoming_interviews]
+
+
+def test_archived_urls_normalize_andersen_host_alias() -> None:
+    card = _card(
+        status="Applied",
+        is_archived=True,
+        url="https://people.andersenlab.com/vacancy/2509387",
+        canonical_url="https://people.andersenlab.com/vacancy/2509387",
+    )
+
+    assert archived_canonical_urls([card]) == {
+        "https://people-andersenlab.com/vacancy/2509387"
+    }
 
 
 def test_stale_archived_uses_earliest_reference_date() -> None:

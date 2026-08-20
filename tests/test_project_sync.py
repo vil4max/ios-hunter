@@ -28,6 +28,7 @@ class FakeClient:
         self.created_titles: list[str] = []
         self.draft_items: list[str] = []
         self.status_sets: list[str] = []
+        self.archived_items: list[str] = []
         self.text_sets: list[tuple[str, str]] = []
         self._by_canonical: dict[str, str] = {}
         self._counter = 10
@@ -77,6 +78,9 @@ class FakeClient:
         if field_id == "F_CAN":
             self._by_canonical[text] = item_id
 
+    def archive_project_item(self, project_id: str, item_id: str) -> None:
+        self.archived_items.append(item_id)
+
 
 def test_build_issue_includes_canonical_marker() -> None:
     vacancy = make_vacancy(url="https://example.com/jobs/1?utm_source=x")
@@ -115,9 +119,9 @@ def test_sync_skipped_when_disabled() -> None:
     assert result.created_count == 0
 
 
-def test_seed_archived_uses_archived_status() -> None:
+def test_seed_archived_uses_project_archive() -> None:
     client = FakeClient()
     sync = ProjectSync(_settings(), client=client)  # type: ignore[arg-type]
     result = sync.seed_archived([make_vacancy(url="https://example.com/legacy/1")])
     assert result.created_count == 1
-    assert "opt-arch" in client.status_sets
+    assert client.archived_items == client.draft_items

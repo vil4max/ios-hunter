@@ -31,3 +31,10 @@ def test_canonicalize_url_preserves_meaningful_query_params() -> None:
         == "https://example.com/jobs/123?gh_jid=4912838101"
     )
 
+
+def test_canonicalize_url_normalizes_andersen_career_host_alias() -> None:
+    assert canonicalize_url(
+        "https://people.andersenlab.com/vacancy/2509387"
+    ) == canonicalize_url(
+        "https://people-andersenlab.com/vacancy/2509387"
+    )

@@ -175,4 +175,11 @@ class ProjectSync:
         return result
 
     def seed_archived(self, vacancies: list[Vacancy]) -> SyncResult:
-        return self.sync_vacancies(vacancies, status_name="Archived")
+        result = self.sync_vacancies(vacancies, status_name="Inbox")
+        if result.skipped_disabled:
+            return result
+        meta = self._ensure_meta()
+        for item in result.created:
+            if item.item_id:
+                self._client.archive_project_item(meta.project_id, item.item_id)
+        return result

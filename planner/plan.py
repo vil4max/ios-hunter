@@ -73,6 +73,7 @@ class ProjectCard:
     created_at: datetime | None
     updated_at: datetime | None
     body: str = ""
+    is_archived: bool = False
 
     @property
     def display_title(self) -> str:
@@ -130,6 +131,7 @@ def parse_project_item(raw: dict[str, Any]) -> ProjectCard | None:
         created_at=created,
         updated_at=updated,
         body=str(content.get("body") or ""),
+        is_archived=bool(raw.get("isArchived")),
     )
 
 
@@ -201,7 +203,7 @@ def build_plan(cards: list[ProjectCard], settings: Settings, *, today: date | No
 
     ranked: list[tuple[int, ProjectCard]] = []
     for card in cards:
-        if card.status in {"Archived", "History"}:
+        if card.is_archived:
             continue
 
         age = _age_days(card, today)
@@ -210,7 +212,7 @@ def build_plan(cards: list[ProjectCard], settings: Settings, *, today: date | No
             card.follow_up is not None
             and today < card.follow_up <= date.fromordinal(today.toordinal() + 7)
         )
-        interview_statuses = {"Screening", "Post-Screen", "Technical", "Post-Tech"}
+        interview_statuses = {"Interview"}
 
         if follow_due:
             plan.pending_follow_ups.append(card)
@@ -229,11 +231,11 @@ def build_plan(cards: list[ProjectCard], settings: Settings, *, today: date | No
         if card.status == "Inbox":
             if age is None or age <= settings.inbox_new_days:
                 plan.new_vacancies.append(card)
-            ranked.append((2, card))
+            ranked.append((3, card))
             continue
 
-        if card.status in {"Replied", "Screening", "Post-Screen", "Technical", "Post-Tech"} and not follow_upcoming:
-            ranked.append((3, card))
+        if card.status in {"Replied", "Interview", "Offer"} and not follow_upcoming:
+            ranked.append((4, card))
 
     seen_ids: set[str] = set()
     for _, card in sorted(ranked, key=lambda pair: (pair[0], pair[1].display_title.lower())):
@@ -256,10 +258,23 @@ def load_cards_from_github(client: GitHubClient, settings: Settings) -> list[Pro
     return cards
 
 
+def load_archived_cards_from_github(
+    client: GitHubClient,
+    settings: Settings,
+) -> list[ProjectCard]:
+    meta = client.resolve_project(settings.project_owner, settings.project_number)
+    cards: list[ProjectCard] = []
+    for raw in client.list_project_items(meta.project_id, archived_only=True):
+        card = parse_project_item(raw)
+        if card is not None:
+            cards.append(card)
+    return cards
+
+
 def archived_canonical_urls(cards: list[ProjectCard]) -> set[str]:
     urls: set[str] = set()
     for card in cards:
-        if card.status not in {"Archived", "History"}:
+        if not card.is_archived and card.status not in {"Archived", "History"}:
             continue
         for raw in (card.canonical_url, card.url):
             key = canonicalize_url(raw) if raw else ""

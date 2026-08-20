@@ -24,21 +24,16 @@ _STATUS_EMOJI: dict[str, str] = {
     "Inbox": "📥",
     "Applied": "📝",
     "Replied": "💬",
-    "Screening": "🔎",
-    "Post-Screen": "🧪",
-    "Technical": "⚙️",
-    "Post-Tech": "🔬",
-    "Archived": "📦",
+    "Interview": "⚙️",
+    "Offer": "🎯",
 }
 _MISSING_BOARD_EMOJI = "⚠️"
 _BOARD_STATUS_ORDER: tuple[str, ...] = (
     "Inbox",
     "Applied",
     "Replied",
-    "Screening",
-    "Post-Screen",
-    "Technical",
-    "Post-Tech",
+    "Interview",
+    "Offer",
 )
 
 

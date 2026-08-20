@@ -60,7 +60,7 @@ def apply_manual_fields(
     item_id: str,
     card: ManualCard,
 ) -> None:
-    if meta.status_field:
+    if meta.status_field and card.status != "Archived":
         option_id = meta.status_field.options.get(card.status)
         if option_id:
             client.set_single_select_field(
@@ -175,6 +175,8 @@ def create_private_card(
     title = card_title(card)
     item_id = gh.add_draft_issue(meta.project_id, title=title, body=build_draft_body(card))
     apply_manual_fields(gh, meta, item_id, card)
+    if card.status == "Archived":
+        gh.archive_project_item(meta.project_id, item_id)
     return item_id
 
 
@@ -210,6 +212,8 @@ def upsert_private_card(
                 body=build_draft_body(card),
             )
         apply_manual_fields(gh, meta, existing, card)
+        if card.status == "Archived":
+            gh.archive_project_item(meta.project_id, existing)
         return existing, False
     item_id = gh.add_draft_issue(
         meta.project_id,
@@ -217,4 +221,6 @@ def upsert_private_card(
         body=build_draft_body(card),
     )
     apply_manual_fields(gh, meta, item_id, card)
+    if card.status == "Archived":
+        gh.archive_project_item(meta.project_id, item_id)
     return item_id, True

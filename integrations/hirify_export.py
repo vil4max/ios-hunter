@@ -77,13 +77,13 @@ def map_hirify_stage(stage: str) -> StagePlan:
     if key in {"applied", "viewed", "no response"}:
         return StagePlan(status="Applied")
     if key == "hr interview":
-        return StagePlan(status="Screening")
+        return StagePlan(status="Interview")
     if key in {"technical interview", "test task"}:
-        return StagePlan(status="Technical")
+        return StagePlan(status="Interview")
     if key == "final interview":
-        return StagePlan(status="Post-Tech")
+        return StagePlan(status="Interview")
     if key == "offer":
-        return StagePlan(status=None, note_only=True)
+        return StagePlan(status="Offer")
     if key == "rejected":
         return StagePlan(status="Archived", close_reason="Rejected HR")
     return StagePlan(status="Applied")

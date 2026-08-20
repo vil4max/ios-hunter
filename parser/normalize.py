@@ -22,6 +22,10 @@ _TRACKING_QUERY_KEYS = {
     "utm_reader",
 }
 
+_HOST_ALIASES = {
+    "people.andersenlab.com": "people-andersenlab.com",
+}
+
 
 def canonicalize_url(raw: str) -> str:
     raw = (raw or "").strip()
@@ -31,6 +35,7 @@ def canonicalize_url(raw: str) -> str:
     split = urlsplit(raw)
     scheme = (split.scheme or "https").lower()
     host = (split.hostname or "").lower()
+    host = _HOST_ALIASES.get(host, host)
     netloc = host
     if split.port and ((scheme == "http" and split.port != 80) or (scheme == "https" and split.port != 443)):
         netloc = f"{host}:{split.port}"

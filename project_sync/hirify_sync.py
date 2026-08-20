@@ -28,10 +28,8 @@ _STATUS_RANK = {
     "Inbox": 0,
     "Applied": 1,
     "Replied": 2,
-    "Screening": 3,
-    "Post-Screen": 4,
-    "Technical": 5,
-    "Post-Tech": 6,
+    "Interview": 3,
+    "Offer": 4,
 }
 
 
@@ -95,11 +93,16 @@ def match_card(row: HirifyApplicationRow, cards: list[ProjectCard]) -> ProjectCa
     pool = [
         card
         for card in cards
-        if _company_key(card.company) == company
-        and (card.status in ACTIVE_PIPELINE_STATUSES or card.status == "Archived")
+        if not card.is_archived
+        and _company_key(card.company) == company
+        and card.status in ACTIVE_PIPELINE_STATUSES
     ]
     if not pool:
-        pool = [card for card in cards if _company_key(card.company) == company]
+        pool = [
+            card
+            for card in cards
+            if not card.is_archived and _company_key(card.company) == company
+        ]
     if not pool:
         return None
     if len(pool) == 1:
@@ -141,7 +144,7 @@ def plan_row_transition(
 
     if plan.status == "Archived" and plan.close_reason:
         if current in ACTIVE_PIPELINE_STATUSES:
-            closed_stage = current if current != "History" else "Applied"
+            closed_stage = current
             return "update", "Archived", plan.close_reason, closed_stage
         return "noop", current, None, None
 
@@ -280,6 +283,8 @@ def apply_row(
         )
 
     item_id, created = upsert_private_card(settings, manual, client=client)
+    if new_status == "Archived" and card is not None:
+        card.is_archived = True
     if created or action == "create":
         seed_seen_from_manual_card(manual)
 

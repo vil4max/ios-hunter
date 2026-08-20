@@ -25,12 +25,8 @@ STATUS_WORKFLOW: tuple[str, ...] = (
     "Inbox",
     "Applied",
     "Replied",
-    "Screening",
-    "Post-Screen",
-    "Technical",
-    "Post-Tech",
-    "Archived",
-    "History",
+    "Interview",
+    "Offer",
 )
 
 ACTIVE_PIPELINE_STATUSES: frozenset[str] = frozenset(
@@ -38,10 +34,8 @@ ACTIVE_PIPELINE_STATUSES: frozenset[str] = frozenset(
         "Inbox",
         "Applied",
         "Replied",
-        "Screening",
-        "Post-Screen",
-        "Technical",
-        "Post-Tech",
+        "Interview",
+        "Offer",
     }
 )
 
@@ -49,10 +43,8 @@ STALE_STATUSES: frozenset[str] = frozenset(
     {
         "Applied",
         "Replied",
-        "Screening",
-        "Post-Screen",
-        "Technical",
-        "Post-Tech",
+        "Interview",
+        "Offer",
     }
 )
 
@@ -71,8 +63,10 @@ CLOSE_REASON_OPTIONS: tuple[str, ...] = (
 
 CLOSED_STAGE_OPTIONS: tuple[str, ...] = (
     "Inbox",
+    "Ready to Apply",
     "Applied",
     "Replied",
+    "Interview",
     "Screening",
     "Post-Screen",
     "Technical",

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from datetime import date, datetime
 from zoneinfo import ZoneInfo
 
@@ -231,6 +232,102 @@ def test_probe_keeps_matching_ios_title_open() -> None:
     assert result.reason == "open"
 
 
+def test_probe_marks_inactive_dou_vacancy_closed() -> None:
+    class FakeResponse:
+        status_code = 200
+        url = "https://jobs.dou.ua/companies/x/vacancies/1/"
+        text = "<html><h1>Senior iOS Developer (вакансія неактивна)</h1></html>"
+        headers: dict[str, str] = {}
+
+    class FakeSession:
+        def get(self, *args, **kwargs):
+            return FakeResponse()
+
+    result = probe_vacancy_url(FakeResponse.url, session=FakeSession())
+    assert result.closed is True
+    assert "вакансія неактивна" in result.reason
+
+
+def test_probe_marks_closed_nix_vacancy_closed() -> None:
+    class FakeResponse:
+        status_code = 200
+        url = "https://careers.n-ix.com/jobs/old-ios-role/"
+        text = "<html><h1>Senior iOS Engineer</h1>The vacancy is already closed.</html>"
+        headers: dict[str, str] = {}
+
+    class FakeSession:
+        def get(self, *args, **kwargs):
+            return FakeResponse()
+
+    result = probe_vacancy_url(FakeResponse.url, session=FakeSession())
+    assert result.closed is True
+    assert "vacancy is already closed" in result.reason
+
+
+def test_probe_keeps_active_next_data_job_open_despite_footer_marker() -> None:
+    payload = {
+        "props": {
+            "pageProps": {
+                "job": {"name": "Senior iOS Developer", "is_expired": False},
+            }
+        }
+    }
+
+    class FakeResponse:
+        status_code = 200
+        url = "https://careers.epam.com/en/vacancy/ios"
+        text = (
+            '<html><h1>Senior iOS Developer</h1><script id="__NEXT_DATA__">'
+            + json.dumps(payload)
+            + "</script><footer>Page not found</footer></html>"
+        )
+        headers: dict[str, str] = {}
+
+    class FakeSession:
+        def get(self, *args, **kwargs):
+            return FakeResponse()
+
+    result = probe_vacancy_url(
+        FakeResponse.url,
+        card_title="Senior iOS Developer",
+        session=FakeSession(),
+    )
+    assert result.closed is False
+    assert result.reason == "open"
+
+
+def test_probe_marks_expired_next_data_job_closed_without_text_marker() -> None:
+    payload = {
+        "props": {
+            "pageProps": {
+                "job": {"name": "Senior iOS Developer", "is_expired": True},
+            }
+        }
+    }
+
+    class FakeResponse:
+        status_code = 200
+        url = "https://careers.epam.com/en/vacancy/expired-ios"
+        text = (
+            '<html><h1>Senior iOS Developer</h1><script id="__NEXT_DATA__">'
+            + json.dumps(payload)
+            + "</script></html>"
+        )
+        headers: dict[str, str] = {}
+
+    class FakeSession:
+        def get(self, *args, **kwargs):
+            return FakeResponse()
+
+    result = probe_vacancy_url(
+        FakeResponse.url,
+        card_title="Senior iOS Developer",
+        session=FakeSession(),
+    )
+    assert result.closed is True
+    assert result.reason == "structured job expired"
+
+
 def test_find_closed_vacancies_uses_probe() -> None:
     cards = [
         _card(item_id="a", status="Applied", url="https://example.com/a"),
@@ -264,6 +361,9 @@ def test_archive_closed_vacancies_sets_fields() -> None:
 
         def update_draft_issue(self, draft_id, **kwargs):
             calls.append(("draft", draft_id, kwargs))
+
+        def archive_project_item(self, project_id, item_id):
+            calls.append(("archive", project_id, item_id))
 
     meta = ProjectMeta(
         project_id="proj",
@@ -306,11 +406,11 @@ def test_archive_closed_vacancies_sets_fields() -> None:
     )
     assert len(archived) == 1
     select_calls = [c for c in calls if c[0] == "select"]
-    assert any(c[1]["option_id"] == "opt-arch" for c in select_calls)
     assert any(c[1]["option_id"] == "opt-role" for c in select_calls)
     assert any(c[1]["option_id"] == "opt-stage-applied" for c in select_calls)
     draft_calls = [c for c in calls if c[0] == "draft"]
     assert "Role closed" in draft_calls[0][2]["body"]
+    assert ("archive", "proj", "item-1") in calls
 
 
 def test_format_liveness_report_empty_and_archived() -> None:

@@ -23,8 +23,10 @@ _SOFT_404_MARKERS = (
     "вакансия закрыта",
     "вакансію закрили",
     "вакансія закрита",
+    "вакансія неактивна",
     "объявление снято",
     "оголошення знято",
+    "vacancy is already closed",
 )
 
 _PLATFORM_CLOSED_MARKERS = (
@@ -195,6 +197,24 @@ def _body_closed(html: str) -> str | None:
     if archived is True:
         return "huntflow archived"
     return None
+
+
+def _next_data_job_state(html: str) -> bool | None:
+    match = re.search(
+        r'<script[^>]*id="__NEXT_DATA__"[^>]*>(.*?)</script>',
+        html,
+        re.I | re.S,
+    )
+    if not match:
+        return None
+    try:
+        payload = json.loads(match.group(1))
+    except json.JSONDecodeError:
+        return None
+    job = payload.get("props", {}).get("pageProps", {}).get("job")
+    if not isinstance(job, dict) or not str(job.get("name") or "").strip():
+        return None
+    return job.get("is_expired") is not True
 
 
 def _response_is_bot_blocked(response: requests.Response) -> bool:
@@ -374,7 +394,17 @@ def probe_vacancy_url(
             reason=f"http {status}",
         )
 
-    closed_reason = _body_closed(html)
+    structured_job_open = _next_data_job_state(html)
+    if structured_job_open is False:
+        return ProbeResult(
+            url=final_url,
+            closed=True,
+            skipped=False,
+            http_status=status,
+            reason="structured job expired",
+            page_title=page_title,
+        )
+    closed_reason = None if structured_job_open is True else _body_closed(html)
     if closed_reason:
         return ProbeResult(
             url=final_url,

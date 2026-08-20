@@ -306,12 +306,22 @@ class GitHubClient:
             {"input": {"projectId": project_id, "itemId": item_id}},
         )
 
+    def archive_project_item(self, project_id: str, item_id: str) -> None:
+        self.graphql(
+            """
+            mutation($input: ArchiveProjectV2ItemInput!) {
+              archiveProjectV2Item(input: $input) { item { id isArchived } }
+            }
+            """,
+            {"input": {"projectId": project_id, "itemId": item_id}},
+        )
+
     def find_project_item_by_canonical_url(self, project_id: str, canonical_url: str) -> str | None:
         needle = canonicalize_url(canonical_url) if canonical_url else ""
         if not needle:
             return None
         marker = f"Canonical-URL: {needle}"
-        for raw in self.list_project_items(project_id):
+        for raw in self.list_project_items(project_id, include_archived=True):
             fields: dict[str, str] = {}
             for node in (raw.get("fieldValues") or {}).get("nodes") or []:
                 if not isinstance(node, dict):
@@ -325,7 +335,7 @@ class GitHubClient:
             field_url = fields.get("Canonical URL") or fields.get("URL") or ""
             content = raw.get("content") or {}
             body = str(content.get("body") or "")
-            if field_url == needle or marker in body:
+            if canonicalize_url(field_url) == needle or marker in body:
                 item_id = raw.get("id")
                 if item_id:
                     return str(item_id)
@@ -335,7 +345,7 @@ class GitHubClient:
         needle = title.strip()
         if not needle:
             return None
-        for raw in self.list_project_items(project_id):
+        for raw in self.list_project_items(project_id, include_archived=True):
             content = raw.get("content") or {}
             if str(content.get("title") or "").strip() != needle:
                 continue
@@ -370,7 +380,7 @@ class GitHubClient:
         return None
 
     def draft_issue_id_for_item(self, project_id: str, item_id: str) -> str | None:
-        for raw in self.list_project_items(project_id):
+        for raw in self.list_project_items(project_id, include_archived=True):
             if str(raw.get("id") or "") != item_id:
                 continue
             content = raw.get("content") or {}
@@ -481,19 +491,27 @@ class GitHubClient:
             },
         )
 
-    def list_project_items(self, project_id: str, *, page_size: int = 50) -> list[dict[str, Any]]:
+    def list_project_items(
+        self,
+        project_id: str,
+        *,
+        page_size: int = 50,
+        include_archived: bool = False,
+        archived_only: bool = False,
+    ) -> list[dict[str, Any]]:
         items: list[dict[str, Any]] = []
         cursor: str | None = None
         while True:
             data = self.graphql(
                 """
-                query($id: ID!, $first: Int!, $after: String) {
+                query($id: ID!, $first: Int!, $after: String, $archivedStates: [ProjectV2ItemArchivedState!]) {
                   node(id: $id) {
                     ... on ProjectV2 {
-                      items(first: $first, after: $after) {
+                      items(first: $first, after: $after, archivedStates: $archivedStates) {
                         pageInfo { hasNextPage endCursor }
                         nodes {
                           id
+                          isArchived
                           updatedAt
                           fieldValues(first: 30) {
                             nodes {
@@ -534,7 +552,18 @@ class GitHubClient:
                   }
                 }
                 """,
-                {"id": project_id, "first": page_size, "after": cursor},
+                {
+                    "id": project_id,
+                    "first": page_size,
+                    "after": cursor,
+                    "archivedStates": (
+                        ["ARCHIVED"]
+                        if archived_only
+                        else ["ARCHIVED", "NOT_ARCHIVED"]
+                        if include_archived
+                        else ["NOT_ARCHIVED"]
+                    ),
+                },
             )
             node = data.get("node") or {}
             connection = node.get("items") or {}

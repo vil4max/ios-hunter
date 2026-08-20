@@ -93,9 +93,9 @@ def test_plan_transition_matrix() -> None:
     inbox = _card(item_id="2", company="Welltech", title="Senior", status="Inbox")
     assert plan_transition(_event(KIND_APPLICATION_ACK, company="Welltech"), inbox)[1] == "Applied"
 
-    technical = _card(item_id="3", company="Welltech", title="Senior", status="Technical")
-    assert plan_transition(_event(KIND_REPLIED, company="Welltech"), technical)[0] == "noop"
-    assert plan_transition(_event(KIND_SCREENING, company="Welltech"), technical)[0] == "noop"
+    interview = _card(item_id="3", company="Welltech", title="Senior", status="Interview")
+    assert plan_transition(_event(KIND_REPLIED, company="Welltech"), interview)[0] == "noop"
+    assert plan_transition(_event(KIND_SCREENING, company="Welltech"), interview)[0] == "noop"
 
     action, status, reason, stage = plan_transition(
         _event(KIND_REJECTED_HR, company="Welltech"),
@@ -125,6 +125,13 @@ def test_match_card_by_company_and_role() -> None:
     matched = match_card(event, cards)
     assert matched is not None
     assert matched.item_id == "b"
+
+
+def test_match_card_ignores_project_archived_items() -> None:
+    archived = _card(item_id="old", company="N-iX", title="Senior iOS", status="Applied")
+    archived.is_archived = True
+
+    assert match_card(_event(KIND_REPLIED, company="N-iX"), [archived]) is None
 
 
 def test_process_unmatched() -> None:

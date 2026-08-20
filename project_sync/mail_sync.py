@@ -31,10 +31,8 @@ _STATUS_RANK = {
     "Inbox": 0,
     "Applied": 1,
     "Replied": 2,
-    "Screening": 3,
-    "Post-Screen": 4,
-    "Technical": 5,
-    "Post-Tech": 6,
+    "Interview": 3,
+    "Offer": 4,
 }
 
 
@@ -78,10 +76,14 @@ def match_card(event: MailEvent, cards: list[ProjectCard]) -> ProjectCard | None
     active = [
         card
         for card in cards
-        if _company_key(card.company) == company and card.status in ACTIVE_PIPELINE_STATUSES
+        if not card.is_archived
+        and _company_key(card.company) == company
+        and card.status in ACTIVE_PIPELINE_STATUSES
     ]
     pool = active or [
-        card for card in cards if _company_key(card.company) == company
+        card
+        for card in cards
+        if not card.is_archived and _company_key(card.company) == company
     ]
     if not pool:
         aliases = {
@@ -93,9 +95,12 @@ def match_card(event: MailEvent, cards: list[ProjectCard]) -> ProjectCard | None
         pool = [
             card
             for card in cards
-            if _company_key(card.company) in extra
-            or company in _company_key(card.company)
-            or _company_key(card.company) in company
+            if not card.is_archived
+            and (
+                _company_key(card.company) in extra
+                or company in _company_key(card.company)
+                or _company_key(card.company) in company
+            )
         ]
         pool = [c for c in pool if c.status in ACTIVE_PIPELINE_STATUSES] or pool
 
@@ -136,12 +141,12 @@ def plan_transition(event: MailEvent, card: ProjectCard) -> tuple[str, str, str 
 
     if event.kind == KIND_SCREENING:
         if current in {"Inbox", "Applied", "Replied"}:
-            return "update", "Screening", None, None
+            return "update", "Interview", None, None
         return "noop", current, None, None
 
     if event.kind == KIND_REJECTED_HR:
         if current in ACTIVE_PIPELINE_STATUSES:
-            closed_stage = current if current != "History" else "Applied"
+            closed_stage = current
             return "update", "Archived", "Rejected HR", closed_stage
         return "noop", current, None, None
 
@@ -197,7 +202,8 @@ def apply_card_fields(
     today: date | None = None,
 ) -> None:
     stamp = today or date.today()
-    _set_select(client, meta, card.item_id, "Status", new_status)
+    if new_status != "Archived":
+        _set_select(client, meta, card.item_id, "Status", new_status)
     if close_reason:
         _set_select(client, meta, card.item_id, "Close Reason", close_reason)
     if closed_stage:
@@ -234,6 +240,9 @@ def apply_card_fields(
                 new_status=new_status,
             ),
         )
+    if new_status == "Archived":
+        client.archive_project_item(meta.project_id, card.item_id)
+        card.is_archived = True
 
 
 def apply_event(

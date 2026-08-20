@@ -80,13 +80,6 @@ def archive_closed_vacancies(
         if settings is None:
             raise ValueError("settings or meta is required")
         project_meta = client.resolve_project(settings.project_owner, settings.project_number)
-    status_field = project_meta.status_field
-    if status_field is None:
-        raise RuntimeError("Project Status field missing")
-    archived_option = status_field.options.get("Archived")
-    if not archived_option:
-        raise RuntimeError("Project Status option Archived missing")
-
     close_reason_field = project_meta.fields_by_name.get("Close Reason")
     closed_stage_field = project_meta.fields_by_name.get("Closed Stage")
     close_reason_option = (
@@ -97,12 +90,6 @@ def archive_closed_vacancies(
     archived: list[ClosedVacancyHit] = []
     for hit in hits:
         card = hit.card
-        client.set_single_select_field(
-            project_id=project_meta.project_id,
-            item_id=card.item_id,
-            field_id=status_field.id,
-            option_id=archived_option,
-        )
         if close_reason_field and close_reason_option:
             client.set_single_select_field(
                 project_id=project_meta.project_id,
@@ -129,6 +116,7 @@ def archive_closed_vacancies(
                     reason=hit.probe.reason,
                 ),
             )
+        client.archive_project_item(project_meta.project_id, card.item_id)
         archived.append(hit)
     return archived
 

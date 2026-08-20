@@ -20,7 +20,7 @@ HISTORY: list[ManualCard] = [
     ManualCard(
         company="Visual Craft",
         title="Senior iOS Engineer",
-        status="Screening",
+        status="Interview",
         source="Djinni",
         applied_at="2026-07-10",
         follow_up="2026-07-20",
