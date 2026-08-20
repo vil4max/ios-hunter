@@ -2288,6 +2288,13 @@
     "company": "Yuliana MYKHAILENKO",
     "subject": "Комерційна пропозиція"
   },
+  "<DxWA7eC2Mew41r3kkPRLeZ7ZIhbGwAkNnwyyzFOvMDg@localhost.localdomain>": {
+    "kind": "application_ack",
+    "processed_at": "2026-08-20T12:39:44+00:00",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg3TOpM",
+    "company": "N-iX",
+    "subject": "Thank you for your application!"
+  },
   "<E9.67.00589.EDE287A6@i-09f62d4b144eae0c8.mta3vrest.sd.prd.sparkpost>": {
     "kind": "ignore",
     "processed_at": "2026-08-09T12:16:37+00:00",
@@ -2778,6 +2785,13 @@
     "processed_at": "2026-08-01T15:16:21+00:00",
     "company": "Paul Solt",
     "subject": "My timer app finally works on iPhone"
+  },
+  "<pEMu4nu9cBH7KGgEYtmVYuhRLngQg6kApTr0j7iEOo@hosting>": {
+    "kind": "rejected_hr",
+    "processed_at": "2026-08-20T12:39:44+00:00",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg3TOnk",
+    "company": "N-iX",
+    "subject": "From NIX"
   },
   "<qnC1RDygH1KCerFGxbhCRw@notifications.google.com>": {
     "kind": "ignore",
