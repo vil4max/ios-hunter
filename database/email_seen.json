@@ -1355,6 +1355,18 @@
     "company": "DOU Day",
     "subject": "DOU Day Picnic: ціна зросте 20 серпня"
   },
+  "<202620081307.13pq3y0t5cjqvj@shared-p100-i21.d.sp1-brevo.net>": {
+    "kind": "replied",
+    "processed_at": "2026-08-20T15:17:40+00:00",
+    "company": "DOU",
+    "subject": "Mobile-розробники, що змусить вас відмовитися від оферу? 🚩"
+  },
+  "<202620081358.146kxa0t5cjqvj@shared-p100-i21.d.sp1-brevo.net>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-20T15:17:40+00:00",
+    "company": "DOU",
+    "subject": "Mobile-розробники, що змусить вас відмовитися від оферу? 🚩"
+  },
   "<2032248378.42868428.1785241368085@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -1969,6 +1981,12 @@
     "company": "N-iX",
     "subject": "Career Agent  ·  2026-08-19"
   },
+  "<6a87191c9f5be_b911a8126596@sharedworker-56f6b8b8cb-jl6tk.mail>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-20T15:17:40+00:00",
+    "company": "GitHub",
+    "subject": "[GitHub] Your fine-grained personal access token is about to expire"
+  },
   "<6a8f378d-a961-4eb9-b3d6-e8fadfed1512@atl1s07mta0304.xt.local>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:55+00:00",
@@ -2287,6 +2305,12 @@
     "processed_at": "2026-08-10T15:16:27+00:00",
     "company": "Yuliana MYKHAILENKO",
     "subject": "Комерційна пропозиція"
+  },
+  "<DYHcvuNdT-KFt86nBpIk0A@geopod-ismtpd-14>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-20T15:17:40+00:00",
+    "company": "EasyWeek",
+    "subject": "Підтверджено: Стрижка @ 24 серпня  2026 11:00"
   },
   "<DxWA7eC2Mew41r3kkPRLeZ7ZIhbGwAkNnwyyzFOvMDg@localhost.localdomain>": {
     "kind": "application_ack",
