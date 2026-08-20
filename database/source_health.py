@@ -39,8 +39,17 @@ def best_scanned(baseline: dict[str, dict[str, Any]], source_id: str) -> int:
         return 0
 
 
+def empty_runs(baseline: dict[str, dict[str, Any]], source_id: str) -> int:
+    record = baseline.get(source_id) or {}
+    try:
+        return int(record.get("empty_runs", 0) or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
 _DEGRADED_DROP_RATIO = 0.4
 _DEGRADED_MIN_BEST = 8
+_DEGRADED_EMPTY_RUNS = 3
 
 
 def classify_degraded(
@@ -57,9 +66,15 @@ def classify_degraded(
         if result.status != STATUS_HEALTHY:
             continue
         best = best_scanned(baseline, result.source_id)
+        previous_empty_runs = empty_runs(baseline, result.source_id)
         if result.items_scanned == 0 and best > 0:
             result.status = STATUS_DEGRADED
             result.error = result.error or "parsed 0 items but previously parsed items"
+            degraded.append(result.source_name)
+            continue
+        if result.items_scanned == 0 and previous_empty_runs >= _DEGRADED_EMPTY_RUNS - 1:
+            result.status = STATUS_DEGRADED
+            result.error = result.error or f"parsed 0 items for {previous_empty_runs + 1} runs"
             degraded.append(result.source_name)
             continue
         if best >= _DEGRADED_MIN_BEST and result.items_scanned < best * _DEGRADED_DROP_RATIO:
@@ -87,6 +102,8 @@ def update_baseline(
         record["name"] = result.source_name
         record["best_scanned"] = max(best_scanned(baseline, result.source_id), result.items_scanned)
         record["last_scanned"] = result.items_scanned
+        record["last_success_at"] = stamp
+        record["empty_runs"] = empty_runs(updated, result.source_id) + 1 if result.items_scanned == 0 else 0
         if result.items_scanned > 0:
             record["last_nonzero"] = stamp
         updated[result.source_id] = record

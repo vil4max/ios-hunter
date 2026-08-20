@@ -8,6 +8,7 @@ from database.source_health import (
     best_scanned,
     classify_degraded,
     default_baseline_path,
+    empty_runs,
     load_baseline,
     save_baseline,
     update_baseline,
@@ -96,6 +97,15 @@ def test_best_scanned_tolerates_missing_and_invalid_values() -> None:
     assert best_scanned(baseline, "missing") == 0
 
 
+def test_empty_runs_tolerates_missing_and_invalid_values() -> None:
+    baseline = {"a": {"empty_runs": "2"}, "b": {"empty_runs": "many"}, "c": {}}
+
+    assert empty_runs(baseline, "a") == 2
+    assert empty_runs(baseline, "b") == 0
+    assert empty_runs(baseline, "c") == 0
+    assert empty_runs(baseline, "missing") == 0
+
+
 def test_classify_degraded_flags_source_that_stopped_parsing() -> None:
     results = [_result("company:acme@acme.com", scanned=0, name="Acme")]
     baseline = {"company:acme@acme.com": {"best_scanned": 40}}
@@ -112,6 +122,17 @@ def test_classify_degraded_leaves_new_sources_alone() -> None:
 
     assert classify_degraded(results, {}) == []
     assert results[0].status == "healthy"
+
+
+def test_classify_degraded_flags_third_consecutive_empty_run() -> None:
+    results = [_result("company:new@new.com", scanned=0, name="New")]
+    baseline = {"company:new@new.com": {"best_scanned": 0, "empty_runs": 2}}
+
+    degraded = classify_degraded(results, baseline)
+
+    assert degraded == ["New"]
+    assert results[0].status == "degraded"
+    assert "3 runs" in (results[0].error or "")
 
 
 def test_classify_degraded_flags_steep_drop_from_high_water_mark() -> None:
@@ -152,6 +173,8 @@ def test_update_baseline_keeps_the_high_water_mark() -> None:
     assert updated["company:a@a.com"]["best_scanned"] == 40
     assert updated["company:a@a.com"]["last_scanned"] == 12
     assert updated["company:a@a.com"]["last_nonzero"] == "2026-07-27T10:00:00+00:00"
+    assert updated["company:a@a.com"]["last_success_at"] == "2026-07-27T10:00:00+00:00"
+    assert updated["company:a@a.com"]["empty_runs"] == 0
 
 
 def test_update_baseline_records_new_high_and_skips_failed_sources() -> None:
@@ -166,15 +189,23 @@ def test_update_baseline_records_new_high_and_skips_failed_sources() -> None:
         "name": "A",
         "best_scanned": 99,
         "last_scanned": 99,
+        "last_success_at": "2026-07-27T10:00:00+00:00",
+        "empty_runs": 0,
         "last_nonzero": "2026-07-27T10:00:00+00:00",
     }
     assert "company:b@b.com" not in updated
 
 
 def test_update_baseline_does_not_stamp_last_nonzero_for_empty_runs() -> None:
-    updated = update_baseline({}, [_result("company:a@a.com", scanned=0)])
+    updated = update_baseline(
+        {"company:a@a.com": {"empty_runs": 1}},
+        [_result("company:a@a.com", scanned=0)],
+        now="2026-07-27T10:00:00+00:00",
+    )
 
     assert "last_nonzero" not in updated["company:a@a.com"]
+    assert updated["company:a@a.com"]["last_success_at"] == "2026-07-27T10:00:00+00:00"
+    assert updated["company:a@a.com"]["empty_runs"] == 2
 
 
 def test_update_baseline_generates_timestamp_when_not_given() -> None:

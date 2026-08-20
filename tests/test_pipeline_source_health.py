@@ -72,6 +72,27 @@ def test_collect_vacancies_does_not_flag_a_source_without_history(
     assert health["sites_ok"] == 1
 
 
+def test_collect_vacancies_flags_repeatedly_empty_source_without_nonzero_history(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    baseline_path = tmp_path / "baseline.json"
+    save_baseline(
+        baseline_path,
+        {"company:new@new.com": {"best_scanned": 0, "empty_runs": 2}},
+    )
+    monkeypatch.setattr(
+        run_pipeline,
+        "collect_all",
+        lambda: CollectResult(source_results=[_source("company:new@new.com", "New", scanned=0)]),
+    )
+
+    _, _, _, health, _ = run_pipeline.collect_vacancies(baseline_path=baseline_path)
+
+    assert health["degraded_source_names"] == ("New",)
+    assert health["sites_ok"] == 0
+
+
 def test_collect_vacancies_only_purges_sources_that_actually_parsed_something(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,

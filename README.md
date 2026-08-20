@@ -1,6 +1,6 @@
 # iOS Hunter
 
-iOS Hunter is a private **job-search utility** inside the wider Career Evolution System. Its bounded responsibility is to collect iOS/Swift vacancies, synchronize operational data with the Career CRM Project, and report collection status. Career direction, competency development, interview knowledge, English progress, and canonical career facts belong to their owning workspaces — not here.
+iOS Hunter is a private **company-career radar** inside the wider Career Evolution System. Its bounded responsibility is to monitor official career pages and ATS endpoints of large Ukrainian service companies for iOS/Swift vacancies, synchronize operational data with the Career CRM Project, and report collection status. Career direction, competency development, interview knowledge, English progress, and canonical career facts belong to their owning workspaces — not here.
 
 Production runs on GitHub Actions. GitHub Project is the operational source of truth for vacancy status. Telegram gets a short OK on the Kyiv collect slots (09:00 / 12:00 / 15:00 / 18:00), and the vacancy list only when something new lands in Inbox. Live ops channels are Telegram, the daily email (after the Kyiv 18:00 collect), and the Project board — `reports/*.md` are static audit notes, not runtime dashboards.
 
@@ -41,17 +41,22 @@ When there are **new** vacancies:
 
 **Pipeline status / Applied / Screening** — manage on the private [Career CRM Project](https://github.com/users/vil4max/projects/3). Telegram does **not** dump today's tasks or CRM sections.
 
-DOU and Djinni board browsing stays in their native apps. This repo watches company career pages, the committed DOU company seed (`database/dou_companies.json`) plus DOU iOS/macOS RSS, and optional Telegram chats (`@itrecruit_ua`, `@remotejobss`, `@itfreelancers`, `@mobile_jobs` — iOS/Swift hiring posts only).
+DOU and Djinni vacancy browsing stays in their native apps and is not part of production collection. This repo watches official company career pages and ATS endpoints. Optional Telegram chats (`@itrecruit_ua`, `@remotejobss`, `@itfreelancers`, `@mobile_jobs`) remain a supplementary channel and do not count as company coverage.
 
-Refresh the DOU company seed periodically (not on every pipeline run):
+Refresh the DOU service-company watchlist periodically. `--resolve-careers` applies the committed official-URL overrides after discovery, so validated URLs are not lost on refresh:
 
 ```bash
+python3 scripts/refresh_dou_service_watchlist.py
+python3 scripts/refresh_dou_service_watchlist.py --resolve-careers
+python3 scripts/refresh_dou_service_watchlist.py --dry-run
 python3 scripts/discover_dou_companies.py
 python3 scripts/discover_dou_companies.py --enrich-sites
 python3 scripts/discover_dou_companies.py --max-pages 2 --limit 40 --dry-run
 ```
 
-Daily collect only **reads** the seed. Active DOU company feeds are capped with `DOU_SEED_FEED_LIMIT` (default `300`; use `all` for no cap).
+Daily collection does not read DOU vacancy feeds or Djinni.
+
+The watchlist combines DOU service-rating companies with DOU Top 50 companies that have a verified official career URL. DOU rating metadata is intentionally limited to the overall score, compensation score, and survey count. Every watchlist company has a registered production source; companies with custom API collectors use them, and the rest use the generic official-page monitor.
 
 One-time Telegram chat setup:
 
@@ -98,9 +103,9 @@ Repository variables:
 ## Pipeline
 
 ```
-Python collectors (career pages / ATS / DOU / Telegram)
+Official company collectors (career pages / ATS) + optional Telegram
         ↓
-Normalize + iOS/Swift filter + geo filter → Deduplicate
+Normalize + iOS/Swift filter → Deduplicate
         ↓
 Project Sync (private Draft + Project Inbox) + seen.json dual-write
         ↓

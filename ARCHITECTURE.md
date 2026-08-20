@@ -7,7 +7,7 @@ Career Agent target: `docs/architecture/career-agent.md`. ADR: `docs/adr/0001-ca
 ```
 GitHub Actions (Kyiv 09/12/15/18, ubuntu)
         │
-   Python collectors (company pages, ATS, DOU, Telegram)
+   Official company collectors (career pages, ATS) + optional Telegram
         │
    Normalize → Deduplicate → Project Sync (+ seen.json dual-write) → Telegram on new
 
@@ -18,9 +18,9 @@ GitHub Actions (daily 04:00 UTC, incl. weekends)
 
 ## Pipeline
 
-1. Python collectors fetch iOS / Swift vacancies from career pages, ATS boards, DOU, and Telegram.
-2. Vacancies are normalized and filtered to iOS / Swift titles (or descriptions) and relevant locations (Ukraine + global remote).
-3. In-run deduplication collapses identical identity keys and same company+title roles.
+1. The DOU service-company watchlist registers one source per company; custom collectors fetch known APIs and the generic monitor scans the remaining official career pages. Telegram is supplementary.
+2. Vacancies are normalized and filtered to iOS / Swift titles or descriptions. Location is retained as metadata.
+3. In-run deduplication collapses identical identity keys only.
 4. When Sync is enabled, Project Sync creates Issue + Project item (Inbox) for new Canonical-URLs.
 5. Collect-slot Telegram sends an Inbox +N alert with vacancy details when something new lands.
 6. Collect workflow commits `database/seen.json` when it changes (`[skip ci]`) during dual-write.
@@ -35,8 +35,8 @@ GitHub Actions (daily 04:00 UTC, incl. weekends)
 
 | Module | Role |
 |--------|------|
-| `collector/` | Company/ATS/DOU/Telegram collectors |
-| `parser/` | Normalize, iOS filter, geo filter, dedupe |
+| `collector/` | Official company/ATS collectors, research importers, optional Telegram |
+| `parser/` | Normalize, iOS filter, dedupe |
 | `config/` | Project + Sync settings from env |
 | `project_sync/` | Issues + Projects V2 GraphQL |
 | `planner/` | Daily work from Project cards |

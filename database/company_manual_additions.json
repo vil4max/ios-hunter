@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Infopulse",
+    "slug": "infopulse",
+    "career_url": "https://careers.tieto.com/jobs?q=iOS"
+  },
+  {
+    "name": "Onix Systems",
+    "slug": "onix-systems",
+    "career_url": "https://onix-systems.com/careers"
+  },
+  {
+    "name": "RBI",
+    "slug": "rbi",
+    "career_url": "https://www.rbi-ri.com.ua/career"
+  },
+  {
+    "name": "Mind Studios",
+    "slug": "mind-studios",
+    "career_url": "https://themindstudios.com/careers/"
+  },
+  {
+    "name": "MWDN",
+    "slug": "mwdn",
+    "career_url": "https://jobs.mwdn.com/careers/"
+  }
+]
