@@ -44,11 +44,13 @@ def test_job_from_item_rejects_non_ios_titles() -> None:
     assert djinni._job_from_item(_item(title="Manual QA", long_description="test cases")) is None
 
 
-def test_job_from_item_rejects_non_ua_geo() -> None:
-    assert (
-        djinni._job_from_item(_item(location="Buenos Aires, Argentina", is_ukraine_only=False))
-        is None
+def test_job_from_item_keeps_non_ua_geo() -> None:
+    job = djinni._job_from_item(
+        _item(location="Buenos Aires, Argentina", is_ukraine_only=False)
     )
+
+    assert job is not None
+    assert job["location"] == "Buenos Aires, Argentina"
 
 
 def test_job_from_item_accepts_ukraine_only_flag() -> None:

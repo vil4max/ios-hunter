@@ -27,7 +27,7 @@ def test_deduplicate_removes_same_identity_vacancies() -> None:
     assert unique[1] is other
 
 
-def test_deduplicate_merges_same_role_from_multiple_sources() -> None:
+def test_deduplicate_keeps_same_role_with_distinct_identities() -> None:
     swift = make_vacancy(
         company="N-iX",
         title="Lead iOS Engineer (#5458)",
@@ -47,10 +47,8 @@ def test_deduplicate_merges_same_role_from_multiple_sources() -> None:
 
     unique, removed = deduplicate([swift, greenhouse])
 
-    assert removed == 1
-    assert len(unique) == 1
-    assert unique[0].title.startswith("Lead iOS Engineer")
-    assert unique[0].description == "SwiftUI, UIKit, and leadership experience required"
+    assert removed == 0
+    assert unique == [swift, greenhouse]
 
 
 def test_deduplicate_keeps_unique_vacancies() -> None:

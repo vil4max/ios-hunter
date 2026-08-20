@@ -7,7 +7,7 @@ from typing import Any
 
 import requests
 
-from parser.normalize import is_ios_job, is_relevant_job_location
+from parser.normalize import is_ios_job
 
 from collector.results import source_failed, source_ok
 from collector.types import SourceResult
@@ -55,8 +55,6 @@ def parse_dou_category_rss(xml_text: str) -> list[dict[str, Any]]:
             continue
         title, company, location = parse_rss_title(raw_title)
         if not is_ios_job(title):
-            continue
-        if not is_relevant_job_location(location):
             continue
         url = link.split("?", 1)[0]
         if url in seen:

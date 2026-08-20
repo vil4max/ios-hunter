@@ -163,29 +163,15 @@ _IOS_ANCHOR = re.compile(
     r")(?![a-z0-9])"
 )
 
-_IOS_DENY = re.compile(
-    r"(?i)(?<![a-z0-9])("
-    r"qa|sdet|tpm|kmm|"
-    r"kotlin\s+multiplatform|"
+_NON_IOS_ROLE_TITLE = re.compile(
+    r"(?i)(?<![a-z0-9])(qa|sdet|tpm|"
     r"quality\s+assurance|"
     r"test(?:ing)?\s+(?:automation|engineer|developer)|"
     r"automation\s+(?:qa|engineer|tester)|"
     r"manual\s+qa|"
-    r"mobile\s+automation|"
-    r"reverse[\s\-]?engineer"
+    r"mobile\s+automation"
     r")(?![a-z0-9])"
 )
-
-_FLUTTER_TITLE = re.compile(r"(?i)(?<![a-z0-9])flutter(?![a-z0-9])")
-
-_CROSS_PLATFORM = re.compile(
-    r"(?i)(?<![a-z0-9])("
-    r"react\s*native|\brn\b|xamarin|cordova|ionic|"
-    r"flutter"
-    r")(?![a-z0-9])"
-)
-
-_PLATFORM_PAIR = re.compile(r"(?i)\(?\s*ios\s*/\s*android\s*\)?")
 
 _BODY_ROLE = re.compile(
     r"(?i)(?<![a-z0-9а-яіїєґ])("
@@ -216,48 +202,13 @@ _APPLE_CORE = re.compile(
     r")(?![a-z0-9])"
 )
 
-_CPP_STACK = re.compile(
-    r"(?i)(?<![a-z0-9])(c\+\+|cpp|c\s*plus\s*plus)(?![a-z0-9])"
-)
-
-_WINDOWS_MACOS_DESKTOP = re.compile(
-    r"(?i)windows\s*/\s*mac(?:os|\s*os)"
-)
-
-_DOMAIN_DENY = re.compile(
-    r"(?i)(?<![a-z0-9а-яіїєґ])("
-    r"igaming|i[\s\-]?gaming|"
-    r"gambling|gambl(?:er|ing)?|"
-    r"casino|casinos|"
-    r"sportsbook|bookmaker|bookmaking|"
-    r"betting\s+(?:company|app|platform|product|operator)|"
-    r"online\s+casino|"
-    r"poker\s+(?:app|platform|product|casino)|"
-    r"гембл(?:інг|инг)?|казино|букмекер(?:ськ\w*)?"
-    r")(?![a-z0-9а-яіїєґ])"
-)
-
-
 def is_ios_job(title: str, description: str | None = None) -> bool:
-    haystack = f"{title} {description or ''}"
     title_text = title or ""
-    if _IOS_DENY.search(title_text):
-        return False
-    if _FLUTTER_TITLE.search(title_text) and not _APPLE_CORE.search(_PLATFORM_PAIR.sub("", title_text)):
-        return False
-    if _CROSS_PLATFORM.search(title_text) and not _APPLE_CORE.search(_PLATFORM_PAIR.sub("", title_text)):
-        return False
-    if _DOMAIN_DENY.search(haystack):
-        return False
-    if _CPP_STACK.search(title_text) and not _APPLE_CORE.search(title_text):
-        return False
-    if _WINDOWS_MACOS_DESKTOP.search(title_text) and not _APPLE_CORE.search(title_text):
+    if _NON_IOS_ROLE_TITLE.search(title_text):
         return False
     if _IOS_ANCHOR.search(title_text):
         return True
     if description and _APPLE_CORE.search(description) and _BODY_ROLE.search(title_text):
-        if _CROSS_PLATFORM.search(description):
-            return False
         return True
     return False
 
@@ -266,47 +217,6 @@ def is_target_level(title: str) -> bool:
     text = title or ""
     if _JUNIOR_TITLE.search(text) and not _SENIORISH_TITLE.search(text):
         return False
-    return True
-
-
-_UKRAINE = re.compile(
-    r"(?i)\b("
-    r"ukraine|kyiv|kiev|lviv|kharkiv|odesa|odessa|dnipro|"
-    r"vinnytsia|ivano[\s\-]?frankivsk|zhytomyr|chernivtsi|uzhhorod|"
-    r"rivne|ternopil|khmelnytskyi|cherkasy|poltava|zaporizhzhia"
-    r")\b"
-)
-
-_NON_UA_GEO = re.compile(
-    r"(?i)\b("
-    r"argentina|buenos\s+aires|brazil|mexico|chile|colombia|peru|"
-    r"india|bengaluru|bangalore|hyderabad|pune|chennai|"
-    r"philippines|vietnam|china|"
-    r"usa|united\s+states|america|canada|uk|united\s+kingdom|"
-    r"germany|poland|польща|польша|krakow|kraków|warsaw|warszawa|"
-    r"hungary|romania|spain|portugal|netherlands|"
-    r"malaysia|singapore|uae|israel|turkey|georgia|kazakhstan|armenia|"
-    r"egypt|cairo|austin|budapest|kuala\s+lumpur|newtown|culiacan"
-    r")\b"
-)
-
-_GLOBAL_REMOTE = re.compile(
-    r"(?i)\b(worldwide|anywhere|emea|europe|eu|cee|remote\s+europe)\b"
-)
-
-
-def is_relevant_job_location(location: str | None, extra: str | None = None) -> bool:
-    text = (location or "").strip()
-    if not text:
-        text = (extra or "").strip()
-    if not text:
-        return True
-    if _UKRAINE.search(text):
-        return True
-    if _NON_UA_GEO.search(text):
-        return False
-    if _GLOBAL_REMOTE.search(text):
-        return True
     return True
 
 
@@ -339,9 +249,6 @@ def normalize_raw(raw: dict[str, Any]) -> Vacancy | None:
 
     location = raw.get("location")
     location = str(location).strip() if location else None
-    extra = " ".join(part for part in (title, description or "") if part)
-    if not is_relevant_job_location(location, extra):
-        return None
     remote = raw.get("remote") or infer_remote(title, location, description)
 
     published_at = None

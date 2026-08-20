@@ -18,7 +18,7 @@ from integrations.http_client import (
     fetch_text_allowing_bot_wall,
     post_form_data,
 )
-from parser.normalize import is_ios_job, is_relevant_job_location
+from parser.normalize import is_ios_job
 
 _NEXT_DATA = re.compile(
     r'<script id="__NEXT_DATA__"[^>]*>(.*?)</script>',
@@ -384,8 +384,6 @@ def collect_grid_dynamics() -> SourceResult:
                 if isinstance(related, str) and related.strip():
                     locations.append(related.strip())
             location = " / ".join(locations) if locations else None
-            if not is_relevant_job_location(location):
-                continue
             vacancy_id = vacancy.get("id")
             if not vacancy_id:
                 continue
@@ -754,8 +752,6 @@ def collect_luxoft() -> SourceResult:
             location = _luxoft_location(anchor)
             if not location:
                 location = _luxoft_location_from_detail(absolute)
-            if not location or not is_relevant_job_location(location):
-                continue
             jobs.append(
                 {
                     "company": company,

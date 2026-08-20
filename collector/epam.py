@@ -9,7 +9,7 @@ from typing import Any
 from collector.results import source_failed, source_ok
 from collector.types import SourceResult
 from integrations.http_client import fetch_text
-from parser.normalize import is_ios_job, is_relevant_job_location
+from parser.normalize import is_ios_job
 
 _COMPANY = "EPAM"
 _SOURCE_ID = "company:epam@careers.epam.com"
@@ -113,9 +113,6 @@ def parse_vacancy_page(html: str, url: str) -> dict[str, Any] | None:
     vacancy_types = _titled_names(metadata.get("vacancy_type") or job.get("vacancy_type"))
 
     location = _format_location(cities, countries)
-    if not is_relevant_job_location(location):
-        return None
-
     source_job_id = job.get("uid") or job.get("unique_id")
     return {
         "company": _COMPANY,

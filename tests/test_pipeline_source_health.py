@@ -142,7 +142,12 @@ def test_collect_vacancies_dedupes_across_sources(
         lambda: CollectResult(
             source_results=[
                 _source("company:a@a.com", "Acme", scanned=1, jobs=[_job("https://a.com/jobs/1")]),
-                _source("company:b@b.com", "Acme", scanned=1, jobs=[_job("https://a.com/jobs/1?utm=x")]),
+                _source(
+                    "company:b@b.com",
+                    "Acme",
+                    scanned=1,
+                    jobs=[_job("https://a.com/jobs/1?utm_source=x")],
+                ),
             ]
         ),
     )

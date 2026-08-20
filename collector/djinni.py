@@ -7,7 +7,7 @@ from urllib.parse import urlencode
 from collector.results import source_failed, source_ok
 from collector.types import SourceResult
 from integrations.http_client import fetch_json
-from parser.normalize import is_ios_job, is_relevant_job_location
+from parser.normalize import is_ios_job
 
 _SOURCE_NAME = "Djinni"
 _SOURCE_ID = "djinni"
@@ -57,9 +57,6 @@ def _job_from_item(item: dict[str, Any]) -> dict[str, Any] | None:
         return None
 
     location = _location_label(item)
-    if not is_relevant_job_location(location):
-        return None
-
     return {
         "company": company,
         "title": title,

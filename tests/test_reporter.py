@@ -11,7 +11,6 @@ from planner.plan import (
     DailyPlan,
     ProjectCard,
     archived_canonical_urls,
-    archived_role_keys,
     exclude_archived_vacancies,
 )
 from project_sync.sync import SyncItemResult, SyncResult
@@ -302,7 +301,7 @@ def test_notify_heartbeat_has_no_live_block(monkeypatch: pytest.MonkeyPatch) -> 
     assert "Следующая проверка" not in sent[0]
 
 
-def test_exclude_archived_vacancies_by_url_and_role_key() -> None:
+def test_exclude_archived_vacancies_by_url_only() -> None:
     cards = [
         ProjectCard(
             item_id="1",
@@ -349,13 +348,13 @@ def test_exclude_archived_vacancies_by_url_and_role_key() -> None:
         make_vacancy(
             company="Sombra",
             title="Middle Software Engineer (IOS Native)",
-            url="https://jobs.dou.ua/companies/sombra/vacancies/366864/?x=1",
+            url="https://jobs.dou.ua/companies/sombra/vacancies/366864/?utm_source=jobsrss",
         ),
     ]
     urls = archived_canonical_urls(cards)
-    roles = archived_role_keys(cards)
-    active = exclude_archived_vacancies(vacancies, archived_urls=urls, archived_roles=roles)
-    assert [item.company for item in active] == ["Paybis"]
+    active = exclude_archived_vacancies(vacancies, archived_urls=urls)
+    assert [item.company for item in active] == ["Sombra", "Paybis"]
+    assert active[0].url == "https://sombrainc.com/careers/middle-software-engineer-ios-native"
 
 
 def test_archived_canonical_urls_collects_archived_only() -> None:

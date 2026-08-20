@@ -20,7 +20,7 @@ def test_parse_rss_title_splits_company_and_location() -> None:
     assert location == "Київ, Львів, віддалено"
 
 
-def test_parse_dou_category_rss_keeps_non_top50_and_applies_geo() -> None:
+def test_parse_dou_category_rss_keeps_non_top50_and_non_ua_geo() -> None:
     xml = """<?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0"><channel>
 <item>
@@ -43,7 +43,7 @@ def test_parse_dou_category_rss_keeps_non_top50_and_applies_geo() -> None:
 
     jobs = parse_dou_category_rss(xml)
 
-    assert [job["company"] for job in jobs] == ["Devico", "ROZETKA"]
+    assert [job["company"] for job in jobs] == ["Devico", "AgileEngine", "ROZETKA"]
     assert jobs[0]["url"] == "https://jobs.dou.ua/companies/devico/vacancies/367217/"
     assert jobs[0]["remote"] == "remote"
     assert jobs[0]["location"] == "віддалено"

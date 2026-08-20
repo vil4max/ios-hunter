@@ -313,8 +313,9 @@ def test_grid_dynamics_parses_plain_json_attribute(stub) -> None:
     result = bespoke.collect_grid_dynamics()
 
     assert result.items_scanned == 4
-    assert [job["source_job_id"] for job in result.jobs] == ["1"]
+    assert [job["source_job_id"] for job in result.jobs] == ["1", "2"]
     assert result.jobs[0]["location"] == "Kyiv, Ukraine"
+    assert result.jobs[1]["location"] == "Buenos Aires, Argentina"
 
 
 def test_grid_dynamics_unescapes_html_entities(stub) -> None:
@@ -608,7 +609,7 @@ def test_luxoft_parses_specialization_jobs(stub) -> None:
 
     assert result.status == "healthy"
     assert result.items_scanned == 4
-    assert len(result.jobs) == 1
+    assert len(result.jobs) == 3
     assert result.jobs[0]["title"] == "Senior iOS Developer"
     assert result.jobs[0]["url"] == "https://career.luxoft.com/jobs/senior-ios-developer-26100"
     assert result.jobs[0]["location"] == "Kyiv, Ukraine"
@@ -636,7 +637,8 @@ def test_luxoft_resolves_location_from_job_json_ld(stub) -> None:
     stub(text=handler)
     result = bespoke.collect_luxoft()
     assert result.status == "healthy"
-    assert result.jobs == []
+    assert len(result.jobs) == 1
+    assert result.jobs[0]["location"] == "Kuala Lumpur, Malaysia"
 
 
 def test_luxoft_reports_failure(stub) -> None:

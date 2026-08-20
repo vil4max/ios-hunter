@@ -37,7 +37,6 @@ from parser.deduplicate import deduplicate_with_report
 from parser.normalize import Vacancy, normalize_many
 from planner.plan import (
     archived_canonical_urls,
-    archived_role_keys,
     exclude_archived_vacancies,
     load_cards_from_github,
 )
@@ -176,19 +175,16 @@ def process_new_vacancies(
     health = source_health or {}
 
     archived_urls = dropped_urls_from_seen(seen)
-    archived_roles: set[tuple[str, str]] = set()
     if settings.configured_for_sync:
         try:
             cards = load_cards_from_github(GitHubClient(settings.github_token), settings)
             archived_urls |= archived_canonical_urls(cards)
-            archived_roles |= archived_role_keys(cards)
         except Exception as error:  # noqa: BLE001
             print(f"Archived exclude load failed: {error}", file=sys.stderr)
 
     active = exclude_archived_vacancies(
         vacancies,
         archived_urls=archived_urls,
-        archived_roles=archived_roles,
     )
     fresh = select_fresh(active, seen, seen_gate=settings.seen_gate_enabled)
 

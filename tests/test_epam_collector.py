@@ -56,7 +56,7 @@ def test_parse_vacancy_page_accepts_ukraine_remote() -> None:
     assert job["company"] == "EPAM"
 
 
-def test_parse_vacancy_page_rejects_argentina_hybrid() -> None:
+def test_parse_vacancy_page_keeps_argentina_hybrid() -> None:
     html = _html_with_job(
         {
             "name": "iOS Software Engineer",
@@ -76,7 +76,8 @@ def test_parse_vacancy_page_rejects_argentina_hybrid() -> None:
         }
     )
     job = parse_vacancy_page(html, "https://careers.epam.com/en/vacancy/ios-software-engineer-blt-ar_en")
-    assert job is None
+    assert job is not None
+    assert job["location"] == "Argentina / Chile / Colombia / Mexico"
 
 
 def test_parse_vacancy_page_skips_expired() -> None:

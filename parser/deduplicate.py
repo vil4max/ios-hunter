@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from parser.normalize import Vacancy, role_key
+from parser.normalize import Vacancy
 
 
 def _richness_score(vacancy: Vacancy) -> int:
@@ -32,7 +32,6 @@ def deduplicate(vacancies: list[Vacancy]) -> tuple[list[Vacancy], int]:
 def deduplicate_with_report(vacancies: list[Vacancy]) -> tuple[list[Vacancy], int, dict]:
     by_identity: dict[str, Vacancy] = {}
     groups: dict[str, list[Vacancy]] = {}
-    role_to_identity: dict[tuple[str, str], str] = {}
     removed = 0
 
     for vacancy in vacancies:
@@ -44,27 +43,13 @@ def deduplicate_with_report(vacancies: list[Vacancy]) -> tuple[list[Vacancy], in
             removed += 1
             continue
 
-        role = role_key(vacancy.company, vacancy.title)
-        mapped_key = role_to_identity.get(role)
-        if mapped_key is not None:
-            existing = by_identity[mapped_key]
-            by_identity[mapped_key] = _pick_richer(existing, vacancy)
-            groups[mapped_key].append(vacancy)
-            removed += 1
-            continue
-
         by_identity[key] = vacancy
         groups[key] = [vacancy]
-        role_to_identity[role] = key
 
     strategy_counts: dict[str, int] = {}
     duplicate_groups: list[dict] = []
     for key, items in groups.items():
-        strategies = {item.identity_strategy or "unknown" for item in items}
-        if len(items) > 1 and len(strategies) > 1:
-            strategy = "role_key"
-        else:
-            strategy = (items[0].identity_strategy or "unknown") if items else "unknown"
+        strategy = (items[0].identity_strategy or "unknown") if items else "unknown"
         strategy_counts[strategy] = strategy_counts.get(strategy, 0) + 1
         if len(items) <= 1:
             continue
