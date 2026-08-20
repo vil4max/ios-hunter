@@ -87,8 +87,6 @@ def match_card(event: MailEvent, cards: list[ProjectCard]) -> ProjectCard | None
     ]
     if not pool:
         aliases = {
-            "n-ix": {"nix", "n ix"},
-            "nix": {"n-ix", "n ix"},
             "welltech": {"well tech"},
         }
         extra = aliases.get(company, set())
@@ -145,7 +143,7 @@ def plan_transition(event: MailEvent, card: ProjectCard) -> tuple[str, str, str 
         return "noop", current, None, None
 
     if event.kind == KIND_REJECTED_HR:
-        if current in ACTIVE_PIPELINE_STATUSES:
+        if current in ACTIVE_PIPELINE_STATUSES and event.confidence >= 0.9:
             closed_stage = current
             return "update", "Archived", "Rejected HR", closed_stage
         return "noop", current, None, None

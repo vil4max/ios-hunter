@@ -47,6 +47,44 @@ def test_classify_nix_ack() -> None:
     assert "Mobile" in event.role_hint or "Engineer" in event.role_hint
 
 
+def test_classify_nix_solutions_ack_ignores_unsubscribe_footer() -> None:
+    event = classify_from_headers(
+        message_id="<ack@nixsolutions.com>",
+        subject="From NIX",
+        from_header="NIX <hr@nixsolutions.com>",
+        body_text=(
+            "Hi, Max!\n"
+            "Ми отримали ваше резюме на vacancy Middle iOS Developer.\n"
+            "Резюме буде розглянуте експертами NIX найближчим часом.\n"
+            "Ми зв'яжемося з вами як тільки отримаємо їх рішення.\n"
+            "Дякуємо, що зацікавились NIX та заповнили резюме.\n"
+            "Відмовитися від повідомлень можна, натиснувши тут"
+        ),
+    )
+
+    assert event.kind == KIND_APPLICATION_ACK
+    assert event.company == "NIX"
+    assert event.role_hint == "Middle iOS Developer"
+
+
+def test_classify_distinguishes_nix_companies_by_sender_domain() -> None:
+    n_ix = classify_from_headers(
+        message_id="<ack@n-ix.com>",
+        subject="From NIX",
+        from_header="Recruitment Team <recruitmentteam@n-ix.com>",
+        body_text="Thank you for your application!",
+    )
+    nix = classify_from_headers(
+        message_id="<ack@nixsolutions.com>",
+        subject="From N-iX",
+        from_header="NIX <hr@nixsolutions.com>",
+        body_text="Ми отримали ваше резюме.",
+    )
+
+    assert n_ix.company == "N-iX"
+    assert nix.company == "NIX"
+
+
 def test_classify_reject() -> None:
     event = classify_from_headers(
         message_id="<3@acme.com>",

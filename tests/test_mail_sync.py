@@ -71,13 +71,14 @@ def _event(
     company: str,
     role_hint: str = "",
     message_id: str = "<m@x>",
+    confidence: float = 0.8,
 ) -> MailEvent:
     return MailEvent(
         kind=kind,
         company=company,
         role_hint=role_hint,
         recruiter="",
-        confidence=0.8,
+        confidence=confidence,
         snippet="snippet",
         subject="subj",
         from_addr="hr@example.com",
@@ -98,13 +99,37 @@ def test_plan_transition_matrix() -> None:
     assert plan_transition(_event(KIND_SCREENING, company="Welltech"), interview)[0] == "noop"
 
     action, status, reason, stage = plan_transition(
-        _event(KIND_REJECTED_HR, company="Welltech"),
+        _event(KIND_REJECTED_HR, company="Welltech", confidence=0.95),
         applied,
     )
     assert action == "update"
     assert status == "Archived"
     assert reason == "Rejected HR"
     assert stage == "Applied"
+
+
+def test_low_confidence_rejection_does_not_archive() -> None:
+    applied = _card(item_id="1", company="Welltech", title="Senior", status="Applied")
+
+    action, status, reason, stage = plan_transition(
+        _event(KIND_REJECTED_HR, company="Welltech", confidence=0.7),
+        applied,
+    )
+
+    assert action == "noop"
+    assert status == "Applied"
+    assert reason is None
+    assert stage is None
+
+
+def test_nix_and_n_ix_are_not_company_aliases() -> None:
+    cards = [
+        _card(item_id="nix", company="NIX", title="Middle iOS Developer", status="Applied"),
+        _card(item_id="n-ix", company="N-iX", title="Middle iOS Engineer", status="Applied"),
+    ]
+
+    assert match_card(_event(KIND_APPLICATION_ACK, company="NIX"), cards).item_id == "nix"
+    assert match_card(_event(KIND_APPLICATION_ACK, company="N-iX"), cards).item_id == "n-ix"
 
 
 def test_match_card_by_company_and_role() -> None:

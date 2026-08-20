@@ -45,7 +45,8 @@ _ATS_DOMAINS = frozenset(
 
 _SUBJECT_COMPANY = (
     (re.compile(r"\bwelltech\b", re.I), "Welltech"),
-    (re.compile(r"\bn-?ix\b", re.I), "N-iX"),
+    (re.compile(r"\bn[-\s]ix\b", re.I), "N-iX"),
+    (re.compile(r"\bnix\b", re.I), "NIX"),
     (re.compile(r"\blineup\b", re.I), "LineUp"),
     (re.compile(r"\bgrammarly\b", re.I), "Grammarly"),
     (re.compile(r"\bsoftserve\b", re.I), "SoftServe"),
@@ -64,7 +65,6 @@ _APPLYING_TO = re.compile(
 )
 
 _REJECT_PATTERNS = (
-    re.compile(r"unfortunately", re.I),
     re.compile(r"not\s+(be\s+)?(able\s+to\s+)?proceed", re.I),
     re.compile(r"will\s+not\s+be\s+moving\s+forward", re.I),
     re.compile(r"decided\s+to\s+(move|go)\s+forward\s+with\s+(other|another)", re.I),
@@ -72,10 +72,9 @@ _REJECT_PATTERNS = (
     re.compile(r"not\s+selected", re.I),
     re.compile(r"position\s+has\s+been\s+filled", re.I),
     re.compile(r"we\s+regret\s+to\s+inform", re.I),
-    re.compile(r"\bвідмов", re.I),
-    re.compile(r"на\s+жаль", re.I),
-    re.compile(r"к\s+сожалению", re.I),
+    re.compile(r"(?:відмовили|відхилили).{0,60}(?:кандидатур|відгук|заявк)", re.I),
     re.compile(r"не\s+будем\s+продолжать", re.I),
+    re.compile(r"не\s+будемо\s+продовжувати", re.I),
     re.compile(r"не\s+продовж", re.I),
 )
 
@@ -99,6 +98,7 @@ _ACK_PATTERNS = (
     re.compile(r"successfully\s+submitted", re.I),
     re.compile(r"дякуємо\s+за\s+(відгук|заявку|інтерес)", re.I),
     re.compile(r"заявк[ау]\s+отримано", re.I),
+    re.compile(r"отримали\s+ваше\s+резюме", re.I),
     re.compile(r"отклик\s+получен", re.I),
 )
 
@@ -231,6 +231,12 @@ _NOISE_FROM = (
 
 _NOISE_DOMAINS = frozenset({"indeed.com"})
 
+_FOOTER_START_PATTERNS = (
+    re.compile(r"^\s*unsubscribe\b", re.I),
+    re.compile(r"^\s*відмовитися\s+від\s+(?:повідомлень|розсилки)", re.I),
+    re.compile(r"^\s*отписаться\s+от\s+(?:сообщений|рассылки)", re.I),
+)
+
 
 @dataclass(frozen=True)
 class MailEvent:
@@ -245,8 +251,17 @@ class MailEvent:
     message_id: str
 
 
+def _body_without_footer(mail: InboundMail) -> str:
+    lines: list[str] = []
+    for line in mail.body_text[:4000].splitlines():
+        if _matches_any(line, _FOOTER_START_PATTERNS):
+            break
+        lines.append(line)
+    return "\n".join(lines)
+
+
 def _blob(mail: InboundMail) -> str:
-    return f"{mail.subject}\n{mail.from_name}\n{mail.from_addr}\n{mail.body_text[:4000]}"
+    return f"{mail.subject}\n{mail.from_name}\n{mail.from_addr}\n{_body_without_footer(mail)}"
 
 
 def _snippet(mail: InboundMail, limit: int = 160) -> str:
@@ -263,6 +278,15 @@ def _domain(addr: str) -> str:
 
 
 def extract_company(mail: InboundMail) -> str:
+    domain = _domain(mail.from_addr)
+    if domain in _DOMAIN_COMPANY:
+        return _DOMAIN_COMPANY[domain]
+    parts = domain.split(".")
+    if len(parts) >= 3:
+        parent = ".".join(parts[-2:])
+        if parent in _DOMAIN_COMPANY:
+            return _DOMAIN_COMPANY[parent]
+
     hay = f"{mail.subject}\n{mail.from_name}\n{mail.body_text[:1500]}"
     for pattern, company in _SUBJECT_COMPANY:
         if pattern.search(hay):
@@ -274,15 +298,6 @@ def extract_company(mail: InboundMail) -> str:
         name = re.split(r"[.!?\n|]", name, maxsplit=1)[0].strip()
         if 2 <= len(name) <= 60 and name.lower() not in {"us", "our", "the", "your"}:
             return name
-
-    domain = _domain(mail.from_addr)
-    if domain in _DOMAIN_COMPANY:
-        return _DOMAIN_COMPANY[domain]
-    parts = domain.split(".")
-    if len(parts) >= 3:
-        parent = ".".join(parts[-2:])
-        if parent in _DOMAIN_COMPANY:
-            return _DOMAIN_COMPANY[parent]
 
     name = (mail.from_name or "").strip()
     if name and not re.search(r"recruit|talent|hr team|careers|noreply|no-reply|hiring team", name, re.I):
@@ -456,7 +471,7 @@ def classify_mail(mail: InboundMail) -> MailEvent:
             company=company,
             role_hint=role_hint,
             recruiter=recruiter,
-            confidence=0.85 if company else 0.55,
+            confidence=0.95 if company else 0.7,
             snippet=snippet,
             subject=mail.subject,
             from_addr=mail.from_addr,
