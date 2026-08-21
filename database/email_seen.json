@@ -275,6 +275,12 @@
     "company": "Facebook",
     "subject": "Это вы только что выполнили вход на новом устройстве здесь: Kyiv?"
   },
+  "<09709d7f-5dc3-4c38-9472-1b5b4977f4b7@Spark>": {
+    "kind": "replied",
+    "processed_at": "2026-08-21T12:16:18+00:00",
+    "company": "vil4max",
+    "subject": "Senior iOS Developer (Swift)"
+  },
   "<0LDhSECupVB_ssz3pWy5Jw@notifications.google.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T16:38:11+00:00",
@@ -1386,6 +1392,18 @@
     "company": "N-iX",
     "subject": "Thank you for your interest in N-iX"
   },
+  "<20260821105103.114988de14166cd5@creator.patreon.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-21T12:16:18+00:00",
+    "company": "iOS (Swift) jobs",
+    "subject": "Embedded Swift Improvements Coming in Swift 6.4"
+  },
+  "<20260821105204.c601718e4468595a@creator.patreon.com>": {
+    "kind": "replied",
+    "processed_at": "2026-08-21T12:16:18+00:00",
+    "company": "iOS (Swift) jobs",
+    "subject": "iOS opening (USA, hybrid)"
+  },
   "<202611080850.13di66eco6cw3srj@email3.sketchfab.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-12T06:18:03+00:00",
@@ -1613,6 +1631,13 @@
     "processed_at": "2026-08-14T09:16:35+00:00",
     "company": "Xcode Cloud",
     "subject": "App -- Build 75 succeeded (main)"
+  },
+  "<349f02c1-0958-412c-bada-fbb249f22ed2@workablemail.com>": {
+    "kind": "application_ack",
+    "processed_at": "2026-08-21T12:16:18+00:00",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg3coXw",
+    "company": "Workana",
+    "subject": "Thanks for applying to Workana"
   },
   "<3525754b-877c-43a9-a603-69bec5111eb3@Spark>": {
     "kind": "ignore",
@@ -2542,6 +2567,13 @@
     "company": "The Brain.fm",
     "subject": "[Motivation] Uh, oh! Reply to get help!  🚨"
   },
+  "<TAFR3O5U3UU4.AYP3CLC4HAIJ1@hrmweb>": {
+    "kind": "replied",
+    "processed_at": "2026-08-21T12:16:23+00:00",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg3TOpM",
+    "company": "NIX",
+    "subject": "From NIX"
+  },
   "<VQdCdJecSSmKCpHDrZv7Cw@notifications.google.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-13T15:19:19+00:00",
@@ -2577,6 +2609,12 @@
     "processed_at": "2026-07-29T13:41:50+00:00",
     "company": "Jooble",
     "subject": "📱 Скоро ви отримаєте перший дзвінок від роботодаців"
+  },
+  "<XP-1tBcz7jhZD8oubmzEYQ@notifications.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-21T12:16:18+00:00",
+    "company": "Google",
+    "subject": "Security alert"
   },
   "<XeDaCmRcupNTE1M4Qod2xA@notifications.google.com>": {
     "kind": "ignore",
@@ -2647,6 +2685,12 @@
     "company": "Prom.ua",
     "subject": "Замовлення 422017465 оплачено ✅"
   },
+  "<c37737a31d8e2e0b0051bb86c7363d74d1ad9e19-20243056-111257859@google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-21T12:16:18+00:00",
+    "company": "YouTube Premium",
+    "subject": "Изменение цены YouTube Premium"
+  },
   "<c3luZXJpc2UuRU1BSUw6NDE1YjUwYTctYTFmMC00ZTVlLTgxNWMtMWRiYzMyMDk4NDA0OmRhZjFiYzc3LThmYjUtNTJiZS1hZjA3LTAxZjJlNjY3NDgzNS4xOTg2Mzk2MQ==@sportano.ua>": {
     "kind": "ignore",
     "processed_at": "2026-08-08T06:16:43+00:00",
@@ -2670,6 +2714,13 @@
     "processed_at": "2026-08-04T06:20:40+00:00",
     "company": "MODIVO.UA",
     "subject": "Ми змінюємося на краще заради вас"
+  },
+  "<c4f271f541561d8b077071640fad7a7290805c66.2j027f3@workablemail.com>": {
+    "kind": "application_ack",
+    "processed_at": "2026-08-21T12:16:18+00:00",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg3coXw",
+    "company": "Workana",
+    "subject": "iOS Engineer - Workana"
   },
   "<calendar-aeda3d15-0243-4ad9-9153-254d380193ba@google.com>": {
     "kind": "ignore",
@@ -2810,6 +2861,12 @@
     "processed_at": "2026-07-31T15:18:16+00:00",
     "company": "MyHeritage",
     "subject": "🌱  Grow your family tree in a few easy steps"
+  },
+  "<er1oNZjKY2AFuz12Epgv-g@notifications.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-21T12:16:23+00:00",
+    "company": "Google",
+    "subject": "Security alert"
   },
   "<f27ad919-9db6-49c4-9881-c9ad5cd6deae@Spark>": {
     "kind": "rejected_hr",
