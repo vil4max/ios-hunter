@@ -261,11 +261,6 @@
     "company": "Steadfast Craft",
     "first_seen": "2026-08-11T12:00:48+00:00"
   },
-  "https://djinni.co/jobs/842867-trainee-ios-software-developer": {
-    "title": "Trainee iOS Software Developer",
-    "company": "GlobalLogic",
-    "first_seen": "2026-08-13T15:18:20+00:00"
-  },
   "https://djinni.co/jobs/842891-senior-mobile-engineer-id82572": {
     "title": "Senior Mobile Engineer ID82572",
     "company": "AgileEngine",
@@ -510,15 +505,20 @@
     "applied_at": "2026-07-29",
     "disposition": "dropped"
   },
+  "https://www.globallogic.com/ua/careers/ios-developer-with-android-irc296867": {
+    "title": "iOS Developer with Android",
+    "company": "GlobalLogic",
+    "first_seen": "2026-08-21T12:15:34+00:00"
+  },
   "https://www.globallogic.com/ua/careers/ios-software-engineer-irc300022": {
     "title": "iOS Software Engineer",
     "company": "GlobalLogic",
     "first_seen": "2026-07-14T20:20:33+00:00"
   },
-  "https://www.globallogic.com/ua/careers/senior-ios-software-engineer-irc296452-2": {
-    "title": "Senior iOS Software Engineer",
+  "https://www.globallogic.com/ua/careers/specialist-ios-software-engineer-irc302236": {
+    "title": "Specialist iOS Software Engineer",
     "company": "GlobalLogic",
-    "first_seen": "2026-07-10T08:29:48+00:00"
+    "first_seen": "2026-08-21T12:15:34+00:00"
   },
   "https://www.griddynamics.com/careers/vacancy/45715": {
     "title": "iOS Developer",
