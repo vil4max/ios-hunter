@@ -28,6 +28,7 @@ def offline(monkeypatch: pytest.MonkeyPatch) -> None:
             "fetch_text_allowing_bot_wall",
             "fetch_impersonated",
             "post_form_data",
+            "post_json",
         ):
             if hasattr(module, name):
                 monkeypatch.setattr(module, name, refuse)

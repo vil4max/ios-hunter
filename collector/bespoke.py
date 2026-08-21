@@ -119,8 +119,16 @@ def _ok(
     started: float,
     *,
     scanned: int | None = None,
+    empty_is_healthy: bool = False,
 ) -> SourceResult:
-    return source_ok(company, source_url, jobs, started, scanned=scanned)
+    return source_ok(
+        company,
+        source_url,
+        jobs,
+        started,
+        scanned=scanned,
+        empty_is_healthy=empty_is_healthy,
+    )
 
 
 def _fail(company: str, source_url: str, error: Exception, started: float) -> SourceResult:
@@ -594,7 +602,7 @@ def collect_globallogic() -> SourceResult:
 
         html = fetch_text_allowing_bot_wall(list_url)
         if html is None:
-            return _ok(company, list_url, [], started, scanned=0)
+            html = fetch_impersonated(list_url)
         document = BeautifulSoup(html, "lxml")
         jobs: list[dict[str, Any]] = []
         seen: set[str] = set()
@@ -799,7 +807,14 @@ def collect_mind_studios() -> SourceResult:
                     "location": item.get("location"),
                 }
             )
-        return _ok(company, url, jobs, started, scanned=len(items))
+        return _ok(
+            company,
+            url,
+            jobs,
+            started,
+            scanned=len(items),
+            empty_is_healthy=True,
+        )
     except Exception as error:  # noqa: BLE001
         return _fail(company, url, error, started)
 

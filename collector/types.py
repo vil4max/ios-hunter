@@ -19,6 +19,7 @@ class SourceResult:
     error: str | None
     response_ms: int
     items_scanned: int = 0
+    empty_is_healthy: bool = False
 
     @property
     def is_usable(self) -> bool:

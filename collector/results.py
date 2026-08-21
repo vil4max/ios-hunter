@@ -23,6 +23,7 @@ def source_ok(
     *,
     scanned: int | None = None,
     source_id: str | None = None,
+    empty_is_healthy: bool = False,
 ) -> SourceResult:
     return SourceResult(
         source_id=source_id or source_id_for(company, source_url),
@@ -33,6 +34,7 @@ def source_ok(
         error=None,
         response_ms=int((time.perf_counter() - started) * 1000),
         items_scanned=len(jobs) if scanned is None else scanned,
+        empty_is_healthy=empty_is_healthy,
     )
 
 

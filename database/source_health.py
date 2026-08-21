@@ -65,6 +65,8 @@ def classify_degraded(
     for result in results:
         if result.status != STATUS_HEALTHY:
             continue
+        if result.items_scanned == 0 and result.empty_is_healthy:
+            continue
         best = best_scanned(baseline, result.source_id)
         previous_empty_runs = empty_runs(baseline, result.source_id)
         if result.items_scanned == 0 and best > 0:

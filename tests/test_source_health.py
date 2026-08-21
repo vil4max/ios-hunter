@@ -124,6 +124,14 @@ def test_classify_degraded_leaves_new_sources_alone() -> None:
     assert results[0].status == "healthy"
 
 
+def test_classify_degraded_accepts_authoritative_empty_source() -> None:
+    result = _result("company:empty@empty.com", scanned=0, name="Empty")
+    result.empty_is_healthy = True
+
+    assert classify_degraded([result], {result.source_id: {"best_scanned": 20}}) == []
+    assert result.status == "healthy"
+
+
 def test_classify_degraded_flags_third_consecutive_empty_run() -> None:
     results = [_result("company:new@new.com", scanned=0, name="New")]
     baseline = {"company:new@new.com": {"best_scanned": 0, "empty_runs": 2}}

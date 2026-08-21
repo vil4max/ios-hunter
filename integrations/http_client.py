@@ -163,6 +163,25 @@ def fetch_json(
     return _get(url, headers=headers, timeout=timeout).json()
 
 
+def post_json(
+    url: str,
+    payload: dict[str, Any],
+    *,
+    params: dict[str, str] | None = None,
+    headers: dict[str, str] | None = None,
+    timeout: int = _DEFAULT_TIMEOUT,
+) -> Any:
+    response = requests.post(
+        url,
+        params=params,
+        json=payload,
+        headers=_merge_headers(headers),
+        timeout=timeout,
+    )
+    response.raise_for_status()
+    return response.json()
+
+
 def fetch_text_allowing_bot_wall(
     url: str,
     *,
