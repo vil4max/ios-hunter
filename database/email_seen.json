@@ -214,6 +214,12 @@
     "company": "James - Ethena Labs",
     "subject": "We have received your application!"
   },
+  "<010201a0230d6294-8565b601-d499-4c11-bcf9-6f1ffaabc47b-000000@eu-west-1.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-21T09:44:39+00:00",
+    "company": "TAXER",
+    "subject": "Новий вхідний документ з ДПС Електронне повідомлення про відкриття рахунків та взяття на облік в органах ДФСУ за даними, отриманими від банків та інших фінансових установ"
+  },
   "<0107019fa9d51843-5bf640bc-163e-4a74-81ee-22be2579400a-000000@eu-central-1.amazonses.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -299,6 +305,12 @@
     "processed_at": "2026-07-31T08:17:55+00:00",
     "company": "Xcode Cloud",
     "subject": "App -- Build 64 succeeded (main)"
+  },
+  "<1023921129.122519.1787303068985@ltx1-app156282.prod.linkedin.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-21T09:44:39+00:00",
+    "company": "LinkedIn",
+    "subject": "Max, please verify your new device"
   },
   "<1028413856.12630027.1785663992472@email.apple.com>": {
     "kind": "ignore",
@@ -635,6 +647,12 @@
     "processed_at": "2026-08-20T09:16:08+00:00",
     "company": "Apple Developer",
     "subject": "Agreement signed: Apple Developer Program License Agreement"
+  },
+  "<1925650745.180864.1787299650040@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-21T09:44:39+00:00",
+    "company": "Xcode Cloud",
+    "subject": "RegionalCheck -- Build 50 succeeded (main)"
   },
   "<1927067782.300382933.1785663987568@email.apple.com>": {
     "kind": "ignore",
@@ -2205,6 +2223,12 @@
     "company": "Runkeeper",
     "subject": "Предупреждение о деактивации учетной записи Runkeeper"
   },
+  "<958155193.3304535.1787299655195@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-21T09:44:39+00:00",
+    "company": "Maksim Vilchevskiy via TestFlight",
+    "subject": "DriveCheckUA 2.1 (50) for iOS is now available to test."
+  },
   "<958478207.662134.1786701638613@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-14T12:18:51+00:00",
@@ -2312,6 +2336,12 @@
     "processed_at": "2026-07-30T07:21:26+00:00",
     "company": "Natasha Grigorova",
     "subject": "Application for IOS Developer at Prequel"
+  },
+  "<CAJ7GhfXMdbWkQR06fxwk01HS_F4JX0Wv68eogcT0CQ9F_=923g@mail.gmail.com>": {
+    "kind": "application_ack",
+    "processed_at": "2026-08-21T09:44:39+00:00",
+    "company": "Anastasiya Matveyeva",
+    "subject": "Thank You for Your Interest in TechMagic"
   },
   "<CAKBszFPn43ptcn7=SCkKtf6wtrp8WHp5fZyxF=hJO8YO6dF4Ng@mail.gmail.com>": {
     "kind": "ignore",
@@ -2689,6 +2719,12 @@
     "processed_at": "2026-08-08T06:16:43+00:00",
     "company": "Cal.com",
     "subject": "Reminder: Intro Interview between Serhii Zinchenko and Max\r\n Vilchevskiy - Fri, Aug 7, 2026 6:00pm"
+  },
+  "<d3sH6E9jDMdsAzRiLzyeY4EaGkS02keiAqhSb0k88t0@cks.com.ua>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-21T09:44:39+00:00",
+    "company": "КК «ЦКС»",
+    "subject": "Сплачуйте за спожиті житлово-комунальні послуги, не накопичуйте борги"
   },
   "<d4be37dfa28d2c5958f66734879e435adf547218.11r8lcf@workablemail.com>": {
     "kind": "application_ack",
