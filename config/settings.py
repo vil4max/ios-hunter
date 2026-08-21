@@ -97,6 +97,7 @@ class Settings:
     stale_days: int
     inbox_new_days: int
     research_stale_days: int
+    application_no_reply_days: int = 30
 
     @property
     def repo_owner(self) -> str:
@@ -135,4 +136,5 @@ def load_settings() -> Settings:
         stale_days=_env_int("CAREER_AGENT_STALE_DAYS", 7),
         inbox_new_days=_env_int("CAREER_AGENT_INBOX_NEW_DAYS", 2),
         research_stale_days=_env_int("CAREER_AGENT_RESEARCH_STALE_DAYS", 5),
+        application_no_reply_days=_env_int("CAREER_AGENT_NO_REPLY_DAYS", 30),
     )

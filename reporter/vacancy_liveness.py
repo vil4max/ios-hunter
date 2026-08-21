@@ -29,7 +29,8 @@ def format_vacancy_liveness_report(
     clock = stamp.strftime("%Y-%m-%d %H:%M")
     archived = list(result.archived or [])
     closed = list(result.closed or [])
-    hits = archived or closed
+    no_reply = list(result.no_reply or [])
+    hits = archived or [*closed, *no_reply]
 
     if not hits:
         lines = [
@@ -42,7 +43,7 @@ def format_vacancy_liveness_report(
     if archived:
         header = f"🗂️ Отправлено в архив: {len(archived)}"
     else:
-        header = f"⚠️ Найдено закрытых: {len(closed)}"
+        header = f"⚠️ Найдено для архива: {len(hits)}"
 
     lines = [header, ""]
     for index, hit in enumerate(hits, start=1):

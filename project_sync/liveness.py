@@ -13,6 +13,7 @@ from project_sync.github_client import GitHubClient, ProjectMeta
 class ClosedVacancyHit:
     card: ProjectCard
     probe: ProbeResult
+    close_reason: str = "Role closed"
 
 
 @dataclass
@@ -20,12 +21,15 @@ class LivenessResult:
     checked: int = 0
     skipped: int = 0
     closed: list[ClosedVacancyHit] | None = None
+    no_reply: list[ClosedVacancyHit] | None = None
     archived: list[ClosedVacancyHit] | None = None
     errors: list[str] | None = None
 
     def __post_init__(self) -> None:
         if self.closed is None:
             self.closed = []
+        if self.no_reply is None:
+            self.no_reply = []
         if self.archived is None:
             self.archived = []
         if self.errors is None:
@@ -54,8 +58,50 @@ def find_closed_vacancies(
     return result
 
 
-def _append_archive_note(body: str, *, today: date, reason: str) -> str:
-    note = f"{today.isoformat()}: auto-archived (Role closed): {reason}"
+def find_no_reply_applications(
+    cards: list[ProjectCard],
+    *,
+    today: date,
+    wait_days: int,
+    excluded_item_ids: set[str] | frozenset[str] | None = None,
+) -> list[ClosedVacancyHit]:
+    excluded = excluded_item_ids or frozenset()
+    hits: list[ClosedVacancyHit] = []
+    for card in cards:
+        if (
+            card.item_id in excluded
+            or card.status != "Applied"
+            or card.applied_at is None
+        ):
+            continue
+        age_days = (today - card.applied_at).days
+        if age_days <= wait_days:
+            continue
+        url = (card.url or card.canonical_url or "").strip()
+        hits.append(
+            ClosedVacancyHit(
+                card=card,
+                probe=ProbeResult(
+                    url=url,
+                    closed=False,
+                    skipped=False,
+                    http_status=None,
+                    reason=f"no reply after {age_days} days",
+                ),
+                close_reason="No reply",
+            )
+        )
+    return hits
+
+
+def _append_archive_note(
+    body: str,
+    *,
+    today: date,
+    close_reason: str,
+    reason: str,
+) -> str:
+    note = f"{today.isoformat()}: auto-archived ({close_reason}): {reason}"
     text = (body or "").rstrip()
     if note in text:
         return text + "\n"
@@ -82,14 +128,13 @@ def archive_closed_vacancies(
         project_meta = client.resolve_project(settings.project_owner, settings.project_number)
     close_reason_field = project_meta.fields_by_name.get("Close Reason")
     closed_stage_field = project_meta.fields_by_name.get("Closed Stage")
-    close_reason_option = (
-        close_reason_field.options.get("Role closed") if close_reason_field else None
-    )
-
     stamp = today or date.today()
     archived: list[ClosedVacancyHit] = []
     for hit in hits:
         card = hit.card
+        close_reason_option = (
+            close_reason_field.options.get(hit.close_reason) if close_reason_field else None
+        )
         if close_reason_field and close_reason_option:
             client.set_single_select_field(
                 project_id=project_meta.project_id,
@@ -113,6 +158,7 @@ def archive_closed_vacancies(
                 body=_append_archive_note(
                     card.body,
                     today=stamp,
+                    close_reason=hit.close_reason,
                     reason=hit.probe.reason,
                 ),
             )
@@ -132,11 +178,19 @@ def run_vacancy_liveness(
     gh = client or GitHubClient(settings.github_token)
     cards = load_cards_from_github(gh, settings)
     result = find_closed_vacancies(cards, probe=probe)
-    if apply_archives and result.closed:
+    stamp = today or date.today()
+    result.no_reply = find_no_reply_applications(
+        cards,
+        today=stamp,
+        wait_days=settings.application_no_reply_days,
+        excluded_item_ids={hit.card.item_id for hit in result.closed or []},
+    )
+    candidates = [*(result.closed or []), *(result.no_reply or [])]
+    if apply_archives and candidates:
         result.archived = archive_closed_vacancies(
             gh,
-            result.closed,
+            candidates,
             settings=settings,
-            today=today,
+            today=stamp,
         )
     return result

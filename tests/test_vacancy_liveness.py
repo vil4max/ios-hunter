@@ -12,6 +12,7 @@ from project_sync.liveness import (
     LivenessResult,
     archive_closed_vacancies,
     find_closed_vacancies,
+    find_no_reply_applications,
 )
 from reporter.vacancy_liveness import format_vacancy_liveness_report
 
@@ -349,6 +350,38 @@ def test_find_closed_vacancies_uses_probe() -> None:
     assert result.closed[0].card.item_id == "a"
 
 
+def test_find_no_reply_applications_archives_only_after_wait_window() -> None:
+    cards = [
+        _card(item_id="day-30", applied_at=date(2026, 7, 22)),
+        _card(item_id="day-31", applied_at=date(2026, 7, 21)),
+        _card(item_id="replied", status="Replied", applied_at=date(2026, 7, 1)),
+        _card(item_id="missing-date", applied_at=None),
+    ]
+
+    hits = find_no_reply_applications(
+        cards,
+        today=date(2026, 8, 21),
+        wait_days=30,
+    )
+
+    assert [hit.card.item_id for hit in hits] == ["day-31"]
+    assert hits[0].close_reason == "No reply"
+    assert hits[0].probe.reason == "no reply after 31 days"
+
+
+def test_find_no_reply_applications_excludes_vacancies_already_closed() -> None:
+    card = _card(item_id="closed-and-stale", applied_at=date(2026, 7, 1))
+
+    hits = find_no_reply_applications(
+        [card],
+        today=date(2026, 8, 21),
+        wait_days=30,
+        excluded_item_ids={card.item_id},
+    )
+
+    assert hits == []
+
+
 def test_archive_closed_vacancies_sets_fields() -> None:
     calls: list[tuple] = []
 
@@ -378,7 +411,7 @@ def test_archive_closed_vacancies_sets_fields() -> None:
                 id="close",
                 name="Close Reason",
                 kind="single_select",
-                options={"Role closed": "opt-role"},
+                options={"Role closed": "opt-role", "No reply": "opt-no-reply"},
             ),
             "Closed Stage": ProjectField(
                 id="stage",
@@ -411,6 +444,60 @@ def test_archive_closed_vacancies_sets_fields() -> None:
     draft_calls = [c for c in calls if c[0] == "draft"]
     assert "Role closed" in draft_calls[0][2]["body"]
     assert ("archive", "proj", "item-1") in calls
+
+
+def test_archive_no_reply_application_sets_no_reply_reason() -> None:
+    calls: list[tuple] = []
+
+    class FakeClient:
+        def set_single_select_field(self, **kwargs):
+            calls.append(("select", kwargs))
+
+        def draft_issue_id_for_item(self, project_id, item_id):
+            return "draft-1"
+
+        def update_draft_issue(self, draft_id, **kwargs):
+            calls.append(("draft", draft_id, kwargs))
+
+        def archive_project_item(self, project_id, item_id):
+            calls.append(("archive", project_id, item_id))
+
+    meta = ProjectMeta(
+        project_id="proj",
+        status_field=ProjectField(id="status", name="Status", kind="single_select"),
+        fields_by_name={
+            "Close Reason": ProjectField(
+                id="close",
+                name="Close Reason",
+                kind="single_select",
+                options={"No reply": "opt-no-reply"},
+            ),
+            "Closed Stage": ProjectField(
+                id="stage",
+                name="Closed Stage",
+                kind="single_select",
+                options={"Applied": "opt-stage-applied"},
+            ),
+        },
+    )
+    hit = ClosedVacancyHit(
+        card=_card(applied_at=date(2026, 7, 21)),
+        probe=ProbeResult(
+            url="https://example.com/job/1",
+            closed=False,
+            skipped=False,
+            http_status=None,
+            reason="no reply after 31 days",
+        ),
+        close_reason="No reply",
+    )
+
+    archive_closed_vacancies(FakeClient(), [hit], today=date(2026, 8, 21), meta=meta)
+
+    select_calls = [call for call in calls if call[0] == "select"]
+    assert any(call[1]["option_id"] == "opt-no-reply" for call in select_calls)
+    draft_calls = [call for call in calls if call[0] == "draft"]
+    assert "auto-archived (No reply)" in draft_calls[0][2]["body"]
 
 
 def test_format_liveness_report_empty_and_archived() -> None:
@@ -462,6 +549,6 @@ def test_format_liveness_report_dry_run_closed_not_archived() -> None:
         LivenessResult(checked=1, skipped=0, closed=[hit], archived=[]),
         now=now,
     )
-    assert message.startswith("⚠️ Найдено закрытых: 1")
+    assert message.startswith("⚠️ Найдено для архива: 1")
     assert "1. Acme — Swift Engineer" in message
     assert message.endswith("🕐 2026-07-28 07:00")

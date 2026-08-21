@@ -16,7 +16,7 @@ from reporter.vacancy_liveness import notify_vacancy_liveness
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Check active Project vacancies for closed URLs, archive, Telegram status."
+        description="Archive closed vacancies and applications with no reply after the wait window."
     )
     parser.add_argument(
         "--dry-run",
@@ -45,9 +45,11 @@ def main() -> int:
     archived = result.archived or []
     print(
         f"Checked={result.checked} skipped={result.skipped} "
-        f"closed={len(result.closed or [])} archived={len(archived)} dry_run={args.dry_run}"
+        f"closed={len(result.closed or [])} no_reply={len(result.no_reply or [])} "
+        f"archived={len(archived)} dry_run={args.dry_run}"
     )
-    for hit in archived or (result.closed or []):
+    candidates = [*(result.closed or []), *(result.no_reply or [])]
+    for hit in archived or candidates:
         label = hit.card.display_title
         print(f"- {label}: {hit.probe.reason}")
     return 0
