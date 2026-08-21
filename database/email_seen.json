@@ -5,6 +5,12 @@
     "company": "Google",
     "subject": "Your video verification is no longer saved in your Google Account"
   },
+  "<-c0SfrDhSVKbxnV0-Si4vw@geopod-ismtpd-39>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-21T06:19:53+00:00",
+    "company": "Steve Kaufmann",
+    "subject": "Why I still read paper books"
+  },
   "<0100019fadd13d4f-b8c430b5-33fe-458f-a3d9-f26a15fdb835-000000@email.amazonses.com>": {
     "kind": "application_ack",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -147,6 +153,18 @@
     "processed_at": "2026-08-15T09:16:18+00:00",
     "company": "duolingo",
     "subject": "Duo ведь не молодеет... 🫠"
+  },
+  "<010001a0206cb530-1aebd6e5-2a2c-4713-93b7-63ad31581286-000000@email.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-21T06:19:53+00:00",
+    "company": "Linear",
+    "subject": "An update to Linear’s pricing"
+  },
+  "<010001a0208b9476-d5df7841-83f9-4601-bc53-e936d4f7020a-000000@email.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-21T06:19:53+00:00",
+    "company": "Linear",
+    "subject": "Changelog: Coding environments"
   },
   "<0101019faa3ac02b-d5c9e8e3-ef86-43ea-9392-8ff92655359d-000000@us-west-2.amazonses.com>": {
     "kind": "ignore",
@@ -312,6 +330,12 @@
     "processed_at": "2026-07-31T08:17:55+00:00",
     "company": "Maksim Vilchevskiy via TestFlight",
     "subject": "OneCart Family 1.4 (64) for iOS is now available to test."
+  },
+  "<1086628939.69621.1787279039710@email-sender-6b4fd58599-m5766>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-21T06:19:53+00:00",
+    "company": "Sense Bank",
+    "subject": "Ваш договір"
   },
   "<11.50.49819.860547A6@i-0dcae1139d500ecaf.mta3vrest.sd.prd.sparkpost>": {
     "kind": "ignore",
@@ -915,6 +939,18 @@
     "company": "Indeed",
     "subject": "Вашу розсилку вакансій за запитом ios senior developer, Київ, Київ активовано"
   },
+  "<1k0gbqn5ro6tq80h@indeed.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-21T06:19:53+00:00",
+    "company": "Indeed",
+    "subject": "ios developer: Level Designer у Joyteractive і ще 2 нові вакансії"
+  },
+  "<1k0gji92h32bk000@indeed.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-21T06:19:53+00:00",
+    "company": "Indeed",
+    "subject": "iOS: Software Engineer, Platform - Kyiv, Ukraine у Speechify і ще 11 нових вакансій"
+  },
   "<202606081221.10bipa0t5cjqvj@shared-p100-i7.d.sp1-brevo.net>": {
     "kind": "ignore",
     "processed_at": "2026-08-06T15:21:31+00:00",
@@ -1324,6 +1360,13 @@
     "processed_at": "2026-08-20T12:16:32+00:00",
     "company": "iOS (Swift) jobs",
     "subject": "SwiftUI iPad Adaptive Layout: Five Layers for Apps That Don't Break in Split\r\n View"
+  },
+  "<20260820153954.4b406e28570bf487@gh-mail.n-ix.com>": {
+    "kind": "application_ack",
+    "processed_at": "2026-08-21T06:19:53+00:00",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg3TOnk",
+    "company": "N-iX",
+    "subject": "Thank you for your interest in N-iX"
   },
   "<202611080850.13di66eco6cw3srj@email3.sketchfab.com>": {
     "kind": "ignore",
@@ -1987,6 +2030,18 @@
     "company": "GitHub",
     "subject": "[GitHub] Your fine-grained personal access token is about to expire"
   },
+  "<6a871a85f12e7_13b11a8825a7@sharedworker-56f6b8b8cb-fwv2z.mail>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-21T06:19:53+00:00",
+    "company": "GitHub",
+    "subject": "[GitHub] A fine-grained personal access token has been regenerated\r\n for your account"
+  },
+  "<6a871a95.faf5771f.1e0825.b5f5@mx.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-21T06:19:53+00:00",
+    "company": "EPAM",
+    "subject": "Career Agent  ·  2026-08-20"
+  },
   "<6a8f378d-a961-4eb9-b3d6-e8fadfed1512@atl1s07mta0304.xt.local>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:55+00:00",
@@ -2071,6 +2126,12 @@
     "company": "Robert Guest at The Economist",
     "subject": "The Taliban are vile. Democracies must still engage with them"
   },
+  "<829977773.10347.1787278832823@es-mail-6d96fcbb59-66vmx>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-21T06:19:53+00:00",
+    "company": "Sense Bank",
+    "subject": "Вхід до Sense SuperApp"
+  },
   "<82b79cc3-518c-482e-b0c7-aac978cb5778@vodokanal.kiev.ua>": {
     "kind": "ignore",
     "processed_at": "2026-08-06T12:17:26+00:00",
@@ -2119,6 +2180,12 @@
     "processed_at": "2026-08-15T12:16:16+00:00",
     "company": "The Economist",
     "subject": "Is Europe safer than America?"
+  },
+  "<8bff4f13-06b4-41e5-9231-95986f92b1ba@atl1s07mta0607.xt.local>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-21T06:19:53+00:00",
+    "company": "Robert Guest at The Economist",
+    "subject": "Could AIs become conscious?"
   },
   "<8fdea58a-59a7-4770-a0c5-73e416b2d679@workablemail.com>": {
     "kind": "ignore",
