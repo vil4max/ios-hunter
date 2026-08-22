@@ -257,6 +257,12 @@
     "company": "WhiteBIT Exchange",
     "subject": "Наклацай на новий смартфон!"
   },
+  "<011301a02552bc09-665c73e4-5eee-466f-a29d-a15a8892cdd1-000000@eu-west-3.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-22T06:16:40+00:00",
+    "company": "WhiteBIT Exchange",
+    "subject": "Ідеальна технопара Samsung × WhiteBIT 🖤"
+  },
   "<01M04DNN5T210S9CVM1XZNM4BT@klaviyomail.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-16T06:18:46+00:00",
@@ -975,6 +981,18 @@
     "company": "Indeed",
     "subject": "iOS: Software Engineer, Platform - Kyiv, Ukraine у Speechify і ще 11 нових вакансій"
   },
+  "<1k0j18dmci5pu800@indeed.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-22T06:16:40+00:00",
+    "company": "Indeed",
+    "subject": "ios developer: Senior Mobile Developer у SKELAR і ще 2 нові вакансії"
+  },
+  "<1k0j7beihkfus800@indeed.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-22T06:16:40+00:00",
+    "company": "Indeed",
+    "subject": "iOS: Strong Junior Manual QA (Mobile) у Ajax Systems і ще 7 нових вакансій"
+  },
   "<202606081221.10bipa0t5cjqvj@shared-p100-i7.d.sp1-brevo.net>": {
     "kind": "ignore",
     "processed_at": "2026-08-06T15:21:31+00:00",
@@ -1403,6 +1421,24 @@
     "processed_at": "2026-08-21T12:16:18+00:00",
     "company": "iOS (Swift) jobs",
     "subject": "iOS opening (USA, hybrid)"
+  },
+  "<20260821161614.3.98a6429ccb02de55.kbqv5ask@mg-d1.substack.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-22T06:16:40+00:00",
+    "company": "Substack",
+    "subject": "Apple Watch brings distributed system headaches to your app and 1 more"
+  },
+  "<20260821215408.7d2ebaa3d5ba6971@cio79999.news.railway.app>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-22T06:16:40+00:00",
+    "company": "Railway",
+    "subject": "Railway for Everyone, Cloud Agents Everywhere, Edge Rules, Redis HA"
+  },
+  "<20260822052741.2f2d1b194b90a4c8@cio121019.openrouter.ai>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-22T06:16:40+00:00",
+    "company": "OpenRouter",
+    "subject": "Welcome to OpenRouter. Let's get started"
   },
   "<202611080850.13di66eco6cw3srj@email3.sketchfab.com>": {
     "kind": "ignore",
@@ -2091,6 +2127,12 @@
     "company": "GERC.UA",
     "subject": "Нагадуємо про важливість сплати житлово-комунальних послуг!"
   },
+  "<6a886bbf.400acb00.28821.16b7@mx.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-22T06:16:40+00:00",
+    "company": "NIX",
+    "subject": "Career Agent  ·  2026-08-21"
+  },
   "<6a8f378d-a961-4eb9-b3d6-e8fadfed1512@atl1s07mta0304.xt.local>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:55+00:00",
@@ -2464,6 +2506,12 @@
     "processed_at": "2026-08-18T12:18:59+00:00",
     "company": "Google",
     "subject": "Security alert"
+  },
+  "<F9.C0.59061.5EB788A6@i-0c19b7dfcaaac5dd7.mta3vrest.sd.prd.sparkpost>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-22T06:16:40+00:00",
+    "company": "OLX",
+    "subject": "🥹 Ваше оголошення повинно бути в топі"
   },
   "<FD.6D.36403.BF5F18A6@i-0fbdafab2ca626ab1.mta3vrest.sd.prd.sparkpost>": {
     "kind": "ignore",
@@ -2856,6 +2904,12 @@
     "company": "Світ Чаю",
     "subject": "🌡️ Рятуємось від +30°C: крижана матча зі знижкою!"
   },
+  "<e61f8a2f-6c1b-40d7-8fc3-2fbbfb714336.noreply@account.tiktok.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-22T06:16:40+00:00",
+    "company": "TikTok",
+    "subject": "New device login detected"
+  },
   "<ec08c4aa-c733-4f00-b5f5-8a568e69c84a@mtasv.net>": {
     "kind": "ignore",
     "processed_at": "2026-08-01T15:16:21+00:00",
@@ -3013,6 +3067,18 @@
     "company": "Checkbox",
     "subject": "Чек - ФОП КОВАЛЕВСЬКА ДАР'Я ОЛЕКСАНДРІВНА"
   },
+  "<tk5o2k-0gjbo9-7b@sendpulse.me>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-22T06:16:40+00:00",
+    "company": "Hard&Soft Skills Community",
+    "subject": "Регистрация подтверждена"
+  },
+  "<tk5o5p-0md1y8-it@sendpulse.me>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-22T06:16:40+00:00",
+    "company": "Hard&Soft Skills Community",
+    "subject": "Регистрация подтверждена"
+  },
   "<vJGwozEgQyyeuFQe_lQqDA@geopod-ismtpd-3>": {
     "kind": "ignore",
     "processed_at": "2026-08-07T06:16:50+00:00",
@@ -3066,5 +3132,11 @@
     "processed_at": "2026-08-05T15:16:43+00:00",
     "company": "ЛУН",
     "subject": "Нові ЖК на ЛУН: ЖК Соборний  2026, ЖК Левадний і ще 4 ЖК  - нові проєкти і старти продажів Києва і області"
+  },
+  "<ysffHHjHeMIX390O1BGXHSyU3f1KUWS1AxnY45KOB00@www.stopfail.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-22T06:16:40+00:00",
+    "company": "StopFail",
+    "subject": "Дякуємо за реєстрацію у 🍑 Pitch Game!"
   }
 }
