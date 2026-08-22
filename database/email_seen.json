@@ -343,6 +343,12 @@
     "company": "Xcode Cloud",
     "subject": "App -- Build 71 succeeded (main)"
   },
+  "<107025192.504785.1787392336028@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-22T12:16:12+00:00",
+    "company": "Apple Developer",
+    "subject": "We’ve received your request to join the App Store Small Business Program."
+  },
   "<1070531124.111932659.1785498315202@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T12:16:26+00:00",
@@ -360,6 +366,12 @@
     "processed_at": "2026-08-21T06:19:53+00:00",
     "company": "Sense Bank",
     "subject": "Ваш договір"
+  },
+  "<10b03984-ae09-4cac-95f0-f4ec55b5ef69@atl1s07mta0606.xt.local>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-22T12:16:12+00:00",
+    "company": "The Economist",
+    "subject": "How big is America’s “obesity penalty”?"
   },
   "<11.50.49819.860547A6@i-0dcae1139d500ecaf.mta3vrest.sd.prd.sparkpost>": {
     "kind": "ignore",
@@ -992,6 +1004,12 @@
     "processed_at": "2026-08-22T06:16:40+00:00",
     "company": "Indeed",
     "subject": "iOS: Strong Junior Manual QA (Mobile) у Ajax Systems і ще 7 нових вакансій"
+  },
+  "<1k0kk0pegkqi6801@indeed.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-22T12:16:12+00:00",
+    "company": "Indeed",
+    "subject": "ios senior developer у Київ, Київ: Senior Mobile Developer в SKELAR"
   },
   "<202606081221.10bipa0t5cjqvj@shared-p100-i7.d.sp1-brevo.net>": {
     "kind": "ignore",
