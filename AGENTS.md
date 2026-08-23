@@ -16,8 +16,9 @@ Standard commands live in `README.md` ("Local debug") and `CONTRIBUTING.md`
 
 ### Python pipeline
 
-- Test: `python3 -m pytest -q` (the suite makes **real network calls** to live job
-  boards, so it takes ~75s; a fully offline run is not expected).
+- Test: `python3 -m pytest -q` (the suite is fully **mocked/offline** and fast
+  (~1s); no live network calls). Collectors/network paths are covered by unit
+  tests with `monkeypatch`/`@patch`.
 - Import check (mirrors CI): the one-liner in `CONTRIBUTING.md` / `ci.yml`.
 - Run the app: `python3 scripts/run_pipeline.py`. It scrapes live company/DOU endpoints,
   normalizes + dedupes, and (without `TELEGRAM_*` secrets) **prints the alert to stdout**

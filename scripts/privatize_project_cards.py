@@ -7,7 +7,6 @@ Convert public Project Issues back to private Drafts, then close the Issues.
 Safe for Career CRM privacy: Project stays private; repo Issues are closed.
 """
 
-import json
 import os
 import subprocess
 import sys

@@ -43,6 +43,7 @@ __pycache__/
 *.pyc
 .venv/
 .coverage
+.ruff_cache/
 
 .cursor/plans/
 .cursor/project-context
