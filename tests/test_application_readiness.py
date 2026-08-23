@@ -82,7 +82,9 @@ def test_build_application_package_replaces_previous_package() -> None:
 
 def test_prepare_application_verifies_open_role_without_changing_status() -> None:
     client = FakeClient()
-    probe = lambda url, card_title="": ProbeResult(url, False, False, 200, "open")
+
+    def probe(url: str, card_title: str = "") -> ProbeResult:
+        return ProbeResult(url, False, False, 200, "open")
 
     prepare_application(
         client,  # type: ignore[arg-type]
@@ -99,7 +101,9 @@ def test_prepare_application_verifies_open_role_without_changing_status() -> Non
 
 def test_prepare_application_does_not_mutate_closed_role() -> None:
     client = FakeClient()
-    probe = lambda url, card_title="": ProbeResult(url, True, False, 200, "closed")
+
+    def probe(url: str, card_title: str = "") -> ProbeResult:
+        return ProbeResult(url, True, False, 200, "closed")
 
     with pytest.raises(RuntimeError, match="vacancy is closed"):
         prepare_application(

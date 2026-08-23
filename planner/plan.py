@@ -9,7 +9,7 @@ from config.settings import (
     Settings,
     STATUS_WORKFLOW,
 )
-from parser.normalize import canonicalize_url, role_key, Vacancy
+from parser.normalize import canonicalize_url, Vacancy
 from project_sync.github_client import GitHubClient
 
 ARCHIVE_HISTORY_MIN_DAYS = 100
