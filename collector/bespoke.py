@@ -619,7 +619,18 @@ def collect_globallogic() -> SourceResult:
             title = re.sub(r"\s+IRC\d+\s*$", "", title).strip()
             if not is_ios_job(title):
                 continue
-            jobs.append({"company": company, "title": title, "url": absolute, "source": "company"})
+            locations = [node.get_text(" ", strip=True) for node in anchor.select(".job_location")]
+            work_modes = [node.get_text(" ", strip=True) for node in anchor.select(".job_tag")]
+            jobs.append(
+                {
+                    "company": company,
+                    "title": title,
+                    "url": absolute,
+                    "source": "company",
+                    "location": ", ".join(dict.fromkeys(filter(None, locations))) or None,
+                    "remote": " ".join(dict.fromkeys(filter(None, work_modes))) or None,
+                }
+            )
 
         if not jobs:
             for match in re.finditer(

@@ -548,6 +548,9 @@ def test_globallogic_reads_job_boxes(stub) -> None:
     stub(
         text=(
             '<a class="job_box" href="/ua/careers/senior-ios-engineer-irc123/">'
+            '<span class="job_location">Argentina</span>'
+            '<span class="job_location">Buenos Aires</span>'
+            '<span class="job_tag">Remote</span>'
             "<h4>Senior iOS Engineer IRC123</h4></a>"
             '<a class="job_box" href="/ua/careers/senior-ios-engineer-irc123/"><h4>dup</h4></a>'
             '<a class="job_box" href="/ua/careers/ios-engineer/"><h4>iOS Engineer</h4></a>'
@@ -560,6 +563,8 @@ def test_globallogic_reads_job_boxes(stub) -> None:
     assert result.items_scanned == 2
     assert result.jobs[0]["title"] == "Senior iOS Engineer"
     assert result.jobs[0]["url"] == "https://www.globallogic.com/ua/careers/senior-ios-engineer-irc123/"
+    assert result.jobs[0]["location"] == "Argentina, Buenos Aires"
+    assert result.jobs[0]["remote"] == "Remote"
 
 
 def test_globallogic_falls_back_to_raw_urls(stub) -> None:

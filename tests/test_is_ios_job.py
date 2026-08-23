@@ -1,8 +1,12 @@
 from __future__ import annotations
 
 from parser.normalize import (
+    Vacancy,
     canonical_company,
+    is_inbox_candidate,
     is_ios_job,
+    is_primary_ios_role,
+    is_target_location,
     is_target_level,
     normalize_raw,
     role_key,
@@ -115,6 +119,34 @@ def test_normalize_raw_drops_junior_but_keeps_non_ua_location() -> None:
     assert junior is None
     assert kazakh is not None
     assert keep is not None
+
+
+def test_inbox_candidate_rejects_cross_platform_titles() -> None:
+    assert not is_primary_ios_role("Middle Mobile iOS/Android Engineer")
+    assert not is_primary_ios_role("iOS Developer with Android")
+    assert not is_primary_ios_role("React Native Developer (iOS/Android)")
+    assert is_primary_ios_role("Senior iOS Engineer (Flutter is a plus)")
+
+
+def test_target_location_rejects_country_restricted_remote_roles() -> None:
+    assert not is_target_location("Cordoba, Buenos Aires")
+    assert not is_target_location("Basking Ridge NJ, United States")
+    assert is_target_location("Ukraine")
+    assert is_target_location("Eastern Europe")
+    assert is_target_location(None)
+
+
+def test_inbox_candidate_requires_primary_ios_and_target_location() -> None:
+    vacancy = Vacancy(
+        company="Avenga",
+        title="Senior iOS Engineer",
+        url="https://example.com/jobs/ios",
+        source="company",
+        location="Buenos Aires",
+        remote="remote",
+    )
+
+    assert not is_inbox_candidate(vacancy)
 
 
 def test_canonical_company_aliases_nix() -> None:

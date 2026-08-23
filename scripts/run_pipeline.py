@@ -34,7 +34,7 @@ from database.source_health import (
 )
 from integrations.notify import CollectReportStats, SourceFailure
 from parser.deduplicate import deduplicate_with_report
-from parser.normalize import Vacancy, normalize_many
+from parser.normalize import Vacancy, is_inbox_candidate, normalize_many
 from planner.plan import (
     archived_canonical_urls,
     exclude_archived_vacancies,
@@ -201,8 +201,9 @@ def process_new_vacancies(
         except Exception as error:  # noqa: BLE001
             print(f"Archived exclude load failed: {error}", file=sys.stderr)
 
+    eligible = [vacancy for vacancy in vacancies if is_inbox_candidate(vacancy)]
     active = exclude_archived_vacancies(
-        vacancies,
+        eligible,
         archived_urls=archived_urls,
     )
     fresh = select_fresh(active, seen, seen_gate=settings.seen_gate_enabled)

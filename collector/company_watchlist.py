@@ -85,6 +85,17 @@ def _local_description(anchor) -> str | None:
     return parent.get_text(" ", strip=True) or None
 
 
+def _local_location(company: str, anchor) -> str | None:
+    country = anchor.select_one(".country")
+    if country is not None:
+        return country.get_text(" ", strip=True) or None
+    if company.strip().lower() == "avenga":
+        metadata = anchor.find_next_sibling("div", class_=lambda value: value and "mt-1" in value)
+        if metadata is not None:
+            return metadata.get_text(" ", strip=True) or None
+    return None
+
+
 def _location_is_allowed(company: str, location: str | None) -> bool:
     allowed = _ALLOWED_LOCATIONS_BY_COMPANY.get(company.strip().lower())
     if not allowed or not location:
@@ -110,11 +121,7 @@ def extract_ios_jobs(company: str, page_url: str, html: str) -> tuple[list[dict[
             url=href,
             base_url=page_url,
             description=_local_description(anchor),
-            location=(
-                anchor.select_one(".country").get_text(" ", strip=True)
-                if anchor.select_one(".country")
-                else None
-            ),
+            location=_local_location(company, anchor),
         )
 
     for script in document.select('script[type="application/ld+json"]'):

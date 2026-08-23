@@ -68,6 +68,19 @@ def test_extract_ios_jobs_excludes_explicit_zoolatech_mexico_location() -> None:
     assert jobs[0]["location"] == "Eastern Europe"
 
 
+def test_extract_ios_jobs_reads_avenga_teamtailor_location() -> None:
+    html = """
+    <div>
+      <a href="/jobs/8255594-senior-ios-engineer">Senior iOS Engineer</a>
+      <div class="mt-1 text-md"><span>Buenos Aires</span></div>
+    </div>
+    """
+
+    jobs, _ = extract_ios_jobs("Avenga", "https://career.avenga.com/jobs", html)
+
+    assert jobs[0]["location"] == "Buenos Aires"
+
+
 def test_unresolved_company_is_an_explicit_failed_source() -> None:
     result = collect_watchlist_company(
         {

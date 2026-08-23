@@ -207,6 +207,28 @@ _APPLE_CORE = re.compile(
     r")(?![a-z0-9])"
 )
 
+_CROSS_PLATFORM_TITLE = re.compile(
+    r"(?i)(?:"
+    r"\bios\s*(?:/|&|and)\s*android\b|"
+    r"\bandroid\s*(?:/|&|and)\s*ios\b|"
+    r"\bios\s+(?:developer|engineer)\s+with\s+android\b|"
+    r"\breact\s+native\s+(?:developer|engineer)\b|"
+    r"\b(?:kmm|kotlin\s+multiplatform)\s+(?:developer|engineer)\b|"
+    r"\bflutter\s+(?:developer|engineer)\b"
+    r")"
+)
+
+_TARGET_LOCATION = re.compile(
+    r"(?i)\b(?:"
+    r"ukraine|ukrainian|kyiv|kiev|lviv|kharkiv|kharkov|dnipro|dnepr|"
+    r"odesa|odessa|vinnytsia|vinnitsa|ivano-frankivsk|uzhhorod|chernivtsi|"
+    r"cherkasy|poltava|zaporizhzhia|ternopil|rivne|lutsk|mykolaiv|"
+    r"worldwide|anywhere|global|emea|europe|european|"
+    r"україн\w*|украин\w*|київ|киев|львів|львов|харків|харьков|дніпро|днепр|"
+    r"одеса|одесса|вінниця|винница"
+    r")\b"
+)
+
 def is_ios_job(title: str, description: str | None = None) -> bool:
     title_text = title or ""
     if _NON_IOS_ROLE_TITLE.search(title_text):
@@ -223,6 +245,19 @@ def is_target_level(title: str) -> bool:
     if _JUNIOR_TITLE.search(text) and not _SENIORISH_TITLE.search(text):
         return False
     return True
+
+
+def is_primary_ios_role(title: str) -> bool:
+    return is_ios_job(title) and not _CROSS_PLATFORM_TITLE.search(title or "")
+
+
+def is_target_location(location: str | None) -> bool:
+    value = (location or "").strip()
+    return not value or bool(_TARGET_LOCATION.search(value))
+
+
+def is_inbox_candidate(vacancy: Vacancy) -> bool:
+    return is_primary_ios_role(vacancy.title) and is_target_location(vacancy.location)
 
 
 def infer_remote(title: str, location: str | None, description: str | None) -> str:

@@ -52,6 +52,28 @@ def test_second_identical_run_sends_zero_created(monkeypatch) -> None:
     assert alerts == [1, 0]
 
 
+def test_pipeline_excludes_cross_platform_and_foreign_location_from_inbox(monkeypatch) -> None:
+    delivered: list[list[str]] = []
+
+    def fake_hourly(sync_result, fresh, *, stats, board_url="", now=None, live=None, excluded_urls=None):
+        delivered.append([vacancy.title for vacancy in fresh])
+
+    monkeypatch.setattr("scripts.run_pipeline.notify_hourly_inbox", fake_hourly)
+    monkeypatch.delenv("CAREER_AGENT_SYNC_ENABLED", raising=False)
+    vacancies = [
+        make_vacancy(title="iOS Developer with Android", location="United States"),
+        make_vacancy(title="Senior iOS Engineer", location="Buenos Aires"),
+        make_vacancy(title="Senior iOS Engineer", location="Ukraine"),
+    ]
+
+    sent, marked, _, notify_ok = process_new_vacancies(vacancies, {}, seed_only=False)
+
+    assert sent == 1
+    assert marked == 1
+    assert notify_ok is True
+    assert delivered == [["Senior iOS Engineer"]]
+
+
 def test_seed_only_marks_without_sending(monkeypatch) -> None:
     calls: list[int] = []
 
