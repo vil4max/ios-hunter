@@ -166,6 +166,11 @@
     "company": "Linear",
     "subject": "Changelog: Coding environments"
   },
+  "<010001a02d36c80d-c4c5167e-9fd8-4055-b8ae-78fa1b9e964a-000000@email.amazonses.com>": {
+    "kind": "application_ack",
+    "processed_at": "2026-08-23T06:19:53+00:00",
+    "subject": "SKELAR: дякуємо за відгук на вакансію"
+  },
   "<0101019faa3ac02b-d5c9e8e3-ef86-43ea-9392-8ff92655359d-000000@us-west-2.amazonses.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -1011,6 +1016,18 @@
     "company": "Indeed",
     "subject": "ios senior developer у Київ, Київ: Senior Mobile Developer в SKELAR"
   },
+  "<1k0lmca8rkmkp803@indeed.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-23T06:19:53+00:00",
+    "company": "Indeed",
+    "subject": "ios developer: Senior Mobile Developer у SKELAR"
+  },
+  "<1k0lmqsa0h5v980g@indeed.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-23T06:19:53+00:00",
+    "company": "Indeed",
+    "subject": "iOS: Strong Junior Manual QA (Mobile) у Ajax Systems і ще 8 нових вакансій"
+  },
   "<202606081221.10bipa0t5cjqvj@shared-p100-i7.d.sp1-brevo.net>": {
     "kind": "ignore",
     "processed_at": "2026-08-06T15:21:31+00:00",
@@ -1463,6 +1480,12 @@
     "processed_at": "2026-08-22T09:16:28+00:00",
     "company": "Microsoft",
     "subject": "Обновление условий использования"
+  },
+  "<20260823052745.a8d1bd896a2b886f@cio121019.openrouter.ai>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-23T06:19:53+00:00",
+    "company": "OpenRouter",
+    "subject": "One API key for every major model"
   },
   "<202611080850.13di66eco6cw3srj@email3.sketchfab.com>": {
     "kind": "ignore",
@@ -2156,6 +2179,12 @@
     "processed_at": "2026-08-22T06:16:40+00:00",
     "company": "NIX",
     "subject": "Career Agent  ·  2026-08-21"
+  },
+  "<6a89bd4f.5ba28bc9.1064e9.060f@mx.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-23T06:19:53+00:00",
+    "company": "NIX",
+    "subject": "Career Agent  ·  2026-08-22"
   },
   "<6a8f378d-a961-4eb9-b3d6-e8fadfed1512@atl1s07mta0304.xt.local>": {
     "kind": "ignore",
@@ -3102,6 +3131,12 @@
     "processed_at": "2026-08-22T06:16:40+00:00",
     "company": "Hard&Soft Skills Community",
     "subject": "Регистрация подтверждена"
+  },
+  "<tk7kta-0p61g1-94@sendpulse.me>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-23T06:19:53+00:00",
+    "company": "StopFail",
+    "subject": "Головна подія тренінгу по самопрезентації ✨"
   },
   "<vJGwozEgQyyeuFQe_lQqDA@geopod-ismtpd-3>": {
     "kind": "ignore",
