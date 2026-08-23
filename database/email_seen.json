@@ -1028,6 +1028,12 @@
     "company": "Indeed",
     "subject": "iOS: Strong Junior Manual QA (Mobile) у Ajax Systems і ще 8 нових вакансій"
   },
+  "<1k0mvod7fj7b180e@indeed.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-23T12:16:31+00:00",
+    "company": "Indeed",
+    "subject": "ios senior developer у Київ, Київ: Senior Mobile Developer в SKELAR"
+  },
   "<202606081221.10bipa0t5cjqvj@shared-p100-i7.d.sp1-brevo.net>": {
     "kind": "ignore",
     "processed_at": "2026-08-06T15:21:31+00:00",
@@ -1486,6 +1492,18 @@
     "processed_at": "2026-08-23T06:19:53+00:00",
     "company": "OpenRouter",
     "subject": "One API key for every major model"
+  },
+  "<20260823100611.84b74cc41ab937ae@creator.patreon.com>": {
+    "kind": "replied",
+    "processed_at": "2026-08-23T12:16:31+00:00",
+    "company": "iOS (Swift) jobs",
+    "subject": "Anthropic has officially launched Claude Academy"
+  },
+  "<20260823102041.8de33f87605fd3a8@creator.patreon.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-23T12:16:31+00:00",
+    "company": "iOS (Swift) jobs",
+    "subject": "Measuring Core Data and SwiftData"
   },
   "<202611080850.13di66eco6cw3srj@email3.sketchfab.com>": {
     "kind": "ignore",
@@ -3167,6 +3185,12 @@
     "processed_at": "2026-08-07T06:16:46+00:00",
     "company": "Max Vilchevskiy",
     "subject": "[vil4max/ios-hunter] Run failed: Collect Schedule Trigger - main\r\n (bbb5f2d)"
+  },
+  "<vil4max/ios-hunter/check-suites/CS_kwDOTEBwK88AAAAUlu8bzg/1787481917@github.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-23T12:16:31+00:00",
+    "company": "Max Vilchevskiy",
+    "subject": "[vil4max/ios-hunter] Run failed: CRM Manual Card - main (14f7592)"
   },
   "<wSnnZrfISI6SuxCusya9WA@geopod-ismtpd-5>": {
     "kind": "ignore",
