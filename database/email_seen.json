@@ -588,6 +588,12 @@
     "company": "FOP_CREDIT",
     "subject": "Кредит «всеБІЗНЕС» від ПУМБ - завантаження документів"
   },
+  "<176660072.25532799.1787490827454@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-23T15:18:33+00:00",
+    "company": "Maksim Vilchevskiy via TestFlight",
+    "subject": "DriveCheckUA 2.1 (51) for iOS is now available to test."
+  },
   "<1785336888235.d7984ce7-430b-43dc-a3b1-2c7d7d6369e8@48628701m.contact.elevenlabs.io>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T16:38:11+00:00",
@@ -658,6 +664,12 @@
     "processed_at": "2026-08-20T09:16:08+00:00",
     "company": "Maksim Vilchevskiy via TestFlight",
     "subject": "OneCart Family 1.4 (78) for iOS is now available to test."
+  },
+  "<1860124717.640099.1787490798079@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-23T15:18:32+00:00",
+    "company": "Xcode Cloud",
+    "subject": "RegionalCheck -- Build 51 succeeded (main)"
   },
   "<1891519014.3602609.1785979707800@email.apple.com>": {
     "kind": "ignore",
@@ -3203,6 +3215,12 @@
     "processed_at": "2026-08-08T06:16:43+00:00",
     "company": "ШЕФ-ПІЦА",
     "subject": "Їжа з собою:  #1310. ШЕФ-ПІЦА  - 07.08.2026 18:27"
+  },
+  "<wvu63652v5cghklw6zea7hne7898zh8h46069@kit-mail3.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-23T15:18:33+00:00",
+    "company": "Omar Elsayed",
+    "subject": "The internet, minus the worst of it  —  CleanBrowse 1.0"
   },
   "<xBE_-VLWQkimcOMjFU5JCQ@geopod-ismtpd-2>": {
     "kind": "ignore",
