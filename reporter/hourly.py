@@ -4,6 +4,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from database.seen import seen_key
+from config.schedule import format_next_check_line
 from integrations.notify import CollectReportStats, SourceFailure
 from integrations.telegram import TELEGRAM_MAX_LENGTH, send_message
 from parser.normalize import Vacancy
@@ -129,7 +130,7 @@ def _collect_status_lines(stats: CollectReportStats) -> list[str]:
     degraded = _degraded_status_line(stats)
     if degraded:
         lines.append(degraded)
-    if _telegram_failed_names(stats):
+    if _telegram_failed_names(stats) or stats.telegram_skipped > 0:
         lines.append(_telegram_status_line(stats))
     if not lines:
         lines.append(_HEALTHY_STATUS)
@@ -139,9 +140,21 @@ def _collect_status_lines(stats: CollectReportStats) -> list[str]:
 def _status_block(stats: CollectReportStats, now: datetime | None = None) -> list[str]:
     stamp = _time_label(now)
     status = _collect_status_lines(stats)
+    lines = [
+        f"📊 Найдено: {stats.found} · новых: {stats.new_count} · в базе: {stats.seen_total}",
+    ]
+    if stats.sites_total > 0:
+        lines.append(f"🌐 Сайты: {stats.sites_ok}/{stats.sites_total} ответили")
+    if stats.telegram_total > 0:
+        lines.append(
+            f"📡 Telegram-источники: {stats.telegram_ok}/{stats.telegram_total} ответили"
+        )
     if len(status) == 1 and status[0] == _HEALTHY_STATUS:
-        return [f"{_HEALTHY_STATUS} · {stamp}"]
-    return [*status, f"🕐 {stamp}"]
+        lines.append(f"{_HEALTHY_STATUS} · {stamp}")
+    else:
+        lines.extend([*status, f"🕐 {stamp}"])
+    lines.append(format_next_check_line(now))
+    return lines
 
 
 def _footer(

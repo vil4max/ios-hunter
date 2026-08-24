@@ -42,7 +42,10 @@ def test_send_message_prints_without_credentials(
     assert capsys.readouterr().out.strip() == "ping"
 
 
-def test_send_message_chunks_and_posts(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_send_message_chunks_posts_and_logs_delivery(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
     monkeypatch.setenv("TELEGRAM_TOKEN", "token")
     monkeypatch.setenv("TELEGRAM_CHAT_ID", "42")
     posts: list[dict] = []
@@ -61,6 +64,7 @@ def test_send_message_chunks_and_posts(monkeypatch: pytest.MonkeyPatch) -> None:
     assert [post["data"]["text"] for post in posts] == ["one", "two"]
     assert posts[0]["data"]["chat_id"] == "42"
     assert "bottoken/sendMessage" in posts[0]["url"]
+    assert capsys.readouterr().out.strip() == "Telegram delivery accepted: 2 message(s)"
 
 
 def test_send_message_includes_error_body(monkeypatch: pytest.MonkeyPatch) -> None:

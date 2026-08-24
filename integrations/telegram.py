@@ -65,5 +65,7 @@ def send_message(text: str) -> None:
         print(text)
         return
 
-    for chunk in split_telegram_text(text):
+    chunks = split_telegram_text(text)
+    for chunk in chunks:
         _post_message(token, chat_id, chunk)
+    print(f"Telegram delivery accepted: {len(chunks)} message(s)")

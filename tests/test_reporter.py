@@ -75,11 +75,15 @@ def test_hourly_lists_new_vacancies_only() -> None:
         "2. Beta — Swift Developer\n"
         "   https://example.com/b\n"
         "\n"
-        "🟢 Система в порядке · 2026-07-15 11:00"
+        "📊 Найдено: 10 · новых: 2 · в базе: 8\n"
+        "🌐 Сайты: 10/10 ответили\n"
+        "📡 Telegram-источники: 3/3 ответили\n"
+        "🟢 Система в порядке · 2026-07-15 11:00\n"
+        "⏭ Следующая проверка в 12:00"
     )
     assert "🔗" not in message
     assert "github.com" not in message
-    assert "Следующая проверка" not in message
+    assert "Следующая проверка в 12:00" in message
 
 
 def test_hourly_telegram_vacancy_is_compact() -> None:
@@ -112,14 +116,16 @@ def test_hourly_telegram_vacancy_is_compact() -> None:
         "1. SmartTek Solutions — Senior iOS Engineer\n"
         "   https://t.me/itrecruit_ua/123\n"
         "\n"
-        "🟢 Система в порядке · 2026-07-15 11:00"
+        "📊 Найдено: 1 · новых: 1 · в базе: 0\n"
+        "🟢 Система в порядке · 2026-07-15 11:00\n"
+        "⏭ Следующая проверка в 12:00"
     )
     assert "🔗" not in message
     assert "https://board" not in message
     assert "📝" not in message
     assert "📅" not in message
     assert "📡" not in message
-    assert "Следующая проверка" not in message
+    assert "Следующая проверка в 12:00" in message
 
 
 def test_hourly_heartbeat_when_no_new() -> None:
@@ -146,12 +152,16 @@ def test_hourly_heartbeat_when_no_new() -> None:
     assert message == (
         "📭 Новых вакансий нет\n"
         "\n"
-        "🟢 Система в порядке · 2026-07-15 11:00"
+        "📊 Найдено: 22 · новых: 0 · в базе: 40\n"
+        "🌐 Сайты: 12/12 ответили\n"
+        "📡 Telegram-источники: 3/3 ответили\n"
+        "🟢 Система в порядке · 2026-07-15 11:00\n"
+        "⏭ Следующая проверка в 12:00"
     )
     assert "Живые" not in message
     assert "Сбор OK" not in message
-    assert "📊" not in message
-    assert "Следующая проверка" not in message
+    assert "📊 Найдено: 22" in message
+    assert "Следующая проверка в 12:00" in message
 
 
 def test_hourly_heartbeat_reports_partial_failures() -> None:
@@ -173,14 +183,46 @@ def test_hourly_heartbeat_reports_partial_failures() -> None:
     assert message == (
         "📭 Новых вакансий нет\n"
         "\n"
+        "📊 Найдено: 20 · новых: 0 · в базе: 40\n"
+        "🌐 Сайты: 11/12 ответили\n"
+        "📡 Telegram-источники: 2/3 ответили\n"
         "⚠️ Поиск по сайтам: SoftServe\n"
         "⚠️ Источники без результата: Binary Studio\n"
         "⚠️ Telegram: remotejobss\n"
-        "🕐 2026-07-15 11:00"
+        "🕐 2026-07-15 11:00\n"
+        "⏭ Следующая проверка в 12:00"
     )
-    assert "Следующая проверка" not in message
+    assert "Следующая проверка в 12:00" in message
     assert "@remotejobss" not in message
     assert "🔕" not in message
+    assert "Система в порядке" not in message
+
+def test_hourly_heartbeat_reports_missing_telegram_session() -> None:
+    now = datetime(2026, 8, 24, 15, 0, tzinfo=_KYIV)
+    stats = CollectReportStats(
+        found=40,
+        seen_total=115,
+        new_count=0,
+        duplicates_removed=0,
+        sites_ok=12,
+        sites_total=12,
+        telegram_ok=0,
+        telegram_total=4,
+        telegram_skipped=4,
+    )
+
+    message = format_hourly_heartbeat(stats=stats, now=now)
+
+    assert message == (
+        "📭 Новых вакансий нет\n"
+        "\n"
+        "📊 Найдено: 40 · новых: 0 · в базе: 115\n"
+        "🌐 Сайты: 12/12 ответили\n"
+        "📡 Telegram-источники: 0/4 ответили\n"
+        "⏭️ Telegram: пропущен (нет session)\n"
+        "🕐 2026-08-24 15:00\n"
+        "⏭ Следующая проверка в 18:00"
+    )
     assert "Система в порядке" not in message
 
 
@@ -367,9 +409,11 @@ def test_notify_heartbeat_has_no_live_block(monkeypatch: pytest.MonkeyPatch) -> 
     assert sent == [
         "📭 Новых вакансий нет\n"
         "\n"
-        "🟢 Система в порядке · 2026-07-27 23:00"
+        "📊 Найдено: 3 · новых: 0 · в базе: 3\n"
+        "🟢 Система в порядке · 2026-07-27 23:00\n"
+        "⏭ Следующая проверка завтра в 9:00"
     ]
-    assert "Следующая проверка" not in sent[0]
+    assert "Следующая проверка завтра в 9:00" in sent[0]
 
 
 def test_exclude_archived_vacancies_by_url_only() -> None:
