@@ -183,6 +183,12 @@
     "company": "Slack",
     "subject": "You have 3 more days to access Slack’s premium features"
   },
+  "<010101a0331946dc-e7a11146-cfee-4b63-acc2-ce3d62e0195c-000000@us-west-2.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-24T11:29:18+00:00",
+    "company": "Makeup.ua",
+    "subject": "Виконуємо бажання: акції, знижки, товари знову в наявності"
+  },
   "<0102019fae41f5e3-dd1e1193-89ff-40dd-90a1-f78779eebea3-000000@eu-west-1.amazonses.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T16:38:11+00:00",
@@ -311,6 +317,12 @@
     "company": "ZONE3000.net",
     "subject": "Thank you for your resume  —  ZONE3000"
   },
+  "<0d06f0a87eb23f13d8e2793b1dfce3d9@swift.generated>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-24T11:29:18+00:00",
+    "company": "Domik.ua",
+    "subject": "Forum.domik -  нове повідомлення"
+  },
   "<1004944868.7743497.1785389263636@lor1-app159092.prod.linkedin.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-30T07:21:26+00:00",
@@ -395,6 +407,12 @@
     "processed_at": "2026-08-06T06:17:09+00:00",
     "company": "Apple",
     "subject": "Your receipt from Apple."
+  },
+  "<1137214915.36656649.1787566338842@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-24T11:29:18+00:00",
+    "company": "Maksim Vilchevskiy via TestFlight",
+    "subject": "OneCart Family 1.4 (79) for iOS is now available to test."
   },
   "<115422669.10612570.1785242587239@email.apple.com>": {
     "kind": "ignore",
@@ -647,6 +665,12 @@
     "company": "Xcode Cloud",
     "subject": "App -- Build 72 succeeded (main)"
   },
+  "<1821127468.890037.1787566342586@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-24T11:29:18+00:00",
+    "company": "Xcode Cloud",
+    "subject": "App -- Build 79 succeeded (main)"
+  },
   "<1845256517.451084532.1785242576627@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -712,6 +736,12 @@
     "processed_at": "2026-08-03T12:16:24+00:00",
     "company": "FOP_CREDIT",
     "subject": "Кредит «всеБІЗНЕС» від ПУМБ - завантаження документів"
+  },
+  "<1959805638.774089.1787566399721@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-24T11:29:18+00:00",
+    "company": "Xcode Cloud",
+    "subject": "RegionalCheck -- Build 52 succeeded (main)"
   },
   "<1juknftnapfud800@indeed.com>": {
     "kind": "ignore",
@@ -1057,6 +1087,12 @@
     "processed_at": "2026-08-24T06:16:19+00:00",
     "company": "Indeed",
     "subject": "iOS: Senior Mobile Developer у SKELAR і ще 8 нових вакансій"
+  },
+  "<1k0pe1abtotu6809@indeed.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-24T11:29:18+00:00",
+    "company": "Indeed",
+    "subject": "ios senior developer у Київ, Київ: Senior Mobile Developer в SKELAR"
   },
   "<202606081221.10bipa0t5cjqvj@shared-p100-i7.d.sp1-brevo.net>": {
     "kind": "ignore",
@@ -1812,6 +1848,12 @@
     "company": "Світ Чаю",
     "subject": "Ваш секретний бонус: -15% на весь асортимент 👀"
   },
+  "<456333232.33061459.1787566400283@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-24T11:29:18+00:00",
+    "company": "Maksim Vilchevskiy via TestFlight",
+    "subject": "DriveCheckUA 2.1 (52) for iOS is now available to test."
+  },
   "<498482044.11309985.1785421132387@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:51+00:00",
@@ -2239,6 +2281,60 @@
     "processed_at": "2026-08-24T06:16:19+00:00",
     "company": "NIX",
     "subject": "Career Agent  ·  2026-08-23"
+  },
+  "<6a8c186745acc_12b11b0556e@sharedworker-7cb5ccf8fb-bgkkm.mail>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-24T11:29:18+00:00",
+    "company": "GitHub",
+    "subject": "[GitHub] Repository transfer from @vil4max (vil4labs/agents-kit)"
+  },
+  "<6a8c18691e3cb_d111b01c@sharedworker-7cb5ccf8fb-6m8zv.mail>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-24T11:29:18+00:00",
+    "company": "GitHub",
+    "subject": "[GitHub] Repository transfer from @vil4max (vil4labs/flux-visuals)"
+  },
+  "<6a8c186ad6a47_13611b050573@sharedworker-7cb5ccf8fb-8c5zz.mail>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-24T11:29:18+00:00",
+    "company": "GitHub",
+    "subject": "[GitHub] Repository transfer from @vil4max (vil4labs/regional-check)"
+  },
+  "<6a8c186b17fb1_c311b0541f0@sharedworker-7cb5ccf8fb-6m6cg.mail>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-24T11:29:18+00:00",
+    "company": "GitHub",
+    "subject": "[GitHub] Repository transfer from @vil4max\r\n (vil4labs/room-scanner-ios)"
+  },
+  "<6a8c186b4c621_12611b0-344@sharedworker-7cb5ccf8fb-6fx5w.mail>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-24T11:29:18+00:00",
+    "company": "GitHub",
+    "subject": "[GitHub] Repository transfer from @vil4max (vil4labs/pitstop-ios)"
+  },
+  "<6a8c186bea791_d711b05073@flexworker-canary-7c4b589c84-vbd7n.mail>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-24T11:29:18+00:00",
+    "company": "GitHub",
+    "subject": "[GitHub] Repository transfer from @vil4max\r\n (vil4labs/visionkit-lab-ios)"
+  },
+  "<6a8c186c9f1b4_f711b0-4bd@sharedworker-7cb5ccf8fb-9ddm5.mail>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-24T11:29:18+00:00",
+    "company": "GitHub",
+    "subject": "[GitHub] Repository transfer from @vil4max (vil4labs/.github)"
+  },
+  "<6a8c186eb7736_176811b0197f7@sharedworker-7cb5ccf8fb-xnck6.mail>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-24T11:29:18+00:00",
+    "company": "GitHub",
+    "subject": "[GitHub] Repository transfer from @vil4max (vil4labs/OneCart)"
+  },
+  "<6a8c18702c83d_15611b01864f@sharedworker-7cb5ccf8fb-4jv99.mail>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-24T11:29:18+00:00",
+    "company": "GitHub",
+    "subject": "[GitHub] Repository transfer from @vil4max\r\n (vil4labs/ios-agent-runtime)"
   },
   "<6a8f378d-a961-4eb9-b3d6-e8fadfed1512@atl1s07mta0304.xt.local>": {
     "kind": "ignore",
@@ -2999,6 +3095,12 @@
     "company": "The Google Workspace",
     "subject": "You now have exclusive access to AI features"
   },
+  "<e03eb53a-8d19-40e5-b57f-ee92e2c9de7e@ms4-66f4b64b8-jpw6d>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-24T11:29:18+00:00",
+    "company": "Sport Life",
+    "subject": "До Дня Незалежності маємо дещо особливе 🎁"
+  },
   "<e16078bf-5350-4b39-ba2d-ddc8a300973c@Spark>": {
     "kind": "ignore",
     "processed_at": "2026-08-06T15:21:31+00:00",
@@ -3197,6 +3299,18 @@
     "processed_at": "2026-08-23T06:19:53+00:00",
     "company": "StopFail",
     "subject": "Головна подія тренінгу по самопрезентації ✨"
+  },
+  "<tk9hlm-1hkbkb-i2@sendpulse.email>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-24T11:29:18+00:00",
+    "company": "Hard&Soft Skills Community",
+    "subject": "Напоминаем: завтра мероприятие"
+  },
+  "<tk9hln-0b2w8l-i9@sendpulse.email>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-24T11:29:18+00:00",
+    "company": "Hard&Soft Skills Community",
+    "subject": "Напоминаем: завтра мероприятие"
   },
   "<vJGwozEgQyyeuFQe_lQqDA@geopod-ismtpd-3>": {
     "kind": "ignore",
