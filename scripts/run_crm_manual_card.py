@@ -35,6 +35,8 @@ def _from_workflow_inputs() -> dict[str, str]:
         "salary": "INPUT_SALARY",
         "summary": "INPUT_SUMMARY",
         "recruiter": "INPUT_RECRUITER",
+        "priority": "INPUT_PRIORITY",
+        "notes": "INPUT_NOTES",
         "close_reason": "INPUT_CLOSE_REASON",
         "closed_stage": "INPUT_CLOSED_STAGE",
     }
@@ -98,6 +100,8 @@ def main() -> int:
         recruiter=raw.get("recruiter") or None,
         summary=raw.get("summary") or None,
         salary=raw.get("salary") or None,
+        priority=raw.get("priority") or None,
+        notes=raw.get("notes") or "",
         url=raw.get("url") or "",
         applied_at=raw.get("applied_at") or None,
         close_reason=close_reason,

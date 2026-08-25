@@ -1,1 +1,12 @@
-{}
+{
+  "company": "Prequel",
+  "title": "Senior iOS Developer",
+  "url": "https://prequel.global.huntflow.io/vacancy/senior-ios-developer-3",
+  "status": "Applied",
+  "channel": "Company site",
+  "source": "Company site",
+  "applied_at": "2026-08-25",
+  "priority": "P1",
+  "summary": "Esti (Prequel) — AI consumer product. Senior iOS: Swift 6, SwiftUI/UIKit, modern concurrency; StoreKit 2 / subscriptions / monetization. AI-assisted engineering is the team's actual workflow (Claude/Cursor, agents, skills, MCP); AI is also part of the Esti product itself. Matches my direction: iOS background + deeper AI engineering, expanding beyond mobile.",
+  "notes": "Applied via Huntflow on 2026-08-25; CV attached. Cover letter focused on why Esti and its AI direction fit my next step rather than repeating CV experience. No explicit English-level requirement in the vacancy.\n\nWhy strong match:\n- Senior iOS: Swift 6, SwiftUI/UIKit, modern concurrency\n- AI-assisted engineering is part of the team's daily workflow (Claude/Cursor, agents, skills, MCP)\n- AI is part of the Esti product itself, not only dev process\n- StoreKit 2 / subscriptions and monetization relevant to recent hands-on experience\n- Matches intended direction: iOS + AI engineering, expanding beyond mobile\n\nInterview process: HR -> Tech interview -> Final with CTO\n\nPreparation focus if they respond:\n- Esti product and architecture analysis\n- Swift 6 / Swift Concurrency\n- StoreKit 2, subscriptions, monetization\n- AI coding agents and agentic development workflow\n- Skills, MCP, context management, deterministic verification\n- Explain end-to-end AI-assisted engineering workflow on a real iOS project\n- Spoken English practice: architecture decisions, AI workflow, iOS implementation"
+}
