@@ -1,1 +1,12 @@
-{}
+{
+  "company": "Creditbooster.ai",
+  "title": "Product Engineer (Swift/Kotlin)",
+  "status": "Archived",
+  "channel": "Djinni",
+  "source": "Djinni",
+  "salary": "$4000-6000",
+  "close_reason": "Rejected tech",
+  "closed_stage": "Technical",
+  "summary": "Fintech pre-seed startup (Chicago HQ, remote US/EU): AI-native credit improvement iOS app. Product Engineer owning mobile + web + API surfaces; React Native (Expo) primary with non-negotiable native Swift/Kotlin store-shipped experience; AI-native workflow (Claude Code, MCP, own agents). Rejected at tech stage.",
+  "notes": "Recorded post-fact from Djinni listing (posted 2026-07-28). Application date and vacancy URL not tracked.\n\nRole facts:\n- Own a product surface end to end: mobile screen, web equivalent, API behind both\n- React Native (Expo) on iOS/Android + Astro landing; Node.js/Fastify/TypeScript/PostgreSQL in reach\n- Native Swift or Kotlin required (non-negotiable), shipped through App Store and Play Store review\n- Daily AI-native workflow: Claude Code, MCP servers, own agents/skills\n- English B2+ written; internal RU/UA; ~4h morning Chicago overlap\n\nRejection: Close Reason 'Rejected tech', Closed Stage 'Technical'."
+}
