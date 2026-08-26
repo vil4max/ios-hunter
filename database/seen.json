@@ -109,6 +109,11 @@
     "company": "EPAM",
     "first_seen": "2026-08-20T10:48:42+00:00"
   },
+  "https://careers.n-ix.com/jobs/4478146101-ios-senior": {
+    "title": "Senior iOS Engineer (#5326)",
+    "company": "N-iX",
+    "first_seen": "2026-08-26T15:57:16+00:00"
+  },
   "https://careers.n-ix.com/jobs/4497788101-ios-middle": {
     "title": "Middle iOS Engineer (#5485)",
     "company": "N-iX",
@@ -452,6 +457,11 @@
     "company": "Telegram",
     "first_seen": "2026-08-18T09:15:38+00:00",
     "disposition": "dropped"
+  },
+  "https://t.me/mobile_jobs/216520": {
+    "title": "iOS Team Lead в команду Calm",
+    "company": "Telegram",
+    "first_seen": "2026-08-26T15:57:16+00:00"
   },
   "https://talent.sage.hr/jobs/d3e9ca75-f099-4299-89f7-cc6962a1cc96": {
     "title": "Lead iOS Developer",
