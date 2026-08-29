@@ -45,6 +45,7 @@ __pycache__/
 .coverage
 .ruff_cache/
 
+.agents/project-context.yaml
 .cursor/plans/
 .cursor/project-context
 .cursor/project-context.yaml
