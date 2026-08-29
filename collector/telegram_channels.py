@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 from typing import Any
 from urllib.parse import urlsplit
 
+from database.telegram_cursors import default_telegram_cursors_path, load_telegram_cursors
 from parser.normalize import is_ios_job
 
 from collector.types import SourceResult
@@ -17,9 +18,16 @@ TELEGRAM_CHANNELS: tuple[str, ...] = (
     "remotejobss",
     "itfreelancers",
     "mobile_jobs",
+    "hirifyme_bot",
 )
 
 _LOOKBACK = 100
+_HIRIFY_CHANNEL = "hirifyme_bot"
+_HIRIFY_JOB_URL = re.compile(
+    r"https?://(?:www\.)?hirify\.me/jobs/(\d+)[^\s]*",
+    re.IGNORECASE,
+)
+_HIRIFY_HEADING = re.compile(r"(?m)^\s*(?P<title>.+?)\s+в\s+(?P<company>[^\n]+?)\s*$")
 
 _HASHTAG_TOKEN_RE = re.compile(r"#([\w]+)", flags=re.UNICODE)
 
@@ -160,16 +168,25 @@ def looks_like_vacancy(text: str) -> bool:
     return any(phrase in lowered for phrase in _VACANCY_PHRASES)
 
 
-def should_keep_message(text: str) -> bool:
+def should_keep_message(text: str, *, channel: str | None = None) -> bool:
     if not text.strip():
         return False
     if is_candidate_post(text):
         return False
     if not is_ios_job(text):
         return False
+    if channel == _HIRIFY_CHANNEL:
+        return _HIRIFY_HEADING.search(text) is not None
     if not looks_like_vacancy(text):
         return False
     return True
+
+
+def _is_hirify_vacancy_candidate(text: str) -> bool:
+    lowered = text.lower()
+    return is_ios_job(text) and (
+        "по подписке:" in lowered or _HIRIFY_HEADING.search(text) is not None
+    )
 
 
 def _strip_line_noise(line: str) -> str:
@@ -222,6 +239,34 @@ def extract_apply_url(text: str) -> str | None:
     return None
 
 
+def _preferred_apply_url(urls: list[str]) -> str | None:
+    cleaned = [url.strip() for url in urls if url and url.strip()]
+    for url in cleaned:
+        if _HIRIFY_JOB_URL.match(url):
+            return url
+    return extract_apply_url("\n".join(cleaned))
+
+
+def _message_urls(message: Any, text: str) -> list[str]:
+    urls: list[str] = []
+    inline_url = extract_apply_url(text)
+    if inline_url:
+        urls.append(inline_url)
+
+    for entity in getattr(message, "entities", None) or ():
+        url = getattr(entity, "url", None)
+        if isinstance(url, str) and url.strip():
+            urls.append(url.strip())
+
+    for row in getattr(message, "buttons", None) or ():
+        buttons = row if isinstance(row, (list, tuple)) else (row,)
+        for button in buttons:
+            url = getattr(button, "url", None)
+            if isinstance(url, str) and url.strip():
+                urls.append(url.strip())
+    return urls
+
+
 def extract_company(text: str) -> str | None:
     for pattern in _COMPANY_PATTERNS:
         match = pattern.search(text)
@@ -262,24 +307,44 @@ def job_from_message(
     text: str,
     *,
     published_at: datetime | None = None,
+    apply_urls: list[str] | None = None,
 ) -> dict[str, Any] | None:
-    if not should_keep_message(text):
+    if not should_keep_message(text, channel=channel):
         return None
-    title = extract_title(text)
-    company = extract_company(text) or "Telegram"
-    apply_url = extract_apply_url(text)
+    hirify_match = _HIRIFY_HEADING.search(text) if channel == _HIRIFY_CHANNEL else None
+    title = _strip_line_noise(hirify_match.group("title")) if hirify_match else extract_title(text)
+    company = (
+        _strip_line_noise(hirify_match.group("company"))
+        if hirify_match
+        else extract_company(text) or "Telegram"
+    )
+    apply_url = _preferred_apply_url(apply_urls or []) or extract_apply_url(text)
+    hirify_id_match = _HIRIFY_JOB_URL.match(apply_url or "")
+    if channel == _HIRIFY_CHANNEL and hirify_id_match is None:
+        return None
+    source_job_id = (
+        f"hirify:{hirify_id_match.group(1)}"
+        if hirify_id_match
+        else f"{channel}:{message_id}"
+    )
     return {
         "company": company,
         "title": title,
         "url": apply_url or message_url(channel, message_id),
-        "source": "telegram",
-        "source_job_id": f"{channel}:{message_id}",
+        "source": "hirify.me" if channel == _HIRIFY_CHANNEL else "telegram",
+        "source_job_id": source_job_id,
         "description": description_snippet(text, title=title, limit=4000),
         "published_at": published_at.isoformat() if published_at else None,
     }
 
 
-def _source_ok(channel: str, jobs: list[dict[str, Any]], started: float) -> SourceResult:
+def _source_ok(
+    channel: str,
+    jobs: list[dict[str, Any]],
+    started: float,
+    *,
+    checkpoint: int | None = None,
+) -> SourceResult:
     return SourceResult(
         source_id=f"telegram:{channel}",
         source_name=f"Telegram @{channel}",
@@ -288,6 +353,7 @@ def _source_ok(channel: str, jobs: list[dict[str, Any]], started: float) -> Sour
         status="healthy",
         error=None,
         response_ms=int((time.perf_counter() - started) * 1000),
+        checkpoint=checkpoint,
     )
 
 
@@ -326,9 +392,36 @@ def _message_published_at(message: Any) -> datetime | None:
     return None
 
 
-async def _fetch_channel_jobs(client: Any, channel: str) -> list[dict[str, Any]]:
+async def _fetch_channel_jobs(
+    client: Any,
+    channel: str,
+    *,
+    after_message_id: int | None = None,
+) -> tuple[list[dict[str, Any]], int | None]:
     jobs: list[dict[str, Any]] = []
-    messages = await client.get_messages(channel, limit=_LOOKBACK)
+    if channel == _HIRIFY_CHANNEL and after_message_id is None:
+        messages = await client.get_messages(channel, limit=1)
+    elif channel == _HIRIFY_CHANNEL:
+        messages = [
+            message
+            async for message in client.iter_messages(
+                channel,
+                min_id=after_message_id,
+                reverse=True,
+            )
+        ]
+    else:
+        messages = await client.get_messages(channel, limit=_LOOKBACK)
+    latest_message_id = max(
+        (
+            int(message.id)
+            for message in messages
+            if message is not None and getattr(message, "id", None)
+        ),
+        default=after_message_id,
+    )
+    if channel == _HIRIFY_CHANNEL and after_message_id is None:
+        return [], latest_message_id
     for message in messages:
         if message is None or not getattr(message, "id", None):
             continue
@@ -340,13 +433,21 @@ async def _fetch_channel_jobs(client: Any, channel: str) -> list[dict[str, Any]]
             int(message.id),
             text,
             published_at=_message_published_at(message),
+            apply_urls=_message_urls(message, text),
         )
         if job:
             jobs.append(job)
-    return jobs
+        elif channel == _HIRIFY_CHANNEL and _is_hirify_vacancy_candidate(text):
+            raise ValueError(
+                f"Hirify vacancy message {message.id} has no parseable hirify.me job URL"
+            )
+    return jobs, latest_message_id
 
 
-async def _collect_channels(channels: tuple[str, ...]) -> list[SourceResult]:
+async def _collect_channels(
+    channels: tuple[str, ...],
+    cursors: dict[str, int],
+) -> list[SourceResult]:
     from telethon import TelegramClient
     from telethon.sessions import StringSession
 
@@ -358,8 +459,12 @@ async def _collect_channels(channels: tuple[str, ...]) -> list[SourceResult]:
         for channel in channels:
             started = time.perf_counter()
             try:
-                jobs = await _fetch_channel_jobs(client, channel)
-                results.append(_source_ok(channel, jobs, started))
+                jobs, checkpoint = await _fetch_channel_jobs(
+                    client,
+                    channel,
+                    after_message_id=cursors.get(channel) if channel == _HIRIFY_CHANNEL else None,
+                )
+                results.append(_source_ok(channel, jobs, started, checkpoint=checkpoint))
             except Exception as error:  # noqa: BLE001
                 results.append(_source_failed(channel, error, started))
     return results
@@ -375,4 +480,5 @@ def collect_telegram_channels(
     started = time.perf_counter()
     if not credentials_configured():
         return [_source_skipped(channel, "TELEGRAM_API_ID/HASH/SESSION not set", started) for channel in channels]
-    return asyncio.run(_collect_channels(channels))
+    cursors = load_telegram_cursors(default_telegram_cursors_path())
+    return asyncio.run(_collect_channels(channels, cursors))

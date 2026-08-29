@@ -197,3 +197,34 @@ def test_degraded_sources_pass_into_hourly_stats(monkeypatch) -> None:
         source_health={"degraded_source_names": ("DataArt",), "sites_ok": 11, "sites_total": 12},
     )
     assert alerts[0].degraded_source_names == ("DataArt",)
+
+
+def test_applied_is_excluded_when_seen_gate_is_disabled(monkeypatch) -> None:
+    alerts: list[int] = []
+
+    def fake_hourly(sync_result, fresh, *, stats, board_url="", now=None, live=None, excluded_urls=None):
+        alerts.append(sync_result.created_count)
+
+    monkeypatch.setattr("scripts.run_pipeline.notify_hourly_inbox", fake_hourly)
+    monkeypatch.delenv("CAREER_AGENT_SYNC_ENABLED", raising=False)
+    monkeypatch.setenv("CAREER_AGENT_SEEN_GATE", "0")
+    vacancy = make_vacancy(url="https://hirify.me/jobs/123456-ios")
+    seen = {
+        vacancy.canonical_url: {
+            "title": vacancy.title,
+            "company": vacancy.company,
+            "disposition": "applied",
+        }
+    }
+
+    sent, marked, result, notify_ok = process_new_vacancies(
+        [vacancy],
+        seen,
+        seed_only=False,
+    )
+
+    assert sent == 0
+    assert marked == 0
+    assert result.created_count == 0
+    assert notify_ok is True
+    assert alerts == [0]

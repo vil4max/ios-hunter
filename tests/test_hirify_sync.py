@@ -352,3 +352,33 @@ def test_sync_does_not_invent_missing_excel_rows(tmp_path: Path) -> None:
     companies = {m.row.company for m in (result.mutations or [])}
     assert companies == {"ElevenLabs"}
     assert "Karta.io" not in companies
+
+
+def test_sync_seeds_hirify_job_url_as_applied_seen(tmp_path: Path) -> None:
+    settings = _settings()
+    collector_seen_path = tmp_path / "seen.json"
+    row = _row(
+        company="Prequel",
+        title="Senior IOS Developer (AI)",
+        stage="Applied",
+        job_url="https://hirify.me/jobs/123456-senior-ios-developer-ai",
+    )
+    card = _card(
+        item_id="prequel",
+        company="Prequel",
+        title="Senior IOS Developer (AI)",
+        status="Applied",
+        url=row.job_url,
+    )
+
+    run_hirify_sync(
+        settings,
+        rows=[row],
+        cards=[card],
+        hirify_seen_path=tmp_path / "hirify_seen.json",
+        collector_seen_path=collector_seen_path,
+    )
+
+    from database.seen import load_seen
+
+    assert row.canonical_job_url in load_seen(collector_seen_path)

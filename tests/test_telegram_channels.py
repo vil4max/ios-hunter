@@ -1,8 +1,12 @@
 from __future__ import annotations
 
+import asyncio
 from datetime import datetime, timezone
 
+import pytest
+
 from collector.telegram_channels import (
+    _fetch_channel_jobs,
     extract_apply_url,
     extract_company,
     extract_title,
@@ -161,6 +165,16 @@ Swift, UIKit
 Название компании: Acme Mobile
 """.strip()
 
+HIRIFY_IOS = """
+Senior IOS Developer (AI) в Prequel
+
+Удаленно (global) | Фулл-тайм | senior | Мобильная разработка
+
+Навыки: ai, ios, swift, swiftui, uikit, code review, storekit, mcp
+
+По подписке: (AI) Senior iOS Engineer Remote
+""".strip()
+
 
 def test_is_ios_job_rejects_studios_substring() -> None:
     assert not is_ios_job(STUDIOS_SEO)
@@ -282,3 +296,94 @@ def test_job_from_message_drops_junk() -> None:
     assert job_from_message("itrecruit_ua", 2, STUDIOS_SEO) is None
     assert job_from_message("itrecruit_ua", 3, QA_CRYPTO) is None
     assert job_from_message("itrecruit_ua", 4, GREETING) is None
+
+
+def test_hirify_message_uses_job_url_and_subscription_format() -> None:
+    job = job_from_message(
+        "hirifyme_bot",
+        501,
+        HIRIFY_IOS,
+        apply_urls=["https://hirify.me/jobs/123456-senior-ios-developer-ai"],
+    )
+    assert job is not None
+    assert job["title"] == "Senior IOS Developer (AI)"
+    assert job["company"] == "Prequel"
+    assert job["url"] == "https://hirify.me/jobs/123456-senior-ios-developer-ai"
+    assert job["source"] == "hirify.me"
+    assert job["source_job_id"] == "hirify:123456"
+
+
+class _FakeMessage:
+    def __init__(self, message_id: int, text: str) -> None:
+        self.id = message_id
+        self.message = text
+        self.raw_text = text
+        self.date = datetime(2026, 8, 27, 9, 11, tzinfo=timezone.utc)
+        self.entities = []
+        self.buttons = []
+
+
+class _FakeClient:
+    def __init__(self, messages: list[_FakeMessage]) -> None:
+        self.messages = messages
+        self.calls: list[dict[str, int]] = []
+
+    async def get_messages(self, channel: str, **kwargs: int) -> list[_FakeMessage]:
+        self.calls.append(kwargs)
+        return self.messages
+
+    async def iter_messages(self, channel: str, **kwargs: int):
+        self.calls.append(kwargs)
+        for message in self.messages:
+            yield message
+
+
+def test_hirify_first_collection_only_initializes_checkpoint() -> None:
+    client = _FakeClient([_FakeMessage(501, HIRIFY_IOS)])
+    jobs, checkpoint = asyncio.run(_fetch_channel_jobs(client, "hirifyme_bot"))
+    assert jobs == []
+    assert checkpoint == 501
+    assert client.calls == [{"limit": 1}]
+
+
+def test_hirify_reads_only_messages_after_checkpoint() -> None:
+    message = _FakeMessage(502, HIRIFY_IOS)
+    message.entities = [type("Entity", (), {"url": "https://hirify.me/jobs/123456-role"})()]
+    client = _FakeClient([message])
+    jobs, checkpoint = asyncio.run(
+        _fetch_channel_jobs(client, "hirifyme_bot", after_message_id=501)
+    )
+    assert client.calls == [{"min_id": 501, "reverse": True}]
+    assert len(jobs) == 1
+    assert checkpoint == 502
+
+
+def test_hirify_does_not_advance_past_vacancy_without_job_url() -> None:
+    client = _FakeClient([_FakeMessage(502, HIRIFY_IOS)])
+
+    with pytest.raises(ValueError, match="no parseable hirify.me job URL"):
+        asyncio.run(
+            _fetch_channel_jobs(client, "hirifyme_bot", after_message_id=501)
+        )
+
+
+def test_hirify_reads_every_message_after_checkpoint_without_batch_loss() -> None:
+    messages = []
+    for message_id in range(502, 603):
+        message = _FakeMessage(message_id, HIRIFY_IOS)
+        message.entities = [
+            type(
+                "Entity",
+                (),
+                {"url": f"https://hirify.me/jobs/{message_id}-ios-role"},
+            )()
+        ]
+        messages.append(message)
+    client = _FakeClient(messages)
+
+    jobs, checkpoint = asyncio.run(
+        _fetch_channel_jobs(client, "hirifyme_bot", after_message_id=501)
+    )
+
+    assert len(jobs) == 101
+    assert checkpoint == 602

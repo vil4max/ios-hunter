@@ -220,9 +220,23 @@ def apply_row(
     dry_run: bool = False,
     client: GitHubClient | None = None,
     today: date | None = None,
+    collector_seen_path: Path | None = None,
 ) -> HirifySyncMutation:
     stamp = today or date.today()
     action, new_status, close_reason, closed_stage = plan_row_transition(row, card)
+
+    if not dry_run and row.job_url:
+        seed_seen_from_manual_card(
+            ManualCard(
+                company=row.company or "Unknown",
+                title=row.job_title or "Role",
+                status=new_status or "Applied",
+                source="hirify.me",
+                url=row.job_url,
+                applied_at=row.date_applied.isoformat() if row.date_applied else None,
+            ),
+            seen_path=collector_seen_path,
+        )
 
     if action == "noop":
         return HirifySyncMutation(
@@ -311,6 +325,7 @@ def run_hirify_sync(
     cards: list[ProjectCard] | None = None,
     client: GitHubClient | None = None,
     today: date | None = None,
+    collector_seen_path: Path | None = None,
 ) -> HirifySyncResult:
     path: Path | None
     if rows is None:
@@ -362,6 +377,7 @@ def run_hirify_sync(
             dry_run=dry_run,
             client=gh,
             today=today,
+            collector_seen_path=collector_seen_path,
         )
         result.mutations.append(mutation)
 

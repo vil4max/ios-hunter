@@ -208,10 +208,53 @@
     "company": "Karta.io",
     "first_seen": "2026-07-29T00:00:00+00:00"
   },
+  "https://hirify.me/jobs/191217-senior-ios-developer-blockchain": {
+    "title": "Senior iOS Developer (SwiftUI)",
+    "company": "Tangem",
+    "first_seen": "2026-08-25T00:00:00+00:00",
+    "disposition": "applied"
+  },
+  "https://hirify.me/jobs/463438-ios-developer-ai": {
+    "title": "iOS Developer (AI)",
+    "company": "ElevenLabs",
+    "first_seen": "2026-07-29T00:00:00+00:00",
+    "disposition": "applied"
+  },
+  "https://hirify.me/jobs/736606-lead-ios-developer-swift-fintech": {
+    "title": "Lead iOS Developer (Fintech)",
+    "company": "Paybis",
+    "first_seen": "2026-08-21T00:00:00+00:00",
+    "disposition": "applied"
+  },
+  "https://hirify.me/jobs/781047-ios-developer-swiftswiftui": {
+    "title": "iOS Developer (Swift/SwiftUI)",
+    "company": "частное лицо",
+    "first_seen": "2026-07-29T00:00:00+00:00",
+    "disposition": "applied"
+  },
   "https://hirify.me/jobs/781047-ios-developer-swiftswiftui-hmc": {
     "title": "iOS Developer (Swift/SwiftUI)",
     "company": "частное лицо",
-    "first_seen": "2026-07-29T00:00:00+00:00"
+    "first_seen": "2026-07-29T00:00:00+00:00",
+    "disposition": "applied"
+  },
+  "https://hirify.me/jobs/842031-ios-engineer-ai": {
+    "title": "iOS Engineer (AI)",
+    "company": "Workana",
+    "first_seen": "2026-08-21T00:00:00+00:00",
+    "disposition": "applied"
+  },
+  "https://hirify.me/jobs/856666-senior-staff-ios-engineer-defi": {
+    "title": "Senior Staff iOS Engineer (DeFi)",
+    "company": "Ethena",
+    "first_seen": "2026-08-18T00:00:00+00:00",
+    "disposition": "applied"
+  },
+  "https://hirify.me/jobs/933548-senior-ios-developer-ios": {
+    "title": "Senior iOS Developer (iOS)",
+    "company": "Unknown",
+    "first_seen": "2026-08-27T00:00:00+00:00",
+    "disposition": "applied"
   },
   "https://jobs.ashbyhq.com/elevenlabs/3b46a40a-e51d-47d3-b623-75a4d03a05b4": {
     "title": "iOS Developer",

@@ -20,6 +20,7 @@ class SourceResult:
     response_ms: int
     items_scanned: int = 0
     empty_is_healthy: bool = False
+    checkpoint: int | None = None
 
     @property
     def is_usable(self) -> bool:

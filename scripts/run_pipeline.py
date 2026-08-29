@@ -32,6 +32,12 @@ from database.source_health import (
     save_baseline,
     update_baseline,
 )
+from database.telegram_cursors import (
+    apply_cursor_updates,
+    default_telegram_cursors_path,
+    load_telegram_cursors,
+    save_telegram_cursors,
+)
 from integrations.notify import CollectReportStats, SourceFailure
 from parser.deduplicate import deduplicate_with_report
 from parser.normalize import Vacancy, is_inbox_candidate, normalize_many
@@ -69,6 +75,7 @@ def summarize_source_checks(
     telegram_skipped = 0
     telegram_ok_names: list[str] = []
     failed_sources: list[SourceFailure] = []
+    telegram_cursor_updates: dict[str, int] = {}
 
     for source in source_results:
         if _is_telegram_source(source):
@@ -88,6 +95,8 @@ def summarize_source_checks(
             else:
                 telegram_ok += 1
                 telegram_ok_names.append(_telegram_channel_label(source))
+                if source.checkpoint is not None:
+                    telegram_cursor_updates[_telegram_channel_label(source)] = source.checkpoint
             continue
 
         sites_total += 1
@@ -114,6 +123,7 @@ def summarize_source_checks(
         "telegram_ok_names": tuple(telegram_ok_names),
         "degraded_source_names": tuple(degraded_names),
         "failed_sources": tuple(failed_sources),
+        "telegram_cursor_updates": telegram_cursor_updates,
     }
     return tuple(failed_names), health
 
@@ -191,6 +201,11 @@ def process_new_vacancies(
     health = source_health or {}
 
     archived_urls = dropped_urls_from_seen(seen)
+    applied_urls = {
+        key
+        for key, meta in seen.items()
+        if str(meta.get("disposition") or "").strip().lower() == "applied"
+    }
     if settings.configured_for_sync:
         try:
             cards = load_archived_cards_from_github(
@@ -204,7 +219,7 @@ def process_new_vacancies(
     eligible = [vacancy for vacancy in vacancies if is_inbox_candidate(vacancy)]
     active = exclude_archived_vacancies(
         eligible,
-        archived_urls=archived_urls,
+        archived_urls=archived_urls | applied_urls,
     )
     fresh = select_fresh(active, seen, seen_gate=settings.seen_gate_enabled)
 
@@ -330,6 +345,16 @@ def main() -> int:
 
     if migrated or marked or purged:
         save_seen(seen_path, seen)
+
+    cursor_updates = {
+        str(channel): int(message_id)
+        for channel, message_id in dict(source_health.get("telegram_cursor_updates") or {}).items()
+    }
+    if notify_ok and cursor_updates:
+        cursor_path = default_telegram_cursors_path(ROOT)
+        cursors = load_telegram_cursors(cursor_path)
+        if apply_cursor_updates(cursors, cursor_updates):
+            save_telegram_cursors(cursor_path, cursors)
 
     runtime = time.perf_counter() - started
     print(

@@ -72,7 +72,7 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add database/seen.json database/source_baseline.json database/collect_slots.json
+          git add database/seen.json database/source_baseline.json database/collect_slots.json database/telegram_cursors.json
           if git diff --staged --quiet; then
             echo "No seen/baseline/slot changes to commit."
             exit 0
