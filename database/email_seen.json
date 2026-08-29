@@ -171,6 +171,17 @@
     "processed_at": "2026-08-23T06:19:53+00:00",
     "subject": "SKELAR: дякуємо за відгук на вакансію"
   },
+  "<010001a04208937e-575a04ec-9642-4349-99c5-03e35483736b-000000@email.amazonses.com>": {
+    "kind": "application_ack",
+    "processed_at": "2026-08-29T08:23:15+00:00",
+    "subject": "Re: Thank you for applying for Senior macOS Engineer — Workforce AI Security (NXJ-193)"
+  },
+  "<010001a046f60de8-3104ba86-2d16-4db9-b44d-426c3e5344d6-000000@email.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:15+00:00",
+    "company": "MyGreenhouse",
+    "subject": "Show recruiters you’re really interested with Dream Job"
+  },
   "<0101019faa3ac02b-d5c9e8e3-ef86-43ea-9392-8ff92655359d-000000@us-west-2.amazonses.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -186,6 +197,18 @@
   "<010101a0331946dc-e7a11146-cfee-4b63-acc2-ce3d62e0195c-000000@us-west-2.amazonses.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-24T11:29:18+00:00",
+    "company": "Makeup.ua",
+    "subject": "Виконуємо бажання: акції, знижки, товари знову в наявності"
+  },
+  "<010101a04414c8b5-6bafaa64-05c3-43b0-be68-6f12f6676071-000000@us-west-2.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:15+00:00",
+    "company": "Makeup.ua",
+    "subject": "Виконуємо бажання: акції, знижки, товари знову в наявності"
+  },
+  "<010101a04772b68d-ae670b83-89bb-482a-a590-984a6be84f2b-000000@us-west-2.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:15+00:00",
     "company": "Makeup.ua",
     "subject": "Виконуємо бажання: акції, знижки, товари знову в наявності"
   },
@@ -230,6 +253,30 @@
     "processed_at": "2026-08-21T09:44:39+00:00",
     "company": "TAXER",
     "subject": "Новий вхідний документ з ДПС Електронне повідомлення про відкриття рахунків та взяття на облік в органах ДФСУ за даними, отриманими від банків та інших фінансових установ"
+  },
+  "<010201a044aeff09-8aa5858e-4218-4c09-9e5c-ae8823f25e73-000000@eu-west-1.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:15+00:00",
+    "company": "Netflix",
+    "subject": "Welcome back! It's easy to rejoin Netflix"
+  },
+  "<010201a0481354dc-1dd1cbdb-a448-4268-83cc-90fe6f870863-000000@eu-west-1.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:15+00:00",
+    "company": "Levi9 Ukraine",
+    "subject": "Complete the application for Senior iOS developer"
+  },
+  "<010201a04813c3a5-39ee3c94-03f8-4373-b507-549faf89505d-000000@eu-west-1.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:15+00:00",
+    "company": "Levi9 Ukraine",
+    "subject": "Log in to Levi9 Ukraine"
+  },
+  "<010201a04813e290-aec1b919-3431-48c5-bf2c-216383fcd749-000000@eu-west-1.amazonses.com>": {
+    "kind": "application_ack",
+    "processed_at": "2026-08-29T08:23:15+00:00",
+    "company": "Tetiana Lobetska - Levi9 Ukraine",
+    "subject": "We have received your application!"
   },
   "<0107019fa9d51843-5bf640bc-163e-4a74-81ee-22be2579400a-000000@eu-central-1.amazonses.com>": {
     "kind": "ignore",
@@ -328,6 +375,12 @@
     "processed_at": "2026-07-30T07:21:26+00:00",
     "company": "LinkedIn Job Alerts",
     "subject": "Senior IOS AI-Enabled Developer at Tango"
+  },
+  "<1005695827.8632354.1787981263603@ltx1-app102832.prod.linkedin.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:20+00:00",
+    "company": "LinkedIn Job Alerts",
+    "subject": "Levi9 Technology Services is hiring a Senior iOS developer"
   },
   "<1012033797.11484037.1785437754454@email.apple.com>": {
     "kind": "ignore",
@@ -468,6 +521,12 @@
     "company": "notifications",
     "subject": "Your one-time-passcode"
   },
+  "<1395806449.26454462.1787845405572@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:15+00:00",
+    "company": "Анастасия Вильчевская",
+    "subject": "“10:30 на маникюр к Марине” added to “Семья” calendar."
+  },
   "<1428624547.258995433.1785500245657@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-31T15:18:16+00:00",
@@ -558,6 +617,12 @@
     "company": "Xcode Cloud",
     "subject": "App -- Build 73 succeeded (main)"
   },
+  "<1602288298.25420780.1787909447890@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:15+00:00",
+    "company": "Apple",
+    "subject": "Your Subscription is Expiring"
+  },
   "<1610100147.2151133.1786710732383@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-15T06:17:16+00:00",
@@ -593,6 +658,12 @@
     "processed_at": "2026-07-31T08:17:51+00:00",
     "company": "Maksim Vilchevskiy via TestFlight",
     "subject": "DriveCheckUA 1.2 (39) for iOS is now available to test."
+  },
+  "<1744088935.86497354.1787863056756@insideapple.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:15+00:00",
+    "company": "Apple Developer",
+    "subject": "Tax and Price Updates for Apps, In-App Purchases, and Subscriptions"
   },
   "<1747344826.55697758.1785421129729@email.apple.com>": {
     "kind": "ignore",
@@ -670,6 +741,12 @@
     "processed_at": "2026-08-24T11:29:18+00:00",
     "company": "Xcode Cloud",
     "subject": "App -- Build 79 succeeded (main)"
+  },
+  "<1826058767.27204580.1787853228662@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:15+00:00",
+    "company": "Maksim Vilchevskiy via TestFlight",
+    "subject": "DriveCheckUA 2.1 (53) for iOS is now available to test."
   },
   "<1845256517.451084532.1785242576627@email.apple.com>": {
     "kind": "ignore",
@@ -1093,6 +1170,36 @@
     "processed_at": "2026-08-24T11:29:18+00:00",
     "company": "Indeed",
     "subject": "ios senior developer у Київ, Київ: Senior Mobile Developer в SKELAR"
+  },
+  "<1k12ct53vq9v2801@indeed.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:15+00:00",
+    "company": "Indeed",
+    "subject": "ios developer: Middle Mobile Software Engineer у Inoxoft і ще 1 нова вакансія"
+  },
+  "<1k12qfv2thgvo80a@indeed.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:15+00:00",
+    "company": "Indeed",
+    "subject": "iOS: Software Engineer, iOS Core Product - Kyiv, Ukraine у Speechify і ще 9 нових вакансій"
+  },
+  "<1k152s7p7ktuf801@indeed.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:20+00:00",
+    "company": "Indeed",
+    "subject": "ios developer: Senior Mobile Developer у SKELAR і ще 4 нові вакансії"
+  },
+  "<1k156ar4gk9tf804@indeed.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:20+00:00",
+    "company": "Indeed",
+    "subject": "iOS: Senior iOS developer у Levi9 Ukraine і ще 8 нових вакансій"
+  },
+  "<1k15um6gbpf9s808@indeed.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:20+00:00",
+    "company": "Indeed",
+    "subject": "Web Designer в компании «AvocadoStories»"
   },
   "<202606081221.10bipa0t5cjqvj@shared-p100-i7.d.sp1-brevo.net>": {
     "kind": "ignore",
@@ -1565,6 +1672,55 @@
     "company": "iOS (Swift) jobs",
     "subject": "Measuring Core Data and SwiftData"
   },
+  "<20260827084212.d18581a69ec17765@gh-mail.coherentsolutions.com>": {
+    "kind": "application_ack",
+    "processed_at": "2026-08-29T08:23:15+00:00",
+    "company": "Coherent Solutions",
+    "subject": "Thank you for applying to Coherent Solutions"
+  },
+  "<20260827134644.dc4c690af5f032c6@creator.patreon.com>": {
+    "kind": "replied",
+    "processed_at": "2026-08-29T08:23:15+00:00",
+    "company": "iOS (Swift) jobs",
+    "subject": "iOS opening (hybrid, Ireland):"
+  },
+  "<20260827141039.d2b0eba8c479df33@creator.patreon.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:15+00:00",
+    "company": "iOS (Swift) jobs",
+    "subject": "Type-Safe SwiftUI Navigation: Building a Better NavigationStack with\r\n NavigationPilot"
+  },
+  "<20260828044747.3.d8f1e520294a9169.hksrbhjx@mg-d1.substack.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:15+00:00",
+    "company": "Substack",
+    "subject": "The Mouthy Renegade Writer posted new notes"
+  },
+  "<20260828085832.babe0f47e509f155@creator.patreon.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:15+00:00",
+    "company": "iOS (Swift) jobs",
+    "subject": "Tax and price updates for apps, In-App Purchases, and subscriptions"
+  },
+  "<20260828143958.c567259cb2581d6a@gh-mail.n-ix.com>": {
+    "kind": "rejected_hr",
+    "processed_at": "2026-08-29T08:23:20+00:00",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg4Il8M",
+    "company": "N-iX",
+    "subject": "N-iX - Updates on application of Max Vilchevskiy on Senior iOS Engineer\r\n position"
+  },
+  "<20260828144538.df969dd1f5d6ca6c@creator.patreon.com>": {
+    "kind": "replied",
+    "processed_at": "2026-08-29T08:23:20+00:00",
+    "company": "iOS (Swift) jobs",
+    "subject": "iOS openings (on-site or hybrid):"
+  },
+  "<20260828214007.d0cbe53603a181ea@cio79999.news.railway.app>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:20+00:00",
+    "company": "Railway",
+    "subject": "Railway plugin for Grok Bot, MySQL High Availability, favorite projects"
+  },
   "<202611080850.13di66eco6cw3srj@email3.sketchfab.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-12T06:18:03+00:00",
@@ -1612,6 +1768,12 @@
     "processed_at": "2026-08-24T06:16:19+00:00",
     "company": "Olga from DataArt",
     "subject": "DataArt Jobs Digest: Explore our latest opportunities"
+  },
+  "<202628081432.15fj3i0t5cjqvj@shared-p100-i21.d.sp1-brevo.net>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:15+00:00",
+    "company": "DOU",
+    "subject": "А яку компанію ви точно не стали б розглядати для роботи?"
   },
   "<2032248378.42868428.1785241368085@email.apple.com>": {
     "kind": "ignore",
@@ -1920,6 +2082,12 @@
     "company": "Ciklum",
     "subject": "iOS Developer (Remote) at Hire Feed"
   },
+  "<533783507.1561904.1787849023052@email.apple.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:15+00:00",
+    "company": "Xcode Cloud",
+    "subject": "RegionalCheck -- Build 53 succeeded (main)"
+  },
   "<536619974.109485279.1785911623075@email.apple.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-05T12:16:31+00:00",
@@ -1944,6 +2112,12 @@
     "processed_at": "2026-08-19T06:21:21+00:00",
     "company": "Apple Developer",
     "subject": "Updated Apple Developer Program License Agreement Now Available"
+  },
+  "<56.53.16641.8E4609A6@i-01536a486ccb06d84.mta3vrest.sd.prd.sparkpost>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:15+00:00",
+    "company": "OLX",
+    "subject": "Час підняти ваше оголошення 🚀"
   },
   "<5f18ebd2-97f0-11f1-b394-532e020b7fcf@ms4-668f894948-72p2c>": {
     "kind": "ignore",
@@ -2342,6 +2516,36 @@
     "company": "Edward Carr at The Economist",
     "subject": "What the Big Mac index reveals about a global currency beef"
   },
+  "<6a9074709ad86_ee11b888489@sharedworker-76459c9fdc-dzfmj.mail>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:15+00:00",
+    "company": "GitHub",
+    "subject": "[GitHub] Cursor is requesting updated permissions"
+  },
+  "<6a9076bf.da55105d.2bf702.c44b@mx.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:15+00:00",
+    "company": "N-iX",
+    "subject": "Career Agent  ·  2026-08-27"
+  },
+  "<6a90e88a6f7cf_10a11b82492a6@flexworker-7d9894ff7f-bzjg7.mail>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:15+00:00",
+    "company": "GitHub",
+    "subject": "[GitHub] Cursor is requesting updated permissions"
+  },
+  "<6a91d812.b3d68efa.14767f.e2db@mx.google.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:20+00:00",
+    "company": "N-iX",
+    "subject": "Career Agent  ·  2026-08-28"
+  },
+  "<6a929199.b9ad6713.496cc.2fa0notifications@youtube.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:20+00:00",
+    "company": "YouTube",
+    "subject": "🔴 На канале \"РАСПАКОВКА ПОЛИТИКИ с Михаилом Павливым\" только что началась премьера ролика \"ПЛАНА \"Б\" НЕ БЫЛО? МОИ ЭФИРЫ\""
+  },
   "<72cc87b2-223f-4eaa-8968-b4c8f41a1dd7@cdg3s51mta0074.xt.local>": {
     "kind": "ignore",
     "processed_at": "2026-07-30T07:21:26+00:00",
@@ -2371,6 +2575,12 @@
     "processed_at": "2026-08-05T06:16:27+00:00",
     "company": "Scrubster Store",
     "subject": "На сайте  scrubster.com.ua  появились товары из вашего списка ожидания"
+  },
+  "<7964d1ad-772d-4efb-92e1-2a4d95a11bf6@atl1s07mta0608.xt.local>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:15+00:00",
+    "company": "Robert Guest at The Economist",
+    "subject": "The Unwelcoming States of America"
   },
   "<7KOF-oHBXrsuo3VCo51mvg@notifications.google.com>": {
     "kind": "ignore",
@@ -2936,6 +3146,12 @@
     "company": "Ciklum",
     "subject": "Thanks for applying — we’ve got it"
   },
+  "<b78f121f-c6a9-48e4-a584-cb9f7072c17c@fra3s50mta0922.xt.local>": {
+    "kind": "replied",
+    "processed_at": "2026-08-29T08:23:15+00:00",
+    "company": "Volkswagen",
+    "subject": "Більше можливостей у дорозі з локальними рекомендаціями від Volkswagen"
+  },
   "<c0ffc7b0-8f2b-11f1-ada1-1f9d6ce77c22@ms4-6bdbcbd8d9-8xt7c>": {
     "kind": "rejected_hr",
     "processed_at": "2026-08-03T12:16:24+00:00",
@@ -3070,6 +3286,12 @@
     "company": "Anthropic",
     "subject": "Want to connect to Xcode?"
   },
+  "<dKwf3-r4QSCWnlkUN8e7eQ@geopod-ismtpd-38>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:15+00:00",
+    "company": "Steve Kaufmann",
+    "subject": "Spain vs Latin America: how different is their Spanish?"
+  },
   "<daf24210ac170c832114bd51c1abfbdc.ums@oracle.com>": {
     "kind": "ignore",
     "processed_at": "2026-08-07T09:16:39+00:00",
@@ -3191,6 +3413,12 @@
     "company": "Antoine van der Lee",
     "subject": "SwiftLee Weekly - Issue 336"
   },
+  "<h3ahmgL8R-KX5htjONV3rg@geopod-ismtpd-26>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:15+00:00",
+    "company": "Brain.fm",
+    "subject": "What listeners actually say"
+  },
   "<iAIW_rStFoBPCFFbFMEvdA@notifications.google.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T16:38:11+00:00",
@@ -3311,6 +3539,18 @@
     "processed_at": "2026-08-24T11:29:18+00:00",
     "company": "Hard&Soft Skills Community",
     "subject": "Напоминаем: завтра мероприятие"
+  },
+  "<tkirjw-0gei0b-gj@sendpulse.me>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:20+00:00",
+    "company": "StopFail",
+    "subject": "3 причини чому ти досі не говориш англійською"
+  },
+  "<tkiua8-18sk3h-b5@spsndr.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-08-29T08:23:20+00:00",
+    "company": "ЖК Н2О",
+    "subject": "🔔 Підтвердіть ваш E-mail"
   },
   "<vJGwozEgQyyeuFQe_lQqDA@geopod-ismtpd-3>": {
     "kind": "ignore",
