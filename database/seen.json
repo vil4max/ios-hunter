@@ -39,11 +39,6 @@
     "company": "Luxoft",
     "first_seen": "2026-08-20T10:48:42+00:00"
   },
-  "https://career.sigma.software/vacancy/senior-ios-developer-14": {
-    "title": "Senior iOS Developer(Ad SDK Infrastructure)",
-    "company": "Sigma Software",
-    "first_seen": "2026-08-13T15:18:20+00:00"
-  },
   "https://careers.epam.com/en/vacancy/ios-software-engineering-manager-bltkximngwjavsofa4a_en": {
     "title": "iOS Software Engineering Manager",
     "company": "EPAM",
@@ -203,11 +198,6 @@
     "company": "Genesis",
     "first_seen": "2026-07-10T08:29:48+00:00"
   },
-  "https://hirify.me/jobs/644315-founding-mobile-lead-fintech": {
-    "title": "Founding Mobile Lead (Fintech)",
-    "company": "Karta.io",
-    "first_seen": "2026-07-29T00:00:00+00:00"
-  },
   "https://hirify.me/jobs/191217-senior-ios-developer-blockchain": {
     "title": "Senior iOS Developer (SwiftUI)",
     "company": "Tangem",
@@ -219,6 +209,11 @@
     "company": "ElevenLabs",
     "first_seen": "2026-07-29T00:00:00+00:00",
     "disposition": "applied"
+  },
+  "https://hirify.me/jobs/644315-founding-mobile-lead-fintech": {
+    "title": "Founding Mobile Lead (Fintech)",
+    "company": "Karta.io",
+    "first_seen": "2026-07-29T00:00:00+00:00"
   },
   "https://hirify.me/jobs/736606-lead-ios-developer-swift-fintech": {
     "title": "Lead iOS Developer (Fintech)",
@@ -363,6 +358,11 @@
     "title": "iOS Developer",
     "company": "Prequel",
     "first_seen": "2026-07-30T00:00:00+00:00"
+  },
+  "https://readdle.com/careers/4963859101?gh_jid=4963859101": {
+    "title": "Warsaw Kyiv Remote Senior iOS Engineer Documents Team",
+    "company": "Readdle",
+    "first_seen": "2026-08-31T14:00:36+00:00"
   },
   "https://t.me/itrecruit_ua/268714": {
     "title": "Привіт!",
