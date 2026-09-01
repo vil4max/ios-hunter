@@ -133,5 +133,10 @@
     "name": "Headway",
     "slug": "headway",
     "career_url": "https://careers.headway.inc/jobs"
+  },
+  {
+    "name": "Valtech",
+    "slug": "valtech",
+    "career_url": "https://www.valtech.com/career/jobs/"
   }
 ]

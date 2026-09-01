@@ -302,3 +302,53 @@ def test_playrix_uses_api_and_counts_only_visible_jobs(monkeypatch) -> None:
     assert result.items_scanned == 2
     assert [job["title"] for job in result.jobs] == ["Middle iOS Engineer"]
     assert result.jobs[0]["url"] == "https://playrix.com/job/open/engineering/middle-ios-engineer"
+
+
+def test_valtech_api_paginates_and_keeps_ios_job(monkeypatch) -> None:
+    pages = {
+        0: {
+            "list": [
+                {
+                    "id": 1,
+                    "title": "Backend Engineer",
+                    "url": "/career/jobs/backend/",
+                    "offices": ["Berlin"],
+                }
+            ],
+            "page": {"itemTotal": 2},
+        },
+        1: {
+            "list": [
+                {
+                    "id": 2,
+                    "title": "Senior/Lead iOS Developer",
+                    "url": "/career/jobs/4961788101/",
+                    "offices": ["Sofia"],
+                }
+            ],
+            "page": {"itemTotal": 2},
+        },
+    }
+
+    def fake_fetch_json(url: str):
+        if "offset=0" in url:
+            return pages[0]
+        if "offset=1" in url:
+            return pages[1]
+        raise AssertionError(f"unexpected url: {url}")
+
+    monkeypatch.setattr(company_watchlist, "fetch_json", fake_fetch_json)
+
+    result = collect_watchlist_company(
+        {
+            "name": "Valtech",
+            "slug": "valtech",
+            "career_url": "https://www.valtech.com/career/jobs/",
+        }
+    )
+
+    assert result.status == "healthy"
+    assert result.items_scanned == 2
+    assert [job["title"] for job in result.jobs] == ["Senior/Lead iOS Developer"]
+    assert result.jobs[0]["location"] == "Sofia"
+    assert result.jobs[0]["url"] == "https://www.valtech.com/career/jobs/4961788101/"

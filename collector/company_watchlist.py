@@ -30,6 +30,10 @@ _CONSCENSIA_API_URL = "https://careers.conscensia.com/wp-json/wp/v2/job?per_page
 _SVITLA_API_URL = "https://svitla.com/career/api/v1/jobs/public?page={page}"
 _WORKABLE_WIDGET_URL = "https://apply.workable.com/api/v1/widget/accounts/labelyourdata"
 _PLAYRIX_API_URL = "https://playrix.com/api/v1/index.php"
+_VALTECH_API_URL = (
+    "https://www.valtech.com/joblist/getjsonresult?id=1571&language=en&limit={limit}&offset={offset}"
+)
+_VALTECH_PAGE_LIMIT = 100
 
 
 def default_watchlist_path(root: Path | None = None) -> Path:
@@ -293,6 +297,49 @@ def _playrix_payload(action: str) -> dict[str, Any]:
     return payload
 
 
+def _collect_valtech(company: str) -> tuple[list[dict[str, Any]], int]:
+    jobs: list[dict[str, Any]] = []
+    scanned = 0
+    offset = 0
+    while True:
+        payload = fetch_json(
+            _VALTECH_API_URL.format(limit=_VALTECH_PAGE_LIMIT, offset=offset)
+        )
+        if not isinstance(payload, dict):
+            raise RuntimeError("Valtech API returned an unexpected payload")
+        items = payload.get("list")
+        page = payload.get("page") if isinstance(payload.get("page"), dict) else {}
+        if not isinstance(items, list):
+            raise RuntimeError("Valtech API payload is missing list")
+        scanned += len(items)
+        for item in items:
+            if not isinstance(item, dict):
+                continue
+            title = str(item.get("title") or "").strip()
+            if not is_ios_job(title):
+                continue
+            offices = item.get("offices") if isinstance(item.get("offices"), list) else []
+            location = " / ".join(
+                str(office).strip() for office in offices if str(office).strip()
+            )
+            relative_url = str(item.get("url") or "").strip()
+            jobs.append(
+                {
+                    "company": company,
+                    "title": title,
+                    "url": urljoin("https://www.valtech.com", relative_url),
+                    "source": "company",
+                    "source_job_id": str(item.get("id") or ""),
+                    "location": location or None,
+                }
+            )
+        item_total = int(page.get("itemTotal") or 0)
+        offset += len(items)
+        if not items or offset >= item_total:
+            break
+    return jobs, scanned
+
+
 def _collect_playrix(company: str) -> tuple[list[dict[str, Any]], int]:
     jobs_payload = _playrix_payload("job/getList")
     sections_payload = _playrix_payload("job/getSectionList")
@@ -368,6 +415,9 @@ def collect_watchlist_company(company: dict[str, Any]) -> SourceResult:
             return source_ok(name, career_url, jobs, started, scanned=scanned, source_id=source_id)
         if slug == "playrix":
             jobs, scanned = _collect_playrix(name)
+            return source_ok(name, career_url, jobs, started, scanned=scanned, source_id=source_id)
+        if slug == "valtech":
+            jobs, scanned = _collect_valtech(name)
             return source_ok(name, career_url, jobs, started, scanned=scanned, source_id=source_id)
         fetch_url = career_url
         try:

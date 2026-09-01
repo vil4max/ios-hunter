@@ -1198,6 +1198,18 @@
       "career_url": "https://careers.headway.inc/jobs",
       "career_url_source": "manual",
       "enabled": true
+    },
+    {
+      "name": "Valtech",
+      "slug": "valtech",
+      "rating_score": null,
+      "compensation_score": null,
+      "survey_count": null,
+      "dou_company_url": null,
+      "company_site_url": null,
+      "career_url": "https://www.valtech.com/career/jobs/",
+      "career_url_source": "manual",
+      "enabled": true
     }
   ]
 }
