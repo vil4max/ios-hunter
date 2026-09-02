@@ -194,6 +194,12 @@
     "company": "Amazon Web Services",
     "subject": "Action Required: AWS Account Alert"
   },
+  "<010001a0621c198b-3c2a6a25-99f1-46d9-b73f-2402489ba395-000000@email.amazonses.com>": {
+    "kind": "application_ack",
+    "processed_at": "2026-09-02T12:41:26+00:00",
+    "company": "Kake",
+    "subject": "You're almost there — complete your profile on Kake"
+  },
   "<0101019faa3ac02b-d5c9e8e3-ef86-43ea-9392-8ff92655359d-000000@us-west-2.amazonses.com>": {
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
@@ -562,6 +568,12 @@
     "processed_at": "2026-08-02T09:16:18+00:00",
     "company": "Apple Developer",
     "subject": "Apple CloudKit: Your sandbox database schema was modified."
+  },
+  "<1294640682.785767.1788352613005@email-sender-8564dbfcc6-gxl9d>": {
+    "kind": "ignore",
+    "processed_at": "2026-09-02T12:41:26+00:00",
+    "company": "notifications",
+    "subject": "Your one-time-passcode"
   },
   "<1350308871.56366.1787210704184@email-sender-b494dd77-wcd86>": {
     "kind": "ignore",
