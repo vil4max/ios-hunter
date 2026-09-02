@@ -29,6 +29,16 @@
     "company": "Luxoft",
     "first_seen": "2026-08-20T10:48:42+00:00"
   },
+  "https://career.sigma.software/vacancy/ai-augmented-software-developer": {
+    "title": "AI-augmented Software Developer",
+    "company": "Sigma Software",
+    "first_seen": "2026-09-02T11:26:59+00:00"
+  },
+  "https://career.sigma.software/vacancy/principal-ai-engineer": {
+    "title": "Principal AI Engineer",
+    "company": "Sigma Software",
+    "first_seen": "2026-09-02T11:26:59+00:00"
+  },
   "https://careers.epam.com/en/vacancy/senior-ios-developer-blt7rnc5o2hvnrsiz9x_en": {
     "title": "Senior iOS Developer",
     "company": "EPAM",
@@ -354,6 +364,11 @@
     "company": "Readdle",
     "first_seen": "2026-08-31T14:00:36+00:00"
   },
+  "https://t.me/itfreelancers/5315": {
+    "title": "Vacancy #Vibecoding #MobileDeveloper",
+    "company": "Telegram",
+    "first_seen": "2026-09-02T11:26:59+00:00"
+  },
   "https://t.me/itrecruit_ua/268714": {
     "title": "Привіт!",
     "company": "Telegram @itrecruit_ua",
@@ -467,11 +482,6 @@
     "title": "Specialist iOS Software Engineer",
     "company": "GlobalLogic",
     "first_seen": "2026-08-21T12:15:34+00:00"
-  },
-  "https://www.griddynamics.com/careers/vacancy/45715": {
-    "title": "iOS Developer",
-    "company": "Grid Dynamics",
-    "first_seen": "2026-08-20T10:48:42+00:00"
   },
   "https://www.nixsolutions.com/ua/cooperation/vacancies/middle-ios-developer": {
     "title": "Middle iOS Developer",
