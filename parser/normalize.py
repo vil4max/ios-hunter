@@ -91,6 +91,7 @@ class Vacancy:
     source_job_id: str | None = None
     identity_key: str = ""
     identity_strategy: str = ""
+    ai_keyword_match: bool = False
     hash: str = field(default="", init=False)
 
     def __post_init__(self) -> None:
@@ -179,16 +180,33 @@ _NON_IOS_ROLE_TITLE = re.compile(
 )
 
 _AI_AUGMENTED_SIGNAL = re.compile(
-    r"(?i)\b(?:ai[- ]augmented|agentic ai|multi[- ]agent|mcp|model context protocol|"
-    r"ai orchestrat(?:ion|or)|ai sdlc|llm|cursor|copilot|autonomous agent)\b"
+    r"(?i)\b(?:"
+    r"ai[- ]augmented|"
+    r"agentic(?:\s+ai)?|"
+    r"multi[- ]agent|autonomous\s+agent|agent\s+orchestration|"
+    r"mcp|model\s+context\s+protocol|"
+    r"ai\s+orchestrat(?:ion|or)|ai\s+sdlc|"
+    r"ai[- ](?:native|first|powered|driven)|"
+    r"ai\s+(?:software\s+|full[-\s]?stack\s+|backend\s+|frontend\s+|web\s+)?(?:developer|engineer)|"
+    r"llm"
+    r")\b"
+)
+# Assistant tool names alone are too generic (SQL "cursor"): require a
+# separate generic AI mention alongside them.
+_AI_ASSISTANT_TOOL_SIGNAL = re.compile(
+    r"(?i)\b(?:cursor|copilot|claude\s+code|codex|windsurf|coding\s+agent)\b"
+)
+_GENERIC_AI_MENTION = re.compile(
+    r"(?i)\b(?:ai|artificial\s+intelligence|llm|agent)\b"
 )
 _AI_AUGMENTED_ENGINEERING = re.compile(
-    r"(?i)\b(?:software|full[- ]stack|backend|frontend|web|javascript|typescript|"
-    r"node(?:\.js)?|engineering|developer|architect)\b"
+    r"(?i)\b(?:software|full[- ]stack|backend|frontend|web\s+(?:developer|engineer)|"
+    r"javascript|typescript|node(?:\.js)?|engineering|engineer|developer|architect)\b"
 )
 _AI_AUGMENTED_EXCLUDED = re.compile(
     r"(?i)\b(?:machine learning|ml engineer|data scientist|deep learning|"
-    r"computer vision|nlp engineer|python[- ]only)\b"
+    r"computer vision|nlp engineer|python[- ]only|"
+    r"qa|sdet|quality\s+assurance|tester|advocate|devrel|manager)\b"
 )
 
 _BODY_ROLE = re.compile(
@@ -255,11 +273,37 @@ def is_ios_job(title: str, description: str | None = None) -> bool:
 
 def is_ai_augmented_job(title: str, description: str | None = None) -> bool:
     text = f"{title} {description or ''}"
+    if _AI_AUGMENTED_EXCLUDED.search(title):
+        return False
+    if not _AI_AUGMENTED_ENGINEERING.search(text):
+        return False
+    if _AI_AUGMENTED_SIGNAL.search(text):
+        return True
     return bool(
-        _AI_AUGMENTED_SIGNAL.search(text)
-        and _AI_AUGMENTED_ENGINEERING.search(text)
-        and not _AI_AUGMENTED_EXCLUDED.search(text)
+        _AI_ASSISTANT_TOOL_SIGNAL.search(text)
+        and _GENERIC_AI_MENTION.search(text)
     )
+
+
+def is_ai_augmented_only(
+    title: str,
+    description: str | None = None,
+    *,
+    ai_keyword_match: bool = False,
+) -> bool:
+    if is_ios_job(title, description):
+        return False
+    return is_ai_augmented_job(title, description) or ai_keyword_match
+
+
+def is_ai_keyword_candidate(title: str, card_text: str = "") -> bool:
+    """Fallback for a server-side AI keyword search: the listing is already
+    AI-filtered, so accept any engineering role whose card still mentions AI."""
+    if _AI_AUGMENTED_EXCLUDED.search(title):
+        return False
+    if not _AI_AUGMENTED_ENGINEERING.search(title):
+        return False
+    return bool(_GENERIC_AI_MENTION.search(f"{title} {card_text}"))
 
 
 def is_target_level(title: str) -> bool:
@@ -310,8 +354,11 @@ def normalize_raw(raw: dict[str, Any]) -> Vacancy | None:
     if description is not None:
         description = str(description).strip() or None
 
+    ai_keyword_match = bool(raw.get("ai_keyword_match"))
     if not (
-        is_ios_job(title, description) or is_ai_augmented_job(title, description)
+        is_ios_job(title, description)
+        or is_ai_augmented_job(title, description)
+        or (ai_keyword_match and is_ai_keyword_candidate(title, description or ""))
     ):
         return None
     if not is_target_level(title):
@@ -343,6 +390,7 @@ def normalize_raw(raw: dict[str, Any]) -> Vacancy | None:
         published_at=published_at,
         description=description,
         source_job_id=source_job_id,
+        ai_keyword_match=ai_keyword_match,
     )
 
 

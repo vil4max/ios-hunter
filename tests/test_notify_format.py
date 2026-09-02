@@ -70,6 +70,27 @@ def test_format_includes_title_company_source_url() -> None:
     )
 
 
+def test_format_badges_ai_augmented_vacancies() -> None:
+    ai_vacancy = make_vacancy(
+        title="AI-augmented Software Developer",
+        company="Sigma Software",
+        url="https://career.sigma.software/vacancy/ai-augmented-software-developer/",
+        source="company",
+        description="JavaScript, TypeScript, MCP",
+    )
+    ios_vacancy = make_vacancy(
+        title="iOS Developer",
+        company="Preply",
+        url="https://jobs.ashbyhq.com/preply/abc",
+        source="company",
+    )
+    now = datetime(2026, 7, 10, 9, 0, tzinfo=_KYIV)
+    message = format_vacancies_message([ai_vacancy, ios_vacancy], now=now)
+    assert message is not None
+    assert "1. 🤖 AI-augmented Software Developer" in message
+    assert "2. iOS Developer" in message
+
+
 def test_format_vacancies_appends_run_stats_footer() -> None:
     vacancy = make_vacancy(
         title="iOS Developer",

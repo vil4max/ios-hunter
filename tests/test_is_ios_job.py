@@ -4,6 +4,8 @@ from parser.normalize import (
     Vacancy,
     canonical_company,
     is_ai_augmented_job,
+    is_ai_augmented_only,
+    is_ai_keyword_candidate,
     is_inbox_candidate,
     is_ios_job,
     is_primary_ios_role,
@@ -21,11 +23,37 @@ def test_is_ai_augmented_job_matches_engineering_roles_without_ml_requirement() 
     assert is_ai_augmented_job(
         "Backend Engineer", "Build multi-agent systems with Node.js"
     )
+    assert is_ai_augmented_job("AI Software Engineer", None)
+    assert is_ai_augmented_job(
+        "Full-Stack Engineer", "Work with Claude Code, Cursor, and other AI tooling"
+    )
 
 
 def test_is_ai_augmented_job_rejects_ml_and_python_only_roles() -> None:
     assert not is_ai_augmented_job("Machine Learning Engineer", "Python, LLMs")
     assert not is_ai_augmented_job("Python-only Backend Developer", "LLM integration")
+
+
+def test_is_ai_augmented_job_rejects_generic_words_without_ai_context() -> None:
+    assert not is_ai_augmented_job(
+        "Backend Developer", "PostgreSQL triggers, cursor performance tuning"
+    )
+    assert not is_ai_augmented_job("QA Engineer", "test our agentic ai platform")
+    assert not is_ai_augmented_job("AI Developer Advocate", "Copilot, LLMs")
+    assert not is_ai_augmented_job("Product Manager", "roadmap for agentic ai platform")
+
+
+def test_is_ai_augmented_only_flags_non_ios_ai_matches() -> None:
+    assert is_ai_augmented_only("AI-augmented Software Developer", "MCP, TypeScript")
+    assert not is_ai_augmented_only("Senior iOS Engineer", "MCP integrations")
+    assert not is_ai_augmented_only("Product Manager", "agentic ai platform")
+
+
+def test_is_ai_keyword_candidate_accepts_engineering_titles_with_ai_mention() -> None:
+    assert is_ai_keyword_candidate("Forward AI Deployment Engineer", "Engineering")
+    assert is_ai_keyword_candidate("Backend Developer", "Python, AI Engineering")
+    assert not is_ai_keyword_candidate("Backend Developer", "PostgreSQL, Python")
+    assert not is_ai_keyword_candidate("Engineering Manager", "AI platform")
 
 
 def test_is_ios_job_matches_title() -> None:

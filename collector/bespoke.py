@@ -18,7 +18,7 @@ from integrations.http_client import (
     fetch_text_allowing_bot_wall,
     post_form_data,
 )
-from parser.normalize import is_ai_augmented_job, is_ios_job
+from parser.normalize import is_ai_augmented_job, is_ai_keyword_candidate, is_ios_job
 
 _NEXT_DATA = re.compile(
     r'<script id="__NEXT_DATA__"[^>]*>(.*?)</script>',
@@ -285,58 +285,74 @@ def collect_sigma() -> SourceResult:
         from bs4 import BeautifulSoup
 
         jobs: list[dict[str, Any]] = []
-        seen: set[str] = set()
-        page = 1
-        while page <= 20:
-            fields = {
-                "action": "filter_vacancies_v2" if page == 1 else "filter_vacancies_v2_loadmore",
-                "keyword": "",
-                "direction": '["engineering"]',
-                "direction_type": "parent",
-                "locations": "[]",
-                "seniority": "[]",
-                "workplace_type": "[]",
-            }
-            if page > 1:
-                fields["page"] = str(page - 1)
-            raw = post_form_data(endpoint, fields)
-            payload = json.loads(raw)
-            if not payload.get("success"):
-                break
-            data = payload.get("data") or {}
-            html = data.get("html") or ""
-            document = BeautifulSoup(html, "lxml")
-            for card in document.select("a.vacancy-card-new"):
-                href = card.get("href") or ""
-                if not href:
-                    continue
-                absolute = absolute_url(href, "https://career.sigma.software/")
-                if absolute in seen:
-                    continue
-                seen.add(absolute)
-                title_node = card.select_one("h3.vacancy-card-new__title")
-                title = title_node.get_text(strip=True) if title_node else ""
-                tech_nodes = card.select("div.vacancy-card-new__technologies span")
-                tech_text = " ".join(node.get_text(strip=True) for node in tech_nodes)
-                if not (
-                    is_ios_job(title)
-                    or is_ios_job(tech_text)
-                    or is_ai_augmented_job(title, tech_text)
-                ):
-                    continue
-                jobs.append(
-                    {
+        scanned: set[str] = set()
+        emitted: set[str] = set()
+
+        def sweep(keyword: str, *, accept_soft_ai_titles: bool = False) -> None:
+            page = 1
+            while page <= 20:
+                fields = {
+                    "action": "filter_vacancies_v2" if page == 1 else "filter_vacancies_v2_loadmore",
+                    "keyword": keyword,
+                    "direction": '["engineering"]',
+                    "direction_type": "parent",
+                    "locations": "[]",
+                    "seniority": "[]",
+                    "workplace_type": "[]",
+                }
+                if page > 1:
+                    fields["page"] = str(page - 1)
+                raw = post_form_data(endpoint, fields)
+                payload = json.loads(raw)
+                if not payload.get("success"):
+                    break
+                data = payload.get("data") or {}
+                html = data.get("html") or ""
+                document = BeautifulSoup(html, "lxml")
+                for card in document.select("a.vacancy-card-new"):
+                    href = card.get("href") or ""
+                    if not href:
+                        continue
+                    absolute = absolute_url(href, "https://career.sigma.software/")
+                    # Cards skipped by the strict pass must stay eligible for
+                    # the soft AI-keyword pass, so only emitted jobs dedupe.
+                    if absolute in emitted:
+                        continue
+                    scanned.add(absolute)
+                    title_node = card.select_one("h3.vacancy-card-new__title")
+                    title = title_node.get_text(strip=True) if title_node else ""
+                    tech_nodes = card.select("div.vacancy-card-new__technologies span")
+                    tech_text = " ".join(node.get_text(strip=True) for node in tech_nodes)
+                    strict_match = (
+                        is_ios_job(title)
+                        or is_ios_job(tech_text)
+                        or is_ai_augmented_job(title, tech_text)
+                    )
+                    soft_match = (
+                        not strict_match
+                        and accept_soft_ai_titles
+                        and is_ai_keyword_candidate(title, tech_text)
+                    )
+                    if not (strict_match or soft_match):
+                        continue
+                    job = {
                         "company": company,
                         "title": title or tech_text,
                         "url": absolute,
                         "source": "company",
                         "description": tech_text or None,
                     }
-                )
-            if not data.get("has_more"):
-                break
-            page += 1
-        return _ok(company, endpoint, jobs, started, scanned=len(seen))
+                    if soft_match:
+                        job["ai_keyword_match"] = True
+                    jobs.append(job)
+                    emitted.add(absolute)
+                if not data.get("has_more"):
+                    break
+                page += 1
+
+        sweep("")
+        sweep("AI", accept_soft_ai_titles=True)
+        return _ok(company, endpoint, jobs, started, scanned=len(scanned))
     except Exception as error:  # noqa: BLE001
         return _fail(company, endpoint, error, started)
 

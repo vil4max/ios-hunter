@@ -213,6 +213,18 @@ def test_sigma_paginates_until_has_more_is_false(stub) -> None:
                 "has_more": False,
             },
         },
+        {
+            "success": True,
+            "data": {
+                "html": (
+                    '<a class="vacancy-card-new" href="/vacancy/4/">'
+                    '<h3 class="vacancy-card-new__title">Forward AI Deployment Engineer</h3></a>'
+                    '<a class="vacancy-card-new" href="/vacancy/3/">'
+                    '<h3 class="vacancy-card-new__title">iOS Engineer</h3></a>'
+                ),
+                "has_more": False,
+            },
+        },
     ]
     calls: list[dict] = []
 
@@ -224,10 +236,16 @@ def test_sigma_paginates_until_has_more_is_false(stub) -> None:
 
     result = bespoke.collect_sigma()
 
-    assert len(calls) == 2
+    assert len(calls) == 3
     assert calls[1]["action"] == "filter_vacancies_v2_loadmore"
-    assert result.items_scanned == 3
-    assert [job["title"] for job in result.jobs] == ["iOS Engineer", "Swift"]
+    assert calls[2]["action"] == "filter_vacancies_v2"
+    assert calls[2]["keyword"] == "AI"
+    assert result.items_scanned == 4
+    assert [job["title"] for job in result.jobs] == [
+        "iOS Engineer",
+        "Swift",
+        "Forward AI Deployment Engineer",
+    ]
 
 
 def test_sigma_stops_when_response_not_successful(stub) -> None:

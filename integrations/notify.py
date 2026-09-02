@@ -6,7 +6,7 @@ from urllib.parse import urlsplit
 from zoneinfo import ZoneInfo
 
 from integrations.telegram import send_message
-from parser.normalize import Vacancy, canonicalize_url
+from parser.normalize import Vacancy, canonicalize_url, is_ai_augmented_only
 
 _KYIV = ZoneInfo("Europe/Kyiv")
 
@@ -134,6 +134,8 @@ def format_vacancies_message(
     blocks: list[str] = [header]
     for index, vacancy in enumerate(unique, start=1):
         title = vacancy.title.strip()
+        if is_ai_augmented_only(vacancy.title, vacancy.description):
+            title = f"🤖 {title}"
         company = vacancy.company.strip()
         source = resolve_source(vacancy)
         url = vacancy.url.strip()
