@@ -18,7 +18,7 @@ from integrations.http_client import (
     fetch_text_allowing_bot_wall,
     post_form_data,
 )
-from parser.normalize import is_ios_job
+from parser.normalize import is_ai_augmented_job, is_ios_job
 
 _NEXT_DATA = re.compile(
     r'<script id="__NEXT_DATA__"[^>]*>(.*?)</script>',
@@ -318,9 +318,21 @@ def collect_sigma() -> SourceResult:
                 title = title_node.get_text(strip=True) if title_node else ""
                 tech_nodes = card.select("div.vacancy-card-new__technologies span")
                 tech_text = " ".join(node.get_text(strip=True) for node in tech_nodes)
-                if not (is_ios_job(title) or is_ios_job(tech_text)):
+                if not (
+                    is_ios_job(title)
+                    or is_ios_job(tech_text)
+                    or is_ai_augmented_job(title, tech_text)
+                ):
                     continue
-                jobs.append({"company": company, "title": title or tech_text, "url": absolute, "source": "company"})
+                jobs.append(
+                    {
+                        "company": company,
+                        "title": title or tech_text,
+                        "url": absolute,
+                        "source": "company",
+                        "description": tech_text or None,
+                    }
+                )
             if not data.get("has_more"):
                 break
             page += 1

@@ -3,6 +3,7 @@ from __future__ import annotations
 from parser.normalize import (
     Vacancy,
     canonical_company,
+    is_ai_augmented_job,
     is_inbox_candidate,
     is_ios_job,
     is_primary_ios_role,
@@ -11,6 +12,20 @@ from parser.normalize import (
     normalize_raw,
     role_key,
 )
+
+
+def test_is_ai_augmented_job_matches_engineering_roles_without_ml_requirement() -> None:
+    assert is_ai_augmented_job(
+        "AI-augmented Software Developer", "JavaScript, TypeScript, MCP"
+    )
+    assert is_ai_augmented_job(
+        "Backend Engineer", "Build multi-agent systems with Node.js"
+    )
+
+
+def test_is_ai_augmented_job_rejects_ml_and_python_only_roles() -> None:
+    assert not is_ai_augmented_job("Machine Learning Engineer", "Python, LLMs")
+    assert not is_ai_augmented_job("Python-only Backend Developer", "LLM integration")
 
 
 def test_is_ios_job_matches_title() -> None:

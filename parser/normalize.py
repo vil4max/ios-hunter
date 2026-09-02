@@ -178,6 +178,19 @@ _NON_IOS_ROLE_TITLE = re.compile(
     r")(?![a-z0-9])"
 )
 
+_AI_AUGMENTED_SIGNAL = re.compile(
+    r"(?i)\b(?:ai[- ]augmented|agentic ai|multi[- ]agent|mcp|model context protocol|"
+    r"ai orchestrat(?:ion|or)|ai sdlc|llm|cursor|copilot|autonomous agent)\b"
+)
+_AI_AUGMENTED_ENGINEERING = re.compile(
+    r"(?i)\b(?:software|full[- ]stack|backend|frontend|web|javascript|typescript|"
+    r"node(?:\.js)?|engineering|developer|architect)\b"
+)
+_AI_AUGMENTED_EXCLUDED = re.compile(
+    r"(?i)\b(?:machine learning|ml engineer|data scientist|deep learning|"
+    r"computer vision|nlp engineer|python[- ]only)\b"
+)
+
 _BODY_ROLE = re.compile(
     r"(?i)(?<![a-z0-9а-яіїєґ])("
     r"mobile|native|"
@@ -240,6 +253,15 @@ def is_ios_job(title: str, description: str | None = None) -> bool:
     return False
 
 
+def is_ai_augmented_job(title: str, description: str | None = None) -> bool:
+    text = f"{title} {description or ''}"
+    return bool(
+        _AI_AUGMENTED_SIGNAL.search(text)
+        and _AI_AUGMENTED_ENGINEERING.search(text)
+        and not _AI_AUGMENTED_EXCLUDED.search(text)
+    )
+
+
 def is_target_level(title: str) -> bool:
     text = title or ""
     if _JUNIOR_TITLE.search(text) and not _SENIORISH_TITLE.search(text):
@@ -257,7 +279,13 @@ def is_target_location(location: str | None) -> bool:
 
 
 def is_inbox_candidate(vacancy: Vacancy) -> bool:
-    return is_primary_ios_role(vacancy.title) and is_target_location(vacancy.location)
+    return (
+        (
+            is_primary_ios_role(vacancy.title)
+            or is_ai_augmented_job(vacancy.title, vacancy.description)
+        )
+        and is_target_location(vacancy.location)
+    )
 
 
 def infer_remote(title: str, location: str | None, description: str | None) -> str:
@@ -282,7 +310,9 @@ def normalize_raw(raw: dict[str, Any]) -> Vacancy | None:
     if description is not None:
         description = str(description).strip() or None
 
-    if not is_ios_job(title, description):
+    if not (
+        is_ios_job(title, description) or is_ai_augmented_job(title, description)
+    ):
         return None
     if not is_target_level(title):
         return None
