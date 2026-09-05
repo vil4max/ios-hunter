@@ -20,8 +20,10 @@ The watchlist is coverage-first: service-rating companies with 200+ specialists 
 
 ## Match policy
 
-Location and product domain are metadata, not hard exclusions. The hard filter keeps explicit Apple-platform signals and rejects only high-confidence non-target titles such as QA/test automation/TPM and junior-only roles.
+Location and product domain are metadata, not hard exclusions. The primary filter keeps Apple-platform signals. A secondary AI-augmented / agentic software engineering track uses keyword matching and requirement-aware exclusions. QA/test automation/TPM and junior-only roles remain excluded. Mandatory ML development or strong Python blocks the AI track; optional Python, RAG and embeddings do not. See [search tracks](search-tracks.md). Sigma reads AI vacancy details before emission; other title-only sources may still require manual requirements review. Secondary query failures preserve primary results with degraded status.
 
 ## Privacy
 
 New Sync creates **private Project drafts** only. Do not convert drafts to Issues in the public repo.
+
+The [company-by-company AI audit](company-ai-search-audit.md) lists all 92 registered companies and remaining discovery limits. DataArt and Luxoft add unfiltered category/specialization passes; Infopulse adds AI/LLM/agentic searches. The shared generic HTML helpers also accept both tracks.

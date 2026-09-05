@@ -18,7 +18,10 @@ from integrations.http_client import (
     fetch_text_allowing_bot_wall,
     post_form_data,
 )
-from parser.normalize import is_ai_augmented_job, is_ai_keyword_candidate, is_ios_job
+from contextlib import contextmanager
+
+from config.search_tracks import AI_SEARCH_KEYWORDS
+from parser.normalize import is_ai_augmented_job, is_ai_keyword_candidate, is_target_job, is_ios_job, ai_requirement_blockers
 
 _NEXT_DATA = re.compile(
     r'<script id="__NEXT_DATA__"[^>]*>(.*?)</script>',
@@ -156,7 +159,7 @@ def collect_andersen() -> SourceResult:
             title = str(item.get("name") or item.get("title") or "")
             technologies = item.get("technologies") or []
             tech_text = " ".join(str(t) for t in technologies)
-            if not (is_ios_job(title) or is_ios_job(tech_text)):
+            if not (is_target_job(title) or is_target_job(tech_text)):
                 continue
             vacancy_id = item.get("vacancy_id") or item.get("id")
             if not vacancy_id:
@@ -198,7 +201,7 @@ def collect_onix() -> SourceResult:
             if not isinstance(attributes, dict):
                 continue
             title = str(attributes.get("name") or "")
-            if not is_ios_job(title):
+            if not is_target_job(title):
                 continue
             slug = attributes.get("url") or ""
             canonical = attributes.get("canonical")
@@ -222,7 +225,7 @@ def collect_nortal() -> SourceResult:
             if not isinstance(data, dict):
                 continue
             title = str(data.get("title") or "")
-            if not is_ios_job(title):
+            if not is_target_job(title):
                 continue
             job_url = str(data.get("apply_url") or data.get("url") or "")
             if not job_url:
@@ -249,20 +252,29 @@ def collect_ciklum() -> SourceResult:
         "recruitingCEJobRequisitions?onlyData=true&expand=requisitionList"
         "&finder=findReqs;siteNumber=CX_1001,keyword=ios,limit=50,offset=0"
     )
+    query_errors: list[str] = []
     try:
         payload = fetch_json(url)
         items = payload.get("items") or []
         requisitions = []
         if items and isinstance(items[0], dict):
-            requisitions = items[0].get("requisitionList") or []
+            requisitions = list(items[0].get("requisitionList") or [])
+        for keyword in AI_SEARCH_KEYWORDS:
+            with _secondary_query(query_errors, keyword):
+                extra = fetch_json(url.replace("keyword=ios", "keyword=" + keyword))
+                extra_items = extra.get("items") or []
+                if extra_items and isinstance(extra_items[0], dict):
+                    requisitions.extend(extra_items[0].get("requisitionList") or [])
         jobs: list[dict[str, Any]] = []
+        seen_ids: set[str] = set()
         for item in requisitions:
             title = str(item.get("Title") or "")
-            if not is_ios_job(title):
+            if not is_target_job(title):
                 continue
             job_id = item.get("Id")
-            if not job_id:
+            if not job_id or str(job_id) in seen_ids:
                 continue
+            seen_ids.add(str(job_id))
             jobs.append(
                 {
                     "company": company,
@@ -272,7 +284,7 @@ def collect_ciklum() -> SourceResult:
                     "source_job_id": str(job_id),
                 }
             )
-        return _ok(company, url, jobs, started, scanned=len(requisitions))
+        return _partial_result(_ok(company, url, jobs, started, scanned=len(requisitions)), query_errors)
     except Exception as error:  # noqa: BLE001
         return _fail(company, url, error, started)
 
@@ -281,6 +293,7 @@ def collect_sigma() -> SourceResult:
     company = "Sigma Software"
     started = time.perf_counter()
     endpoint = "https://career.sigma.software/wp-admin/admin-ajax.php"
+    query_errors: list[str] = []
     try:
         from bs4 import BeautifulSoup
 
@@ -324,8 +337,8 @@ def collect_sigma() -> SourceResult:
                     tech_nodes = card.select("div.vacancy-card-new__technologies span")
                     tech_text = " ".join(node.get_text(strip=True) for node in tech_nodes)
                     strict_match = (
-                        is_ios_job(title)
-                        or is_ios_job(tech_text)
+                        is_target_job(title)
+                        or is_target_job(tech_text)
                         or is_ai_augmented_job(title, tech_text)
                     )
                     soft_match = (
@@ -342,6 +355,18 @@ def collect_sigma() -> SourceResult:
                         "source": "company",
                         "description": tech_text or None,
                     }
+                    if not is_ios_job(title, tech_text):
+                        with _secondary_query(query_errors, "vacancy details"):
+                            detail = BeautifulSoup(fetch_text(absolute), "lxml")
+                            for node in detail.select("script, style, nav, footer, form"):
+                                node.decompose()
+                            content = detail.select_one("main") or detail
+                            description = str(content) if content.get_text(strip=True) else ""
+                            if description:
+                                job["description"] = description
+                        if ai_requirement_blockers(title, job["description"] or ""):
+                            emitted.add(absolute)
+                            continue
                     if soft_match:
                         job["ai_keyword_match"] = True
                     jobs.append(job)
@@ -351,8 +376,10 @@ def collect_sigma() -> SourceResult:
                 page += 1
 
         sweep("")
-        sweep("AI", accept_soft_ai_titles=True)
-        return _ok(company, endpoint, jobs, started, scanned=len(scanned))
+        for keyword in AI_SEARCH_KEYWORDS:
+            with _secondary_query(query_errors, keyword):
+                sweep(keyword, accept_soft_ai_titles=True)
+        return _partial_result(_ok(company, endpoint, jobs, started, scanned=len(scanned)), query_errors)
     except Exception as error:  # noqa: BLE001
         return _fail(company, endpoint, error, started)
 
@@ -364,6 +391,7 @@ def collect_dataart() -> SourceResult:
         "https://www.dataart.team/dataart-team/api/vacancies/"
         "filter-fields-page?categories=569"
     )
+    query_errors: list[str] = []
     try:
         payload = fetch_json(url)
         items = (
@@ -373,12 +401,20 @@ def collect_dataart() -> SourceResult:
         )
         if not isinstance(items, list):
             items = []
+        items = list(items)
+        with _secondary_query(query_errors, "all categories"):
+            extra = fetch_json(url.partition("?")[0])
+            extra_items = extra.get("vacancies", {}).get("items") if isinstance(extra.get("vacancies"), dict) else extra.get("items", [])
+            if isinstance(extra_items, list):
+                items.extend(extra_items)
         jobs: list[dict[str, Any]] = []
+        emitted: set[str] = set()
         for item in items:
             title = str(item.get("title") or "")
             slug = item.get("slug")
-            if not is_ios_job(title) or not slug:
+            if not is_target_job(title) or not slug or slug in emitted:
                 continue
+            emitted.add(slug)
             jobs.append(
                 {
                     "company": company,
@@ -387,7 +423,7 @@ def collect_dataart() -> SourceResult:
                     "source": "company",
                 }
             )
-        return _ok(company, url, jobs, started, scanned=len(items))
+        return _partial_result(_ok(company, url, jobs, started, scanned=len(items)), query_errors)
     except Exception as error:  # noqa: BLE001
         return _fail(company, url, error, started)
 
@@ -407,7 +443,7 @@ def collect_grid_dynamics() -> SourceResult:
         jobs: list[dict[str, Any]] = []
         for vacancy in vacancies:
             title = str(vacancy.get("title") or "")
-            if not is_ios_job(title):
+            if not is_target_job(title):
                 continue
             locations = []
             for loc in vacancy.get("countryLocations") or []:
@@ -496,7 +532,7 @@ def collect_rbi() -> SourceResult:
 
         jobs: list[dict[str, Any]] = []
         for url, title in zip(urls, titles):
-            if not title or not is_ios_job(title):
+            if not title or not is_target_job(title):
                 continue
             jobs.append({"company": company, "title": title, "url": url, "source": "company"})
         return _ok(company, list_url, jobs, started, scanned=len(urls))
@@ -511,8 +547,12 @@ def collect_nix_html() -> SourceResult:
         "https://careers.n-ix.com/jobs/"
         "?keyword=ios&work_type%5B%5D=Remote&work_type%5B%5D=Office+based"
     )
+    query_errors: list[str] = []
     try:
         html = fetch_text(list_url)
+        for keyword in AI_SEARCH_KEYWORDS:
+            with _secondary_query(query_errors, keyword):
+                html += "\n" + fetch_text(list_url.replace("keyword=ios", "keyword=" + keyword))
         jobs: list[dict[str, Any]] = []
         seen: set[str] = set()
         pattern = re.compile(
@@ -525,10 +565,10 @@ def collect_nix_html() -> SourceResult:
             if job_url in seen:
                 continue
             seen.add(job_url)
-            if not is_ios_job(title):
+            if not is_target_job(title):
                 continue
             jobs.append({"company": company, "title": title, "url": job_url, "source": "company"})
-        return _ok(company, list_url, jobs, started, scanned=len(seen))
+        return _partial_result(_ok(company, list_url, jobs, started, scanned=len(seen)), query_errors)
     except Exception as error:  # noqa: BLE001
         return _fail(company, list_url, error, started)
 
@@ -537,8 +577,12 @@ def collect_intellias() -> SourceResult:
     company = "Intellias"
     started = time.perf_counter()
     list_url = "https://career.intellias.com/?s=iOS"
+    query_errors: list[str] = []
     try:
         html = fetch_text(list_url)
+        for keyword in AI_SEARCH_KEYWORDS:
+            with _secondary_query(query_errors, keyword):
+                html += "\n" + fetch_text(list_url.replace("s=iOS", "s=" + keyword))
         jobs: list[dict[str, Any]] = []
         seen: set[str] = set()
         pattern = re.compile(
@@ -551,10 +595,10 @@ def collect_intellias() -> SourceResult:
             if job_url in seen:
                 continue
             seen.add(job_url)
-            if not is_ios_job(title):
+            if not is_target_job(title):
                 continue
             jobs.append({"company": company, "title": title, "url": job_url, "source": "company"})
-        return _ok(company, list_url, jobs, started, scanned=len(seen))
+        return _partial_result(_ok(company, list_url, jobs, started, scanned=len(seen)), query_errors)
     except Exception as error:  # noqa: BLE001
         return _fail(company, list_url, error, started)
 
@@ -563,8 +607,12 @@ def collect_infopulse() -> SourceResult:
     company = "Infopulse"
     started = time.perf_counter()
     list_url = "https://careers.tieto.com/jobs?q=iOS"
+    query_errors: list[str] = []
     try:
         html = fetch_text(list_url)
+        for keyword in AI_SEARCH_KEYWORDS:
+            with _secondary_query(query_errors, keyword):
+                html += "\n" + fetch_text(list_url.replace("q=iOS", "q=" + keyword))
         jobs: list[dict[str, Any]] = []
         seen: set[str] = set()
         pattern = re.compile(
@@ -579,10 +627,10 @@ def collect_infopulse() -> SourceResult:
             if job_url in seen:
                 continue
             seen.add(job_url)
-            if not is_ios_job(title):
+            if not is_target_job(title):
                 continue
             jobs.append({"company": company, "title": title, "url": job_url, "source": "company"})
-        return _ok(company, list_url, jobs, started, scanned=len(seen))
+        return _partial_result(_ok(company, list_url, jobs, started, scanned=len(seen)), query_errors)
     except Exception as error:  # noqa: BLE001
         return _fail(company, list_url, error, started)
 
@@ -603,7 +651,7 @@ def collect_softserve() -> SourceResult:
             if job_url in seen:
                 continue
             seen.add(job_url)
-            if not is_ios_job(title):
+            if not is_target_job(title):
                 continue
             location = str(item.get("city") or "").strip() or None
             jobs.append(
@@ -625,12 +673,18 @@ def collect_globallogic() -> SourceResult:
     company = "GlobalLogic"
     started = time.perf_counter()
     list_url = "https://www.globallogic.com/ua/career-search-page/?keywords=ios"
+    query_errors: list[str] = []
     try:
         from bs4 import BeautifulSoup
 
         html = fetch_text_allowing_bot_wall(list_url)
         if html is None:
             html = fetch_impersonated(list_url)
+        for keyword in AI_SEARCH_KEYWORDS:
+            with _secondary_query(query_errors, keyword):
+                query_url = list_url.replace("keywords=ios", "keywords=" + keyword)
+                extra = fetch_text_allowing_bot_wall(query_url)
+                html += "\n" + (extra if extra is not None else fetch_impersonated(query_url))
         document = BeautifulSoup(html, "lxml")
         jobs: list[dict[str, Any]] = []
         seen: set[str] = set()
@@ -645,7 +699,7 @@ def collect_globallogic() -> SourceResult:
             heading = anchor.select_one("h4")
             title = heading.get_text(strip=True) if heading else anchor.get_text(" ", strip=True)
             title = re.sub(r"\s+IRC\d+\s*$", "", title).strip()
-            if not is_ios_job(title):
+            if not is_target_job(title):
                 continue
             locations = [node.get_text(" ", strip=True) for node in anchor.select(".job_location")]
             work_modes = [node.get_text(" ", strip=True) for node in anchor.select(".job_tag")]
@@ -672,10 +726,10 @@ def collect_globallogic() -> SourceResult:
                 seen.add(absolute)
                 title = title_from_slug(absolute)
                 title = re.sub(r"\s*irc\d+\s*$", "", title, flags=re.IGNORECASE).strip()
-                if not is_ios_job(title):
+                if not is_target_job(title):
                     continue
                 jobs.append({"company": company, "title": title, "url": absolute, "source": "company"})
-        return _ok(company, list_url, jobs, started, scanned=len(seen))
+        return _partial_result(_ok(company, list_url, jobs, started, scanned=len(seen)), query_errors)
     except Exception as error:  # noqa: BLE001
         return _fail(company, list_url, error, started)
 
@@ -764,10 +818,13 @@ def collect_luxoft() -> SourceResult:
         "https://career.luxoft.com/jobs"
         "?specialization=iOS+%28Objective-C%2FSwift%29"
     )
+    query_errors: list[str] = []
     try:
         from bs4 import BeautifulSoup
 
         html = fetch_text(list_url)
+        with _secondary_query(query_errors, "all specializations"):
+            html += "\n" + fetch_text(list_url.partition("?")[0])
         document = BeautifulSoup(html, "lxml")
         jobs: list[dict[str, Any]] = []
         seen: set[str] = set()
@@ -792,9 +849,9 @@ def collect_luxoft() -> SourceResult:
                 ).strip()
             if not title:
                 title = title_from_slug(absolute)
-            if not is_ios_job(title) and not is_ios_job(raw):
+            if not is_target_job(title) and not is_target_job(raw):
                 continue
-            if not is_ios_job(title):
+            if not is_target_job(title):
                 title = raw.split(" iOS ")[0].strip() or title
             location = _luxoft_location(anchor)
             if not location:
@@ -808,7 +865,7 @@ def collect_luxoft() -> SourceResult:
                     "location": location,
                 }
             )
-        return _ok(company, list_url, jobs, started, scanned=len(seen))
+        return _partial_result(_ok(company, list_url, jobs, started, scanned=len(seen)), query_errors)
     except Exception as error:  # noqa: BLE001
         return _fail(company, list_url, error, started)
 
@@ -830,7 +887,7 @@ def collect_mind_studios() -> SourceResult:
             if not isinstance(item, dict):
                 continue
             title = str(item.get("title") or item.get("name") or "").strip()
-            if not is_ios_job(title):
+            if not is_target_job(title):
                 continue
             slug = str(item.get("slug") or item.get("url") or "").strip()
             job_url = absolute_url(slug, "https://themindstudios.com/careers/") if slug else ""
@@ -879,7 +936,7 @@ def collect_mwdn() -> SourceResult:
             seen.add(dedupe)
             name = anchor.select_one(".comeet-position-name")
             title = name.get_text(strip=True) if name else title_from_slug(absolute)
-            if not is_ios_job(title):
+            if not is_target_job(title):
                 continue
             jobs.append({"company": company, "title": title, "url": absolute, "source": "company"})
         return _ok(company, list_url, jobs, started, scanned=len(seen))
@@ -898,7 +955,7 @@ def collect_zone3000() -> SourceResult:
             if not isinstance(item, dict):
                 continue
             title = str(item.get("title") or "").strip()
-            if not is_ios_job(title):
+            if not is_target_job(title):
                 continue
             slug = str(item.get("url") or "").strip().lstrip("/")
             if not slug:
@@ -918,3 +975,18 @@ def collect_zone3000() -> SourceResult:
         return _ok(company, _ZONE3000_API_URL, jobs, started, scanned=len(items))
     except Exception as error:  # noqa: BLE001
         return _fail(company, _ZONE3000_API_URL, error, started)
+
+
+@contextmanager
+def _secondary_query(errors: list[str], keyword: str):
+    try:
+        yield
+    except Exception as error:  # noqa: BLE001
+        errors.append(f"{keyword}: {error}")
+
+
+def _partial_result(result: SourceResult, errors: list[str]) -> SourceResult:
+    if errors:
+        result.status = "degraded"
+        result.error = "Secondary AI search incomplete: " + "; ".join(errors)
+    return result

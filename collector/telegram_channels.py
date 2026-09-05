@@ -9,7 +9,7 @@ from typing import Any
 from urllib.parse import urlsplit
 
 from database.telegram_cursors import default_telegram_cursors_path, load_telegram_cursors
-from parser.normalize import is_ios_job
+from parser.normalize import is_target_job
 
 from collector.types import SourceResult
 
@@ -173,7 +173,7 @@ def should_keep_message(text: str, *, channel: str | None = None) -> bool:
         return False
     if is_candidate_post(text):
         return False
-    if not is_ios_job(text):
+    if not is_target_job(text):
         return False
     if channel == _HIRIFY_CHANNEL:
         return _HIRIFY_HEADING.search(text) is not None
@@ -184,7 +184,7 @@ def should_keep_message(text: str, *, channel: str | None = None) -> bool:
 
 def _is_hirify_vacancy_candidate(text: str) -> bool:
     lowered = text.lower()
-    return is_ios_job(text) and (
+    return is_target_job(text) and (
         "по подписке:" in lowered or _HIRIFY_HEADING.search(text) is not None
     )
 

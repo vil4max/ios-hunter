@@ -9,7 +9,7 @@ from typing import Any
 from collector.results import source_failed, source_ok
 from collector.types import SourceResult
 from integrations.http_client import fetch_text
-from parser.normalize import is_ios_job
+from parser.normalize import is_target_job
 
 _COMPANY = "EPAM"
 _SOURCE_ID = "company:epam@careers.epam.com"
@@ -23,7 +23,7 @@ _NEXT_DATA = re.compile(
     r'<script id="__NEXT_DATA__"[^>]*>(.*?)</script>',
     re.DOTALL,
 )
-_IOS_SLUG = re.compile(r"(?i)(ios|swift)")
+_IOS_SLUG = re.compile(r"(?i)(ios|swift|(?:^|[-/])(?:ai|llm|agentic)(?:[-/]|$))")
 _MAX_WORKERS = 4
 
 
@@ -104,7 +104,7 @@ def parse_vacancy_page(html: str, url: str) -> dict[str, Any] | None:
     if description is not None:
         description = str(description).strip() or None
 
-    if not is_ios_job(title, description):
+    if not is_target_job(title, description):
         return None
 
     metadata = job.get("metadata") if isinstance(job.get("metadata"), dict) else {}

@@ -5,7 +5,8 @@ from dataclasses import dataclass
 from html import unescape
 from pathlib import Path
 
-from parser.normalize import Vacancy
+from config.search_tracks import AI_RELEVANCE_PATTERNS
+from parser.normalize import Vacancy, is_ai_augmented_only, ai_negative_signals, ai_requirement_blockers, required_ai_text
 
 
 @dataclass(frozen=True)
@@ -171,11 +172,26 @@ def assess_fit(vacancy: Vacancy, profile: CandidateProfile) -> FitAssessment:
     reasons.extend(role_reasons)
     blockers.extend(role_blockers)
 
+    ai_track = is_ai_augmented_only(title, description, ai_keyword_match=vacancy.ai_keyword_match)
     stack_points, stack_reasons = _stack_score(text, profile)
+    if ai_track:
+        matched = [name for name, pattern in AI_RELEVANCE_PATTERNS.items() if re.search(pattern, text, re.I)]
+        stack_points = min(25, 4 + 3 * len(matched))
+        stack_reasons = ["AI opportunity signals (not proven candidate skills): " + (", ".join(matched) or "unspecified")]
+        reasons = [reason.replace("iOS role", "AI role") for reason in reasons]
+        reasons.append("secondary Applied AI track; iOS remains primary")
+        score -= 5
+        negatives = ai_negative_signals(title, required_ai_text(vacancy.description or ""))
+        blockers.extend(ai_requirement_blockers(title, vacancy.description or ""))
+        score -= 15 * len(negatives)
+        reasons.extend(negatives)
     score += stack_points
     reasons.extend(stack_reasons)
 
     experience_points, experience_reasons = _experience_score(text, profile)
+    if ai_track:
+        experience_points = 7
+        experience_reasons = ["AI/Python commercial experience unverified; iOS years are not substituted"]
     score += experience_points
     reasons.extend(experience_reasons)
 
@@ -194,6 +210,23 @@ def assess_fit(vacancy: Vacancy, profile: CandidateProfile) -> FitAssessment:
     else:
         score += 5
 
+    if ai_track:
+        requirements = required_ai_text(vacancy.description or "")
+        gaps = []
+        for skill, pattern in {
+            "JavaScript": r"\bjavascript\b", "TypeScript": r"\btypescript\b",
+            "MCP": r"\bmcp\b", "AI orchestration": r"\borchestration\b",
+            "multi-agent systems": r"\bmulti.agent\b", "AI SDLC": r"\bai sdlc\b",
+            "client-facing communication": r"\b(?:consulting|client.facing)\b",
+        }.items():
+            if re.search(pattern, requirements, re.I) and skill.lower() not in profile.skills:
+                gaps.append(skill)
+        if gaps:
+            reasons.append("Required skills need evidence: " + ", ".join(gaps))
+            score = min(score, 77)
+        if not description:
+            reasons.append("Full requirements unavailable; manual review needed")
+            score = min(score, 77)
     score = max(0, min(100, score))
     if blockers:
         recommendation = "skip"

@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 from collector.results import source_failed, source_ok
 from collector.types import SourceResult
 from integrations.http_client import fetch_impersonated, fetch_json, fetch_text, post_json
-from parser.normalize import is_ios_job
+from parser.normalize import is_target_job
 
 _JOB_URL_TOKENS = ("career", "job", "jobs", "vacanc", "position", "opening")
 _ALLOWED_LOCATIONS_BY_COMPANY: dict[str, frozenset[str]] = {
@@ -70,7 +70,7 @@ def _add_candidate(
         return
     if not is_job_posting and not _is_job_url(absolute_url):
         return
-    if not (is_ios_job(normalized_title, description) or is_ios_job(absolute_url)):
+    if not (is_target_job(normalized_title, description) or is_target_job(absolute_url)):
         return
     candidates.setdefault(absolute_url, (normalized_title, description, location))
 
@@ -181,7 +181,7 @@ def _collect_conscensia(company: str) -> tuple[list[dict[str, Any]], int]:
         title_node = item.get("title")
         title = str(title_node.get("rendered") or "") if isinstance(title_node, dict) else ""
         description = str(item.get("content") or "")
-        if not is_ios_job(title, description):
+        if not is_target_job(title, description):
             continue
         jobs.append(
             {
@@ -212,7 +212,7 @@ def _collect_svitla(company: str) -> tuple[list[dict[str, Any]], int]:
                 continue
             title = str(item.get("position") or "").strip()
             description = str(item.get("fullDescription") or "")
-            if not is_ios_job(title, description):
+            if not is_target_job(title, description):
                 continue
             cities = item.get("jobCities") if isinstance(item.get("jobCities"), list) else []
             locations = []
@@ -258,7 +258,7 @@ def _collect_label_your_data(company: str) -> tuple[list[dict[str, Any]], int]:
         if not isinstance(item, dict):
             continue
         title = str(item.get("title") or "").strip()
-        if not is_ios_job(title):
+        if not is_target_job(title):
             continue
         locations = item.get("locations") if isinstance(item.get("locations"), list) else []
         location_labels = []
@@ -316,7 +316,7 @@ def _collect_valtech(company: str) -> tuple[list[dict[str, Any]], int]:
             if not isinstance(item, dict):
                 continue
             title = str(item.get("title") or "").strip()
-            if not is_ios_job(title):
+            if not is_target_job(title):
                 continue
             offices = item.get("offices") if isinstance(item.get("offices"), list) else []
             location = " / ".join(
@@ -368,7 +368,7 @@ def _collect_playrix(company: str) -> tuple[list[dict[str, Any]], int]:
                 "ourStack",
             )
         )
-        if not is_ios_job(title, description):
+        if not is_target_job(title, description):
             continue
         section = section_codes.get(item.get("parentId"), "")
         slug = str(item.get("code") or "").strip()

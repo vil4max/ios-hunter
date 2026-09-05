@@ -18,6 +18,7 @@ def stub(monkeypatch: pytest.MonkeyPatch):
             handler = payload if callable(payload) else (lambda url, **_k: payload)
             monkeypatch.setattr(bespoke, "fetch_json", handler)
         if form is not None:
+            monkeypatch.setattr(bespoke, "fetch_text", lambda *args, **kwargs: "")
             monkeypatch.setattr(bespoke, "post_form_data", form)
 
     return apply
@@ -170,7 +171,7 @@ def test_ciklum_reads_oracle_requisitions(stub) -> None:
 
     result = bespoke.collect_ciklum()
 
-    assert result.items_scanned == 3
+    assert result.items_scanned == 12
     assert result.jobs[0]["url"].endswith("/job/R1")
 
 
@@ -230,16 +231,16 @@ def test_sigma_paginates_until_has_more_is_false(stub) -> None:
 
     def fake_post(url: str, fields: dict, **_kwargs) -> str:
         calls.append(fields)
-        return json.dumps(pages[len(calls) - 1])
+        return json.dumps(pages[len(calls) - 1] if len(calls) <= len(pages) else {"success": True, "data": {"html": "", "has_more": False}})
 
     stub(form=fake_post)
 
     result = bespoke.collect_sigma()
 
-    assert len(calls) == 3
+    assert len(calls) == 5
     assert calls[1]["action"] == "filter_vacancies_v2_loadmore"
     assert calls[2]["action"] == "filter_vacancies_v2"
-    assert calls[2]["keyword"] == "AI"
+    assert [call["keyword"] for call in calls[2:]] == ["AI", "LLM", "agentic"]
     assert result.items_scanned == 4
     assert [job["title"] for job in result.jobs] == [
         "iOS Engineer",
@@ -278,7 +279,7 @@ def test_dataart_builds_urls_from_slug(stub) -> None:
 
     result = bespoke.collect_dataart()
 
-    assert result.items_scanned == 3
+    assert result.items_scanned == 6
     assert result.jobs[0]["url"] == "https://www.dataart.team/vacancies/ios-developer"
     assert "categories=569" in result.source_url
     assert "skills=771" not in result.source_url
@@ -299,7 +300,7 @@ def test_dataart_android_only_mobile_page_is_healthy_not_empty_scan(stub) -> Non
     result = bespoke.collect_dataart()
 
     assert result.status == "healthy"
-    assert result.items_scanned == 2
+    assert result.items_scanned == 4
     assert result.jobs == []
 
 

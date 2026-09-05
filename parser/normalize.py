@@ -188,7 +188,7 @@ _AI_AUGMENTED_SIGNAL = re.compile(
     r"ai\s+orchestrat(?:ion|or)|ai\s+sdlc|"
     r"ai[- ](?:native|first|powered|driven)|"
     r"ai\s+(?:software\s+|full[-\s]?stack\s+|backend\s+|frontend\s+|web\s+)?(?:developer|engineer)|"
-    r"llm"
+    r"llm|applied\s+ai|ai\s+(?:platform|integration|solutions?)"
     r")\b"
 )
 # Assistant tool names alone are too generic (SQL "cursor"): require a
@@ -277,6 +277,8 @@ def is_ai_augmented_job(title: str, description: str | None = None) -> bool:
         return False
     if not _AI_AUGMENTED_ENGINEERING.search(text):
         return False
+    if (_AI_AUGMENTED_ENGINEERING.search(title) and _GENERIC_AI_MENTION.search(title)):
+        return True
     if _AI_AUGMENTED_SIGNAL.search(text):
         return True
     return bool(
@@ -328,6 +330,7 @@ def is_inbox_candidate(vacancy: Vacancy) -> bool:
             is_primary_ios_role(vacancy.title)
             or is_ai_augmented_job(vacancy.title, vacancy.description)
         )
+        and (is_primary_ios_role(vacancy.title) or not ai_requirement_blockers(vacancy.title, vacancy.description or ""))
         and is_target_location(vacancy.location)
     )
 
@@ -353,6 +356,9 @@ def normalize_raw(raw: dict[str, Any]) -> Vacancy | None:
     description = raw.get("description")
     if description is not None:
         description = str(description).strip() or None
+
+    if not is_ios_job(title, description) and ai_requirement_blockers(title, description or ""):
+        return None
 
     ai_keyword_match = bool(raw.get("ai_keyword_match"))
     if not (
@@ -401,3 +407,72 @@ def normalize_many(raw_jobs: list[dict[str, Any]]) -> list[Vacancy]:
         if vacancy:
             vacancies.append(vacancy)
     return vacancies
+
+
+def is_target_job(title: str, description: str | None = None) -> bool:
+    """Shared early collector gate; preserve the original iOS predicate."""
+    return is_ios_job(title, description) or (
+        is_ai_augmented_job(title, description)
+        and not ai_requirement_blockers(title, description or "")
+    )
+
+
+def ai_negative_signals(title: str, description: str = "") -> tuple[str, ...]:
+    signals = []
+    if re.search(r"\b(?:data scien(?:ce|tist)|research|computer vision|nlp|mlops)\b", title, re.I):
+        signals.append("specialist Data Science/research/MLOps title")
+    for sentence in re.split(r"[.\n;]", description):
+        if re.search(r"\b(?:not required|optional|nice.to.have|preferred|no need)\b", sentence, re.I):
+            continue
+        if re.search(r"\b(?:primary|primarily|heavy|focus|core|main)\b", sentence, re.I) and re.search(
+            r"\b(?:model training|training models|mlops|computer vision|nlp research|ml research|data science)\b", sentence, re.I
+        ):
+            signals.append("research/model-training/MLOps-heavy responsibilities")
+        if (re.search(r"\b(?:must|required|mandatory|minimum|at least)\b", sentence, re.I)
+            and re.search(r"\b(?:commercial|professional|production)\b", sentence, re.I)
+            and re.search(r"\b(?:python|ml|machine learning)\b", sentence, re.I)
+            and re.search(r"\b(?:[3-9]|[1-9][0-9])(?:\s*[-–]\s*\d+)?\s*\+?\s*(?:years?|yrs?)\b", sentence, re.I)):
+            signals.append("mandatory 3+ years commercial Python/ML experience needs evidence")
+    return tuple(dict.fromkeys(signals))
+
+
+def required_ai_text(description: str) -> str:
+    """Keep requirement sections and exclude explicitly optional bullets."""
+    from bs4 import BeautifulSoup
+
+    document = BeautifulSoup(description or "", "html.parser")
+    for node in document.find_all(["p", "li", "div", "h1", "h2", "h3", "h4", "br"]):
+        node.insert_after("\n")
+    text = document.get_text(" ")
+    required = []
+    optional_section = False
+    for line in re.split(r"[\n;]|(?<=[.!?])\s+", text):
+        line = line.strip()
+        if re.search(r"^(?:nice.to.have|preferred qualifications|bonus|desirable)\b", line, re.I):
+            optional_section = True
+            continue
+        if re.search(r"^(?:requirements|responsibilities|qualifications|personal profile|required skills)\b", line, re.I):
+            optional_section = False
+        if optional_section or re.search(r"\b(?:not required|optional|preferred|also acceptable|other languages|nice.to.have)\b", line, re.I):
+            continue
+        required.append(line)
+    return "\n".join(required)
+
+
+def ai_requirement_blockers(title: str, description: str = "") -> tuple[str, ...]:
+    text = required_ai_text(description)
+    blockers = []
+    if _AI_AUGMENTED_EXCLUDED.search(title) or re.search(r"\b(?:research scientist|mlops engineer|data science)\b", title, re.I):
+        blockers.append("ML/research specialist role")
+    for line in text.splitlines():
+        if re.search(r"\b(?:train(?:ing)?|develop(?:ing)?|build(?:ing)?)\s+(?:(?:custom|new|ml|machine learning|deep learning)\s+)*(?:models?|neural networks)\b", line, re.I):
+            blockers.append("required ML model development")
+        if re.search(
+            r"\b(?:strong|deep|advanced|expert|proficien\w*|extensive)\s+"
+            r"(?:(?:knowledge|understanding|experience|expertise|proficiency|skills|in|of|with)\s+){0,4}python\b"
+            r"|\bpython\s+(?:expertise|proficiency|mastery)\b",
+            line, re.I,
+        ):
+            blockers.append("required strong Python")
+    blockers.extend(ai_negative_signals(title, text))
+    return tuple(dict.fromkeys(blockers))

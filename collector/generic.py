@@ -9,7 +9,7 @@ from urllib.parse import urljoin
 from collector.results import source_failed, source_ok
 from collector.types import SourceResult
 from integrations.http_client import fetch_json, fetch_text, fetch_text_allowing_bot_wall
-from parser.normalize import is_ios_job
+from parser.normalize import is_target_job
 
 
 def collect_wp_rest(company: str, endpoint: str) -> SourceResult:
@@ -24,7 +24,7 @@ def collect_wp_rest(company: str, endpoint: str) -> SourceResult:
             title = re.sub(r"<[^>]+>", "", str(rendered or "")).strip()
             title = html_lib.unescape(title)
             job_url = str(item.get("link") or "")
-            if not is_ios_job(title) or not job_url:
+            if not is_target_job(title) or not job_url:
                 continue
             jobs.append(
                 {
@@ -101,7 +101,7 @@ def collect_html_regex(
             if dedupe_key in seen:
                 continue
             seen.add(dedupe_key)
-            if not is_ios_job(title):
+            if not is_target_job(title):
                 continue
             jobs.append({"company": company, "title": title, "url": job_url, "source": "company"})
         return source_ok(company, list_url, jobs, started, scanned=len(seen))
@@ -178,7 +178,7 @@ def collect_soup_links(
                     title = title_from_slug(absolute)
                 if title_transform:
                     title = title_transform(title)
-                if not is_ios_job(title):
+                if not is_target_job(title):
                     continue
 
                 location = None

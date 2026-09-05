@@ -1,6 +1,6 @@
 # iOS Hunter
 
-iOS Hunter is a private **company-career radar** inside the wider Career Evolution System. Its bounded responsibility is to monitor official career pages and ATS endpoints of large Ukrainian service companies for iOS/Swift vacancies, synchronize operational data with the Career CRM Project, and report collection status. Career direction, competency development, interview knowledge, English progress, and canonical career facts belong to their owning workspaces — not here.
+iOS Hunter is a private **company-career radar** inside the wider Career Evolution System. Its bounded responsibility is to monitor official career pages and ATS endpoints of large Ukrainian service companies for primary iOS/Swift and secondary Applied AI / AI Software Engineering vacancies, synchronize operational data with the Career CRM Project, and report collection status. Career direction, competency development, interview knowledge, English progress, and canonical career facts belong to their owning workspaces — not here.
 
 Production runs on GitHub Actions. GitHub Project is the operational source of truth for vacancy status. Telegram gets a short OK on the Kyiv collect slots (09:00 / 12:00 / 15:00 / 18:00), and the vacancy list only when something new lands in Inbox. Live ops channels are Telegram, the daily email (after the Kyiv 18:00 collect), and the Project board — `reports/*.md` are static audit notes, not runtime dashboards.
 
@@ -182,3 +182,11 @@ Hirify Applications sync is local-first: export Excel from https://hirify.me/app
 ## Identity
 
 Vacancies are keyed by canonical URL (tracking query params stripped). Project Sync is idempotent via `Canonical-URL` in the Issue body.
+
+## Career search tracks
+
+The primary track stays Senior iOS Engineer. Applied AI / AI Software Engineering
+is a second opportunity track, not a change to the candidate's factual profile.
+Policy and positive keywords live in `config/search_tracks.py`; see
+[search criteria and source coverage](docs/search-tracks.md) for examples,
+negative signals, scoring and rollback.
