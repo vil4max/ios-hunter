@@ -419,11 +419,6 @@
     "company": "EPAM",
     "first_seen": "2026-09-05T13:55:18+00:00"
   },
-  "https://careers.epam.com/en/vacancy/senior-python-test-automation-engineer-with-ai-bltuwtrcyw0e2yjzav6_en": {
-    "title": "Senior Python Test Automation Engineer with AI",
-    "company": "EPAM",
-    "first_seen": "2026-09-05T13:55:18+00:00"
-  },
   "https://careers.epam.com/en/vacancy/senior-search-engineer-generative-ai-bltb192ifuzurw3jfr3_en": {
     "title": "Senior Search Engineer (Generative AI)",
     "company": "EPAM",
@@ -802,6 +797,11 @@
     "title": "IOS Developer",
     "company": "Genesis",
     "first_seen": "2026-07-10T08:29:48+00:00"
+  },
+  "https://geniusee.com/career/ai-python-engineer": {
+    "title": "AI/Python Engineer",
+    "company": "Geniusee",
+    "first_seen": "2026-09-05T16:52:41+00:00"
   },
   "https://hirify.me/jobs/1023764-ios-razrabotcik": {
     "title": "iOS-разработчик",
