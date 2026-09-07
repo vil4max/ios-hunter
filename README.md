@@ -190,3 +190,16 @@ is a second opportunity track, not a change to the candidate's factual profile.
 Policy and positive keywords live in `config/search_tracks.py`; see
 [search criteria and source coverage](docs/search-tracks.md) for examples,
 negative signals, scoring and rollback.
+
+### Candidate profile for Inbox scoring
+
+Run `npm run build` in the private sibling `Profile/career` before scoring.
+`scripts/score_inbox.py --profile /path/to/build/candidate-profile.json` consumes
+schema version 1 of that generated profile. The default path is
+`../Profile/career/build/candidate-profile.json`. Missing or malformed input fails
+before credentials, CRM reads or collection; there is no Markdown parsing or
+silent experience/skill fallback. Refresh the profile after career changes.
+The source fingerprint and generation timestamp identify the export; they do
+not automatically prove that a detached copy is current. Keep the JSON private
+and untracked. The scoring algorithm is unchanged; search tracks and spoken
+English are carried as context, not new score adjustments.

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import json
 import re
+from datetime import datetime
 from dataclasses import dataclass
 from html import unescape
 from pathlib import Path
@@ -18,6 +20,8 @@ class CandidateProfile:
     remote_preferred: bool
     english_public_level: str
     excluded_domains: frozenset[str]
+    search_tracks: tuple[str, ...] = ()
+    english_spoken_level: str = ""
 
 
 @dataclass(frozen=True)
@@ -67,30 +71,49 @@ def _plain_text(value: str) -> str:
     return re.sub(r"\s+", " ", unescape(without_tags)).strip()
 
 
-def load_candidate_profile(resume_path: Path, career_path: Path) -> CandidateProfile:
-    resume = resume_path.read_text(encoding="utf-8")
-    career = career_path.read_text(encoding="utf-8")
-    years_match = re.search(r"approved public experience framing is `([0-9]+)\+ years`", career)
-    skills = {
-        match.group(1).strip().lower()
-        for match in re.finditer(r"\[GENERAL_SKILL\]\*\*\s*([^\n]+)", career)
-    }
-    if not skills:
-        skills_section = resume.partition("## Skills")[2].partition("## Roles")[0]
-        skills = {part.strip().lower() for part in skills_section.split("·") if part.strip()}
-    excluded = frozenset(
-        domain
-        for domain in ("gambling", "dating")
-        if domain in career.lower()
-    )
+def load_candidate_profile(profile_path: Path) -> CandidateProfile:
+    try:
+        data = json.loads(profile_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as error:
+        raise ValueError("Candidate profile unavailable or invalid; run npm run build in Profile/career") from error
+    if not isinstance(data, dict) or type(data.get("schemaVersion")) is not int or data["schemaVersion"] != 1:
+        raise ValueError("Unsupported candidate profile schemaVersion; expected 1")
+    years = data.get("publicExperienceYears")
+    if type(years) is not int or not 0 < years < 80:
+        raise ValueError("Invalid candidate profile publicExperienceYears")
+    for key in ("preferredRole", "homeLocation", "englishPublicLevel", "englishSpokenLevel"):
+        if not isinstance(data.get(key), str) or not data[key].strip():
+            raise ValueError(f"Invalid candidate profile {key}")
+    for key in ("skills", "searchTracks", "excludedDomains"):
+        values = data.get(key)
+        if not isinstance(values, list) or any(not isinstance(value, str) or not value.strip() for value in values):
+            raise ValueError(f"Invalid candidate profile {key}")
+        if key != "excludedDomains" and not values:
+            raise ValueError(f"Empty candidate profile {key}")
+    if type(data.get("remotePreferred")) is not bool:
+        raise ValueError("Invalid candidate profile remotePreferred")
+    fingerprint = data.get("sourceFingerprint")
+    if not isinstance(fingerprint, str) or not re.fullmatch(r"[0-9a-f]{64}", fingerprint):
+        raise ValueError("Invalid candidate profile sourceFingerprint")
+    try:
+        generated = datetime.fromisoformat(data["generatedAt"].replace("Z", "+00:00"))
+        if generated.tzinfo is None:
+            raise ValueError("Timezone required")
+    except (KeyError, AttributeError, TypeError, ValueError) as error:
+        raise ValueError("Invalid candidate profile generatedAt") from error
+    aliases = {"swift package manager (spm)": "spm", "modular architecture": "modularization"}
+    skills = {value.strip().lower() for value in data["skills"]}
+    skills.update(aliases[value] for value in tuple(skills) if value in aliases)
     return CandidateProfile(
-        years_ios=int(years_match.group(1)) if years_match else 10,
+        years_ios=years,
         skills=frozenset(skills),
-        preferred_role="Senior iOS Engineer",
-        home_location="Kyiv, Ukraine",
-        remote_preferred="Remote is the primary and strongly preferred" in career,
-        english_public_level="B2",
-        excluded_domains=excluded,
+        preferred_role=data["preferredRole"],
+        home_location=data["homeLocation"],
+        remote_preferred=data["remotePreferred"],
+        english_public_level=data["englishPublicLevel"],
+        excluded_domains=frozenset(value.strip().lower() for value in data["excludedDomains"]),
+        search_tracks=tuple(data["searchTracks"]),
+        english_spoken_level=data["englishSpokenLevel"],
     )
 
 
