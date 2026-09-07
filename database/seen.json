@@ -69,16 +69,6 @@
     "company": "Intellias",
     "first_seen": "2026-09-05T13:55:18+00:00"
   },
-  "https://career.intellias.com/vacancy/senior-airag-engineer-document-intelligence-30322": {
-    "title": "Senior AI/RAG Engineer (Document Intelligence)",
-    "company": "Intellias",
-    "first_seen": "2026-09-05T13:55:18+00:00"
-  },
-  "https://career.intellias.com/vacancy/senior-ios-engineer-30434": {
-    "title": "Senior IOS Engineer",
-    "company": "Intellias",
-    "first_seen": "2026-07-10T08:29:48+00:00"
-  },
   "https://career.intellias.com/vacancy/senior-ios-swiftuicombine-developer-30823": {
     "title": "Senior iOS SwiftUI/Combine Developer",
     "company": "Intellias",
@@ -89,14 +79,14 @@
     "company": "Intellias",
     "first_seen": "2026-09-05T13:55:18+00:00"
   },
+  "https://career.intellias.com/vacancy/servicenow-ai-engineer-30788": {
+    "title": "ServiceNow AI Engineer",
+    "company": "Intellias",
+    "first_seen": "2026-09-07T12:44:36+00:00"
+  },
   "https://career.intellias.com/vacancy/servicenow-senior-ai-developer-30825": {
     "title": "ServiceNow Senior AI Developer",
     "company": "Intellias",
-    "first_seen": "2026-09-05T13:55:18+00:00"
-  },
-  "https://career.luxoft.com/jobs/senior-data-engineer-aitooling-27113": {
-    "title": "Senior Data Engineer (AI/Tooling)",
-    "company": "Luxoft",
     "first_seen": "2026-09-05T13:55:18+00:00"
   },
   "https://career.luxoft.com/jobs/senior-mobile-engineer-ios-swift-24568": {
@@ -119,10 +109,20 @@
     "company": "Sigma Software",
     "first_seen": "2026-09-02T11:26:59+00:00"
   },
+  "https://career.sigma.software/vacancy/principal-data-platform-engineer": {
+    "title": "Principal Data Platform Engineer(Swedish Ad Platform)",
+    "company": "Sigma Software",
+    "first_seen": "2026-09-07T12:44:36+00:00"
+  },
   "https://career.sigma.software/vacancy/senior-ai-full-stack-software-engineer": {
     "title": "Senior Full Stack Engineer with AI(Healthcare)",
     "company": "Sigma Software",
     "first_seen": "2026-09-05T13:55:18+00:00"
+  },
+  "https://career.sigma.software/vacancy/senior-analytics-engineer": {
+    "title": "Senior Analytics Engineer(Semantic Layer)",
+    "company": "Sigma Software",
+    "first_seen": "2026-09-07T12:44:36+00:00"
   },
   "https://career.softserveinc.com/en-us/vacancies/ai-architect-89826": {
     "title": "AI Architect",
@@ -314,6 +314,11 @@
     "company": "EPAM",
     "first_seen": "2026-09-05T13:55:18+00:00"
   },
+  "https://careers.epam.com/en/vacancy/senior-devops-engineer-gcp-with-ai-bltqen278jouil3ynqn_en": {
+    "title": "Senior DevOps Engineer GCP with AI",
+    "company": "EPAM",
+    "first_seen": "2026-09-07T12:44:36+00:00"
+  },
   "https://careers.epam.com/en/vacancy/senior-full-stack-net-developer-with-ai-blt5s2ls3fq513uq6ql_en": {
     "title": "Senior Full Stack .NET Developer with AI",
     "company": "EPAM",
@@ -323,6 +328,11 @@
     "title": "Senior Full Stack .NET Developer with AI",
     "company": "EPAM",
     "first_seen": "2026-09-05T13:55:18+00:00"
+  },
+  "https://careers.epam.com/en/vacancy/senior-gcp-engineer-with-ai-blt276uuzp8dyu64frg_en": {
+    "title": "Senior GCP Engineer with AI",
+    "company": "EPAM",
+    "first_seen": "2026-09-07T12:44:36+00:00"
   },
   "https://careers.epam.com/en/vacancy/senior-genai-ai-backend-engineer-bltqd4ke788kxr9yjca_en": {
     "title": "Senior GenAI/AI Backend Engineer",
@@ -409,6 +419,11 @@
     "company": "EPAM",
     "first_seen": "2026-09-05T13:55:18+00:00"
   },
+  "https://careers.epam.com/en/vacancy/senior-python-test-automation-engineer-with-ai-bltuwtrcyw0e2yjzav6_en": {
+    "title": "Senior Python Test Automation Engineer with AI",
+    "company": "EPAM",
+    "first_seen": "2026-09-07T12:44:36+00:00"
+  },
   "https://careers.epam.com/en/vacancy/senior-search-engineer-generative-ai-bltb192ifuzurw3jfr3_en": {
     "title": "Senior Search Engineer (Generative AI)",
     "company": "EPAM",
@@ -424,13 +439,13 @@
     "company": "N-iX",
     "first_seen": "2026-08-20T10:48:42+00:00"
   },
+  "https://careers.n-ix.com/jobs/4499178101-php-leader": {
+    "title": "Senior/ Lead PHP Engineer (with AI Skills) (#5504)",
+    "company": "N-iX",
+    "first_seen": "2026-09-07T12:44:36+00:00"
+  },
   "https://careers.n-ix.com/jobs/4508522101-ai-engineering-senior": {
     "title": "Senior Full-Stack Engineer (with Kotlin and AI agents experience) (#5641)",
-    "company": "N-iX",
-    "first_seen": "2026-09-05T13:55:18+00:00"
-  },
-  "https://careers.n-ix.com/jobs/4508524101-javascript-senior": {
-    "title": "Senior Front-End Engineer (with AI agents experience) (#5642)",
     "company": "N-iX",
     "first_seen": "2026-09-05T13:55:18+00:00"
   },
@@ -1263,6 +1278,11 @@
     "company": "DataArt",
     "first_seen": "2026-09-05T13:55:18+00:00"
   },
+  "https://www.dataart.team/vacancies/ML00136": {
+    "title": "Principal AI Solutions Architect, Healthcare & Life Sciences - US",
+    "company": "DataArt",
+    "first_seen": "2026-09-07T12:44:36+00:00"
+  },
   "https://www.globallogic.com/ua/careers/ai-process-automation-agentic-workflow-engineer-coach-irc301639-4": {
     "title": "AI Process Automation / Agentic Workflow Engineer & Coach",
     "company": "GlobalLogic",
@@ -1282,6 +1302,11 @@
     "title": "Senior AI engineer",
     "company": "GlobalLogic",
     "first_seen": "2026-09-05T13:55:18+00:00"
+  },
+  "https://www.globallogic.com/ua/careers/senior-lead-native-ios-irc303783": {
+    "title": "Senior Lead – Native iOS",
+    "company": "GlobalLogic",
+    "first_seen": "2026-09-07T12:44:36+00:00"
   },
   "https://www.globallogic.com/ua/careers/specialist-ios-software-engineer-irc302236": {
     "title": "Specialist iOS Software Engineer",
