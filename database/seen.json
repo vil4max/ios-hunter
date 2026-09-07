@@ -69,15 +69,15 @@
     "company": "Intellias",
     "first_seen": "2026-09-05T13:55:18+00:00"
   },
+  "https://career.intellias.com/vacancy/senior-airag-engineer-document-intelligence-30322": {
+    "title": "Senior AI/RAG Engineer (Document Intelligence)",
+    "company": "Intellias",
+    "first_seen": "2026-09-07T18:17:23+00:00"
+  },
   "https://career.intellias.com/vacancy/senior-ios-swiftuicombine-developer-30823": {
     "title": "Senior iOS SwiftUI/Combine Developer",
     "company": "Intellias",
     "first_seen": "2026-09-04T16:26:54+00:00"
-  },
-  "https://career.intellias.com/vacancy/senior-javapython-with-ai-engineer-30688": {
-    "title": "Senior Java/Python with AI Engineer",
-    "company": "Intellias",
-    "first_seen": "2026-09-05T13:55:18+00:00"
   },
   "https://career.intellias.com/vacancy/servicenow-ai-engineer-30788": {
     "title": "ServiceNow AI Engineer",
@@ -314,11 +314,6 @@
     "company": "EPAM",
     "first_seen": "2026-09-05T13:55:18+00:00"
   },
-  "https://careers.epam.com/en/vacancy/senior-devops-engineer-gcp-with-ai-bltqen278jouil3ynqn_en": {
-    "title": "Senior DevOps Engineer GCP with AI",
-    "company": "EPAM",
-    "first_seen": "2026-09-07T12:44:36+00:00"
-  },
   "https://careers.epam.com/en/vacancy/senior-full-stack-net-developer-with-ai-blt5s2ls3fq513uq6ql_en": {
     "title": "Senior Full Stack .NET Developer with AI",
     "company": "EPAM",
@@ -353,11 +348,6 @@
     "title": "Senior iOS Developer",
     "company": "EPAM",
     "first_seen": "2026-08-20T10:48:42+00:00"
-  },
-  "https://careers.epam.com/en/vacancy/senior-java-full-stack-engineer-cloud-ai-blt3xg6g9xjkgk6g7g4_en": {
-    "title": "Senior Java / Full-Stack Engineer (Cloud & AI)",
-    "company": "EPAM",
-    "first_seen": "2026-09-05T13:55:18+00:00"
   },
   "https://careers.epam.com/en/vacancy/senior-lead-ai-engineer-python-bltg46068qibyvg217d_en": {
     "title": "Senior/Lead AI Engineer (Python)",
@@ -419,11 +409,6 @@
     "company": "EPAM",
     "first_seen": "2026-09-05T13:55:18+00:00"
   },
-  "https://careers.epam.com/en/vacancy/senior-python-test-automation-engineer-with-ai-bltuwtrcyw0e2yjzav6_en": {
-    "title": "Senior Python Test Automation Engineer with AI",
-    "company": "EPAM",
-    "first_seen": "2026-09-07T12:44:36+00:00"
-  },
   "https://careers.epam.com/en/vacancy/senior-search-engineer-generative-ai-bltb192ifuzurw3jfr3_en": {
     "title": "Senior Search Engineer (Generative AI)",
     "company": "EPAM",
@@ -463,6 +448,11 @@
     "title": "Senior AI Engineer &#8211; Agentic Systems (#5735)",
     "company": "N-iX",
     "first_seen": "2026-09-05T13:55:18+00:00"
+  },
+  "https://careers.n-ix.com/jobs/4519147101-java-leader": {
+    "title": "Lead Java/Kotlin/AI Engineer (#5758)",
+    "company": "N-iX",
+    "first_seen": "2026-09-07T18:17:23+00:00"
   },
   "https://careers.tieto.com/job/ai-and-data-architect-m-f-d-tieto-tech-consulting-in-berlin-germany-jid-2773": {
     "title": "AI & Data Architect (m/f/d) - Tieto Tech Consulting",
