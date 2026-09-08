@@ -69,11 +69,6 @@
     "company": "Intellias",
     "first_seen": "2026-09-05T13:55:18+00:00"
   },
-  "https://career.intellias.com/vacancy/senior-airag-engineer-document-intelligence-30322": {
-    "title": "Senior AI/RAG Engineer (Document Intelligence)",
-    "company": "Intellias",
-    "first_seen": "2026-09-07T18:17:23+00:00"
-  },
   "https://career.intellias.com/vacancy/senior-ios-swiftuicombine-developer-30823": {
     "title": "Senior iOS SwiftUI/Combine Developer",
     "company": "Intellias",
@@ -216,16 +211,6 @@
   },
   "https://careers.epam.com/en/vacancy/lead-java-software-engineer-aws-ai-bltlcud5arpen36p27i_en": {
     "title": "Lead Java Software Engineer (AWS, AI)",
-    "company": "EPAM",
-    "first_seen": "2026-09-05T13:55:18+00:00"
-  },
-  "https://careers.epam.com/en/vacancy/lead-node-js-engineer-aws-ai-bltbcks6jn8h6ldgzq9_en": {
-    "title": "Lead Node.JS Engineer (AWS, AI)",
-    "company": "EPAM",
-    "first_seen": "2026-09-05T13:55:18+00:00"
-  },
-  "https://careers.epam.com/en/vacancy/lead-node-js-engineer-aws-ai-bltd7rm40xv6rz6s0to_en": {
-    "title": "Lead Node.JS Engineer (AWS, AI)",
     "company": "EPAM",
     "first_seen": "2026-09-05T13:55:18+00:00"
   },
@@ -578,6 +563,11 @@
     "title": "Forward Deployed Engineer (AI/GenAI) CHI Software is a global software development services provider delivering AI-driven solutions, cloud services and data engineering across EdTech, FinTech, HealthTech. We help businesses modernize, scale, and unlock new value through the latest technologies. We are looking for Forward Deployed Engineer (AI/GenAI) Apply",
     "company": "CHI Software",
     "first_seen": "2026-09-05T13:55:18+00:00"
+  },
+  "https://chisw.com/vacancies/implementation-specialist": {
+    "title": "Implementation Specialist CHI Software is a global software development services provider delivering AI-driven solutions, cloud services, data engineering across EdTech, FinTech and HealthTech. We help businesses modernize, scale and unlock new value through the latest technologies. We are looking for an Implementation Specialist. Apply",
+    "company": "CHI Software",
+    "first_seen": "2026-09-08T11:26:58+00:00"
   },
   "https://chisw.com/vacancies/it-support-service-desk-specialist": {
     "title": "IT Support & Service Desk Specialist CHI Software is a global software development services provider delivering AI-driven solutions, cloud services, data engineering across EdTech, FinTech and HealthTech. We help businesses modernize, scale and unlock new value through the latest technologies. We are looking for IT Support & Service Desk Specialist Apply",
@@ -989,6 +979,11 @@
     "company": "MWDN",
     "first_seen": "2026-07-27T19:26:23+00:00"
   },
+  "https://macpaw.com/careers/data_engineer_AI": {
+    "title": "Revenue Ukraine, Europe Data Engineer (AI Integrations)",
+    "company": "MacPaw",
+    "first_seen": "2026-09-08T11:26:58+00:00"
+  },
   "https://onix-systems.com/careers/senior-ios-developer": {
     "title": "Senior iOS Developer",
     "company": "Onix Systems",
@@ -996,11 +991,6 @@
   },
   "https://people-andersenlab.com/vacancy/2509375": {
     "title": "ML/AI Engineer (India)",
-    "company": "Andersen",
-    "first_seen": "2026-09-05T13:55:18+00:00"
-  },
-  "https://people-andersenlab.com/vacancy/2509507": {
-    "title": "AI Solution Architect",
     "company": "Andersen",
     "first_seen": "2026-09-05T13:55:18+00:00"
   },
@@ -1068,6 +1058,11 @@
     "title": "Senior Backend Engineer Build AI Agents",
     "company": "Salesforge",
     "first_seen": "2026-09-05T13:55:18+00:00"
+  },
+  "https://remoteok.com/remote-jobs/remote-senior-site-reliability-engineer-ai-infrastructure-andromeda-cluster-1131375": {
+    "title": "Senior Site Reliability Engineer AI Infrastructure",
+    "company": "Andromeda Cluster",
+    "first_seen": "2026-09-08T11:26:58+00:00"
   },
   "https://sombrainc.com/careers/junior-software-engineer-java-2": {
     "title": "Junior Software Engineer (Java) We're looking for an early career fullstack Java engineer to contribute to software used in the trading tools industry. You'll write production code from day one, supported by senior engineers through mentorship and code review, while building your skills in enterprise development, AI-assisted coding, and the software development lifecycle. Software Engineering Colombia, Medellín",
@@ -1263,15 +1258,25 @@
     "company": "Creatio",
     "first_seen": "2026-09-05T13:55:18+00:00"
   },
-  "https://www.dataart.team/vacancies/DARC00054": {
-    "title": "Senior Snowflake Architect with AI Data Platform Expertise",
-    "company": "DataArt",
-    "first_seen": "2026-09-05T13:55:18+00:00"
-  },
   "https://www.dataart.team/vacancies/ML00136": {
     "title": "Principal AI Solutions Architect, Healthcare & Life Sciences - US",
     "company": "DataArt",
     "first_seen": "2026-09-07T12:44:36+00:00"
+  },
+  "https://www.dataart.team/vacancies/PYT00195": {
+    "title": "Senior Python Full Stack Developer with React and LLM Integration, AI Platform",
+    "company": "DataArt",
+    "first_seen": "2026-09-08T11:26:58+00:00"
+  },
+  "https://www.dataart.team/vacancies/PYT00196": {
+    "title": "Python Developer with AWS AgentCore, Agent Gateway",
+    "company": "DataArt",
+    "first_seen": "2026-09-08T11:26:58+00:00"
+  },
+  "https://www.dataart.team/vacancies/QAA00199": {
+    "title": "QE Engineer with Playwright and AI (Hyderabad-based)",
+    "company": "DataArt",
+    "first_seen": "2026-09-08T11:26:58+00:00"
   },
   "https://www.globallogic.com/ua/careers/ai-process-automation-agentic-workflow-engineer-coach-irc301639-4": {
     "title": "AI Process Automation / Agentic Workflow Engineer & Coach",
