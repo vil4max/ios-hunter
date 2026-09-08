@@ -24,6 +24,11 @@
     "company": "Avenga",
     "first_seen": "2026-09-04T11:25:48+00:00"
   },
+  "https://career.avenga.com/jobs/8343317-senior-python-engineer-generative-ai": {
+    "title": "Senior Python Engineer – Generative AI Buenos Aires · Hybrid",
+    "company": "Avenga",
+    "first_seen": "2026-09-08T16:45:17+00:00"
+  },
   "https://career.intellias.com/vacancy/agentic-identity-access-security-principal-engineerarchitect-30638": {
     "title": "Agentic Identity &#038; Access Security Principal Engineer/Architect",
     "company": "Intellias",
@@ -59,11 +64,6 @@
     "company": "Intellias",
     "first_seen": "2026-09-05T13:55:18+00:00"
   },
-  "https://career.intellias.com/vacancy/senior-ai-engineer-agent-integration-skills-30325": {
-    "title": "Senior AI Engineer (Agent Integration &amp; Skills)",
-    "company": "Intellias",
-    "first_seen": "2026-09-05T13:55:18+00:00"
-  },
   "https://career.intellias.com/vacancy/senior-ai-sdlc-engineer-30308": {
     "title": "Senior AI SDLC Engineer",
     "company": "Intellias",
@@ -83,6 +83,11 @@
     "title": "ServiceNow Senior AI Developer",
     "company": "Intellias",
     "first_seen": "2026-09-05T13:55:18+00:00"
+  },
+  "https://career.intellias.com/vacancy/strong-middle-applied-ai-software-engineer-30224": {
+    "title": "Strong Middle Applied AI Software Engineer",
+    "company": "Intellias",
+    "first_seen": "2026-09-08T16:45:17+00:00"
   },
   "https://career.luxoft.com/jobs/senior-mobile-engineer-ios-swift-24568": {
     "title": "Senior Mobile Engineer - iOS Swift",
@@ -118,11 +123,6 @@
     "title": "Senior Analytics Engineer(Semantic Layer)",
     "company": "Sigma Software",
     "first_seen": "2026-09-07T12:44:36+00:00"
-  },
-  "https://career.softserveinc.com/en-us/vacancies/ai-architect-89826": {
-    "title": "AI Architect",
-    "company": "SoftServe",
-    "first_seen": "2026-09-05T13:55:18+00:00"
   },
   "https://careers-en-nortal.icims.com/jobs/6342/login": {
     "title": "AI Engineer",
@@ -214,15 +214,15 @@
     "company": "EPAM",
     "first_seen": "2026-09-05T13:55:18+00:00"
   },
-  "https://careers.epam.com/en/vacancy/lead-node-js-engineer-aws-ai-bltk7edq34pi8cdi10e_en": {
+  "https://careers.epam.com/en/vacancy/lead-node-js-engineer-aws-ai-bltbcks6jn8h6ldgzq9_en": {
     "title": "Lead Node.JS Engineer (AWS, AI)",
     "company": "EPAM",
-    "first_seen": "2026-09-05T13:55:18+00:00"
+    "first_seen": "2026-09-08T16:45:17+00:00"
   },
-  "https://careers.epam.com/en/vacancy/lead-node-js-engineer-aws-ai-bltldpgcxccbhustmpl_en": {
+  "https://careers.epam.com/en/vacancy/lead-node-js-engineer-aws-ai-bltd7rm40xv6rz6s0to_en": {
     "title": "Lead Node.JS Engineer (AWS, AI)",
     "company": "EPAM",
-    "first_seen": "2026-09-05T13:55:18+00:00"
+    "first_seen": "2026-09-08T16:45:17+00:00"
   },
   "https://careers.epam.com/en/vacancy/principal-engineer-tech-lead-net-react-azure-ai-bltjf0begs8911718ca_en": {
     "title": "Principal Engineer / Tech Lead (.NET, React, Azure, AI)",
@@ -298,6 +298,11 @@
     "title": "Senior Data AI Engineer",
     "company": "EPAM",
     "first_seen": "2026-09-05T13:55:18+00:00"
+  },
+  "https://careers.epam.com/en/vacancy/senior-devops-engineer-gcp-with-ai-bltqen278jouil3ynqn_en": {
+    "title": "Senior DevOps Engineer GCP with AI",
+    "company": "EPAM",
+    "first_seen": "2026-09-08T16:45:17+00:00"
   },
   "https://careers.epam.com/en/vacancy/senior-full-stack-net-developer-with-ai-blt5s2ls3fq513uq6ql_en": {
     "title": "Senior Full Stack .NET Developer with AI",
@@ -393,6 +398,11 @@
     "title": "Senior Python Software Engineer for the Big Data/AI Retraining Program",
     "company": "EPAM",
     "first_seen": "2026-09-05T13:55:18+00:00"
+  },
+  "https://careers.epam.com/en/vacancy/senior-python-test-automation-engineer-with-ai-bltuwtrcyw0e2yjzav6_en": {
+    "title": "Senior Python Test Automation Engineer with AI",
+    "company": "EPAM",
+    "first_seen": "2026-09-08T16:45:17+00:00"
   },
   "https://careers.epam.com/en/vacancy/senior-search-engineer-generative-ai-bltb192ifuzurw3jfr3_en": {
     "title": "Senior Search Engineer (Generative AI)",
@@ -830,6 +840,11 @@
     "company": "Wildberries Банк",
     "first_seen": "2026-09-04T11:25:48+00:00"
   },
+  "https://hirify.me/jobs/672733-ios-developer-swift": {
+    "title": "iOS Developer (Swift)",
+    "company": "Yandex Go",
+    "first_seen": "2026-09-08T16:45:17+00:00"
+  },
   "https://hirify.me/jobs/736606-lead-ios-developer-swift-fintech": {
     "title": "Lead iOS Developer (Fintech)",
     "company": "Paybis",
@@ -1258,26 +1273,6 @@
     "company": "Creatio",
     "first_seen": "2026-09-05T13:55:18+00:00"
   },
-  "https://www.dataart.team/vacancies/ML00136": {
-    "title": "Principal AI Solutions Architect, Healthcare & Life Sciences - US",
-    "company": "DataArt",
-    "first_seen": "2026-09-07T12:44:36+00:00"
-  },
-  "https://www.dataart.team/vacancies/PYT00195": {
-    "title": "Senior Python Full Stack Developer with React and LLM Integration, AI Platform",
-    "company": "DataArt",
-    "first_seen": "2026-09-08T11:26:58+00:00"
-  },
-  "https://www.dataart.team/vacancies/PYT00196": {
-    "title": "Python Developer with AWS AgentCore, Agent Gateway",
-    "company": "DataArt",
-    "first_seen": "2026-09-08T11:26:58+00:00"
-  },
-  "https://www.dataart.team/vacancies/QAA00199": {
-    "title": "QE Engineer with Playwright and AI (Hyderabad-based)",
-    "company": "DataArt",
-    "first_seen": "2026-09-08T11:26:58+00:00"
-  },
   "https://www.globallogic.com/ua/careers/ai-process-automation-agentic-workflow-engineer-coach-irc301639-4": {
     "title": "AI Process Automation / Agentic Workflow Engineer & Coach",
     "company": "GlobalLogic",
@@ -1292,6 +1287,11 @@
     "title": "Lead AI Engineer",
     "company": "GlobalLogic",
     "first_seen": "2026-09-05T13:55:18+00:00"
+  },
+  "https://www.globallogic.com/ua/careers/middle-python-engineer-with-agentic-ai-irc303988": {
+    "title": "Middle Python Engineer with Agentic AI",
+    "company": "GlobalLogic",
+    "first_seen": "2026-09-08T16:45:17+00:00"
   },
   "https://www.globallogic.com/ua/careers/senior-ai-engineer-irc296446": {
     "title": "Senior AI engineer",
