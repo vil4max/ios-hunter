@@ -32,6 +32,8 @@ class FakeClient:
         self.text_sets: list[tuple[str, str]] = []
         self._by_canonical: dict[str, str] = {}
         self._by_role: dict[tuple[str, str], str] = {}
+        self.items: list[dict] = []
+        self.list_calls = 0
         self._counter = 10
         self.meta = ProjectMeta(
             project_id="PROJECT",
@@ -58,6 +60,11 @@ class FakeClient:
     def resolve_project(self, owner: str, number: int) -> ProjectMeta:
         return self.meta
 
+    def list_project_items(self, project_id: str, *, include_archived: bool = False) -> list[dict]:
+        assert include_archived
+        self.list_calls += 1
+        return list(self.items)
+
     def find_project_item_by_canonical_url(self, project_id: str, canonical_url: str) -> str | None:
         return self._by_canonical.get(canonical_url)
 
@@ -70,6 +77,7 @@ class FakeClient:
         item_id = f"DRAFT-{self._counter}"
         self.created_titles.append(title)
         self.draft_items.append(item_id)
+        self.items.append({"id": item_id, "content": {"title": title, "body": body}})
         from parser.normalize import role_key
         company, role = title.split(" — ", 1)
         self._by_role[role_key(company, role)] = item_id

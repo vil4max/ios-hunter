@@ -134,7 +134,7 @@ Telegram only on new vacancies (list + OK)
 | **Collect Schedule Trigger** | Hourly :17 UTC in daytime band; Kyiv due-slot 09/12/15/18 with catch-up + slot dedupe; Collect only |
 | **Daily Vacancy Liveness** | Every day 04:00 UTC (incl. weekends) — probe active board URLs, archive closed, Telegram status |
 | **Daily Email Report** | Kyiv 18:00 via Collect and/or schedule trigger (even if Collect already ran/failed) — claim day on `main` before SMTP; manual `force` re-sends |
-| **IMAP Recruiter Poll** | After Collect completes (`workflow_run`) or manual — classify recruiter mail, update CRM, Telegram |
+| **IMAP Recruiter Poll** | Explicit reusable job after Collect or manual — classify recruiter mail, update CRM, Telegram |
 | **CI** | Push / PR — Ruff, offline pytest, import checks |
 
 ## Local Collect kick (GHA lag kludge)
@@ -181,7 +181,7 @@ Hirify Applications sync is local-first: export Excel from https://hirify.me/app
 
 ## Identity
 
-Vacancies are keyed by canonical URL (tracking query params stripped). Project Sync is idempotent via `Canonical-URL` in the Issue body.
+Vacancies are keyed by canonical URL (tracking query params stripped). Project Sync matches canonical URLs and normalized company/title roles against one complete, paginated CRM snapshot per run, including archived cards. Newly created drafts enter the same index immediately. An incomplete snapshot stops creation to avoid duplicates.
 
 ## Career search tracks
 

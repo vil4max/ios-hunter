@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 
 from config.settings import Settings
 from parser.normalize import Vacancy, canonicalize_url, location_attention
-from project_sync.github_client import GitHubClient, GitHubGraphQLError, ProjectMeta
+from project_sync.github_client import GitHubClient, GitHubGraphQLError, ProjectItemIndex, ProjectMeta
 
 
 CANONICAL_MARKER_PREFIX = "Canonical-URL: "
@@ -112,6 +112,8 @@ class ProjectSync:
         self._settings = settings
         self._client = client or GitHubClient(settings.github_token)
         self._meta: ProjectMeta | None = None
+        self._index: ProjectItemIndex | None = None
+        self._index_error: GitHubGraphQLError | None = None
 
     def _ensure_meta(self) -> ProjectMeta:
         if self._meta is None:
@@ -120,6 +122,19 @@ class ProjectSync:
                 self._settings.project_number,
             )
         return self._meta
+
+    def _ensure_index(self, meta: ProjectMeta) -> ProjectItemIndex:
+        if self._index_error is not None:
+            raise self._index_error
+        if self._index is None:
+            try:
+                items = self._client.list_project_items(meta.project_id, include_archived=True)
+                self._index = ProjectItemIndex.from_items(items)
+            except (GitHubGraphQLError, OSError, ValueError) as error:
+                # An incomplete snapshot must never authorize draft creation in this run.
+                self._index_error = GitHubGraphQLError(str(error))
+                raise self._index_error from error
+        return self._index
 
     def sync_vacancy(self, vacancy: Vacancy, *, status_name: str = "Inbox") -> SyncItemResult:
         canonical = vacancy.canonical_url or canonicalize_url(vacancy.url)
@@ -135,14 +150,8 @@ class ProjectSync:
 
         try:
             meta = self._ensure_meta()
-            existing_item_id = self._client.find_project_item_by_canonical_url(
-                meta.project_id,
-                canonical,
-            )
-            if existing_item_id is None:
-                existing_item_id = self._client.find_project_item_by_role(
-                    meta.project_id, vacancy.company, vacancy.title,
-                )
+            index = self._ensure_index(meta)
+            existing_item_id = index.find(canonical, vacancy.company, vacancy.title)
             if existing_item_id is not None:
                 base.existing = True
                 base.item_id = existing_item_id
@@ -153,6 +162,8 @@ class ProjectSync:
                 title=build_issue_title(vacancy),
                 body=build_issue_body(vacancy),
             )
+            # The draft exists even if a later field mutation fails.
+            index.remember(item_id, canonical, vacancy.company, vacancy.title)
             _apply_project_fields(self._client, meta, item_id, vacancy, status_name=status_name)
             base.created = True
             base.item_id = item_id

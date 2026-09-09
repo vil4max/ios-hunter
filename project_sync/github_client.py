@@ -39,6 +39,51 @@ class IssueRef:
     body: str = ""
 
 
+@dataclass
+class ProjectItemIndex:
+    by_url: dict[str, str] = field(default_factory=dict)
+    by_role: dict[tuple[str, str], str] = field(default_factory=dict)
+
+    @classmethod
+    def from_items(cls, items: list[dict[str, Any]]) -> ProjectItemIndex:
+        index = cls()
+        for raw in items:
+            item_id = str(raw.get("id") or "")
+            if not item_id:
+                continue
+            fields = {
+                str((node.get("field") or {}).get("name")): str(node["text"])
+                for node in (raw.get("fieldValues") or {}).get("nodes") or []
+                if isinstance(node, dict) and node.get("text") is not None
+            }
+            content = raw.get("content") or {}
+            urls = [fields.get("Canonical URL", ""), fields.get("URL", "")]
+            for line in str(content.get("body") or "").splitlines():
+                if line.startswith("Canonical-URL: "):
+                    urls.append(line.removeprefix("Canonical-URL: ").strip())
+            for url in urls:
+                canonical = canonicalize_url(url) if url else ""
+                if canonical:
+                    index.by_url.setdefault(canonical, item_id)
+            title = str(content.get("title") or "")
+            if " — " in title:
+                company, role = title.split(" — ", 1)
+                if company.strip() and role.strip():
+                    index.by_role.setdefault(role_key(company, role), item_id)
+        return index
+
+    def remember(self, item_id: str, canonical_url: str, company: str, title: str) -> None:
+        canonical = canonicalize_url(canonical_url) if canonical_url else ""
+        if canonical:
+            self.by_url.setdefault(canonical, item_id)
+        if company.strip() and title.strip():
+            self.by_role.setdefault(role_key(company, title), item_id)
+
+    def find(self, canonical_url: str, company: str, title: str) -> str | None:
+        canonical = canonicalize_url(canonical_url) if canonical_url else ""
+        return self.by_url.get(canonical) or self.by_role.get(role_key(company, title))
+
+
 class GitHubClient:
     def __init__(self, token: str, *, timeout: int = 45) -> None:
         self._token = token
@@ -513,6 +558,7 @@ class GitHubClient:
     ) -> list[dict[str, Any]]:
         items: list[dict[str, Any]] = []
         cursor: str | None = None
+        seen_cursors: set[str] = set()
         while True:
             data = self.graphql(
                 """
@@ -577,15 +623,21 @@ class GitHubClient:
                     ),
                 },
             )
-            node = data.get("node") or {}
-            connection = node.get("items") or {}
-            for item in connection.get("nodes") or []:
-                if isinstance(item, dict):
-                    items.append(item)
-            page_info = connection.get("pageInfo") or {}
-            if not page_info.get("hasNextPage"):
+            node = data.get("node")
+            connection = node.get("items") if isinstance(node, dict) else None
+            if not isinstance(connection, dict) or not isinstance(connection.get("nodes"), list):
+                raise GitHubGraphQLError("Project items response missing connection")
+            page_info = connection.get("pageInfo")
+            if not isinstance(page_info, dict) or not isinstance(page_info.get("hasNextPage"), bool):
+                raise GitHubGraphQLError("Project items response missing pagination metadata")
+            for item in connection["nodes"]:
+                if not isinstance(item, dict) or not item.get("id"):
+                    raise GitHubGraphQLError("Project items response contains an unreadable item")
+                items.append(item)
+            if not page_info["hasNextPage"]:
                 break
             cursor = page_info.get("endCursor")
-            if not cursor:
-                break
+            if not isinstance(cursor, str) or not cursor or cursor in seen_cursors:
+                raise GitHubGraphQLError("Project items pagination did not advance")
+            seen_cursors.add(cursor)
         return items
