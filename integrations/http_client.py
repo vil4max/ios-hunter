@@ -2,6 +2,10 @@ from __future__ import annotations
 
 import re
 import time
+import threading
+from datetime import timezone
+from email.utils import parsedate_to_datetime
+from urllib.parse import urlsplit
 from collections.abc import Callable, Sequence
 from typing import Any
 
@@ -60,29 +64,73 @@ def _impersonate_headers(extra: dict[str, str] | None) -> dict[str, str]:
     return headers
 
 
+_DOMAIN_LOCK = threading.Lock()
+_DOMAIN_SLOTS: dict[str, threading.BoundedSemaphore] = {}
+_MAX_RETRY_AFTER = 30.0
+
+
+class RetryBudgetError(RuntimeError):
+    """The server's backoff cannot fit this bounded collection attempt."""
+
+
+def _domain_slot(url: str):
+    domain = (urlsplit(url).hostname or "").lower()
+    with _DOMAIN_LOCK:
+        return _DOMAIN_SLOTS.setdefault(domain, threading.BoundedSemaphore(2))
+
+
+def _retry_delay(response, attempt: int) -> float:
+    value = (getattr(response, "headers", None) or {}).get("Retry-After")
+    delay = 0.4 * (attempt + 1)
+    if value is not None:
+        try:
+            if str(value).strip().isdigit():
+                delay = float(value)
+            else:
+                parsed = parsedate_to_datetime(str(value))
+                if parsed.tzinfo is None:
+                    parsed = parsed.replace(tzinfo=timezone.utc)
+                delay = max(0.0, parsed.timestamp() - time.time())
+        except (TypeError, ValueError, OverflowError):
+            pass
+    if delay > _MAX_RETRY_AFTER:
+        raise RetryBudgetError(f"Retry-After exceeds {_MAX_RETRY_AFTER:g}s collection budget")
+    return delay
+
+
+def _limited_get(getter, url: str, **kwargs):
+    # Hold the domain slot through backoff so retries cannot increase fan-out.
+    with _domain_slot(url):
+        for attempt in range(_MAX_ATTEMPTS):
+            try:
+                response = getter(url, **kwargs)
+            except requests.RequestException:
+                if attempt == _MAX_ATTEMPTS - 1:
+                    raise
+                time.sleep(0.4 * (attempt + 1))
+                continue
+            if response.status_code != 429 and not 500 <= response.status_code <= 599:
+                return response
+            if attempt == _MAX_ATTEMPTS - 1:
+                return response
+            time.sleep(_retry_delay(response, attempt))
+    raise RuntimeError(f"unreachable retry loop for {url}")  # pragma: no cover
+
+
 def _get(
     url: str,
     *,
     headers: dict[str, str] | None = None,
     timeout: int = _DEFAULT_TIMEOUT,
+    allow_redirects: bool | None = None,
 ) -> requests.Response:
-    merged = _merge_headers(headers)
-    last_attempt = _MAX_ATTEMPTS - 1
-    for attempt in range(_MAX_ATTEMPTS):
-        try:
-            response = requests.get(url, headers=merged, timeout=timeout)
-            if response.status_code < 500 or attempt == last_attempt:
-                response.raise_for_status()
-                return response
-        except requests.HTTPError as error:
-            status = error.response.status_code if error.response is not None else 0
-            if not (500 <= status <= 599) or attempt == last_attempt:
-                raise
-        except requests.RequestException:
-            if attempt == last_attempt:
-                raise
-        time.sleep(0.4 * (attempt + 1))
-    raise RuntimeError(f"unreachable retry loop for {url}")  # pragma: no cover
+    options = {"headers": _merge_headers(headers), "timeout": timeout}
+    if allow_redirects is not None:
+        options["allow_redirects"] = allow_redirects
+    response = _limited_get(requests.get, url, **options)
+    if response.status_code >= 400:
+        response.raise_for_status()
+    return response
 
 
 def looks_like_bot_wall(text: str) -> bool:
@@ -108,7 +156,9 @@ def fetch_impersonated(
             session = curl_requests.Session(impersonate=impersonate)
             warmed = True
             for warm_url in warm_urls or ():
-                warm_response = session.get(warm_url, headers=merged, timeout=timeout)
+                warm_response = _limited_get(session.get, warm_url, headers=merged, timeout=timeout)
+                if warm_response.status_code == 429 or warm_response.status_code >= 500:
+                    raise RetryBudgetError(f"HTTP {warm_response.status_code} after warmup retry budget")
                 if warm_response.status_code >= 400:
                     last_error = RuntimeError(
                         f"HTTP {warm_response.status_code} warming {warm_url}"
@@ -118,7 +168,9 @@ def fetch_impersonated(
             if not warmed:
                 continue
 
-            response = session.get(url, headers=merged, timeout=timeout)
+            response = _limited_get(session.get, url, headers=merged, timeout=timeout)
+            if response.status_code == 429 or response.status_code >= 500:
+                raise RetryBudgetError(f"HTTP {response.status_code} after retry budget")
             if response.status_code >= 400:
                 last_error = RuntimeError(f"HTTP {response.status_code} for {url}")
                 continue
@@ -132,6 +184,8 @@ def fetch_impersonated(
                 last_error = RuntimeError(f"unexpected payload for {url}")
                 continue
             return text
+        except RetryBudgetError:
+            raise
         except Exception as error:  # noqa: BLE001
             last_error = error
     raise RuntimeError(str(last_error) if last_error else f"failed to fetch {url}")

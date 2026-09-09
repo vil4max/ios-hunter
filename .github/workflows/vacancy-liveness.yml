@@ -34,8 +34,19 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
+      - name: Restore optional liveness cadence cache
+        uses: actions/cache@v4
+        continue-on-error: true
+        env:
+          SEGMENT_DOWNLOAD_TIMEOUT_MINS: 1
+        with:
+          path: .cache/liveness.json
+          key: liveness-v1-${{ runner.os }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: liveness-v1-${{ runner.os }}-
+
       - name: Check closed vacancies
         env:
+          LIVENESS_CACHE_PATH: .cache/liveness.json
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           CAREER_AGENT_TOKEN: ${{ secrets.CAREER_AGENT_TOKEN }}

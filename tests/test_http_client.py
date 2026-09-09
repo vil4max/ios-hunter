@@ -282,3 +282,99 @@ def test_post_form_data_returns_text(monkeypatch: pytest.MonkeyPatch) -> None:
 
 def test_looks_like_bot_wall_on_clean_page() -> None:
     assert http_client.looks_like_bot_wall("<html><body>jobs</body></html>") is False
+
+
+@pytest.mark.parametrize('status', [429, 503])
+def test_retry_after_seconds_is_respected(monkeypatch, status):
+    response = FakeResponse(status_code=status)
+    response.headers = {'Retry-After': '3'}
+    calls = _record_get(monkeypatch, [response, FakeResponse(text='ok')])
+    sleeps = []
+    monkeypatch.setattr(http_client.time, 'sleep', sleeps.append)
+    assert http_client.fetch_text('https://example.com') == 'ok'
+    assert len(calls) == 2
+    assert sleeps == [3.0]
+
+
+def test_retry_after_http_date(monkeypatch):
+    response = FakeResponse(status_code=429)
+    response.headers = {'Retry-After': 'Thu, 01 Jan 1970 00:16:45 GMT'}
+    _record_get(monkeypatch, [response, FakeResponse(text='ok')])
+    sleeps = []
+    monkeypatch.setattr(http_client.time, 'time', lambda: 1000)
+    monkeypatch.setattr(http_client.time, 'sleep', sleeps.append)
+    assert http_client.fetch_text('https://example.com') == 'ok'
+    assert sleeps == [5.0]
+
+
+def test_excessive_retry_after_fails_without_early_retry(monkeypatch):
+    response = FakeResponse(status_code=429)
+    response.headers = {'Retry-After': '3600'}
+    calls = _record_get(monkeypatch, [response])
+    monkeypatch.setattr(http_client.time, 'sleep', lambda _: pytest.fail('must not sleep'))
+    with pytest.raises(http_client.RetryBudgetError):
+        http_client.fetch_text('https://example.com')
+    assert len(calls) == 1
+
+
+def test_shared_get_limits_same_domain_concurrency(monkeypatch):
+    import threading
+    from concurrent.futures import ThreadPoolExecutor
+
+    lock = threading.Lock()
+    two_entered = threading.Event()
+    release = threading.Event()
+    active = maximum = 0
+    def get(*_args, **_kwargs):
+        nonlocal active, maximum
+        with lock:
+            active += 1
+            maximum = max(maximum, active)
+            if active == 2:
+                two_entered.set()
+        assert release.wait(3)
+        with lock:
+            active -= 1
+        return FakeResponse(text='ok')
+    monkeypatch.setattr(http_client.requests, 'get', get)
+    with ThreadPoolExecutor(max_workers=5) as pool:
+        tasks = [pool.submit(http_client.fetch_text, f'https://bounded.example/jobs/{i}') for i in range(5)]
+        try:
+            assert two_entered.wait(3)
+            assert maximum == 2
+        finally:
+            release.set()
+        assert all(task.result() == 'ok' for task in tasks)
+    assert maximum == 2
+
+
+def test_malformed_retry_after_uses_bounded_backoff(monkeypatch):
+    response = FakeResponse(status_code=503)
+    response.headers = {'Retry-After': 'later'}
+    calls = _record_get(monkeypatch, [response])
+    sleeps = []
+    monkeypatch.setattr(http_client.time, 'sleep', sleeps.append)
+    with pytest.raises(requests.HTTPError):
+        http_client.fetch_text('https://example.com')
+    assert len(calls) == 3
+    assert sleeps == [0.4, 0.8]
+
+
+def test_impersonation_does_not_bypass_server_rate_limit(monkeypatch):
+    import sys
+    import types
+
+    attempts = []
+    class Session:
+        def __init__(self, impersonate):
+            attempts.append(impersonate)
+        def get(self, *args, **kwargs):
+            response = FakeResponse(status_code=429)
+            response.headers = {'Retry-After': '3600'}
+            return response
+    module = types.ModuleType('curl_cffi')
+    module.requests = types.SimpleNamespace(Session=Session)
+    monkeypatch.setitem(sys.modules, 'curl_cffi', module)
+    with pytest.raises(http_client.RetryBudgetError):
+        http_client.fetch_impersonated('https://example.com')
+    assert len(attempts) == 1

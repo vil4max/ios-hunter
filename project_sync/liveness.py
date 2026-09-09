@@ -1,7 +1,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, datetime, timezone
+import hashlib
+import json
+import os
+from pathlib import Path
+import tempfile
 
 from config.settings import ACTIVE_PIPELINE_STATUSES, Settings
 from integrations.vacancy_probe import ProbeResult, probe_vacancy_url
@@ -24,6 +29,7 @@ class LivenessResult:
     no_reply: list[ClosedVacancyHit] | None = None
     archived: list[ClosedVacancyHit] | None = None
     errors: list[str] | None = None
+    deferred: int = 0
 
     def __post_init__(self) -> None:
         if self.closed is None:
@@ -40,21 +46,102 @@ def active_cards_for_liveness(cards: list[ProjectCard]) -> list[ProjectCard]:
     return [card for card in cards if card.status in ACTIVE_PIPELINE_STATUSES]
 
 
+def _liveness_key(url: str, title: str) -> str:
+    return hashlib.sha256(json.dumps([url, title], ensure_ascii=False).encode()).hexdigest()
+
+
+def _read_liveness_cache(path: Path | None) -> dict:
+    if path is None:
+        return {}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    if not isinstance(data, dict) or data.get("version") != 1:
+        return {}
+    entries = data.get("entries")
+    return entries if isinstance(entries, dict) else {}
+
+
+def _recently_open(entry, *, status: str, now: datetime) -> bool:
+    if not isinstance(entry, dict) or entry.get("confirmed_open") is not True:
+        return False
+    if entry.get("reason") != "open" or type(entry.get("http_status")) is not int:
+        return False
+    if not 200 <= entry["http_status"] < 300:
+        return False
+    try:
+        checked_at = datetime.fromisoformat(entry["checked_at"])
+        if checked_at.tzinfo is None:
+            return False
+        age = (now - checked_at).total_seconds()
+    except (KeyError, TypeError, ValueError):
+        return False
+    interval = 48 * 3600 if status == "Inbox" else 24 * 3600
+    return 0 <= age < interval
+
+
+def _save_liveness_cache(path: Path, entries: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent, delete=False) as handle:
+            temporary = Path(handle.name)
+            json.dump({"version": 1, "entries": entries}, handle, ensure_ascii=False, sort_keys=True)
+            handle.write("\n")
+        os.replace(temporary, path)
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
+
+
 def find_closed_vacancies(
     cards: list[ProjectCard],
     *,
     probe=probe_vacancy_url,
+    cache_path: Path | None = None,
+    now: datetime | None = None,
 ) -> LivenessResult:
     result = LivenessResult()
-    for card in active_cards_for_liveness(cards):
-        url = (card.url or card.canonical_url or "").strip()
-        probe_result = probe(url, card_title=card.title)
-        if probe_result.skipped:
-            result.skipped += 1
-            continue
-        result.checked += 1
-        if probe_result.closed:
-            result.closed.append(ClosedVacancyHit(card=card, probe=probe_result))
+    stamp = now or datetime.now(timezone.utc)
+    if stamp.tzinfo is None:
+        stamp = stamp.replace(tzinfo=timezone.utc)
+    cached = _read_liveness_cache(cache_path)
+    retained = {}
+    try:
+        for card in active_cards_for_liveness(cards):
+            url = (card.url or card.canonical_url or "").strip()
+            key = _liveness_key(url, card.title)
+            entry = cached.get(key)
+            if cache_path is not None and _recently_open(entry, status=card.status, now=stamp):
+                retained[key] = entry
+                result.deferred += 1
+                continue
+            # Only new confirmed-open evidence can enter retained. Expired positives
+            # are invalidated even when a probe raises or returns unknown/closed.
+            cached.pop(key, None)
+            retained.pop(key, None)
+            probe_result = probe(url, card_title=card.title)
+            if probe_result.skipped:
+                result.skipped += 1
+                continue
+            result.checked += 1
+            if probe_result.closed:
+                result.closed.append(ClosedVacancyHit(card=card, probe=probe_result))
+            elif (probe_result.reason == "open" and probe_result.http_status is not None
+                  and 200 <= probe_result.http_status < 300):
+                retained[key] = {
+                    "confirmed_open": True,
+                    "checked_at": stamp.isoformat(),
+                    "reason": "open",
+                    "http_status": probe_result.http_status,
+                }
+    finally:
+        if cache_path is not None:
+            try:
+                _save_liveness_cache(cache_path, retained)
+            except OSError:
+                result.errors.append("Could not save optional liveness cadence cache")
     return result
 
 
@@ -174,10 +261,12 @@ def run_vacancy_liveness(
     probe=probe_vacancy_url,
     today: date | None = None,
     apply_archives: bool = True,
+    cache_path: Path | None = None,
+    now: datetime | None = None,
 ) -> LivenessResult:
     gh = client or GitHubClient(settings.github_token)
     cards = load_cards_from_github(gh, settings)
-    result = find_closed_vacancies(cards, probe=probe)
+    result = find_closed_vacancies(cards, probe=probe, cache_path=cache_path, now=now)
     stamp = today or date.today()
     result.no_reply = find_no_reply_applications(
         cards,

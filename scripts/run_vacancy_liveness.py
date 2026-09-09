@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -34,9 +35,11 @@ def main() -> int:
         )
         return 1
 
+    cache_path = os.environ.get("LIVENESS_CACHE_PATH", "").strip()
     result = run_vacancy_liveness(
         settings,
         apply_archives=not args.dry_run,
+        cache_path=Path(cache_path) if cache_path else None,
     )
     notify_vacancy_liveness(
         result,
@@ -44,10 +47,12 @@ def main() -> int:
     )
     archived = result.archived or []
     print(
-        f"Checked={result.checked} skipped={result.skipped} "
+        f"Checked={result.checked} skipped={result.skipped} deferred={result.deferred} "
         f"closed={len(result.closed or [])} no_reply={len(result.no_reply or [])} "
         f"archived={len(archived)} dry_run={args.dry_run}"
     )
+    for error in result.errors or []:
+        print(f"Warning: {error}", file=sys.stderr)
     candidates = [*(result.closed or []), *(result.no_reply or [])]
     for hit in archived or candidates:
         label = hit.card.display_title

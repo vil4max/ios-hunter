@@ -45,3 +45,22 @@ during the 2026-09-09 public-page check; RBI sitemap returned HTTP 200. No new
 ATS endpoint, anti-bot bypass, or alternative production feed was introduced.
 AI detail hydration requires a matching JobPosting title or a matching heading
 in the main article; unrelated roles and missing requirements cannot unlock Inbox.
+
+## Request and detail-cache budgets
+
+The shared GET client permits two concurrent requests per hostname and at most
+three attempts per GET. HTTP 429 and 5xx use `Retry-After` seconds or HTTP dates;
+a required delay above 30 seconds fails this attempt instead of retrying early.
+Without a valid header the retry delays are 0.4 and 0.8 seconds. Impersonation
+fallbacks share the domain limit and cannot restart exhausted rate-limit retries.
+Custom clients outside the shared HTTP module retain their existing behavior.
+
+Set `DETAIL_CACHE_PATH` to an optional local JSON cache file to reuse successfully
+verified generic AI detail descriptions for six hours (maximum 256 entries).
+The default is no persistent cache. URL and title identify an entry; listings,
+failures, missing requirements and vacancy liveness are never cached. The cache
+uses atomic replacement, treats malformed files as cold starts, and never returns
+expired content when a fresh request fails. It coordinates threads in one process;
+parallel processes should use separate files. Cache write failures do not discard
+successfully fetched vacancies. Descriptions can remain unchanged for up to six
+hours after the source edits its requirements; listing discovery still runs live.

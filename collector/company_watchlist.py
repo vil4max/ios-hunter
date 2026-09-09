@@ -13,7 +13,8 @@ from bs4 import BeautifulSoup
 
 from collector.results import source_failed, source_ok
 from collector.types import STATUS_DEGRADED, SourceResult
-from integrations.http_client import fetch_impersonated, fetch_json, fetch_text, post_json
+from integrations.http_client import _get, fetch_impersonated, fetch_json, fetch_text, post_json
+from integrations.detail_cache import DetailCache
 from parser.normalize import has_ai_job_details, is_ai_augmented_job, is_ios_job, is_target_job
 
 _JOB_URL_TOKENS = ("career", "job", "jobs", "vacanc", "position", "opening")
@@ -185,7 +186,7 @@ def _fetch_ai_detail(url, base_url):
     for _ in range(4):
         if not _same_detail_origin(url, base_url):
             raise ValueError("AI detail URL is outside the public career origin")
-        response = requests.get(url, timeout=15, allow_redirects=False)
+        response = _get(url, timeout=15, allow_redirects=False)
         if response.status_code in {301, 302, 303, 307, 308}:
             url = urljoin(url, response.headers.get("Location", ""))
             continue
@@ -218,6 +219,7 @@ def _matching_detail(title, html):
 
 def _hydrate_ai_details(jobs, career_url):
     errors = []
+    cache = DetailCache.from_environment()
     pending = [job for job in jobs
                if not is_ios_job(job["title"], job.get("description"))
                and is_ai_augmented_job(job["title"], job.get("description"))
@@ -226,11 +228,16 @@ def _hydrate_ai_details(jobs, career_url):
         errors.append(f"AI detail limit: {len(pending) - 8} deferred")
     for job in pending[:8]:
         try:
-            description, location = _matching_detail(
+            if not _same_detail_origin(job["url"], career_url):
+                raise ValueError("AI detail URL is outside the public career origin")
+            cached = cache.get(job["url"], job["title"])
+            description, location = cached or _matching_detail(
                 job["title"], _fetch_ai_detail(job["url"], career_url)
             )
             if not has_ai_job_details(job["title"], description):
                 raise ValueError("matching AI requirements unavailable")
+            if cached is None:
+                cache.put(job["url"], job["title"], description, location)
             job["description"] = description
             if location:
                 job["location"] = location

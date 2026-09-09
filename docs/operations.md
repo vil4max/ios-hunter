@@ -112,3 +112,29 @@ PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m pytest -q -p no:cacheprovider
 CI also runs the import check in `.github/workflows/ci.yml`. These tests mock
 collection, delivery and GitHub. A green local suite validates rules and failure
 handling; it does not prove live reachability or deployed workflow behavior.
+
+## Vacancy liveness cadence
+
+Set `LIVENESS_CACHE_PATH` to an optional local JSON cache to reduce repeated
+probes of confirmed-open roles. Inbox cards are checked again after 48 hours;
+Applied, Replied, Interview and Offer cards after 24 hours. Moving a card into
+an active application stage immediately selects the shorter interval. With no
+cache path, every active card is checked on every run as before.
+
+Cache entries require positive vacancy evidence (`open`, successful HTTP status)
+and are keyed by both vacancy URL and title. They only defer requests; they can
+never mark a vacancy closed or cause a closure archive. Unknown responses,
+errors and confirmed closure invalidate previous positive evidence and are
+never cached. Expired, malformed and future-dated evidence is treated as cold.
+The existing no-reply application rule remains independent of URL probing.
+
+The runner logs `checked`, `skipped` and `deferred` separately. Optional cache
+write failures produce a warning; malformed or unavailable input falls back to
+live checking. Cache files are disposable optimization data, separate from
+career decisions and Git-backed runtime history.
+
+Collect and Daily Vacancy Liveness enable these disposable caches through
+GitHub Actions cache storage. Each successful run saves a new snapshot; cache
+misses or cache-service errors fall back to live reads. Local runs remain
+uncached unless the corresponding path variable is set. Remove the cache or
+its environment variable to return to the previous request frequency.

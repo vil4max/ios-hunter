@@ -40,6 +40,7 @@ database/djinni_archive_scraped.json
 /data/
 *.sqlite
 __pycache__/
+.cache/
 *.pyc
 .venv/
 .coverage
