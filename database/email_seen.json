@@ -755,6 +755,12 @@
     "processed_at": "2026-09-02T11:34:07+00:00",
     "subject": "Thank you for applying to Sigma Software"
   },
+  "<1689067865.30202756.1788946064223@lva2-app58956.prod.linkedin.com>": {
+    "company": "GlobalLogic",
+    "kind": "ignore",
+    "processed_at": "2026-09-09T12:29:13+00:00",
+    "subject": "GlobalLogic is hiring a Lead Mobile Developer IRC304059"
+  },
   "<1697054995.12831.1785758775773@task-spot-69q1.europe-west3-c.c.dah-backend-production.internal>": {
     "company": "S4",
     "kind": "rejected_hr",
@@ -999,6 +1005,12 @@
     "kind": "ignore",
     "processed_at": "2026-09-09T07:11:24+00:00",
     "subject": "[Менеджмент 360] Записи всех дней."
+  },
+  "<198133349091378348a1575026@mlsend.com>": {
+    "company": "Стратоплан — Школа менеджмента",
+    "kind": "ignore",
+    "processed_at": "2026-09-09T12:29:13+00:00",
+    "subject": "Что делать, если вы хотите роста, денег и смысла"
   },
   "<1F.0E.13830.26CD69A6@i-0d355bf65d1872868.mta1vrest.sd.prd.sparkpost>": {
     "company": "Ladders",
@@ -2027,6 +2039,12 @@
     "processed_at": "2026-09-09T07:11:25+00:00",
     "subject": "Your August Flow State recap 🌭"
   },
+  "<20260909113851.bed063a14764f9b0@cio153131.tryexponent.com>": {
+    "company": "Jacob from Exponent",
+    "kind": "ignore",
+    "processed_at": "2026-09-09T12:29:13+00:00",
+    "subject": "Ready to go all in on your SWE prep?"
+  },
   "<202611080850.13di66eco6cw3srj@email3.sketchfab.com>": {
     "company": "Sketchfab",
     "kind": "ignore",
@@ -2346,6 +2364,12 @@
     "processed_at": "2026-09-09T07:11:25+00:00",
     "subject": "JP Morgan Chase & Co. and Other Companies - Openings"
   },
+  "<3B.03.19461.08F60AA6@i-063a73f5527672d90.mta1vrest.sd.prd.sparkpost>": {
+    "company": "Ladders",
+    "kind": "replied",
+    "processed_at": "2026-09-09T12:29:13+00:00",
+    "subject": "New Jobs Posted: Apply before others do"
+  },
   "<3F.1A.22074.6AE5B6A6@i-01b5cfbe31b72afc1.mta1vrest.sd.prd.sparkpost>": {
     "company": "Stack Overflow",
     "kind": "ignore",
@@ -2386,6 +2410,12 @@
     "kind": "ignore",
     "processed_at": "2026-08-24T11:29:18+00:00",
     "subject": "DriveCheckUA 2.1 (52) for iOS is now available to test."
+  },
+  "<477697127.71913364.1788948782821@email.apple.com>": {
+    "company": "App Store Connect",
+    "kind": "ignore",
+    "processed_at": "2026-09-09T12:29:13+00:00",
+    "subject": "Review of your OneCart Family (iOS) submission is complete."
   },
   "<497c7601b77525491178921448580dda@swift.generated>": {
     "company": "ZONE3000.net",
@@ -3672,6 +3702,12 @@
     "processed_at": "2026-08-29T08:23:15+00:00",
     "subject": "Більше можливостей у дорозі з локальними рекомендаціями від Volkswagen"
   },
+  "<bd0d11af-c8df-4f7d-b2f8-0cfc7ddd9eb6@ms4-6cb878c876-msllf>": {
+    "company": "Світ Чаю",
+    "kind": "ignore",
+    "processed_at": "2026-09-09T12:29:13+00:00",
+    "subject": "-30% на нові чайні набори 🍵"
+  },
   "<c0ffc7b0-8f2b-11f1-ada1-1f9d6ce77c22@ms4-6bdbcbd8d9-8xt7c>": {
     "company": "Банк ПУМБ",
     "kind": "rejected_hr",
@@ -3986,6 +4022,12 @@
     "kind": "ignore",
     "processed_at": "2026-08-03T12:16:24+00:00",
     "subject": "Start with any question"
+  },
+  "<nB4d7LN1QRClF1Xi84saOQ@geopod-ismtpd-22>": {
+    "company": "OpenAI",
+    "kind": "ignore",
+    "processed_at": "2026-09-09T12:29:13+00:00",
+    "subject": "Your OpenAI code is 311083"
   },
   "<o1SgLjjeEXvhbSyK9vRFJA@notifications.google.com>": {
     "company": "Google",
