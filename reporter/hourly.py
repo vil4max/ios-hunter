@@ -7,7 +7,7 @@ from database.seen import seen_key
 from config.schedule import format_next_check_line
 from integrations.notify import CollectReportStats, SourceFailure
 from integrations.telegram import TELEGRAM_MAX_LENGTH, send_message
-from parser.normalize import Vacancy, is_ai_augmented_only
+from parser.normalize import Vacancy, is_ai_augmented_only, location_attention
 from project_sync.sync import SyncResult
 
 _KYIV = ZoneInfo("Europe/Kyiv")
@@ -174,6 +174,8 @@ def _vacancy_label(vacancy: Vacancy) -> str:
     title = vacancy.title.strip()
     if is_ai_augmented_only(vacancy.title, vacancy.description):
         title = f"🤖 {title}"
+    if location_attention(vacancy.location, vacancy.remote):
+        title = f"⚠️ {title}"
     company = vacancy.company.strip()
     is_telegram = (vacancy.source or "").strip().lower() == "telegram"
     skip_company = is_telegram and company.lower() in {

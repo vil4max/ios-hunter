@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from config.settings import Settings
-from parser.normalize import Vacancy, canonicalize_url
+from parser.normalize import Vacancy, canonicalize_url, location_attention
 from project_sync.github_client import GitHubClient, GitHubGraphQLError, ProjectMeta
 
 
@@ -57,6 +57,8 @@ def build_issue_body(vacancy: Vacancy) -> str:
     ]
     if vacancy.location:
         lines.append(f"**Location:** {vacancy.location}")
+    elif location_attention(vacancy.location, vacancy.remote):
+        lines.append("**Location:** ⚠️ unknown — verify before applying")
     if vacancy.remote:
         lines.append(f"**Remote:** {vacancy.remote}")
     return "\n".join(lines) + "\n"

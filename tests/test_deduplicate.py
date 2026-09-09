@@ -47,8 +47,9 @@ def test_deduplicate_keeps_same_role_with_distinct_identities() -> None:
 
     unique, removed = deduplicate([swift, greenhouse])
 
-    assert removed == 0
-    assert unique == [swift, greenhouse]
+    assert removed == 1
+    assert len(unique) == 1
+    assert set(unique[0].location.split(" / ")) == {"Ukraine", "Kyiv"}
 
 
 def test_deduplicate_keeps_unique_vacancies() -> None:

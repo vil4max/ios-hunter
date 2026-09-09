@@ -319,9 +319,31 @@ def is_primary_ios_role(title: str) -> bool:
     return is_ios_job(title) and not _CROSS_PLATFORM_TITLE.search(title or "")
 
 
-def is_target_location(location: str | None) -> bool:
+def is_location_eligible(location: str | None, remote: str | None = None) -> bool:
+    """Allow remote roles and Kyiv work only; reject explicit foreign offices."""
     value = (location or "").strip()
-    return not value or bool(_TARGET_LOCATION.search(value))
+    mode = (remote or "").strip().lower()
+    if not value:
+        return True
+    if re.search(r"(?i)\b(?:kyiv|kiev|київ|киев)\b", value):
+        return True
+    if re.search(r"(?i)\b(?:remote|worldwide|global|anywhere|віддален)\b", value):
+        return True
+    if re.fullmatch(r"(?i)\s*(?:ukraine|ukrainian|украин\w*|україн\w*)\s*", value):
+        return True
+    if mode == "remote" and re.search(r"(?i)\b(?:ukraine|ukrainian|украин\w*|україн\w*)\b", value):
+        return True
+    return False
+
+
+def is_target_location(location: str | None) -> bool:
+    """Backward-compatible location predicate for callers without work mode."""
+    return is_location_eligible(location)
+
+
+def location_attention(location: str | None, remote: str | None = None) -> bool:
+    """Unknown locations remain visible but need manual verification."""
+    return not (location or "").strip()
 
 
 def is_inbox_candidate(vacancy: Vacancy) -> bool:
@@ -331,7 +353,7 @@ def is_inbox_candidate(vacancy: Vacancy) -> bool:
             or is_ai_augmented_job(vacancy.title, vacancy.description)
         )
         and (is_primary_ios_role(vacancy.title) or not ai_requirement_blockers(vacancy.title, vacancy.description or ""))
-        and is_target_location(vacancy.location)
+        and is_location_eligible(vacancy.location, vacancy.remote)
     )
 
 

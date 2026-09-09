@@ -72,7 +72,7 @@ def test_hourly_lists_new_vacancies_only() -> None:
         "\n"
         "1. Acme — Senior iOS Engineer\n"
         "   https://example.com/a\n"
-        "2. Beta — Swift Developer\n"
+        "2. Beta — ⚠️ Swift Developer\n"
         "   https://example.com/b\n"
         "\n"
         "📊 Найдено: 10 · новых: 2 · в базе: 8\n"

@@ -24,7 +24,11 @@ engineering titles with AI/LLM keywords regardless of word order, or existing
 AI implementation signals in descriptions. This is deterministic keyword
 matching, not embeddings or an external LLM. Existing AI coding-tool matching
 is retained. Generic Python, Docker or SQL alone cannot establish an AI track.
-Junior-only and location rules remain unchanged.
+Junior-only rules remain unchanged. Inbox geography is strict: remote roles and
+Kyiv roles are eligible; explicit foreign offices and non-Kyiv on-site/hybrid
+roles are excluded. A missing location remains eligible as an uncertain result,
+regardless of the source's remote field, but is marked for manual verification
+in Telegram and the CRM.
 
 Sigma, Ciklum, N-iX, Intellias and GlobalLogic retain their iOS query and add
 AI, LLM and agentic queries. EPAM sitemap discovery adds AI/LLM/agentic slugs.
@@ -80,6 +84,10 @@ requests. This is conservative English text matching, not proof of fit.
 
 The existing Telegram/Inbox delivery and AI label are retained. No new channel
 or delivery action was created or executed during verification.
+
+Company/title variants from multiple city or source URLs collapse into one
+Inbox role. Advertised locations are merged into the surviving card, and the
+richer description is retained.
 
 Reference: https://career.sigma.software/vacancy/ai-augmented-software-developer/
 (read 2026-09-05). Its detailed requirements allow alternative programming

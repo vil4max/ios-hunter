@@ -27,3 +27,8 @@ Location and product domain are metadata, not hard exclusions. The primary filte
 New Sync creates **private Project drafts** only. Do not convert drafts to Issues in the public repo.
 
 The [company-by-company AI audit](company-ai-search-audit.md) lists all 92 registered companies and remaining discovery limits. DataArt and Luxoft add unfiltered category/specialization passes; Infopulse adds AI/LLM/agentic searches. The shared generic HTML helpers also accept both tracks.
+
+Inbox geography accepts remote and Kyiv only. Missing location is retained with a
+manual-review warning; explicit foreign or non-Kyiv on-site/hybrid locations are
+excluded. Company/title multi-geo variants collapse to one role card with merged
+locations.

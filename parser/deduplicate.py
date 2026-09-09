@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from parser.normalize import Vacancy
+from parser.normalize import Vacancy, role_key
 
 
 def _richness_score(vacancy: Vacancy) -> int:
@@ -24,6 +24,20 @@ def _pick_richer(first: Vacancy, second: Vacancy) -> Vacancy:
     return first
 
 
+def _merge_role_metadata(primary: Vacancy, duplicate: Vacancy) -> Vacancy:
+    locations = [
+        value.strip()
+        for value in (primary.location or "").split(" / ") + (duplicate.location or "").split(" / ")
+        if value.strip()
+    ]
+    primary.location = " / ".join(dict.fromkeys(locations)) or None
+    if primary.remote in {None, "", "unknown"} and duplicate.remote:
+        primary.remote = duplicate.remote
+    if not primary.description and duplicate.description:
+        primary.description = duplicate.description
+    return primary
+
+
 def deduplicate(vacancies: list[Vacancy]) -> tuple[list[Vacancy], int]:
     unique, removed, _ = deduplicate_with_report(vacancies)
     return unique, removed
@@ -45,6 +59,26 @@ def deduplicate_with_report(vacancies: list[Vacancy]) -> tuple[list[Vacancy], in
 
         by_identity[key] = vacancy
         groups[key] = [vacancy]
+
+    # Company career pages often publish one role once per city or work mode.
+    # Keep the richest card and carry every advertised location into it.
+    by_role: dict[tuple[str, str], Vacancy] = {}
+    role_keys: dict[tuple[str, str], str] = {}
+    for key, vacancy in list(by_identity.items()):
+        role = role_key(vacancy.company, vacancy.title)
+        previous = by_role.get(role)
+        if previous is None:
+            by_role[role] = vacancy
+            role_keys[role] = key
+            continue
+        chosen = _pick_richer(previous, vacancy)
+        other = vacancy if chosen is previous else previous
+        _merge_role_metadata(chosen, other)
+        by_role[role] = chosen
+        removed += 1
+        del by_identity[role_keys[role]]
+        by_identity[key] = chosen
+        role_keys[role] = key
 
     strategy_counts: dict[str, int] = {}
     duplicate_groups: list[dict] = []

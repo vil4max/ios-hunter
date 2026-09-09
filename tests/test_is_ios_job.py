@@ -10,6 +10,8 @@ from parser.normalize import (
     is_ios_job,
     is_primary_ios_role,
     is_target_location,
+    is_location_eligible,
+    location_attention,
     is_target_level,
     normalize_raw,
     role_key,
@@ -175,8 +177,18 @@ def test_target_location_rejects_country_restricted_remote_roles() -> None:
     assert not is_target_location("Cordoba, Buenos Aires")
     assert not is_target_location("Basking Ridge NJ, United States")
     assert is_target_location("Ukraine")
-    assert is_target_location("Eastern Europe")
+    assert not is_target_location("Eastern Europe")
     assert is_target_location(None)
+
+
+def test_inbox_location_policy_allows_remote_or_kyiv_only() -> None:
+    assert is_location_eligible("Kyiv, Ukraine", "hybrid")
+    assert is_location_eligible("Ukraine", "remote")
+    assert is_location_eligible(None, "remote")
+    assert location_attention(None, "unknown")
+    assert location_attention(None, "remote")
+    assert not is_location_eligible("Buenos Aires, Argentina", "remote")
+    assert not is_location_eligible("Lviv, Ukraine", "onsite")
 
 
 def test_inbox_candidate_requires_primary_ios_and_target_location() -> None:
