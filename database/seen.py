@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from parser.normalize import Vacancy, canonicalize_url, normalize_token
+from parser.normalize import Vacancy, canonicalize_url, normalize_token, role_key
 
 
 def utc_now() -> str:
@@ -22,6 +22,15 @@ def seen_key(vacancy: Vacancy) -> str:
     if vacancy.canonical_url:
         return vacancy.canonical_url
     return vacancy.identity_key or vacancy.hash
+
+
+def seen_roles(seen: dict[str, dict[str, Any]], *, dispositions: set[str] | None = None) -> set[tuple[str, str]]:
+    return {
+        role_key(str(meta["company"]), str(meta["title"]))
+        for meta in seen.values()
+        if meta.get("company") and meta.get("title")
+        and (dispositions is None or str(meta.get("disposition") or "").lower() in dispositions)
+    }
 
 
 def load_seen(path: Path) -> dict[str, dict[str, Any]]:
@@ -82,14 +91,18 @@ def purge_dead_seen(
     *,
     live_urls: set[str],
     purgeable_companies: set[str] | frozenset[str],
+    confirmed_closed_urls: set[str] | frozenset[str] = frozenset(),
 ) -> list[str]:
-    if not purgeable_companies:
+    # A partial listing is not evidence of closure. Never discard user decisions.
+    if not purgeable_companies or not confirmed_closed_urls:
         return []
     purgeable = {normalize_token(name) for name in purgeable_companies if name.strip()}
     if not purgeable:
         return []
     removed: list[str] = []
     for key, meta in list(seen.items()):
+        if key not in confirmed_closed_urls or meta.get("disposition"):
+            continue
         company = normalize_token(str(meta.get("company") or ""))
         if not company or company not in purgeable:
             continue

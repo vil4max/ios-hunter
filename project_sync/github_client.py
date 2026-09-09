@@ -5,7 +5,7 @@ from typing import Any
 
 import requests
 
-from parser.normalize import canonicalize_url
+from parser.normalize import canonicalize_url, role_key
 
 
 GRAPHQL_URL = "https://api.github.com/graphql"
@@ -352,6 +352,18 @@ class GitHubClient:
             item_id = raw.get("id")
             if item_id:
                 return str(item_id)
+        return None
+
+    def find_project_item_by_role(self, project_id: str, company: str, title: str) -> str | None:
+        needle = role_key(company, title)
+        for raw in self.list_project_items(project_id, include_archived=True):
+            content = raw.get("content") or {}
+            card_title = str(content.get("title") or "")
+            if " — " not in card_title:
+                continue
+            card_company, card_role = card_title.split(" — ", 1)
+            if role_key(card_company, card_role) == needle and raw.get("id"):
+                return str(raw["id"])
         return None
 
     def find_project_item_by_company(self, project_id: str, company: str) -> str | None:

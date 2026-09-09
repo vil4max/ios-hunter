@@ -66,11 +66,23 @@ def test_purge_dead_seen_removes_only_missing_for_purgeable_companies() -> None:
         seen,
         live_urls={"https://example.com/epam/live"},
         purgeable_companies={"EPAM"},
+        confirmed_closed_urls={"https://example.com/epam/dead"},
     )
     assert removed == ["https://example.com/epam/dead"]
     assert "https://example.com/epam/live" in seen
     assert "https://example.com/softserve/old" in seen
     assert "https://example.com/epam/dead" not in seen
+
+
+def test_partial_listing_never_erases_history_or_user_dispositions() -> None:
+    seen = {}
+    for disposition in (None, "applied", "dropped", "archived"):
+        mark_seen(seen, make_vacancy(url=f"https://example.com/{disposition}"), disposition=disposition)
+    assert purge_dead_seen(seen, live_urls=set(), purgeable_companies={"Acme"}) == []
+    assert len(seen) == 4
+    removed = purge_dead_seen(seen, live_urls=set(), purgeable_companies={"Acme"}, confirmed_closed_urls=set(seen))
+    assert removed == ["https://example.com/None"]
+    assert len(seen) == 3
 
 
 def test_migrate_from_sqlite_imports_urls(tmp_path: Path) -> None:

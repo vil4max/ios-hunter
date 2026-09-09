@@ -49,7 +49,7 @@ def test_deduplicate_keeps_same_role_with_distinct_identities() -> None:
 
     assert removed == 1
     assert len(unique) == 1
-    assert set(unique[0].location.split(" / ")) == {"Ukraine", "Kyiv"}
+    assert set(unique[0].advertised_locations) == {"Ukraine", "Kyiv"}
 
 
 def test_deduplicate_keeps_unique_vacancies() -> None:
@@ -70,3 +70,21 @@ def test_deduplicate_handles_empty_list() -> None:
 
     assert unique == []
     assert removed == 0
+
+
+def test_multi_geo_keeps_eligible_url_and_its_requirements() -> None:
+    foreign = make_vacancy(url="https://example.com/mexico", location="Mexico", remote="onsite", description="Long description " * 100)
+    local = make_vacancy(url="https://example.com/kyiv", location="Kyiv", remote="hybrid")
+    unique, removed = deduplicate([foreign, local])
+    assert removed == 1
+    assert unique[0].url == local.url
+    assert unique[0].location == "Kyiv"
+    assert unique[0].remote == "hybrid"
+    assert unique[0].description == local.description
+    assert unique[0].advertised_locations == ("Kyiv", "Mexico")
+
+
+def test_role_selection_is_independent_of_collection_order() -> None:
+    a = make_vacancy(url="https://example.com/a")
+    b = make_vacancy(url="https://example.com/b")
+    assert deduplicate([a, b])[0][0].url == deduplicate([b, a])[0][0].url

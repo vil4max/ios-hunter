@@ -31,6 +31,7 @@ class FakeClient:
         self.archived_items: list[str] = []
         self.text_sets: list[tuple[str, str]] = []
         self._by_canonical: dict[str, str] = {}
+        self._by_role: dict[tuple[str, str], str] = {}
         self._counter = 10
         self.meta = ProjectMeta(
             project_id="PROJECT",
@@ -60,11 +61,18 @@ class FakeClient:
     def find_project_item_by_canonical_url(self, project_id: str, canonical_url: str) -> str | None:
         return self._by_canonical.get(canonical_url)
 
+    def find_project_item_by_role(self, project_id: str, company: str, title: str) -> str | None:
+        from parser.normalize import role_key
+        return self._by_role.get(role_key(company, title))
+
     def add_draft_issue(self, project_id: str, *, title: str, body: str = "") -> str:
         self._counter += 1
         item_id = f"DRAFT-{self._counter}"
         self.created_titles.append(title)
         self.draft_items.append(item_id)
+        from parser.normalize import role_key
+        company, role = title.split(" — ", 1)
+        self._by_role[role_key(company, role)] = item_id
         for line in body.splitlines():
             if line.startswith("Canonical-URL: "):
                 self._by_canonical[line.removeprefix("Canonical-URL: ")] = item_id
@@ -117,6 +125,15 @@ def test_sync_skipped_when_disabled() -> None:
     result = sync.sync_vacancies([make_vacancy()])
     assert result.skipped_disabled is True
     assert result.created_count == 0
+
+
+def test_sync_recognizes_role_when_location_url_changes() -> None:
+    client = FakeClient()
+    first = ProjectSync(_settings(), client=client).sync_vacancies([make_vacancy(url="https://example.com/a")])
+    second = ProjectSync(_settings(), client=client).sync_vacancies([make_vacancy(url="https://example.com/b")])
+    assert first.created_count == 1
+    assert second.existing_count == 1
+    assert second.created_count == 0
 
 
 def test_seed_archived_uses_project_archive() -> None:

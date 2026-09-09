@@ -18,7 +18,7 @@ from database.collect_slots import default_collect_slots_path, slot_completed
 from database.daily_email_days import default_daily_email_days_path, email_sent_for_day
 
 
-def main() -> int:
+def _evaluate_gate() -> int:
     stamp = _as_kyiv()
     due = due_collect_slot(stamp)
     day = stamp.strftime("%Y-%m-%d")
@@ -40,6 +40,14 @@ def main() -> int:
     slots = "/".join(f"{hour:02d}" for hour in COLLECT_HOURS)
     print(f"Collect window: Kyiv {slots} — run due slot {due:02d}")
     return 0
+
+
+def main() -> int:
+    try:
+        return _evaluate_gate()
+    except Exception as error:
+        print(f"Collect schedule gate failed: {error}", file=sys.stderr)
+        return 2
 
 
 if __name__ == "__main__":

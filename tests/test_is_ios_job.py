@@ -176,7 +176,7 @@ def test_inbox_candidate_rejects_cross_platform_titles() -> None:
 def test_target_location_rejects_country_restricted_remote_roles() -> None:
     assert not is_target_location("Cordoba, Buenos Aires")
     assert not is_target_location("Basking Ridge NJ, United States")
-    assert is_target_location("Ukraine")
+    assert not is_target_location("Ukraine")
     assert not is_target_location("Eastern Europe")
     assert is_target_location(None)
 

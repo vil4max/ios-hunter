@@ -19,6 +19,7 @@ concurrency:
 jobs:
   trigger:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
 
@@ -57,8 +58,11 @@ jobs:
           echo "dispatch_daily_email=${dispatch_daily_email:-false}" >> "$GITHUB_OUTPUT"
           if [ "$status" -eq 0 ]; then
             echo "skip_gate=false" >> "$GITHUB_OUTPUT"
-          else
+          elif [ "$status" -eq 1 ]; then
             echo "skip_gate=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Collect schedule gate failed with exit status ${status}" >&2
+            exit "$status"
           fi
 
       - name: Trigger Collect iOS Jobs

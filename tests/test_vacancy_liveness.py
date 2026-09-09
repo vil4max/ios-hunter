@@ -2,7 +2,10 @@ from __future__ import annotations
 
 import json
 from datetime import date, datetime
+from types import SimpleNamespace
 from zoneinfo import ZoneInfo
+
+import pytest
 
 from integrations.vacancy_probe import ProbeResult, probe_vacancy_url, should_skip_url
 from planner.plan import ProjectCard
@@ -231,6 +234,67 @@ def test_probe_keeps_matching_ios_title_open() -> None:
     )
     assert result.closed is False
     assert result.reason == "open"
+
+
+@pytest.mark.parametrize(
+    ("final_url", "html"),
+    [
+        ("https://example.com/careers", "<h1>Careers</h1><a>Senior iOS Engineer</a>"),
+        ("https://example.com/", "<title>Acme</title><p>Join our team</p>"),
+        ("https://example.com/jobs", "<h1>Software Engineer Jobs</h1>"),
+        ("https://example.com/jobs/old-ios", '<div id="app"></div>'),
+    ],
+)
+def test_probe_does_not_confirm_generic_pages_open(final_url: str, html: str) -> None:
+    response = SimpleNamespace(status_code=200, url=final_url, text=html, headers={})
+    session = SimpleNamespace(get=lambda *args, **kwargs: response)
+
+    result = probe_vacancy_url(
+        "https://example.com/jobs/old-ios",
+        card_title="Senior iOS Engineer",
+        session=session,
+    )
+
+    assert result.closed is False
+    assert result.skipped is True
+    assert result.reason == "unknown: no vacancy evidence"
+
+
+@pytest.mark.parametrize("title", ["Senior iOS Engineer", "AI-Augmented Software Developer"])
+def test_probe_keeps_redirect_to_actual_job_open(title: str) -> None:
+    response = SimpleNamespace(
+        status_code=200,
+        url="https://example.com/en/jobs/current-role",
+        text=f"<h1>{title}</h1><p>Apply now</p>",
+        headers={},
+    )
+    session = SimpleNamespace(get=lambda *args, **kwargs: response)
+
+    result = probe_vacancy_url(
+        "https://example.com/jobs/current-role",
+        card_title=title,
+        session=session,
+    )
+
+    assert result.closed is False
+    assert result.skipped is False
+    assert result.reason == "open"
+
+
+def test_probe_keeps_structured_job_without_rendered_title_open() -> None:
+    payload = {"props": {"pageProps": {"job": {"name": "iOS Developer", "is_expired": False}}}}
+    response = SimpleNamespace(
+        status_code=200,
+        url="https://example.com/job/1",
+        text='<script id="__NEXT_DATA__">' + json.dumps(payload) + "</script>",
+        headers={},
+    )
+    session = SimpleNamespace(get=lambda *args, **kwargs: response)
+
+    result = probe_vacancy_url(response.url, card_title="iOS Developer", session=session)
+
+    assert result.closed is False
+    assert result.skipped is False
 
 
 def test_probe_marks_inactive_dou_vacancy_closed() -> None:

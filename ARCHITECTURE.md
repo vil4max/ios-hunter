@@ -19,9 +19,9 @@ GitHub Actions (daily 04:00 UTC, incl. weekends)
 ## Pipeline
 
 1. The DOU service-company watchlist registers one source per company; custom collectors fetch known APIs and the generic monitor scans the remaining official career pages. Telegram is supplementary.
-2. Vacancies are normalized and filtered to primary iOS / Swift or secondary Applied AI engineering titles or descriptions. Location is retained as metadata.
-3. In-run deduplication collapses identical identity keys only.
-4. When Sync is enabled, Project Sync creates Issue + Project item (Inbox) for new Canonical-URLs.
+2. Vacancies are normalized and filtered to primary iOS / Swift or secondary Applied AI engineering titles or descriptions. Inbox checks work eligibility from Kyiv, while unknown locations carry a warning.
+3. Deduplication collapses identities and company/title role variants, preferring an eligible application URL. Seen history and CRM role lookup suppress city variants across runs.
+4. When Sync is enabled, Project Sync creates private Project draft items (Inbox) for roles absent by canonical URL and normalized company/title. It never creates public Issues.
 5. Collect-slot Telegram sends an Inbox +N alert with vacancy details when something new lands.
 6. Collect workflow commits `database/seen.json` when it changes (`[skip ci]`) during dual-write.
 

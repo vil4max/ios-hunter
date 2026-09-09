@@ -8,7 +8,7 @@ from html import unescape
 from pathlib import Path
 
 from config.search_tracks import AI_RELEVANCE_PATTERNS
-from parser.normalize import Vacancy, is_ai_augmented_only, ai_negative_signals, ai_requirement_blockers, required_ai_text
+from parser.normalize import Vacancy, is_ai_augmented_only, ai_negative_signals, ai_requirement_blockers, required_ai_text, is_location_eligible, has_ai_job_details
 
 
 @dataclass(frozen=True)
@@ -48,19 +48,7 @@ _SENIOR = re.compile(r"\b(senior|sr\.?|lead|staff|principal|architect)\b", re.I)
 _MIDDLE = re.compile(r"\b(middle|mid-level|mid level)\b", re.I)
 _JUNIOR = re.compile(r"\b(junior|jr\.?|intern|trainee)\b", re.I)
 _YEARS = re.compile(r"\b(\d{1,2})\s*\+?\s*(?:years?|yrs?)\b", re.I)
-_REMOTE = re.compile(r"\b(remote|worldwide|anywhere|work from home)\b", re.I)
-_GLOBAL_REMOTE = re.compile(r"\b(worldwide|anywhere|global remote|emea|europe)\b", re.I)
-_UKRAINE = re.compile(
-    r"\b(?:ukraine|ukrainian|kyiv|kiev|lviv|kharkiv|kharkov|dnipro|dnepr|"
-    r"odesa|odessa|vinnytsia|vinnitsa|ivano-frankivsk|uzhhorod|chernivtsi|"
-    r"cherkasy|poltava|zaporizhzhia|ternopil|rivne|lutsk|mykolaiv|"
-    r"україн\w*|украин\w*|київ|киев|львів|львов|харків|харьков|дніпро|днепр|"
-    r"одеса|одесса|вінниця|винница|івано-франківськ|ивано-франковск|ужгород|"
-    r"чернівці|черновцы|черкаси|черкассы|полтава|запоріжжя|запорожье|"
-    r"тернопіль|тернополь|рівне|ровно|луцьк|луцк|миколаїв|николаев)\b",
-    re.I,
-)
-_KYIV_HYBRID = re.compile(r"\b(kyiv|kiev)\b.*\bhybrid\b|\bhybrid\b.*\b(kyiv|kiev)\b", re.I)
+_REMOTE = re.compile(r"\b(remote|remotely|worldwide|global|anywhere|work from home|віддалено|віддалений|дистанційно)\b", re.I)
 _ENGLISH_ADVANCED = re.compile(r"\b(c1|advanced english|fluent english)\b", re.I)
 _ENGLISH_B2 = re.compile(r"\b(b2|upper.intermediate)\b", re.I)
 _ENGLISH_LEVEL = re.compile(r"\b(a1|a2|b1|b2|c1|c2)\b", re.I)
@@ -154,20 +142,15 @@ def _experience_score(text: str, profile: CandidateProfile) -> tuple[int, list[s
     return 7, [f"experience requirement {required}+ exceeds public {profile.years_ios}+ framing"]
 
 
-def _work_mode_score(vacancy: Vacancy, text: str) -> tuple[int, list[str], list[str]]:
+def _work_mode_score(vacancy: Vacancy) -> tuple[int, list[str], list[str]]:
     location = (vacancy.location or "").strip()
     remote = (vacancy.remote or "").strip()
-    combined = " ".join((location, remote, text[:1500]))
-    if location and not _UKRAINE.search(location) and not _GLOBAL_REMOTE.search(location):
-        return 0, [f"concrete non-UA location: {location}"], ["location mismatch"]
+    if not is_location_eligible(location, remote):
+        return 0, [f"work location unavailable from Kyiv: {location}"], ["location mismatch"]
     if _REMOTE.search(remote) or _REMOTE.search(location):
         return 20, ["remote work signal"], []
-    if _KYIV_HYBRID.search(combined):
-        return 12, ["Kyiv hybrid is possible but low preference"], []
-    if _UKRAINE.search(location):
-        return 18, [f"Ukraine location: {location}"], []
     if location:
-        return 0, [f"concrete non-UA location: {location}"], ["location mismatch"]
+        return 12, ["Kyiv office/hybrid is possible but low preference"], []
     return 10, ["work location is unclear"], []
 
 
@@ -218,7 +201,7 @@ def assess_fit(vacancy: Vacancy, profile: CandidateProfile) -> FitAssessment:
     score += experience_points
     reasons.extend(experience_reasons)
 
-    work_points, work_reasons, work_blockers = _work_mode_score(vacancy, text)
+    work_points, work_reasons, work_blockers = _work_mode_score(vacancy)
     score += work_points
     reasons.extend(work_reasons)
     blockers.extend(work_blockers)
@@ -247,7 +230,8 @@ def assess_fit(vacancy: Vacancy, profile: CandidateProfile) -> FitAssessment:
         if gaps:
             reasons.append("Required skills need evidence: " + ", ".join(gaps))
             score = min(score, 77)
-        if not description:
+        if not has_ai_job_details(title, vacancy.description):
+            blockers.append("AI job details unavailable")
             reasons.append("Full requirements unavailable; manual review needed")
             score = min(score, 77)
     score = max(0, min(100, score))

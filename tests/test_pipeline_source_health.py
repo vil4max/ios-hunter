@@ -54,7 +54,7 @@ def test_collect_vacancies_marks_previously_working_source_as_degraded(
     assert health["degraded_source_names"] == ("Acme",)
     assert health["sites_ok"] == 0
     assert purgeable == frozenset()
-    assert "Source degraded (parsed 0 items): Acme" in capsys.readouterr().err
+    assert "Source degraded: Acme: parsed 0 items but previously parsed items" in capsys.readouterr().err
 
 
 def test_source_summary_preserves_failure_url_and_reason() -> None:

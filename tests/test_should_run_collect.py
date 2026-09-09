@@ -68,3 +68,30 @@ def test_should_run_collect_email_not_pending_when_claimed(
     assert should_run_collect.main() == 0
     out = capsys.readouterr().out
     assert "dispatch_daily_email=false" in out
+
+
+def test_should_run_collect_skips_before_first_slot(monkeypatch, capsys) -> None:
+    monkeypatch.setattr(
+        should_run_collect,
+        "_as_kyiv",
+        lambda: datetime(2026, 8, 4, 8, 30, tzinfo=KYIV),
+    )
+
+    assert should_run_collect.main() == 1
+    assert "before Kyiv 09:00" in capsys.readouterr().out
+
+
+def test_should_run_collect_reports_read_failure_as_error(monkeypatch, capsys) -> None:
+    monkeypatch.setattr(
+        should_run_collect,
+        "_as_kyiv",
+        lambda: datetime(2026, 8, 4, 12, 30, tzinfo=KYIV),
+    )
+
+    def unreadable_slots(*args):
+        raise PermissionError("cannot read collect slots")
+
+    monkeypatch.setattr(should_run_collect, "slot_completed", unreadable_slots)
+
+    assert should_run_collect.main() == 2
+    assert "cannot read collect slots" in capsys.readouterr().err

@@ -61,6 +61,8 @@ def build_issue_body(vacancy: Vacancy) -> str:
         lines.append("**Location:** ⚠️ unknown — verify before applying")
     if vacancy.remote:
         lines.append(f"**Remote:** {vacancy.remote}")
+    if vacancy.advertised_locations:
+        lines.append(f"**Advertised locations:** {' / '.join(vacancy.advertised_locations)}")
     return "\n".join(lines) + "\n"
 
 
@@ -137,6 +139,10 @@ class ProjectSync:
                 meta.project_id,
                 canonical,
             )
+            if existing_item_id is None:
+                existing_item_id = self._client.find_project_item_by_role(
+                    meta.project_id, vacancy.company, vacancy.title,
+                )
             if existing_item_id is not None:
                 base.existing = True
                 base.item_id = existing_item_id

@@ -23,6 +23,7 @@ from database.seen import (
     purge_dead_seen,
     save_seen,
     seen_key,
+    seen_roles,
     utc_now,
 )
 from database.source_health import (
@@ -40,7 +41,7 @@ from database.telegram_cursors import (
 )
 from integrations.notify import CollectReportStats, SourceFailure
 from parser.deduplicate import deduplicate_with_report
-from parser.normalize import Vacancy, is_inbox_candidate, normalize_many
+from parser.normalize import Vacancy, is_inbox_candidate, normalize_many, role_key
 from planner.plan import (
     archived_canonical_urls,
     exclude_archived_vacancies,
@@ -49,6 +50,7 @@ from planner.plan import (
 from project_sync.github_client import GitHubClient
 from project_sync.sync import ProjectSync, SyncItemResult, SyncResult
 from reporter.hourly import notify_hourly_inbox
+from reporter.collector_health import rejection_counts, safe_error, write_collect_diagnostics
 
 
 def _is_telegram_source(source: SourceResult) -> bool:
@@ -92,6 +94,8 @@ def summarize_source_checks(
                 )
             elif skipped:
                 telegram_skipped += 1
+            elif source.status == STATUS_DEGRADED:
+                degraded_names.append(source.source_name)
             else:
                 telegram_ok += 1
                 telegram_ok_names.append(_telegram_channel_label(source))
@@ -137,7 +141,7 @@ def collect_vacancies(
 
     path = baseline_path or default_baseline_path(ROOT)
     baseline = load_baseline(path)
-    degraded = classify_degraded(results, baseline)
+    classify_degraded(results, baseline)
     save_baseline(path, update_baseline(baseline, results))
 
     raw_jobs: list[dict] = []
@@ -151,17 +155,45 @@ def collect_vacancies(
             continue
         # A source that parsed nothing cannot prove a vacancy is gone, so its
         # history must survive until the source is healthy again.
-        if source.items_scanned <= 0:
+        if source.items_scanned <= 0 or source.status == STATUS_DEGRADED:
             continue
         if source.source_id.startswith("company:") or source.source_id.startswith("dou"):
             purgeable_companies.add(source.source_name)
 
-    for name in degraded:
-        print(f"Source degraded (parsed 0 items): {name}", file=sys.stderr)
+    for source in results:
+        if source.status == STATUS_DEGRADED:
+            print(f"Source degraded: {source.source_name}: {source.error or 'unspecified'}", file=sys.stderr)
 
     failed_source_names, health = summarize_source_checks(results)
     vacancies = normalize_many(raw_jobs)
     unique, removed, _ = deduplicate_with_report(vacancies)
+    company_sources = [source for source in results if not _is_telegram_source(source)]
+    health["company_outage"] = not any(
+        source.status != STATUS_FAILED and (source.status != STATUS_DEGRADED or source.items_scanned > 0)
+        for source in company_sources
+    )
+    sources = []
+    for source in sorted(results, key=lambda item: item.source_id):
+        normalized = normalize_many(source.jobs) if source.status != STATUS_FAILED else []
+        sources.append({
+            "id": source.source_id, "name": source.source_name, "status": source.status,
+            "reason": safe_error(source.error or ""), "scanned": source.items_scanned,
+            "raw": len(source.jobs), "normalized": len(normalized),
+            "normalization_rejected": len(source.jobs) - len(normalized),
+            "inbox_eligible": sum(is_inbox_candidate(item) for item in normalized),
+            "rejections": rejection_counts(normalized), "response_ms": source.response_ms,
+        })
+    health["diagnostics"] = {
+        "schema_version": 1, "collected_at": utc_now(), "status": "collected",
+        "sources": sources,
+        "counts": {
+            "raw": len(raw_jobs), "normalized": len(vacancies), "unique_roles": len(unique),
+            "duplicates_collapsed": removed,
+            "inbox_eligible": sum(is_inbox_candidate(item) for item in unique),
+        },
+        "rejections": rejection_counts(unique),
+    }
+    write_collect_diagnostics(health["diagnostics"])
     return unique, removed, failed_source_names, health, frozenset(purgeable_companies)
 
 
@@ -169,11 +201,14 @@ def select_fresh(vacancies: list[Vacancy], seen: dict, *, seen_gate: bool) -> li
     if not seen_gate:
         return list(vacancies)
     fresh: list[Vacancy] = []
+    known_roles = seen_roles(seen)
     for vacancy in vacancies:
         key = seen_key(vacancy)
-        if not key or key in seen:
+        role = role_key(vacancy.company, vacancy.title)
+        if not key or key in seen or role in known_roles:
             continue
         fresh.append(vacancy)
+        known_roles.add(role)
     return fresh
 
 
@@ -216,7 +251,11 @@ def process_new_vacancies(
         except Exception as error:  # noqa: BLE001
             print(f"Archived exclude load failed: {error}", file=sys.stderr)
 
-    eligible = [vacancy for vacancy in vacancies if is_inbox_candidate(vacancy)]
+    excluded_roles = seen_roles(seen, dispositions={"applied", "dropped", "archived"})
+    eligible = [
+        vacancy for vacancy in vacancies
+        if is_inbox_candidate(vacancy) and role_key(vacancy.company, vacancy.title) not in excluded_roles
+    ]
     active = exclude_archived_vacancies(
         eligible,
         archived_urls=archived_urls | applied_urls,
@@ -312,6 +351,12 @@ def main() -> int:
     )
     args = parser.parse_args()
 
+    settings = load_settings()
+    if settings.sync_enabled and not settings.configured_for_sync:
+        print("CRM sync requested but token/repository/project configuration is incomplete", file=sys.stderr)
+        write_collect_diagnostics({"schema_version": 1, "status": "failed", "error": "incomplete_sync_configuration"}, summary=True)
+        return 1
+
     seed_only = args.seed_only or os.environ.get("SEED_SEEN_ONLY", "").strip() in {"1", "true", "yes"}
     seen_path = Path(os.environ.get("SEEN_PATH", default_seen_path(ROOT)))
     jobs_db = Path(os.environ.get("JOBS_DB_PATH", ROOT / "database" / "jobs.db"))
@@ -350,13 +395,24 @@ def main() -> int:
         str(channel): int(message_id)
         for channel, message_id in dict(source_health.get("telegram_cursor_updates") or {}).items()
     }
-    if notify_ok and cursor_updates:
+    if notify_ok and not sync_result.failed_count and cursor_updates:
         cursor_path = default_telegram_cursors_path(ROOT)
         cursors = load_telegram_cursors(cursor_path)
         if apply_cursor_updates(cursors, cursor_updates):
             save_telegram_cursors(cursor_path, cursors)
 
     runtime = time.perf_counter() - started
+    failed = not notify_ok or bool(sync_result.failed_count) or bool(source_health.get("company_outage"))
+    report = dict(source_health.get("diagnostics") or {})
+    partial = bool(failed_source_names or source_health.get("degraded_source_names"))
+    report["status"] = "failed" if failed else "degraded" if partial else "healthy"
+    report["delivery"] = {
+        "created": sync_result.created_count, "existing": sync_result.existing_count,
+        "sync_failed": sync_result.failed_count, "sync_disabled": sync_result.skipped_disabled,
+        "notify_ok": notify_ok, "marked_seen": marked,
+    }
+    report["runtime_seconds"] = round(runtime, 2)
+    write_collect_diagnostics(report, summary=True)
     print(
         f"Vacancies: {len(vacancies)}\n"
         f"Duplicates removed: {duplicates_removed}\n"
@@ -373,7 +429,7 @@ def main() -> int:
         f"Notify ok: {notify_ok}\n"
         f"Runtime: {runtime:.1f}s"
     )
-    if not notify_ok:
+    if failed:
         return 1
     return 0
 

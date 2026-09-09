@@ -67,7 +67,7 @@ def test_country_restricted_remote_role_is_skipped() -> None:
     assert result.blockers == ("location mismatch",)
 
 
-def test_ukrainian_city_without_country_is_not_a_location_mismatch() -> None:
+def test_ukrainian_city_office_outside_kyiv_is_a_location_mismatch() -> None:
     for location in ("Lviv", "Kharkiv", "Dnipro", "Odesa"):
         vacancy = Vacancy(
             company="Acme",
@@ -81,8 +81,7 @@ def test_ukrainian_city_without_country_is_not_a_location_mismatch() -> None:
 
         result = assess_fit(vacancy, PROFILE)
 
-        assert "location mismatch" not in result.blockers
-        assert f"Ukraine location: {location}" in result.reasons
+        assert "location mismatch" in result.blockers
 
 
 def test_middle_role_is_eligible_without_seniority_penalty() -> None:

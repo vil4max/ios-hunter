@@ -60,6 +60,11 @@ _JOB_TITLE_MARKERS = (
     "architect",
 )
 
+_CAREERS_INDEX_TITLE = re.compile(
+    r"\b(?:careers?|vacancies|jobs|open positions|open roles|join (?:our|the) team)\b",
+    re.I,
+)
+
 _SKIP_HOST_SUFFIXES = (
     "t.me",
     "telegram.me",
@@ -412,6 +417,20 @@ def probe_vacancy_url(
             skipped=False,
             http_status=status,
             reason=closed_reason,
+            page_title=page_title,
+        )
+    has_job_title = any(
+        re.search(rf"\b{re.escape(marker)}\b", page_title, re.I)
+        for marker in _JOB_TITLE_MARKERS
+    ) and not _CAREERS_INDEX_TITLE.search(page_title)
+    # A successful HTTP response may be a careers index or a client-rendered shell.
+    if structured_job_open is not True and _huntflow_archived(html) is not False and not has_job_title:
+        return ProbeResult(
+            url=final_url,
+            closed=False,
+            skipped=True,
+            http_status=status,
+            reason="unknown: no vacancy evidence",
             page_title=page_title,
         )
     if _role_keyword_mismatch(card_title, page_title):

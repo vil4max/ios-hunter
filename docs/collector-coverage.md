@@ -20,7 +20,7 @@ The watchlist is coverage-first: service-rating companies with 200+ specialists 
 
 ## Match policy
 
-Location and product domain are metadata, not hard exclusions. The primary filter keeps Apple-platform signals. A secondary AI-augmented / agentic software engineering track uses keyword matching and requirement-aware exclusions. QA/test automation/TPM and junior-only roles remain excluded. Mandatory ML development or strong Python blocks the AI track; optional Python, RAG and embeddings do not. See [search tracks](search-tracks.md). Sigma reads AI vacancy details before emission; other title-only sources may still require manual requirements review. Secondary query failures preserve primary results with degraded status.
+Discovery retains broad Apple-platform signals. Inbox requires native iOS/Swift or an AI role with sufficient description and no requirement blockers. Geography is checked before Inbox admission; product-domain exclusions remain part of profile scoring. A secondary AI-augmented / agentic software engineering track uses keyword matching and requirement-aware exclusions. QA/test automation/TPM and junior-only roles remain excluded. Mandatory ML development or strong Python blocks the AI track; optional Python, RAG and embeddings do not. See [search tracks](search-tracks.md). Sigma reads AI vacancy details before emission; other title-only AI candidates wait outside Inbox for sufficient details. Secondary query failures preserve primary results with degraded status.
 
 ## Privacy
 
@@ -30,5 +30,4 @@ The [company-by-company AI audit](company-ai-search-audit.md) lists all 92 regis
 
 Inbox geography accepts remote and Kyiv only. Missing location is retained with a
 manual-review warning; explicit foreign or non-Kyiv on-site/hybrid locations are
-excluded. Company/title multi-geo variants collapse to one role card with merged
-locations.
+excluded. Company/title multi-geo variants collapse to one role card with separately listed advertised locations and an eligible application URL.

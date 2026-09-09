@@ -135,7 +135,7 @@ Telegram only on new vacancies (list + OK)
 | **Daily Vacancy Liveness** | Every day 04:00 UTC (incl. weekends) — probe active board URLs, archive closed, Telegram status |
 | **Daily Email Report** | Kyiv 18:00 via Collect and/or schedule trigger (even if Collect already ran/failed) — claim day on `main` before SMTP; manual `force` re-sends |
 | **IMAP Recruiter Poll** | After Collect completes (`workflow_run`) or manual — classify recruiter mail, update CRM, Telegram |
-| **CI** | Push / PR — pytest |
+| **CI** | Push / PR — Ruff, offline pytest, import checks |
 
 ## Local Collect kick (GHA lag kludge)
 
@@ -203,3 +203,9 @@ The source fingerprint and generation timestamp identify the export; they do
 not automatically prove that a detached copy is current. Keep the JSON private
 and untracked. The scoring algorithm is unchanged; search tracks and spoken
 English are carried as context, not new score adjustments.
+
+### Collection reliability and diagnostics
+
+Collection preserves seen history across incomplete source responses and city-URL changes. AI admission requires job details; native iOS remains primary. Inbox and fit scoring share the Kyiv/remote policy, with unknown location explicitly marked for review.
+
+Actions saves a per-source JSON report and a step summary with scanned/normalized/eligible counts, rejection categories, timings and failure reasons. Partial source failures are reported as degraded; a total company-source outage, CRM sync failure or notification failure fails the run. Recovery state is retained as a private artifact for seven days even when the pipeline fails. See [operations and recovery](docs/operations.md) for access, log retrieval, scheduling limitations and safe recovery.

@@ -92,6 +92,7 @@ class Vacancy:
     identity_key: str = ""
     identity_strategy: str = ""
     ai_keyword_match: bool = False
+    advertised_locations: tuple[str, ...] = ()
     hash: str = field(default="", init=False)
 
     def __post_init__(self) -> None:
@@ -315,25 +316,55 @@ def is_target_level(title: str) -> bool:
     return True
 
 
+_UKRAINE = re.compile(
+    r"\b(?:ukraine|ukrainian|kyiv|kiev|lviv|kharkiv|kharkov|dnipro|dnepr|"
+    r"odesa|odessa|vinnytsia|vinnitsa|ivano-frankivsk|uzhhorod|chernivtsi|"
+    r"cherkasy|poltava|zaporizhzhia|ternopil|rivne|lutsk|mykolaiv|"
+    r"україн\w*|украин\w*|київ|киев|львів|львов|харків|харьков|дніпро|днепр|"
+    r"одеса|одесса|вінниця|винница|івано-франківськ|ивано-франковск|ужгород|"
+    r"чернівці|черновцы|черкаси|черкассы|полтава|запоріжжя|запорожье|"
+    r"тернопіль|тернополь|рівне|ровно|луцьк|луцк|миколаїв|николаев)\b",
+    re.I,
+)
+_KYIV = re.compile(r"\b(?:kyiv|kiev|київ|киев)\b", re.I)
+_REMOTE_LOCATION = re.compile(r"\b(?:remote|remotely|work from home|worldwide|global|anywhere|віддалено|віддалений|дистанційно)\b", re.I)
+_NATIVE_IOS_TITLE = re.compile(r"\b(?:ios|swift|swiftui|uikit|iphone|ipad|objective[ -]?c|objc|cocoatouch)\b", re.I)
+
+
 def is_primary_ios_role(title: str) -> bool:
-    return is_ios_job(title) and not _CROSS_PLATFORM_TITLE.search(title or "")
+    return bool(_NATIVE_IOS_TITLE.search(title or "")) and is_ios_job(title) and not _CROSS_PLATFORM_TITLE.search(title or "")
 
 
 def is_location_eligible(location: str | None, remote: str | None = None) -> bool:
-    """Allow remote roles and Kyiv work only; reject explicit foreign offices."""
+    """Accept work from Ukraine or Kyiv offices; unknown geography needs review."""
     value = (location or "").strip()
     mode = (remote or "").strip().lower()
     if not value:
         return True
-    if re.search(r"(?i)\b(?:kyiv|kiev|київ|киев)\b", value):
+    if _KYIV.search(value):
         return True
-    if re.search(r"(?i)\b(?:remote|worldwide|global|anywhere|віддален)\b", value):
+    if mode in {"onsite", "on-site", "office", "hybrid"} or re.search(r"\b(?:on[- ]?site|office|hybrid|not remote|no remote)\b", value, re.I):
+        return False
+    has_remote = mode == "remote" or bool(_REMOTE_LOCATION.search(value))
+    if not has_remote:
+        return False
+    if _UKRAINE.search(value):
         return True
-    if re.fullmatch(r"(?i)\s*(?:ukraine|ukrainian|украин\w*|україн\w*)\s*", value):
-        return True
-    if mode == "remote" and re.search(r"(?i)\b(?:ukraine|ukrainian|украин\w*|україн\w*)\b", value):
-        return True
-    return False
+    # A remote label does not override a concrete country restriction.
+    scope = _REMOTE_LOCATION.sub("", value)
+    scope = re.sub(r"\b(?:work|working|from|home|fully|only|in|or)\b", "", scope, flags=re.I)
+    return not scope.strip(" ,;/()–-|")
+
+
+def has_ai_job_details(title: str, description: str | None) -> bool:
+    from bs4 import BeautifulSoup
+
+    text = BeautifulSoup(description or "", "html.parser").get_text(" ", strip=True)
+    text = re.sub(re.escape(title), "", text, flags=re.I)
+    return len(re.findall(r"\b\w+\b", text)) >= 8 and bool(
+        _AI_AUGMENTED_SIGNAL.search(text)
+        or re.search(r"\b(?:rag|embeddings|tool calling|structured outputs?|evals?)\b", text, re.I)
+    )
 
 
 def is_target_location(location: str | None) -> bool:
@@ -350,7 +381,8 @@ def is_inbox_candidate(vacancy: Vacancy) -> bool:
     return (
         (
             is_primary_ios_role(vacancy.title)
-            or is_ai_augmented_job(vacancy.title, vacancy.description)
+            or (is_ai_augmented_job(vacancy.title, vacancy.description)
+                and has_ai_job_details(vacancy.title, vacancy.description))
         )
         and (is_primary_ios_role(vacancy.title) or not ai_requirement_blockers(vacancy.title, vacancy.description or ""))
         and is_location_eligible(vacancy.location, vacancy.remote)
@@ -359,11 +391,20 @@ def is_inbox_candidate(vacancy: Vacancy) -> bool:
 
 def infer_remote(title: str, location: str | None, description: str | None) -> str:
     text = f"{title} {location or ''} {description or ''}".lower()
-    if any(word in text for word in ("remote", "remotely")):
-        return "remote"
-    if "hybrid" in text:
+    if re.search(
+        r"\b(?:not (?:a )?remote|no remote (?:work|option)|"
+        r"remote (?:work )?is not (?:available|offered|supported)|"
+        r"cannot (?:work|be done) remotely)\b",
+        text,
+    ):
+        return "onsite"
+    if re.search(r"\bhybrid\b", text):
         return "hybrid"
-    if any(word in text for word in ("onsite", "office")):
+    if re.search(r"\bon[- ]?site\b", text):
+        return "onsite"
+    if _REMOTE_LOCATION.search(text):
+        return "remote"
+    if re.search(r"\boffice\b", text):
         return "onsite"
     return "unknown"
 
@@ -394,7 +435,9 @@ def normalize_raw(raw: dict[str, Any]) -> Vacancy | None:
 
     location = raw.get("location")
     location = str(location).strip() if location else None
-    remote = raw.get("remote") or infer_remote(title, location, description)
+    remote = raw.get("remote")
+    if not remote or str(remote).strip().lower() == "unknown":
+        remote = infer_remote(title, location, description)
 
     published_at = None
     if raw.get("published_at"):
@@ -443,9 +486,7 @@ def ai_negative_signals(title: str, description: str = "") -> tuple[str, ...]:
     signals = []
     if re.search(r"\b(?:data scien(?:ce|tist)|research|computer vision|nlp|mlops)\b", title, re.I):
         signals.append("specialist Data Science/research/MLOps title")
-    for sentence in re.split(r"[.\n;]", description):
-        if re.search(r"\b(?:not required|optional|nice.to.have|preferred|no need)\b", sentence, re.I):
-            continue
+    for sentence in re.split(r"[.\n;]", required_ai_text(description)):
         if re.search(r"\b(?:primary|primarily|heavy|focus|core|main)\b", sentence, re.I) and re.search(
             r"\b(?:model training|training models|mlops|computer vision|nlp research|ml research|data science)\b", sentence, re.I
         ):
@@ -468,16 +509,25 @@ def required_ai_text(description: str) -> str:
     text = document.get_text(" ")
     required = []
     optional_section = False
+    required_section = False
     for line in re.split(r"[\n;]|(?<=[.!?])\s+", text):
         line = line.strip()
-        if re.search(r"^(?:nice.to.have|preferred qualifications|bonus|desirable)\b", line, re.I):
+        if re.search(r"^(?:nice.to.have|preferred(?: qualifications)?|bonus|desirable)\b", line, re.I):
             optional_section = True
             continue
-        if re.search(r"^(?:requirements|responsibilities|qualifications|personal profile|required skills)\b", line, re.I):
+        if re.search(r"^(?:requirements|qualifications|personal profile|required skills)\b", line, re.I):
             optional_section = False
-        if optional_section or re.search(r"\b(?:not required|optional|preferred|also acceptable|other languages|nice.to.have)\b", line, re.I):
+            required_section = True
+        if re.search(r"^(?:responsibilities|about us|what we offer|benefits)\b", line, re.I):
+            optional_section = False
+            required_section = False
+        if optional_section:
             continue
-        required.append(line)
+        # Optional wording belongs to its clause, not every requirement in a bullet.
+        for clause in re.split(r",|\bbut\b|\band(?=\s+\w+\s+(?:is\s+)?(?:preferred|optional))", line, flags=re.I):
+            if re.search(r"\b(?:not required|optional|preferred|also acceptable|other languages|nice.to.have|no need)\b", clause, re.I):
+                continue
+            required.append(("required: " if required_section else "") + clause.strip())
     return "\n".join(required)
 
 

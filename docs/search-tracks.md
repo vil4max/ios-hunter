@@ -25,7 +25,7 @@ AI implementation signals in descriptions. This is deterministic keyword
 matching, not embeddings or an external LLM. Existing AI coding-tool matching
 is retained. Generic Python, Docker or SQL alone cannot establish an AI track.
 Junior-only rules remain unchanged. Inbox geography is strict: remote roles and
-Kyiv roles are eligible; explicit foreign offices and non-Kyiv on-site/hybrid
+Kyiv roles are eligible; remote must explicitly cover Ukraine or have unrestricted geography. US-only remote and unconfirmed regional restrictions are not accepted; explicit foreign offices and non-Kyiv on-site/hybrid
 roles are excluded. A missing location remains eligible as an uncertain result,
 regardless of the source's remote field, but is marked for manual verification
 in Telegram and the CRM.
@@ -34,8 +34,7 @@ Sigma, Ciklum, N-iX, Intellias and GlobalLogic retain their iOS query and add
 AI, LLM and agentic queries. EPAM sitemap discovery adds AI/LLM/agentic slugs.
 Official watchlist parsers and other bespoke collectors share the expanded gate.
 Existing pagination/detail caps remain: this is broader discovery, not a claim
-of exhaustive market coverage. Title-only sources may lack enough detail for
-negative signals until descriptions are available. Sigma reference vacancy was read on 2026-09-05. Other live endpoints have not
+of exhaustive market coverage. Title-only AI records remain discovery candidates but cannot enter Inbox or receive a positive fit decision until details are available. The detail heuristic requires at least eight words beyond the title plus an AI implementation signal; it is not proof that every requirement was fetched. Sigma reference vacancy was read on 2026-09-05. Other live endpoints have not
 been revalidated as part of this offline change. Secondary query failures keep
 primary results and report degraded coverage. Sigma fetches AI vacancy details;
 failed detail fetches remain visible as degraded coverage.
@@ -53,7 +52,7 @@ iOS tenure never proves commercial Python/ML tenure.
 Each distinct negative signal deducts 15 points: specialist Data Science,
 research, CV/NLP or MLOps titles; explicitly primary/heavy research,
 model-training or MLOps responsibilities; mandatory 3+ commercial/professional/
-production years in Python or ML within the same sentence. Python alone and
+production years in Python or ML in a mandatory clause or Requirements section. Python alone and
 explicit optional/preferred requirements do not incur a penalty. These are
 conservative English keyword heuristics, not complete requirement parsing.
 Existing pure ML/Data Scientist title exclusions remain in the parser.
@@ -67,9 +66,7 @@ at 78, review at 62, weak below; existing domain/location blockers still skip.
 
 ## Compatibility and rollback
 
-No schema, dependency, identity, deduplication, profile or CRM migration.
-Existing callable iOS/AI predicates remain available. Revert this scoped diff
-to restore the former discovery and score rules; existing CRM data is untouched.
+No dependencies or profile migration are required. Existing URL-keyed seen records remain readable; company/title metadata also identifies a previously handled role. CRM lookup uses the same normalized role alongside canonical URLs, including archived cards. No existing cards are rewritten. Reverting code does not require a data migration.
 
 ## Requirement-aware eligibility
 
@@ -77,7 +74,7 @@ The updated requirement gate excludes mandatory strong/deep/advanced Python,
 ML model development, specialist research roles, and hard commercial Python/ML
 experience requirements. Optional sections (Nice to have, Bonus, Preferred
 qualifications) and explicitly optional bullets are ignored by this gate.
-RAG and embeddings alone are never blockers. iOS eligibility remains unchanged.
+RAG and embeddings alone are never blockers. Native iOS/Swift remains the primary Inbox track; macOS/C++ without native iOS/Swift does not qualify. A preferred clause cannot hide a separate mandatory Python requirement.
 Unknown mandatory JavaScript, TypeScript, MCP, orchestration, multi-agent,
 AI SDLC and consulting skills cap AI fit below strong and produce evidence
 requests. This is conservative English text matching, not proof of fit.
@@ -86,8 +83,7 @@ The existing Telegram/Inbox delivery and AI label are retained. No new channel
 or delivery action was created or executed during verification.
 
 Company/title variants from multiple city or source URLs collapse into one
-Inbox role. Advertised locations are merged into the surviving card, and the
-richer description is retained.
+Inbox role across runs. An eligible variant wins before description richness, with a deterministic URL tie-break. Its location, remote mode and requirements remain intact. All advertised locations appear separately in the CRM body and never make an ineligible variant eligible. Partial listings cannot erase seen history or user decisions.
 
 Reference: https://career.sigma.software/vacancy/ai-augmented-software-developer/
 (read 2026-09-05). Its detailed requirements allow alternative programming

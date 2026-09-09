@@ -44,12 +44,15 @@ def _body_field(body: str, name: str) -> str | None:
 
 
 def _fallback_vacancy(card: ProjectCard) -> Vacancy:
+    location = _body_field(card.body, "Location")
+    if location and (location == "unknown" or location.startswith("⚠️ unknown")):
+        location = None
     return Vacancy(
         company=card.company,
         title=card.title,
         url=card.url or card.canonical_url,
         source=card.source or "company",
-        location=_body_field(card.body, "Location"),
+        location=location,
         remote=_body_field(card.body, "Remote"),
     )
 
