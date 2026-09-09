@@ -181,6 +181,10 @@ Hirify Applications sync is local-first: export Excel from https://hirify.me/app
 
 ## Identity
 
+An offline [admission quality benchmark](docs/search-quality.md) checks curated
+vacancies and duplicate groups in CI. It reports false admissions and misses
+without collecting jobs or writing to CRM.
+
 Vacancies are keyed by canonical URL (tracking query params stripped). Project Sync matches canonical URLs and normalized company/title roles against one complete, paginated CRM snapshot per run, including archived cards. Newly created drafts enter the same index immediately. An incomplete snapshot stops creation to avoid duplicates.
 
 ## Career search tracks
