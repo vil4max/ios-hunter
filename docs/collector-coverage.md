@@ -20,7 +20,7 @@ The watchlist is coverage-first: service-rating companies with 200+ specialists 
 
 ## Match policy
 
-Discovery retains broad Apple-platform signals. Inbox requires native iOS/Swift or an AI role with sufficient description and no requirement blockers. Geography is checked before Inbox admission; product-domain exclusions remain part of profile scoring. A secondary AI-augmented / agentic software engineering track uses keyword matching and requirement-aware exclusions. QA/test automation/TPM and junior-only roles remain excluded. Mandatory ML development or strong Python blocks the AI track; optional Python, RAG and embeddings do not. See [search tracks](search-tracks.md). Sigma reads AI vacancy details before emission; other title-only AI candidates wait outside Inbox for sufficient details. Secondary query failures preserve primary results with degraded status.
+Discovery retains broad Apple-platform signals. Inbox requires native iOS/Swift or an AI role with sufficient description and no requirement blockers. Geography is checked before Inbox admission; product-domain exclusions remain part of profile scoring. A secondary AI-augmented / agentic software engineering track uses keyword matching and requirement-aware exclusions. QA/test automation/TPM and junior-only roles remain excluded. Mandatory ML development or strong Python blocks the AI track; optional Python, RAG and embeddings do not. See [search tracks](search-tracks.md). Sigma reads AI vacancy details before emission. Generic watchlist sources hydrate up to eight missing AI descriptions per company, sequentially, from matching HTTPS detail pages on the same origin. Redirects are checked before each request; off-origin or failed details and limit overflow degrade the source while preserving iOS results. JSON-LD JobPosting descriptions and locations, including nested graphs, enrich listing anchors. WordPress and Conscensia retain rendered descriptions already returned by their APIs. Other title-only AI candidates wait outside Inbox for sufficient details. Secondary query failures preserve primary results with degraded status.
 
 ## Privacy
 
@@ -31,3 +31,17 @@ The [company-by-company AI audit](company-ai-search-audit.md) lists all 92 regis
 Inbox geography accepts remote and Kyiv only. Missing location is retained with a
 manual-review warning; explicit foreign or non-Kyiv on-site/hybrid locations are
 excluded. Company/title multi-geo variants collapse to one role card with separately listed advertised locations and an eligible application URL.
+
+## Recovery boundaries
+
+RBI discovery reads its sitemap and career listing independently. A failed path
+keeps verified jobs from the other path and reports degraded coverage. Detail
+failures and page limits are explicit; if every discovered detail fails, the
+source fails. A sitemap slug alone never creates a vacancy title.
+
+A successful unit test or indexed search result does not prove live HTTP
+availability. AltexSoft career listing and RBI career listing returned HTTP 403
+during the 2026-09-09 public-page check; RBI sitemap returned HTTP 200. No new
+ATS endpoint, anti-bot bypass, or alternative production feed was introduced.
+AI detail hydration requires a matching JobPosting title or a matching heading
+in the main article; unrelated roles and missing requirements cannot unlock Inbox.

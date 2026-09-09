@@ -418,7 +418,8 @@ def test_rbi_skips_pages_that_fail_to_load(stub) -> None:
     result = bespoke.collect_rbi()
 
     assert result.jobs == []
-    assert result.status == "healthy"
+    assert result.status == "failed"
+    assert "detail down" in result.error
 
 
 def test_rbi_reports_failure_when_list_page_is_down(stub) -> None:
@@ -430,10 +431,10 @@ def test_rbi_reports_failure_when_list_page_is_down(stub) -> None:
     assert bespoke.collect_rbi().status == "failed"
 
 
-def test_rbi_title_falls_back_to_slug(stub) -> None:
+def test_rbi_title_does_not_invent_title_from_slug(stub) -> None:
     stub(text=lambda url, **_k: "<html>no title</html>")
 
-    assert bespoke._rbi_title("https://www.rbi-ri.com.ua/career/ios-developer") == "ios developer"
+    assert bespoke._rbi_title("https://www.rbi-ri.com.ua/career/ios-developer") is None
 
 
 def test_nix_html_parses_numbered_titles(stub) -> None:

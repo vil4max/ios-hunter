@@ -1,18 +1,20 @@
 from __future__ import annotations
 
 import json
+import ipaddress
+import re
 import time
 from pathlib import Path
 from typing import Any
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlsplit
 
 import requests
 from bs4 import BeautifulSoup
 
 from collector.results import source_failed, source_ok
-from collector.types import SourceResult
+from collector.types import STATUS_DEGRADED, SourceResult
 from integrations.http_client import fetch_impersonated, fetch_json, fetch_text, post_json
-from parser.normalize import is_target_job
+from parser.normalize import has_ai_job_details, is_ai_augmented_job, is_ios_job, is_target_job
 
 _JOB_URL_TOKENS = ("career", "job", "jobs", "vacanc", "position", "opening")
 _ALLOWED_LOCATIONS_BY_COMPANY: dict[str, frozenset[str]] = {
@@ -72,7 +74,11 @@ def _add_candidate(
         return
     if not (is_target_job(normalized_title, description) or is_target_job(absolute_url)):
         return
-    candidates.setdefault(absolute_url, (normalized_title, description, location))
+    previous = candidates.get(absolute_url)
+    if previous and is_job_posting:
+        candidates[absolute_url] = (normalized_title, description or previous[1], location or previous[2])
+    elif previous is None:
+        candidates[absolute_url] = (normalized_title, description, location)
 
 
 def _local_description(anchor) -> str | None:
@@ -107,6 +113,132 @@ def _location_is_allowed(company: str, location: str | None) -> bool:
     return location.strip().lower() in allowed
 
 
+def _job_postings(document):
+    def entries(value):
+        if isinstance(value, list):
+            for item in value:
+                yield from entries(item)
+        elif isinstance(value, dict):
+            types = value.get("@type", [])
+            if types == "JobPosting" or (isinstance(types, list) and "JobPosting" in types):
+                yield value
+            yield from entries(value.get("@graph", []))
+
+    for script in document.select('script[type="application/ld+json"]'):
+        try:
+            yield from entries(json.loads(script.string or ""))
+        except (TypeError, ValueError):
+            continue
+
+
+def _posting_location(entry):
+    locations = entry.get("jobLocation") or []
+    if not isinstance(locations, list):
+        locations = [locations]
+    labels = []
+    for location in locations:
+        if not isinstance(location, dict):
+            continue
+        address = location.get("address") or {}
+        if isinstance(address, str):
+            labels.append(address)
+        elif isinstance(address, dict):
+            country = address.get("addressCountry") or ""
+            if isinstance(country, dict):
+                country = country.get("name") or ""
+            label = ", ".join(str(value) for value in (
+                address.get("addressLocality"), address.get("addressRegion"), country
+            ) if value)
+            if label:
+                labels.append(label)
+    # Remote does not erase a country restriction in the posting.
+    if entry.get("jobLocationType") == "TELECOMMUTE":
+        restrictions = entry.get("applicantLocationRequirements") or []
+        if not isinstance(restrictions, list):
+            restrictions = [restrictions]
+        labels.extend(str(item["name"]) for item in restrictions
+                      if isinstance(item, dict) and item.get("name"))
+        labels.append("Remote")
+    return " / ".join(dict.fromkeys(labels)) or None
+
+
+def _same_detail_origin(url, base_url):
+    try:
+        target, base = urlsplit(url), urlsplit(base_url)
+        if target.scheme != "https" or target.username or target.password or not target.hostname:
+            return False
+        if (target.scheme, target.hostname, target.port) != (base.scheme, base.hostname, base.port):
+            return False
+        host = target.hostname.lower()
+        if host == "localhost" or host.endswith((".localhost", ".local")):
+            return False
+        try:
+            return ipaddress.ip_address(host).is_global
+        except ValueError:
+            return True
+    except ValueError:
+        return False
+
+
+def _fetch_ai_detail(url, base_url):
+    # Check every redirect before making the next request to an untrusted job link.
+    for _ in range(4):
+        if not _same_detail_origin(url, base_url):
+            raise ValueError("AI detail URL is outside the public career origin")
+        response = requests.get(url, timeout=15, allow_redirects=False)
+        if response.status_code in {301, 302, 303, 307, 308}:
+            url = urljoin(url, response.headers.get("Location", ""))
+            continue
+        response.raise_for_status()
+        return response.text
+    raise ValueError("AI detail redirect limit reached")
+
+
+def _matching_detail(title, html):
+    document = BeautifulSoup(html, "lxml")
+    def title_key(text):
+        return " ".join(re.findall(r"\w+", text.casefold()))
+
+    for entry in _job_postings(document):
+        if title_key(str(entry.get("title") or "")) == title_key(title):
+            return str(entry.get("description") or ""), _posting_location(entry)
+    content = document.select_one("main, article")
+    if content is None:
+        return "", None
+    heading = content.select_one("h1")
+    if heading is None or title_key(heading.get_text(" ", strip=True)) != title_key(title):
+        return "", None
+    for node in content.select("script, style, nav, footer, form, aside, [class*='related']"):
+        node.decompose()
+    # A detail page must not borrow requirements from another advertised role.
+    if len(content.select("h1")) != 1:
+        return "", None
+    return str(content), None
+
+
+def _hydrate_ai_details(jobs, career_url):
+    errors = []
+    pending = [job for job in jobs
+               if not is_ios_job(job["title"], job.get("description"))
+               and is_ai_augmented_job(job["title"], job.get("description"))
+               and not has_ai_job_details(job["title"], job.get("description"))]
+    if len(pending) > 8:
+        errors.append(f"AI detail limit: {len(pending) - 8} deferred")
+    for job in pending[:8]:
+        try:
+            description, location = _matching_detail(
+                job["title"], _fetch_ai_detail(job["url"], career_url)
+            )
+            if not has_ai_job_details(job["title"], description):
+                raise ValueError("matching AI requirements unavailable")
+            job["description"] = description
+            if location:
+                job["location"] = location
+        except Exception as error:  # noqa: BLE001
+            errors.append(f"AI detail {job['url']}: {error}")
+    return errors
+
+
 def extract_ios_jobs(company: str, page_url: str, html: str) -> tuple[list[dict[str, Any]], int]:
     document = BeautifulSoup(html, "lxml")
     candidates: dict[str, tuple[str, str | None, str | None]] = {}
@@ -128,27 +260,15 @@ def extract_ios_jobs(company: str, page_url: str, html: str) -> tuple[list[dict[
             location=_local_location(company, anchor),
         )
 
-    for script in document.select('script[type="application/ld+json"]'):
-        try:
-            payload = json.loads(script.string or "")
-        except (TypeError, ValueError):
-            continue
-        entries = payload if isinstance(payload, list) else [payload]
-        for entry in entries:
-            if not isinstance(entry, dict) or entry.get("@type") != "JobPosting":
-                continue
-            title = str(entry.get("title") or "")
-            url = str(entry.get("url") or page_url)
-            description = str(entry.get("description") or "") or None
-            job_like_links.add(urljoin(page_url, url))
-            _add_candidate(
-                candidates,
-                title=title,
-                url=url,
-                base_url=page_url,
-                description=description,
-                is_job_posting=True,
-            )
+    for entry in _job_postings(document):
+        title = str(entry.get("title") or "")
+        url = str(entry.get("url") or page_url)
+        description = str(entry.get("description") or "") or None
+        job_like_links.add(urljoin(page_url, url))
+        _add_candidate(
+            candidates, title=title, url=url, base_url=page_url,
+            description=description, location=_posting_location(entry), is_job_posting=True,
+        )
 
     jobs = []
     for url, (title, description, location) in candidates.items():
@@ -180,7 +300,8 @@ def _collect_conscensia(company: str) -> tuple[list[dict[str, Any]], int]:
             continue
         title_node = item.get("title")
         title = str(title_node.get("rendered") or "") if isinstance(title_node, dict) else ""
-        description = str(item.get("content") or "")
+        content = item.get("content") or ""
+        description = str(content.get("rendered") or "") if isinstance(content, dict) else str(content)
         if not is_target_job(title, description):
             continue
         jobs.append(
@@ -190,6 +311,7 @@ def _collect_conscensia(company: str) -> tuple[list[dict[str, Any]], int]:
                 "url": str(item.get("link") or ""),
                 "source": "company",
                 "source_job_id": str(item.get("id") or ""),
+                "description": description or None,
             }
         )
     return jobs, len(items)
@@ -428,7 +550,8 @@ def collect_watchlist_company(company: dict[str, Any]) -> SourceResult:
                 raise
             html = fetch_impersonated(fetch_url)
         jobs, scanned = extract_ios_jobs(name, fetch_url, html)
-        return source_ok(
+        errors = _hydrate_ai_details(jobs, career_url)
+        result = source_ok(
             name,
             career_url,
             jobs,
@@ -436,5 +559,9 @@ def collect_watchlist_company(company: dict[str, Any]) -> SourceResult:
             scanned=scanned,
             source_id=source_id,
         )
+        if errors:
+            result.status = STATUS_DEGRADED
+            result.error = "; ".join(errors)
+        return result
     except Exception as error:  # noqa: BLE001
         return source_failed(name, career_url, error, started, source_id=source_id)

@@ -24,7 +24,9 @@ def collect_wp_rest(company: str, endpoint: str) -> SourceResult:
             title = re.sub(r"<[^>]+>", "", str(rendered or "")).strip()
             title = html_lib.unescape(title)
             job_url = str(item.get("link") or "")
-            if not is_target_job(title) or not job_url:
+            content = item.get("content") or ""
+            description = str(content.get("rendered") or "") if isinstance(content, dict) else str(content)
+            if not is_target_job(title, description) or not job_url:
                 continue
             jobs.append(
                 {
@@ -33,6 +35,7 @@ def collect_wp_rest(company: str, endpoint: str) -> SourceResult:
                     "url": job_url,
                     "source": "company",
                     "source_job_id": item.get("id"),
+                    "description": description or None,
                 }
             )
         return source_ok(company, endpoint, jobs, started, scanned=len(items))

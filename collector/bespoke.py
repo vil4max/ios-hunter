@@ -9,8 +9,9 @@ from typing import Any
 from urllib.parse import urljoin
 
 from collector.generic import absolute_url, title_from_slug
+from collector.company_watchlist import _matching_detail
 from collector.results import source_failed, source_ok
-from collector.types import SourceResult
+from collector.types import STATUS_DEGRADED, STATUS_FAILED, SourceResult
 from integrations.http_client import (
     fetch_impersonated,
     fetch_json,
@@ -21,7 +22,7 @@ from integrations.http_client import (
 from contextlib import contextmanager
 
 from config.search_tracks import AI_SEARCH_KEYWORDS
-from parser.normalize import is_ai_augmented_job, is_ai_keyword_candidate, is_target_job, is_ios_job, ai_requirement_blockers
+from parser.normalize import is_ai_augmented_job, is_ai_keyword_candidate, is_target_job, is_ios_job, ai_requirement_blockers, has_ai_job_details
 
 _NEXT_DATA = re.compile(
     r'<script id="__NEXT_DATA__"[^>]*>(.*?)</script>',
@@ -474,23 +475,31 @@ def collect_grid_dynamics() -> SourceResult:
         return _fail(company, list_url, error, started)
 
 
-def _rbi_title(url: str) -> str | None:
-    try:
-        page = fetch_text(url)
-    except Exception:  # noqa: BLE001
-        return None
-    title_match = re.search(
-        r'<meta property="og:title" content="([^"]+)"\s*/?>',
-        page,
-        re.IGNORECASE,
-    )
-    title = title_match.group(1) if title_match else ""
+def _rbi_page(url: str) -> dict[str, Any]:
+    from bs4 import BeautifulSoup
+
+    page = fetch_text(url)
+    document = BeautifulSoup(page, "lxml")
+    node = document.select_one('meta[property="og:title"]')
+    title = str(node.get("content") or "") if node else ""
     if not title:
-        title_match = re.search(r"<title>([^<]+)</title>", page, re.IGNORECASE)
-        title = title_match.group(1) if title_match else title_from_slug(url)
+        node = document.select_one("h1, title")
+        title = node.get_text(" ", strip=True) if node else ""
     title = re.sub(r"^Vacancy\s+", "", title, flags=re.IGNORECASE)
     title = re.sub(r"\s+—\s+RBI Retail Innovation\s*$", "", title)
-    return html_lib.unescape(title).strip()
+    title = html_lib.unescape(title).strip()
+    if not title or title.casefold() in {"careers", "career", "vacancies", "rbi retail innovation", "кар’єра", "кар\'єра", "вакансії"}:
+        raise ValueError("RBI detail has no verified title")
+    description, location = _matching_detail(title, page)
+    return {"company": "RBI Retail Innovation", "title": title, "url": url,
+            "source": "company", "description": description or None, "location": location}
+
+
+def _rbi_title(url: str) -> str | None:
+    try:
+        return _rbi_page(url)["title"]
+    except Exception:  # noqa: BLE001
+        return None
 
 
 def collect_rbi() -> SourceResult:
@@ -498,46 +507,54 @@ def collect_rbi() -> SourceResult:
     started = time.perf_counter()
     list_url = "https://www.rbi-ri.com.ua/career"
     sitemap_url = "https://www.rbi-ri.com.ua/sitemap.xml"
-    try:
-        urls: list[str] = []
-        seen: set[str] = set()
+    errors: list[str] = []
+    urls: list[str] = []
+    discovery_success = 0
+    for endpoint in (sitemap_url, list_url):
         try:
-            sitemap = fetch_text(sitemap_url)
+            page = fetch_text(endpoint)
+            discovery_success += 1
             for match in re.finditer(
-                r"<loc>(https://www\.rbi-ri\.com\.ua/career/[a-z0-9-]+)</loc>",
-                sitemap,
-                re.IGNORECASE,
+                r"https?://(?:www\.)?rbi-ri\.com\.ua/career/([a-z0-9-]+)",
+                page, re.IGNORECASE,
             ):
-                url = match.group(1)
-                if url not in seen:
-                    seen.add(url)
+                url = f"https://www.rbi-ri.com.ua/career/{match.group(1)}"
+                if url not in urls:
                     urls.append(url)
-        except Exception:  # noqa: BLE001
-            pass
+        except Exception as error:  # noqa: BLE001
+            errors.append(f"{endpoint}: {error}")
+    if not discovery_success:
+        return _fail(company, list_url, RuntimeError("; ".join(errors)), started)
+    if len(urls) > _RBI_MAX_DETAIL_PAGES:
+        errors.append(f"RBI detail limit: {len(urls) - _RBI_MAX_DETAIL_PAGES} deferred")
+    urls = urls[:_RBI_MAX_DETAIL_PAGES]
 
-        list_html = fetch_text(list_url)
-        for match in re.finditer(
-            r"https?://(?:www\.)?rbi-ri\.com\.ua/career/([a-z0-9-]+)",
-            list_html,
-            re.IGNORECASE,
-        ):
-            url = f"https://www.rbi-ri.com.ua/career/{match.group(1)}"
-            if url not in seen:
-                seen.add(url)
-                urls.append(url)
+    def detail(url):
+        try:
+            return _rbi_page(url), None
+        except Exception as error:  # noqa: BLE001
+            return None, f"RBI detail {url}: {error}"
 
-        urls = urls[:_RBI_MAX_DETAIL_PAGES]
-        with ThreadPoolExecutor(max_workers=_RBI_MAX_WORKERS) as pool:
-            titles = list(pool.map(_rbi_title, urls))
-
-        jobs: list[dict[str, Any]] = []
-        for url, title in zip(urls, titles):
-            if not title or not is_target_job(title):
-                continue
-            jobs.append({"company": company, "title": title, "url": url, "source": "company"})
-        return _ok(company, list_url, jobs, started, scanned=len(urls))
-    except Exception as error:  # noqa: BLE001
-        return _fail(company, list_url, error, started)
+    with ThreadPoolExecutor(max_workers=_RBI_MAX_WORKERS) as pool:
+        pages = list(pool.map(detail, urls))
+    jobs = []
+    verified = 0
+    for job, error in pages:
+        if error:
+            errors.append(error)
+            continue
+        verified += 1
+        if not is_target_job(job["title"], job.get("description")):
+            continue
+        if (not is_ios_job(job["title"], job.get("description"))
+                and not has_ai_job_details(job["title"], job.get("description"))):
+            errors.append(f"RBI AI requirements unavailable: {job['url']}")
+        jobs.append(job)
+    result = _ok(company, list_url, jobs, started, scanned=len(urls))
+    if errors:
+        result.status = STATUS_FAILED if urls and not verified else STATUS_DEGRADED
+        result.error = "; ".join(errors)
+    return result
 
 
 def collect_nix_html() -> SourceResult:
