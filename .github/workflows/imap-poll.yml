@@ -2,11 +2,7 @@ name: IMAP Recruiter Poll
 
 on:
   workflow_dispatch:
-  # After Collect finishes (board already updated), so mail CRM never races Inbox seed.
-  workflow_run:
-    workflows: ["Collect iOS Jobs"]
-    types:
-      - completed
+  workflow_call:
 
 permissions:
   contents: write
@@ -18,12 +14,8 @@ concurrency:
 
 jobs:
   poll:
-    if: >
-      github.event_name == 'workflow_dispatch' ||
-      (github.event_name == 'workflow_run' &&
-       github.event.workflow_run.conclusion != 'cancelled' &&
-       github.event.workflow_run.conclusion != 'skipped')
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
 

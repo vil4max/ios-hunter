@@ -23,10 +23,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Refresh daily email day marker
+      - name: Refresh schedule state
         run: |
           set -euo pipefail
           git fetch origin main
+          git checkout origin/main -- database/collect_slots.json
           if git cat-file -e "origin/main:database/daily_email_days.json" 2>/dev/null; then
             git checkout origin/main -- database/daily_email_days.json
             echo "Refreshed database/daily_email_days.json from origin/main"
@@ -44,7 +45,7 @@ jobs:
           if [ "${{ github.event_name }}" != "schedule" ]; then
             echo "skip_gate=false" >> "$GITHUB_OUTPUT"
             echo "dispatch_daily_email=false" >> "$GITHUB_OUTPUT"
-            echo "Manual trigger — gate bypassed (collect; IMAP follows via workflow_run)"
+            echo "Manual trigger — gate bypassed (collect; IMAP is a dependent Collect job)"
             exit 0
           fi
           set +e
@@ -92,8 +93,7 @@ jobs:
             delay=$((delay * 2))
           done
 
-      # IMAP Recruiter Poll starts via workflow_run after Collect iOS Jobs completes
-      # (see .github/workflows/imap-poll.yml) — never in parallel with Collect.
+      # Collect calls IMAP as a dependent reusable workflow.
 
       - name: Trigger Daily Email Report
         id: dispatch_email

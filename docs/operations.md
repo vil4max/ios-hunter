@@ -78,12 +78,10 @@ The schedule targets Kyiv 09/12/15/18. On September 7 and 8, 2026, the recorded
 runs filled only two slots each despite the active hourly trigger. The precise
 cause is not established; local parser changes cannot guarantee hosted cron
 delivery. The existing opt-in Mac launchd backup is documented in README and
-has not been installed or modified by this work.
+uses a ten-minute interval and a Kyiv-time gate, independent of the Mac timezone. Installation status is a local deployment concern.
 
 Compare latest Collect, IMAP and liveness execution times with the intended
-schedule. IMAP's latest observed execution was September 2 even though Collect
-ran later; investigate its downstream trigger separately before claiming full
-mail automation health. No trigger was dispatched during this verification.
+schedule. The prior IMAP trigger gap is addressed by calling IMAP as an explicit dependent reusable workflow inside Collect. Its result is now visible in the parent run. No trigger was dispatched during this verification.
 
 Latest observed Collect had HTTP 403 for AltexSoft and RBI. Logs make these
 coverage gaps visible; they do not bypass site protections. Generic HTML,

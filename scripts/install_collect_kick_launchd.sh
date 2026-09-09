@@ -46,13 +46,8 @@ case "$1" in
     <key>LANG</key>
     <string>en_US.UTF-8</string>
   </dict>
-  <key>StartCalendarInterval</key>
-  <array>
-    <dict><key>Hour</key><integer>9</integer><key>Minute</key><integer>15</integer></dict>
-    <dict><key>Hour</key><integer>12</integer><key>Minute</key><integer>15</integer></dict>
-    <dict><key>Hour</key><integer>15</integer><key>Minute</key><integer>15</integer></dict>
-    <dict><key>Hour</key><integer>18</integer><key>Minute</key><integer>15</integer></dict>
-  </array>
+  <key>StartInterval</key>
+  <integer>600</integer>
   <key>StandardOutPath</key>
   <string>${HOME}/Library/Logs/ios-hunter-collect-kick.launchd.out.log</string>
   <key>StandardErrorPath</key>
@@ -64,7 +59,7 @@ EOF
     launchctl bootstrap "gui/$(id -u)" "${PLIST_PATH}"
     launchctl enable "gui/$(id -u)/${LABEL}" 2>/dev/null || true
     echo "Installed ${PLIST_PATH}"
-    echo "Fires at 09:15/12:15/15:15/18:15 in the Mac local timezone (use Europe/Kyiv)."
+    echo "Checks every 10 minutes; Python gates dispatch to overdue Kyiv slots between 09:15 and 21:00."
     echo "Log: ~/Library/Logs/ios-hunter-collect-kick.log"
     ;;
   uninstall)

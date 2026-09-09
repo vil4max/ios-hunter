@@ -139,13 +139,13 @@ Telegram only on new vacancies (list + OK)
 
 ## Local Collect kick (GHA lag kludge)
 
-If GitHub Actions `schedule` is late and a Kyiv slot (09/12/15/18) is still unmarked after 15 minutes, a Mac launchd agent can dispatch **Collect iOS Jobs** via `gh`. This is a backup nudge only — not a replacement for remote cron, and it does not run the pipeline locally. IMAP still follows Collect via `workflow_run`.
+If GitHub Actions `schedule` is late and a Kyiv slot (09/12/15/18) is still unmarked after 15 minutes, a Mac launchd agent can dispatch **Collect iOS Jobs** via `gh`. This is a backup nudge only — not a replacement for remote cron, and it does not run the pipeline locally. IMAP runs as an explicit dependent job of Collect.
 
 Requires Mac timezone `Europe/Kyiv`, `gh` auth, and a clean fetch of `origin/main`.
 
 ```bash
 chmod +x scripts/kick_collect_if_due.sh scripts/install_collect_kick_launchd.sh
-./scripts/install_collect_kick_launchd.sh install   # 09:15 / 12:15 / 15:15 / 18:15 local
+./scripts/install_collect_kick_launchd.sh install   # every 10 minutes; overdue Kyiv slots only
 ./scripts/install_collect_kick_launchd.sh status
 ./scripts/install_collect_kick_launchd.sh uninstall
 ./scripts/kick_collect_if_due.sh                    # manual dry check + maybe dispatch
@@ -209,3 +209,5 @@ English are carried as context, not new score adjustments.
 Collection preserves seen history across incomplete source responses and city-URL changes. AI admission requires job details; native iOS remains primary. Inbox and fit scoring share the Kyiv/remote policy, with unknown location explicitly marked for review.
 
 Actions saves a per-source JSON report and a step summary with scanned/normalized/eligible counts, rejection categories, timings and failure reasons. Partial source failures are reported as degraded; a total company-source outage, CRM sync failure or notification failure fails the run. Recovery state is retained as a private artifact for seven days even when the pipeline fails. See [operations and recovery](docs/operations.md) for access, log retrieval, scheduling limitations and safe recovery.
+
+Schedule health is written to the Actions summary, including earlier missed slots. The Mac backup checks every ten minutes while awake, dispatches only overdue slots during Kyiv daytime, and treats gate errors as failures. It requires the existing local `gh` login. `IOS_HUNTER_KICK_DRY_RUN=1` checks without dispatching. A sleeping/offline Mac cannot guarantee a deadline.

@@ -65,11 +65,19 @@ gate_out="$(python3 "${ROOT}/scripts/should_kick_collect.py" 2>&1)"
 gate_status=$?
 set -e
 printf '%s\n' "${gate_out}"
-if [[ "${gate_status}" -ne 0 ]]; then
+if [[ "${gate_status}" -eq 1 ]]; then
   log "SKIP: gate exit ${gate_status}"
   exit 0
 fi
 
+if [[ "${gate_status}" -ne 0 ]]; then
+  log "ERROR: gate exit ${gate_status}"
+  exit "${gate_status}"
+fi
+if [[ "${IOS_HUNTER_KICK_DRY_RUN:-0}" == "1" ]]; then
+  log "DRY RUN: would dispatch Collect iOS Jobs"
+  exit 0
+fi
 log "DISPATCH: Collect iOS Jobs"
 if ! gh workflow run "Collect iOS Jobs" --ref main; then
   log "ERROR: gh workflow run failed"

@@ -3,7 +3,7 @@ name: Collect iOS Jobs
 on:
   workflow_dispatch:
   # Scheduled Kyiv 09/12/15/18 via .github/workflows/hourly-trigger.yml
-  # (ubuntu → workflow_dispatch). IMAP Recruiter Poll follows via workflow_run.
+  # (ubuntu → workflow_dispatch). IMAP follows as an explicit dependent job.
   # Final Kyiv slot 18 may also dispatch Daily Email (deduped with schedule trigger).
 
 permissions:
@@ -62,7 +62,9 @@ jobs:
           CAREER_PROJECT_OWNER: ${{ vars.CAREER_PROJECT_OWNER }}
           CAREER_PROJECT_NUMBER: ${{ vars.CAREER_PROJECT_NUMBER }}
           PROJECT_BOARD_URL: ${{ vars.PROJECT_BOARD_URL }}
-        run: python3 scripts/run_pipeline.py
+        run: |
+          echo "COLLECT_STARTED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
+          python3 scripts/run_pipeline.py
 
       - name: Mark Kyiv collect slot completed
         id: slot
@@ -179,3 +181,9 @@ jobs:
             --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
             --data-urlencode "text=${text}" \
             -d "disable_web_page_preview=true" >/dev/null
+
+  imap:
+    needs: collect
+    if: ${{ !cancelled() && needs.collect.result != 'skipped' }}
+    uses: ./.github/workflows/imap-poll.yml
+    secrets: inherit

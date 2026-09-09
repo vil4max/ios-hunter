@@ -16,10 +16,12 @@ from config.schedule import (
     due_collect_slot_for_local_kick,
 )
 from database.collect_slots import default_collect_slots_path, slot_completed
+from planner.collect_health import report_overdue_slots
 
 
-def main() -> int:
+def _evaluate_gate() -> int:
     stamp = _as_kyiv()
+    report_overdue_slots(default_collect_slots_path(ROOT), stamp)
     due = due_collect_slot(stamp)
     kick_due = due_collect_slot_for_local_kick(stamp)
     day = stamp.strftime("%Y-%m-%d")
@@ -28,8 +30,8 @@ def main() -> int:
     print(f"due_slot={due if due is not None else ''}")
     print(f"kick_slot={kick_due if kick_due is not None else ''}")
     print(f"kick_lag_minutes={COLLECT_KICK_LAG_MINUTES}")
-    if due is None:
-        print("Local kick: before Kyiv 09:00 — skip")
+    if due is None or stamp.hour >= 21:
+        print("Local kick: outside Kyiv 09:00–21:00 — skip")
         return 1
     if kick_due is None:
         print(
@@ -43,6 +45,14 @@ def main() -> int:
     slots = "/".join(f"{hour:02d}" for hour in COLLECT_HOURS)
     print(f"Local kick: Kyiv {slots} — dispatch Collect for slot {kick_due:02d}")
     return 0
+
+
+def main() -> int:
+    try:
+        return _evaluate_gate()
+    except Exception as error:
+        print(f"Local kick gate failed: {error}", file=sys.stderr)
+        return 2
 
 
 if __name__ == "__main__":

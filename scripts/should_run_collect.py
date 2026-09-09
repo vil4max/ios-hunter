@@ -16,10 +16,12 @@ from config.schedule import (
 )
 from database.collect_slots import default_collect_slots_path, slot_completed
 from database.daily_email_days import default_daily_email_days_path, email_sent_for_day
+from planner.collect_health import report_overdue_slots
 
 
 def _evaluate_gate() -> int:
     stamp = _as_kyiv()
+    report_overdue_slots(default_collect_slots_path(ROOT), stamp)
     due = due_collect_slot(stamp)
     day = stamp.strftime("%Y-%m-%d")
     final_slot = is_final_collect_slot(stamp)

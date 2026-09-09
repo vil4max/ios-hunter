@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import os
 import sys
+from datetime import datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -24,7 +25,8 @@ def _write_github_output(**values: str) -> None:
 
 
 def main() -> int:
-    stamp = _as_kyiv()
+    started = os.environ.get("COLLECT_STARTED_AT", "").strip()
+    stamp = _as_kyiv(datetime.fromisoformat(started.replace("Z", "+00:00"))) if started else _as_kyiv()
     due = due_collect_slot(stamp)
     day = stamp.strftime("%Y-%m-%d")
     if due is None:
