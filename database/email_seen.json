@@ -212,6 +212,12 @@
     "processed_at": "2026-09-09T07:11:25+00:00",
     "subject": "Personal Computer is here"
   },
+  "<010001a0864cbfd2-9d0f2afc-4a28-49fe-a150-b1b9bc31a063-000000@email.amazonses.com>": {
+    "company": "Kake",
+    "kind": "ignore",
+    "processed_at": "2026-09-09T16:04:17+00:00",
+    "subject": "You're a few steps from finishing your Kake profile"
+  },
   "<0101019faa3ac02b-d5c9e8e3-ef86-43ea-9392-8ff92655359d-000000@us-west-2.amazonses.com>": {
     "company": "Makeup.ua",
     "kind": "ignore",
@@ -712,6 +718,12 @@
     "kind": "ignore",
     "processed_at": "2026-08-08T06:16:43+00:00",
     "subject": "“Мне на маникюр 15:00” added to “Семья” calendar."
+  },
+  "<158455450.57699277.1788963581559@email.apple.com>": {
+    "company": "Apple",
+    "kind": "ignore",
+    "processed_at": "2026-09-09T16:04:17+00:00",
+    "subject": "A refund request has been received"
   },
   "<1597218402.12619041.1785656177498@email.apple.com>": {
     "company": "Xcode Cloud",
@@ -2045,6 +2057,18 @@
     "processed_at": "2026-09-09T12:29:13+00:00",
     "subject": "Ready to go all in on your SWE prep?"
   },
+  "<20260909145816.3.98a6429ccb02de55.2x7eor41@mg-d0.substack.com>": {
+    "company": "Substack",
+    "kind": "ignore",
+    "processed_at": "2026-09-09T16:04:17+00:00",
+    "subject": "API testing was “hard” until I learned these 53 techniques and 3 more"
+  },
+  "<20260909151752.10e69f1c33921287@creator.patreon.com>": {
+    "company": "iOS (Swift) jobs",
+    "kind": "ignore",
+    "processed_at": "2026-09-09T16:04:17+00:00",
+    "subject": "Recent iOS/Swift publications"
+  },
   "<202611080850.13di66eco6cw3srj@email3.sketchfab.com>": {
     "company": "Sketchfab",
     "kind": "ignore",
@@ -3013,6 +3037,12 @@
     "processed_at": "2026-09-09T07:11:24+00:00",
     "subject": "Доступний рахунок на оплату ЖКП для КИЇВ, ПЧІЛКИ ОЛЕНИ ВУЛ. Б4 КВ57 на 01.09.2026"
   },
+  "<6aa1835c.d84cfa41.212e81.8967@mx.google.com>": {
+    "company": "N-iX",
+    "kind": "replied",
+    "processed_at": "2026-09-09T16:04:17+00:00",
+    "subject": "Career Agent  ·  2026-09-09"
+  },
   "<72cc87b2-223f-4eaa-8968-b4c8f41a1dd7@cdg3s51mta0074.xt.local>": {
     "company": "ZEEKR EU",
     "kind": "ignore",
@@ -3974,6 +4004,12 @@
     "kind": "ignore",
     "processed_at": "2026-08-08T15:18:06+00:00",
     "subject": "Please Verify Your Email Address"
+  },
+  "<gOhz6N3dQayf3HdTR4baxA@geopod-ismtpd-0>": {
+    "company": "ЛУН",
+    "kind": "ignore",
+    "processed_at": "2026-09-09T16:04:17+00:00",
+    "subject": "Нові ЖК на ЛУН: Таунхауси Smart level, КМ  Maison de Rive  і ще 1 ЖК  - нові проєкти і старти продажів Києва і області"
   },
   "<gku75ng5qwb5hlq082dtrh8556lk4smh3vv2k@kit-mail3.com>": {
     "company": "Antoine van der Lee",
