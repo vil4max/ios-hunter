@@ -1,827 +1,827 @@
 {
   "company-watchlist:adtelligent": {
-    "name": "Adtelligent",
     "best_scanned": 40,
-    "last_scanned": 40,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 40,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Adtelligent"
   },
   "company-watchlist:agiliway": {
-    "name": "Agiliway",
     "best_scanned": 9,
-    "last_scanned": 8,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 8,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Agiliway"
   },
   "company-watchlist:aimprosoft": {
-    "name": "Aimprosoft",
     "best_scanned": 4,
-    "last_scanned": 2,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 2,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Aimprosoft"
   },
   "company-watchlist:airslate": {
-    "name": "airSlate",
     "best_scanned": 3,
-    "last_scanned": 3,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 3,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "airSlate"
   },
   "company-watchlist:ajax-systems": {
-    "name": "Ajax Systems",
     "best_scanned": 409,
-    "last_scanned": 402,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 402,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Ajax Systems"
   },
   "company-watchlist:allstars-it": {
-    "name": "ALLSTARSIT",
     "best_scanned": 9,
-    "last_scanned": 9,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 9,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "ALLSTARSIT"
   },
   "company-watchlist:altexsoft": {
-    "name": "AltexSoft",
     "best_scanned": 13,
+    "empty_runs": 0,
+    "last_nonzero": "2026-09-07T12:44:36+00:00",
     "last_scanned": 13,
     "last_success_at": "2026-09-07T12:44:36+00:00",
-    "empty_runs": 0,
-    "last_nonzero": "2026-09-07T12:44:36+00:00"
+    "name": "AltexSoft"
   },
   "company-watchlist:amdaris": {
-    "name": "Amdaris",
     "best_scanned": 20,
-    "last_scanned": 19,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 18,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Amdaris"
   },
   "company-watchlist:appflame": {
-    "name": "appflame",
     "best_scanned": 4,
-    "last_scanned": 4,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
-    "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "empty_runs": 1,
+    "last_nonzero": "2026-09-08T16:45:16+00:00",
+    "last_scanned": 0,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "appflame"
   },
   "company-watchlist:aprior-it": {
-    "name": "Apriorit",
     "best_scanned": 30,
+    "empty_runs": 0,
+    "last_nonzero": "2026-09-08T16:45:16+00:00",
     "last_scanned": 30,
     "last_success_at": "2026-09-08T16:45:16+00:00",
-    "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "name": "Apriorit"
   },
   "company-watchlist:autodoc": {
-    "name": "AUTODOC",
     "best_scanned": 3,
-    "last_scanned": 3,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 3,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "AUTODOC"
   },
   "company-watchlist:avenga": {
-    "name": "Avenga",
     "best_scanned": 29,
-    "last_scanned": 29,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 29,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Avenga"
   },
   "company-watchlist:beetroot": {
-    "name": "Beetroot",
     "best_scanned": 19,
-    "last_scanned": 19,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 19,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Beetroot"
   },
   "company-watchlist:betterme": {
-    "name": "BetterMe",
     "best_scanned": 1,
-    "last_scanned": 1,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 1,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "BetterMe"
   },
   "company-watchlist:brightgrove": {
-    "name": "Brightgrove",
     "best_scanned": 25,
-    "last_scanned": 25,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 25,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Brightgrove"
   },
   "company-watchlist:capgemini-engineering": {
-    "name": "Capgemini Engineering",
     "best_scanned": 19,
-    "last_scanned": 19,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 19,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Capgemini Engineering"
   },
   "company-watchlist:chi-software": {
-    "name": "CHI Software",
     "best_scanned": 79,
-    "last_scanned": 79,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 79,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "CHI Software"
   },
   "company-watchlist:cleveroad": {
-    "name": "Cleveroad",
     "best_scanned": 8,
-    "last_scanned": 8,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 8,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Cleveroad"
   },
   "company-watchlist:computools": {
-    "name": "Computools",
     "best_scanned": 53,
-    "last_scanned": 53,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 53,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Computools"
   },
   "company-watchlist:conscensia": {
-    "name": "Conscensia",
     "best_scanned": 7,
-    "last_scanned": 5,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 5,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Conscensia"
   },
   "company-watchlist:creatio": {
-    "name": "Creatio",
     "best_scanned": 84,
-    "last_scanned": 79,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 79,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Creatio"
   },
   "company-watchlist:delphi-llc": {
-    "name": "Delphi Software",
     "best_scanned": 1,
-    "last_scanned": 1,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 1,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Delphi Software"
   },
   "company-watchlist:develux": {
-    "name": "Develux",
     "best_scanned": 10,
-    "last_scanned": 7,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 7,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Develux"
   },
   "company-watchlist:devtorium": {
-    "name": "Devtorium",
     "best_scanned": 4,
-    "last_scanned": 4,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 4,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Devtorium"
   },
   "company-watchlist:digicode": {
-    "name": "Digicode",
     "best_scanned": 14,
-    "last_scanned": 14,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 14,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Digicode"
   },
   "company-watchlist:edvantis": {
-    "name": "Edvantis",
     "best_scanned": 3,
-    "last_scanned": 3,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 3,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Edvantis"
   },
   "company-watchlist:eleks": {
-    "name": "ELEKS",
     "best_scanned": 12,
-    "last_scanned": 12,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 12,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "ELEKS"
   },
   "company-watchlist:exadel": {
-    "name": "Exadel",
     "best_scanned": 4,
-    "last_scanned": 4,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 4,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Exadel"
   },
   "company-watchlist:forte-group": {
-    "name": "Forte Group",
     "best_scanned": 3,
-    "last_scanned": 3,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 3,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Forte Group"
   },
   "company-watchlist:geeksforless": {
-    "name": "GeeksForLess",
     "best_scanned": 2,
-    "last_scanned": 2,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 2,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "GeeksForLess"
   },
   "company-watchlist:genesis": {
-    "name": "Genesis",
     "best_scanned": 2,
-    "last_scanned": 2,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 2,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Genesis"
   },
   "company-watchlist:geniusee": {
-    "name": "Geniusee",
     "best_scanned": 10,
-    "last_scanned": 10,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 10,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Geniusee"
   },
   "company-watchlist:headway": {
-    "name": "Headway",
     "best_scanned": 29,
-    "last_scanned": 26,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 26,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Headway"
   },
   "company-watchlist:indeema": {
-    "name": "Indeema",
     "best_scanned": 6,
-    "last_scanned": 6,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 6,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Indeema"
   },
   "company-watchlist:infocus": {
-    "name": "infocus",
     "best_scanned": 1,
-    "last_scanned": 1,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 1,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "infocus"
   },
   "company-watchlist:innovecs": {
-    "name": "Innovecs",
     "best_scanned": 35,
-    "last_scanned": 35,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 35,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Innovecs"
   },
   "company-watchlist:itera-consulting-group-ukraine": {
-    "name": "Itera",
     "best_scanned": 18,
-    "last_scanned": 18,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 18,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Itera"
   },
   "company-watchlist:label-your-data": {
-    "name": "Label Your Data",
     "best_scanned": 79,
-    "last_scanned": 41,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 41,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Label Your Data"
   },
   "company-watchlist:leobit": {
-    "name": "Leobit",
     "best_scanned": 9,
-    "last_scanned": 9,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 9,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Leobit"
   },
   "company-watchlist:lionwood-software": {
-    "name": "Lionwood Software",
     "best_scanned": 4,
-    "last_scanned": 2,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 2,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Lionwood Software"
   },
   "company-watchlist:macpaw": {
-    "name": "MacPaw",
     "best_scanned": 8,
-    "last_scanned": 8,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 8,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "MacPaw"
   },
   "company-watchlist:materialise": {
-    "name": "Materialise",
     "best_scanned": 7,
-    "last_scanned": 7,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 7,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Materialise"
   },
   "company-watchlist:metinvest-digital": {
-    "name": "Metinvest Digital",
     "best_scanned": 3,
-    "last_scanned": 3,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 3,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Metinvest Digital"
   },
   "company-watchlist:modus-x": {
-    "name": "MODUS X",
     "best_scanned": 6,
-    "last_scanned": 6,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 6,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "MODUS X"
   },
   "company-watchlist:netcracker": {
-    "name": "Netcracker",
     "best_scanned": 3,
-    "last_scanned": 3,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 3,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Netcracker"
   },
   "company-watchlist:nix": {
-    "name": "NIX",
     "best_scanned": 35,
-    "last_scanned": 31,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 31,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "NIX"
   },
   "company-watchlist:nova-digital": {
-    "name": "Nova Digital",
     "best_scanned": 2,
-    "last_scanned": 2,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 2,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Nova Digital"
   },
   "company-watchlist:p2h": {
-    "name": "P2H",
     "best_scanned": 9,
-    "last_scanned": 9,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 9,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "P2H"
   },
   "company-watchlist:plarium": {
-    "name": "Plarium",
     "best_scanned": 1,
-    "last_scanned": 1,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 1,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Plarium"
   },
   "company-watchlist:playrix": {
-    "name": "Playrix",
     "best_scanned": 28,
-    "last_scanned": 28,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 28,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Playrix"
   },
   "company-watchlist:playtech": {
-    "name": "Playtech",
     "best_scanned": 32,
-    "last_scanned": 32,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 32,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Playtech"
   },
   "company-watchlist:playtika": {
-    "name": "Playtika",
     "best_scanned": 16,
-    "last_scanned": 16,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 16,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Playtika"
   },
   "company-watchlist:preply": {
-    "name": "Preply",
     "best_scanned": 25,
-    "last_scanned": 25,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 25,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Preply"
   },
   "company-watchlist:readdle": {
-    "name": "Readdle",
     "best_scanned": 15,
-    "last_scanned": 13,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 13,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Readdle"
   },
   "company-watchlist:skelar": {
-    "name": "SKELAR",
     "best_scanned": 3,
-    "last_scanned": 3,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 3,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "SKELAR"
   },
   "company-watchlist:smart-business": {
-    "name": "SMART business",
     "best_scanned": 16,
-    "last_scanned": 12,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 12,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "SMART business"
   },
   "company-watchlist:soloway-technologies": {
-    "name": "SoloWay Technologies",
     "best_scanned": 7,
-    "last_scanned": 7,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 7,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "SoloWay Technologies"
   },
   "company-watchlist:sombra": {
-    "name": "Sombra",
     "best_scanned": 13,
-    "last_scanned": 13,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 13,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Sombra"
   },
   "company-watchlist:spd-technology": {
-    "name": "SPD Technology",
     "best_scanned": 3,
-    "last_scanned": 3,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 3,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "SPD Technology"
   },
   "company-watchlist:svitla-systems-inc": {
-    "name": "Svitla Systems",
     "best_scanned": 147,
-    "last_scanned": 146,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 146,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Svitla Systems"
   },
   "company-watchlist:tieto-ukraine": {
-    "name": "Tieto Ukraine",
     "best_scanned": 45,
-    "last_scanned": 45,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 45,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Tieto Ukraine"
   },
   "company-watchlist:ubisoft": {
-    "name": "Ubisoft",
     "best_scanned": 8,
-    "last_scanned": 8,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 8,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Ubisoft"
   },
   "company-watchlist:uklon": {
-    "name": "Uklon",
     "best_scanned": 4,
-    "last_scanned": 4,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 4,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Uklon"
   },
   "company-watchlist:valtech": {
-    "name": "Valtech",
     "best_scanned": 170,
-    "last_scanned": 163,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 162,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Valtech"
   },
   "company-watchlist:vilmate": {
-    "name": "Vilmate",
     "best_scanned": 17,
-    "last_scanned": 17,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 17,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Vilmate"
   },
   "company-watchlist:viseven": {
-    "name": "Viseven",
     "best_scanned": 29,
-    "last_scanned": 26,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 26,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Viseven"
   },
   "company-watchlist:volmi": {
-    "name": "VOLMI",
     "best_scanned": 1,
-    "last_scanned": 1,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 1,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "VOLMI"
   },
   "company-watchlist:wezom": {
-    "name": "Wezom",
     "best_scanned": 5,
-    "last_scanned": 3,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 3,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Wezom"
   },
   "company-watchlist:wix": {
-    "name": "Wix",
     "best_scanned": 9,
-    "last_scanned": 9,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 9,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Wix"
   },
   "company-watchlist:yalantis": {
-    "name": "Yalantis",
     "best_scanned": 3,
-    "last_scanned": 3,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 3,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Yalantis"
   },
   "company-watchlist:zfort": {
-    "name": "ZFORT Group",
     "best_scanned": 11,
-    "last_scanned": 11,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 11,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "ZFORT Group"
   },
   "company-watchlist:zoolatech": {
-    "name": "Zoolatech",
     "best_scanned": 63,
-    "last_scanned": 48,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 48,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Zoolatech"
   },
   "company:allstarsit@jobs.dou.ua": {
-    "name": "ALLSTARSIT",
     "best_scanned": 1,
+    "last_nonzero": "2026-08-20T09:15:37+00:00",
     "last_scanned": 1,
-    "last_nonzero": "2026-08-20T09:15:37+00:00"
+    "name": "ALLSTARSIT"
   },
   "company:andersen@asite-api.andersenlab.com": {
-    "name": "Andersen",
     "best_scanned": 213,
-    "last_scanned": 191,
-    "last_nonzero": "2026-09-08T16:45:16+00:00",
-    "last_success_at": "2026-09-08T16:45:16+00:00",
-    "empty_runs": 0
+    "empty_runs": 0,
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 192,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Andersen"
   },
   "company:avenga@jobs.dou.ua": {
-    "name": "Avenga",
     "best_scanned": 11,
+    "last_nonzero": "2026-08-20T09:15:37+00:00",
     "last_scanned": 10,
-    "last_nonzero": "2026-08-20T09:15:37+00:00"
+    "name": "Avenga"
   },
   "company:capgemini engineering@jobs.dou.ua": {
-    "name": "Capgemini Engineering",
     "best_scanned": 3,
+    "last_nonzero": "2026-08-20T09:15:37+00:00",
     "last_scanned": 1,
-    "last_nonzero": "2026-08-20T09:15:37+00:00"
+    "name": "Capgemini Engineering"
   },
   "company:ciklum@ialmme.fa.ocs.oraclecloud.com": {
-    "name": "Ciklum",
     "best_scanned": 147,
+    "empty_runs": 0,
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
     "last_scanned": 147,
-    "last_nonzero": "2026-09-08T16:45:16+00:00",
-    "last_success_at": "2026-09-08T16:45:16+00:00",
-    "empty_runs": 0
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Ciklum"
   },
   "company:dataart@dataart.team": {
-    "name": "DataArt",
     "best_scanned": 12,
+    "empty_runs": 0,
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
     "last_scanned": 12,
-    "last_nonzero": "2026-09-08T16:45:16+00:00",
-    "last_success_at": "2026-09-08T16:45:16+00:00",
-    "empty_runs": 0
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "DataArt"
   },
   "company:eleks@jobs.dou.ua": {
-    "name": "ELEKS",
     "best_scanned": 11,
+    "last_nonzero": "2026-08-20T09:15:37+00:00",
     "last_scanned": 11,
-    "last_nonzero": "2026-08-20T09:15:37+00:00"
+    "name": "ELEKS"
   },
   "company:epam@careers.epam.com": {
-    "name": "EPAM",
     "best_scanned": 535,
-    "last_scanned": 525,
-    "last_nonzero": "2026-09-08T16:45:16+00:00",
-    "last_success_at": "2026-09-08T16:45:16+00:00",
-    "empty_runs": 0
+    "empty_runs": 0,
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 453,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "EPAM"
   },
   "company:geeksforless@jobs.dou.ua": {
-    "name": "GeeksForLess",
     "best_scanned": 4,
+    "last_nonzero": "2026-08-20T09:15:37+00:00",
     "last_scanned": 4,
-    "last_nonzero": "2026-08-20T09:15:37+00:00"
+    "name": "GeeksForLess"
   },
   "company:globallogic@globallogic.com": {
-    "name": "GlobalLogic",
     "best_scanned": 33,
-    "last_scanned": 33,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 32,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "GlobalLogic"
   },
   "company:grid dynamics@griddynamics.com": {
-    "name": "Grid Dynamics",
     "best_scanned": 246,
-    "last_scanned": 192,
-    "last_nonzero": "2026-09-08T16:45:16+00:00",
-    "last_success_at": "2026-09-08T16:45:16+00:00",
-    "empty_runs": 0
+    "empty_runs": 0,
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 193,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Grid Dynamics"
   },
   "company:infopulse@careers.tieto.com": {
-    "name": "Infopulse",
     "best_scanned": 30,
+    "empty_runs": 0,
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
     "last_scanned": 30,
-    "last_nonzero": "2026-09-08T16:45:16+00:00",
-    "last_success_at": "2026-09-08T16:45:16+00:00",
-    "empty_runs": 0
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Infopulse"
   },
   "company:intellias@career.intellias.com": {
-    "name": "Intellias",
     "best_scanned": 15,
+    "empty_runs": 0,
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
     "last_scanned": 14,
-    "last_nonzero": "2026-09-08T16:45:16+00:00",
-    "last_success_at": "2026-09-08T16:45:16+00:00",
-    "empty_runs": 0
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Intellias"
   },
   "company:levi9@jobs.dou.ua": {
-    "name": "Levi9",
     "best_scanned": 5,
+    "last_nonzero": "2026-08-20T09:15:37+00:00",
     "last_scanned": 5,
-    "last_nonzero": "2026-08-20T09:15:37+00:00"
+    "name": "Levi9"
   },
   "company:luxoft@career.luxoft.com": {
-    "name": "Luxoft",
     "best_scanned": 20,
+    "empty_runs": 0,
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
     "last_scanned": 20,
-    "last_nonzero": "2026-09-08T16:45:16+00:00",
-    "last_success_at": "2026-09-08T16:45:16+00:00",
-    "empty_runs": 0
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Luxoft"
   },
   "company:mind studios@themindstudios.com": {
-    "name": "Mind Studios",
     "best_scanned": 0,
+    "empty_runs": 57,
     "last_scanned": 0,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
-    "empty_runs": 56
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Mind Studios"
   },
   "company:miratech@jobs.dou.ua": {
-    "name": "Miratech",
     "best_scanned": 3,
+    "last_nonzero": "2026-08-20T09:15:37+00:00",
     "last_scanned": 3,
-    "last_nonzero": "2026-08-20T09:15:37+00:00"
+    "name": "Miratech"
   },
   "company:mwdn@jobs.mwdn.com": {
-    "name": "MWDN",
     "best_scanned": 38,
-    "last_scanned": 29,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 29,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "MWDN"
   },
   "company:n-ix@careers.n-ix.com": {
-    "name": "N-iX",
     "best_scanned": 12,
+    "empty_runs": 0,
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
     "last_scanned": 12,
-    "last_nonzero": "2026-09-08T16:45:16+00:00",
-    "last_success_at": "2026-09-08T16:45:16+00:00",
-    "empty_runs": 0
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "N-iX"
   },
   "company:nortal@nortal.career.page": {
-    "name": "Nortal",
     "best_scanned": 10,
-    "last_scanned": 9,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 9,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Nortal"
   },
   "company:onix systems@onix-systems.com": {
-    "name": "Onix Systems",
     "best_scanned": 8,
-    "last_scanned": 8,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T16:45:16+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 8,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Onix Systems"
   },
   "company:rbi retail innovation@rbi-ri.com.ua": {
-    "name": "RBI Retail Innovation",
     "best_scanned": 4,
-    "last_scanned": 4,
-    "last_success_at": "2026-09-08T11:26:58+00:00",
     "empty_runs": 0,
-    "last_nonzero": "2026-09-08T11:26:58+00:00"
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
+    "last_scanned": 4,
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "RBI Retail Innovation"
   },
   "company:sigma software@career.sigma.software": {
-    "name": "Sigma Software",
     "best_scanned": 47,
+    "empty_runs": 0,
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
     "last_scanned": 43,
-    "last_nonzero": "2026-09-08T16:45:16+00:00",
-    "last_success_at": "2026-09-08T16:45:16+00:00",
-    "empty_runs": 0
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Sigma Software"
   },
   "company:softserve@career.softserveinc.com": {
-    "name": "SoftServe",
     "best_scanned": 256,
+    "empty_runs": 0,
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
     "last_scanned": 238,
-    "last_nonzero": "2026-09-08T16:45:16+00:00",
-    "last_success_at": "2026-09-08T16:45:16+00:00",
-    "empty_runs": 0
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "SoftServe"
   },
   "company:spd technology@jobs.dou.ua": {
-    "name": "SPD Technology",
     "best_scanned": 6,
+    "last_nonzero": "2026-08-20T09:15:37+00:00",
     "last_scanned": 6,
-    "last_nonzero": "2026-08-20T09:15:37+00:00"
+    "name": "SPD Technology"
   },
   "company:svitla systems@jobs.dou.ua": {
-    "name": "Svitla Systems",
     "best_scanned": 5,
+    "last_nonzero": "2026-08-20T09:15:37+00:00",
     "last_scanned": 5,
-    "last_nonzero": "2026-08-20T09:15:37+00:00"
+    "name": "Svitla Systems"
   },
   "company:trinetix@jobs.dou.ua": {
-    "name": "Trinetix",
     "best_scanned": 0,
-    "last_scanned": 0
+    "last_scanned": 0,
+    "name": "Trinetix"
   },
   "company:zone3000@zone3000.net": {
-    "name": "ZONE3000",
     "best_scanned": 50,
+    "empty_runs": 0,
+    "last_nonzero": "2026-09-09T07:10:21+00:00",
     "last_scanned": 44,
-    "last_nonzero": "2026-09-08T16:45:16+00:00",
-    "last_success_at": "2026-09-08T16:45:16+00:00",
-    "empty_runs": 0
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "ZONE3000"
   },
   "djinni": {
-    "name": "Djinni",
     "best_scanned": 21,
+    "last_nonzero": "2026-08-20T09:15:37+00:00",
     "last_scanned": 15,
-    "last_nonzero": "2026-08-20T09:15:37+00:00"
+    "name": "Djinni"
   },
   "dou-ios-rss": {
-    "name": "DOU iOS/macOS",
     "best_scanned": 15,
+    "last_nonzero": "2026-08-20T09:15:37+00:00",
     "last_scanned": 9,
-    "last_nonzero": "2026-08-20T09:15:37+00:00"
+    "name": "DOU iOS/macOS"
   },
   "telegram:hirifyme_bot": {
-    "name": "Telegram @hirifyme_bot",
     "best_scanned": 0,
+    "empty_runs": 27,
     "last_scanned": 0,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
-    "empty_runs": 26
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Telegram @hirifyme_bot"
   },
   "telegram:itfreelancers": {
-    "name": "Telegram @itfreelancers",
     "best_scanned": 0,
+    "empty_runs": 57,
     "last_scanned": 0,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
-    "empty_runs": 56
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Telegram @itfreelancers"
   },
   "telegram:itrecruit_ua": {
-    "name": "Telegram @itrecruit_ua",
     "best_scanned": 0,
+    "empty_runs": 57,
     "last_scanned": 0,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
-    "empty_runs": 56
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Telegram @itrecruit_ua"
   },
   "telegram:mobile_jobs": {
-    "name": "Telegram @mobile_jobs",
     "best_scanned": 0,
+    "empty_runs": 57,
     "last_scanned": 0,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
-    "empty_runs": 56
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Telegram @mobile_jobs"
   },
   "telegram:remotejobss": {
-    "name": "Telegram @remotejobss",
     "best_scanned": 0,
+    "empty_runs": 57,
     "last_scanned": 0,
-    "last_success_at": "2026-09-08T16:45:16+00:00",
-    "empty_runs": 56
+    "last_success_at": "2026-09-09T07:10:21+00:00",
+    "name": "Telegram @remotejobss"
   }
 }
