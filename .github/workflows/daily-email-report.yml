@@ -18,28 +18,20 @@ permissions:
 concurrency:
   group: daily-email-report-${{ github.repository }}
   cancel-in-progress: false
+  queue: max
 
 jobs:
   report:
+    concurrency:
+      group: career-state-writer-${{ github.repository }}
+      cancel-in-progress: false
+      queue: max
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Refresh daily email day marker
-        id: refresh
-        run: |
-          set -euo pipefail
-          git fetch origin main
-          if git cat-file -e "origin/main:database/daily_email_days.json" 2>/dev/null; then
-            git checkout origin/main -- database/daily_email_days.json
-            echo "Refreshed database/daily_email_days.json from origin/main"
-          else
-            mkdir -p database
-            printf '%s\n' '{' '  "days": []' '}' > database/daily_email_days.json
-            echo "Initialized empty database/daily_email_days.json"
-          fi
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -49,41 +41,20 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
+      - name: Refresh runtime state
+        id: refresh_state
+        run: python3 scripts/runtime_state.py refresh database/daily_email_days.json database/seen.json
+
       - name: Claim daily email day
         id: claim
         env:
           DAILY_EMAIL_FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force || 'false' }}
         run: python3 scripts/claim_daily_email_day.py
 
-      - name: Commit claim marker
+      - name: Publish runtime state
         id: commit_claim
         if: steps.claim.outputs.claimed == 'true'
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add database/daily_email_days.json
-          if git diff --staged --quiet; then
-            echo "No daily_email_days changes to commit."
-            exit 0
-          fi
-          git commit -m "chore(daily_email): claim report day [skip ci]"
-          branch="${GITHUB_REF_NAME}"
-          for attempt in 1 2 3 4 5; do
-            git fetch origin "$branch"
-            if ! git diff --quiet || ! git diff --cached --quiet; then
-              git stash push --include-untracked -m "daily-email-ci-dirty-${attempt}" || true
-            fi
-            if git rebase "origin/$branch" && git push origin "HEAD:$branch"; then
-              echo "Pushed daily_email_days claim on attempt ${attempt}"
-              exit 0
-            fi
-            echo "Push race on attempt ${attempt}, retrying..."
-            git rebase --abort 2>/dev/null || true
-            sleep $((attempt * 2))
-          done
-          echo "Failed to push daily_email_days after retries" >&2
-          exit 1
+        run: python3 scripts/runtime_state.py publish
 
       - name: Send daily email report
         id: send
@@ -103,6 +74,18 @@ jobs:
           CAREER_PROJECT_NUMBER: ${{ vars.CAREER_PROJECT_NUMBER }}
           PROJECT_BOARD_URL: ${{ vars.PROJECT_BOARD_URL }}
         run: python3 scripts/run_daily_report.py --send-claimed
+
+      - name: Upload runtime state recovery
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-email-report-recovery-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            database/daily_email_days.json
+            database/seen.json
+            diagnostics/runtime-state*.json
+          if-no-files-found: warn
+          retention-days: 7
 
       - name: Notify failure on Telegram
         if: failure()

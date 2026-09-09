@@ -14,9 +14,14 @@ permissions:
 concurrency:
   group: collect-ios-jobs-${{ github.repository }}
   cancel-in-progress: false
+  queue: max
 
 jobs:
   collect:
+    concurrency:
+      group: career-state-writer-${{ github.repository }}
+      cancel-in-progress: false
+      queue: max
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -27,15 +32,6 @@ jobs:
       - name: Prepare directories
         run: mkdir -p database
 
-      - name: Refresh daily email day marker
-        run: |
-          set -euo pipefail
-          git fetch origin main
-          if git cat-file -e "origin/main:database/daily_email_days.json" 2>/dev/null; then
-            git checkout origin/main -- database/daily_email_days.json
-            echo "Refreshed database/daily_email_days.json from origin/main"
-          fi
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -43,6 +39,10 @@ jobs:
 
       - name: Install Python dependencies
         run: pip install -r requirements.txt
+
+      - name: Refresh runtime state
+        id: refresh_state
+        run: python3 scripts/runtime_state.py refresh database/seen.json database/source_baseline.json database/collect_slots.json database/telegram_cursors.json database/daily_email_days.json
 
       - name: Run Python pipeline
         id: pipe
@@ -80,6 +80,11 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
 
+      - name: Publish runtime state
+        id: commit_seen
+        if: ${{ !cancelled() && (steps.pipe.outcome == 'success' || steps.pipe.outcome == 'failure') }}
+        run: python3 scripts/runtime_state.py publish
+
       - name: Upload collection recovery state
         if: always()
         uses: actions/upload-artifact@v4
@@ -90,46 +95,10 @@ jobs:
             database/source_baseline.json
             database/telegram_cursors.json
             database/collect_slots.json
+            database/daily_email_days.json
+            diagnostics/runtime-state*.json
           if-no-files-found: warn
           retention-days: 7
-
-      - name: Commit seen store
-        id: commit_seen
-        if: ${{ !cancelled() && (steps.pipe.outcome == 'success' || steps.pipe.outcome == 'failure') }}
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add database/seen.json database/source_baseline.json database/collect_slots.json database/telegram_cursors.json
-          if git diff --staged --quiet; then
-            echo "No seen/baseline/slot changes to commit."
-            exit 0
-          fi
-          git commit -m "chore(seen): record notified vacancies [skip ci]"
-          branch="${GITHUB_REF_NAME}"
-          for attempt in 1 2 3 4 5; do
-            if ! git fetch origin "$branch"; then
-              echo "Fetch failed on attempt ${attempt}, retrying..."
-              sleep $((attempt * 2))
-              continue
-            fi
-            if ! git diff --quiet || ! git diff --cached --quiet; then
-              git stash push --include-untracked -m "collect-ci-dirty-${attempt}" || true
-            fi
-            if ! git rebase "origin/$branch"; then
-              git rebase --abort 2>/dev/null || true
-              echo "State rebase failed; recover from the uploaded artifact before retrying" >&2
-              exit 1
-            fi
-            if git push origin "HEAD:$branch"; then
-              echo "Pushed seen/baseline on attempt ${attempt}"
-              exit 0
-            fi
-            echo "Push race on attempt ${attempt}, retrying..."
-            sleep $((attempt * 2))
-          done
-          echo "Failed to push seen/baseline after retries" >&2
-          exit 1
 
       - name: Trigger Daily Email Report
         id: dispatch_email

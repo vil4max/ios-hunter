@@ -78,15 +78,21 @@ on:
       - ".github/workflows/crm-manual-card.yml"
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: crm-manual-card-${{ github.repository }}
   cancel-in-progress: false
+  queue: max
 
 jobs:
   upsert:
+    concurrency:
+      group: career-state-writer-${{ github.repository }}
+      cancel-in-progress: false
+      queue: max
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -98,7 +104,12 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
+      - name: Refresh runtime state
+        id: refresh_state
+        run: python3 scripts/runtime_state.py refresh database/seen.json
+
       - name: Upsert CRM card
+        id: upsert
         env:
           CAREER_AGENT_TOKEN: ${{ secrets.CAREER_AGENT_TOKEN }}
           CAREER_AGENT_SYNC_ENABLED: ${{ vars.CAREER_AGENT_SYNC_ENABLED }}
@@ -120,3 +131,19 @@ jobs:
           INPUT_CLOSE_REASON: ${{ inputs.close_reason }}
           INPUT_CLOSED_STAGE: ${{ inputs.closed_stage }}
         run: python3 scripts/run_crm_manual_card.py
+
+      - name: Publish runtime state
+        id: commit_seen
+        if: ${{ !cancelled() && (steps.upsert.outcome == 'success' || steps.upsert.outcome == 'failure') }}
+        run: python3 scripts/runtime_state.py publish
+
+      - name: Upload runtime state recovery
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: crm-manual-card-recovery-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            database/seen.json
+            diagnostics/runtime-state*.json
+          if-no-files-found: warn
+          retention-days: 7

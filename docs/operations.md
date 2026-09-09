@@ -65,12 +65,23 @@ cannot advance Telegram cursors. Repeated source/URL absence never erases
 history; even explicit closure cleanup preserves applied/dropped/archived
 user decisions.
 
-If a state rebase conflicts, the run fails immediately with its recovery
-artifact intact. Fetch/push transport races have bounded retries. Recover by
-comparing the artifact against the latest remote state; retain user decisions,
-monotonic cursors and actually completed slots. Never overwrite the entire
-remote state with an old artifact or reset the history to force a re-run.
-Existing CRM drafts are looked up by URL and normalized company/title on retry.
+Runtime/CRM writers share a job-level concurrency group with `queue: max` (up to
+100 pending jobs). Reusable caller jobs do not hold that lock. Each job refreshes
+allowlisted state from current `main` before reading or changing it, while source
+code remains pinned to its workflow revision.
+
+`scripts/runtime_state.py` is the shared publisher. It builds a commit over the
+latest remote tree using a temporary Git index, preserving unrelated code
+commits. It never rebases, resets or stashes the running checkout. Concurrent
+independent JSON edits merge; cursors use maxima and completed slots/day claims
+use unions. Conflicting edits of one decision fail explicitly and retain the
+recovery artifact. History records are not deleted by pruning. Non-fast-forward
+push races re-fetch and re-merge within a bounded retry loop.
+
+Recovery artifacts include the base revision and any sanitized publisher error.
+Compare them with current remote state; never overwrite the entire history with
+an older artifact. Manual CRM updates now persist their local seen decisions too.
+No new database, credentials or external storage service is required.
 
 ## Scheduling and remaining source limits
 

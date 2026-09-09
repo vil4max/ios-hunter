@@ -11,9 +11,14 @@ permissions:
 concurrency:
   group: imap-recruiter-poll-${{ github.repository }}
   cancel-in-progress: false
+  queue: max
 
 jobs:
   poll:
+    concurrency:
+      group: career-state-writer-${{ github.repository }}
+      cancel-in-progress: false
+      queue: max
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -26,6 +31,10 @@ jobs:
 
       - name: Install Python dependencies
         run: pip install -r requirements.txt
+
+      - name: Refresh runtime state
+        id: refresh_state
+        run: python3 scripts/runtime_state.py refresh database/email_seen.json
 
       - name: Poll IMAP and sync CRM
         id: poll
@@ -46,34 +55,21 @@ jobs:
           EMAIL_SEEN_PATH: database/email_seen.json
         run: python3 scripts/run_imap_poll.py
 
-      - name: Commit email seen store
+      - name: Publish runtime state
         id: commit_seen
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add database/email_seen.json
-          if git diff --staged --quiet; then
-            echo "No email_seen changes to commit."
-            exit 0
-          fi
-          git commit -m "chore(email_seen): record processed recruiter mail [skip ci]"
-          branch="${GITHUB_REF_NAME}"
-          for attempt in 1 2 3 4 5; do
-            git fetch origin "$branch"
-            if ! git diff --quiet || ! git diff --cached --quiet; then
-              git stash push --include-untracked -m "imap-ci-dirty-${attempt}" || true
-            fi
-            if git rebase "origin/$branch" && git push origin "HEAD:$branch"; then
-              echo "Pushed email_seen on attempt ${attempt}"
-              exit 0
-            fi
-            echo "Push race on attempt ${attempt}, retrying..."
-            git rebase --abort 2>/dev/null || true
-            sleep $((attempt * 2))
-          done
-          echo "Failed to push email_seen after retries" >&2
-          exit 1
+        if: ${{ !cancelled() && (steps.poll.outcome == 'success' || steps.poll.outcome == 'failure') }}
+        run: python3 scripts/runtime_state.py publish
+
+      - name: Upload runtime state recovery
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: imap-poll-recovery-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            database/email_seen.json
+            diagnostics/runtime-state*.json
+          if-no-files-found: warn
+          retention-days: 7
 
       - name: Notify failure on Telegram
         if: failure()
