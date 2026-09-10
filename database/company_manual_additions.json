@@ -138,5 +138,10 @@
     "name": "Valtech",
     "slug": "valtech",
     "career_url": "https://www.valtech.com/career/jobs/"
+  },
+  {
+    "name": "PUMB",
+    "slug": "pumb",
+    "career_url": "https://career.pumb.ua/vacancy"
   }
 ]
