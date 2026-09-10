@@ -266,6 +266,12 @@
     "processed_at": "2026-09-09T07:11:24+00:00",
     "subject": "Виконуємо бажання: акції, знижки, товари знову в наявності"
   },
+  "<010101a08bc28c14-402e80a7-cd1f-4010-8577-188be42bcee0-000000@us-west-2.amazonses.com>": {
+    "company": "Makeup.ua",
+    "kind": "ignore",
+    "processed_at": "2026-09-10T15:21:31+00:00",
+    "subject": "Нове - Замовлення №‪1789051167-0820‬"
+  },
   "<0102019fae41f5e3-dd1e1193-89ff-40dd-90a1-f78779eebea3-000000@eu-west-1.amazonses.com>": {
     "company": "Igor from Hirify",
     "kind": "ignore",
@@ -331,6 +337,24 @@
     "kind": "application_ack",
     "processed_at": "2026-08-29T08:23:15+00:00",
     "subject": "We have received your application!"
+  },
+  "<010201a08ba84b72-7b6e35a0-0c75-49b2-ad8f-3456b4a64737-000000@eu-west-1.amazonses.com>": {
+    "company": "monobank",
+    "kind": "ignore",
+    "processed_at": "2026-09-10T15:21:31+00:00",
+    "subject": "Квитанції"
+  },
+  "<010201a08bad7629-73e95fc4-552a-4ed7-80c5-92880ea76402-000000@eu-west-1.amazonses.com>": {
+    "company": "monobank",
+    "kind": "ignore",
+    "processed_at": "2026-09-10T15:21:31+00:00",
+    "subject": "Квитанція"
+  },
+  "<010201a08bae1789-994367cf-7734-4f26-90f3-218864e7bf7e-000000@eu-west-1.amazonses.com>": {
+    "company": "monobank",
+    "kind": "ignore",
+    "processed_at": "2026-09-10T15:21:31+00:00",
+    "subject": "Квитанція"
   },
   "<0107019fa9d51843-5bf640bc-163e-4a74-81ee-22be2579400a-000000@eu-central-1.amazonses.com>": {
     "company": "EasyStaff Payroll Support",
@@ -562,6 +586,12 @@
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
     "subject": "Max, please verify your new device"
+  },
+  "<1210826575.2088547.1789043164709@email.apple.com>": {
+    "company": "Apple",
+    "kind": "ignore",
+    "processed_at": "2026-09-10T15:21:31+00:00",
+    "subject": "Decision on refund request"
   },
   "<1227730251.2551623.1788260516093@email.apple.com>": {
     "company": "Xcode Cloud",
@@ -2105,6 +2135,12 @@
     "processed_at": "2026-09-10T12:23:26+00:00",
     "subject": "Contact from zoolatech.com"
   },
+  "<20260910141754.3.98a6429ccb02de55.7m0o67x3@mg-d1.substack.com>": {
+    "company": "Substack",
+    "kind": "ignore",
+    "processed_at": "2026-09-10T15:21:31+00:00",
+    "subject": "What is happening with code reviews? and 3 more"
+  },
   "<202610091006.193kha0t5cjqvj@shared-p100-i7.d.sp1-brevo.net>": {
     "company": "DOU",
     "kind": "ignore",
@@ -2260,6 +2296,12 @@
     "kind": "ignore",
     "processed_at": "2026-09-09T07:11:24+00:00",
     "subject": "4% в USD фикс + потенциал Nasdaq"
+  },
+  "<21645-2323109283979333037-76e6891b-97d2-426f-bea2-1867e65b59c1@carrotquest-mail.io>": {
+    "company": "Freedom24",
+    "kind": "ignore",
+    "processed_at": "2026-09-10T15:21:31+00:00",
+    "subject": "Активируйте MAPLE 🍁- получите до 35 подарочных акций"
   },
   "<216afa7e-c003-4e2d-bb4a-627d1233f686@mtasv.net>": {
     "company": "Spark",
@@ -3103,11 +3145,24 @@
     "processed_at": "2026-09-10T06:27:53+00:00",
     "subject": "🔴 На канале \"Apple\" началась прямая трансляция \"Apple Event — September 9\""
   },
+  "<6aa2cade.0ea1c686.34ff18.bcae@mx.google.com>": {
+    "company": "NIX",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg3TOpM",
+    "kind": "replied",
+    "processed_at": "2026-09-10T15:21:31+00:00",
+    "subject": "Career Agent  ·  2026-09-10"
+  },
   "<706525469.587335.1789028948190@email.apple.com>": {
     "company": "Xcode Cloud",
     "kind": "ignore",
     "processed_at": "2026-09-10T09:22:37+00:00",
     "subject": "RegionalCheck -- Build 66 succeeded (main)"
+  },
+  "<7185091.2424508.1789043631026@email.apple.com>": {
+    "company": "Apple",
+    "kind": "ignore",
+    "processed_at": "2026-09-10T15:21:31+00:00",
+    "subject": "A refund request has been received"
   },
   "<72cc87b2-223f-4eaa-8968-b4c8f41a1dd7@cdg3s51mta0074.xt.local>": {
     "company": "ZEEKR EU",
@@ -3132,6 +3187,12 @@
     "kind": "ignore",
     "processed_at": "2026-09-09T09:22:30+00:00",
     "subject": "App -- Build 90 succeeded (main)"
+  },
+  "<770160071.2412487.1789043551032@email.apple.com>": {
+    "company": "Apple",
+    "kind": "ignore",
+    "processed_at": "2026-09-10T15:21:31+00:00",
+    "subject": "A refund request has been received"
   },
   "<77d5ee385ea1b4c5ea83e991885925f4@swift.generated>": {
     "company": "ZONE3000.net",
@@ -3661,6 +3722,12 @@
     "kind": "ignore",
     "processed_at": "2026-08-05T06:16:34+00:00",
     "subject": "[Motivation] How are you feeling today?  🚀"
+  },
+  "<PXxWLwQkSQqp2COFxwnfPQ@geopod-ismtpd-0>": {
+    "company": "MyHeritage",
+    "kind": "ignore",
+    "processed_at": "2026-09-10T15:21:31+00:00",
+    "subject": "Discover your ancestors' stories in historical records"
   },
   "<Pi4ccXX7gJIV3nN5QBdUZg@notifications.google.com>": {
     "company": "Google",
