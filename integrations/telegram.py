@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from urllib.parse import urlsplit
 
 import requests
 
@@ -34,9 +35,19 @@ def split_telegram_text(text: str, limit: int = TELEGRAM_MAX_LENGTH) -> list[str
     return chunks
 
 
+def _redact_token(url: str, token: str) -> str:
+    if not token or token not in url:
+        return url
+    split = urlsplit(url)
+    if split.scheme and split.netloc and split.path.startswith("/bot"):
+        return split._replace(path=split.path.replace(f"/bot{token}", "/bot[redacted]", 1)).geturl()
+    return url.replace(token, "[redacted]")
+
+
 def _post_message(token: str, chat_id: str, text: str, timeout: int = 30) -> None:
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
     response = requests.post(
-        f"https://api.telegram.org/bot{token}/sendMessage",
+        url,
         data={
             "chat_id": chat_id,
             "text": text,
@@ -50,8 +61,9 @@ def _post_message(token: str, chat_id: str, text: str, timeout: int = 30) -> Non
     detail = (response.text or "").strip()
     if len(detail) > 500:
         detail = detail[:500] + "…"
+    safe_url = _redact_token(response.url or url, token)
     raise requests.HTTPError(
-        f"{response.status_code} Client Error for url: {response.url}"
+        f"{response.status_code} Client Error for url: {safe_url}"
         + (f"; body={detail}" if detail else ""),
         response=response,
     )
