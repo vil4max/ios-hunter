@@ -67,13 +67,17 @@ def test_send_message_chunks_posts_and_logs_delivery(
     assert capsys.readouterr().out.strip() == "Telegram delivery accepted: 2 message(s)"
 
 
-def test_send_message_includes_error_body(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_send_message_redacts_token_in_error_body(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("TELEGRAM_TOKEN", "token")
     monkeypatch.setenv("TELEGRAM_CHAT_ID", "42")
 
     def fake_post(url: str, data: dict, headers: dict, timeout: int) -> FakeResponse:
-        return FakeResponse(status_code=400, text='{"description":"message is too long"}')
+        return FakeResponse(
+            status_code=400,
+            text='{"description":"message is too long"}',
+            url="https://api.telegram.org/bottoken/sendMessage",
+        )
 
     monkeypatch.setattr(telegram.requests, "post", fake_post)
-    with pytest.raises(requests.HTTPError, match="message is too long"):
+    with pytest.raises(requests.HTTPError, match=r"bot\[redacted\].*message is too long"):
         telegram.send_message("hello")

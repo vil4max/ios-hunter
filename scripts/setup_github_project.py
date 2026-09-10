@@ -2,30 +2,39 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
-from pathlib import Path
+import tempfile
 
 
 PROJECT_ID = "PVT_kwHOABVlTc4Bdb8R"
 STATUS_FIELD_ID = "PVTSSF_lAHOABVlTc4Bdb8RzhX9fr0"
-TMP = Path("/tmp/career-agent-gh-graphql.json")
 
 
 def graphql(query: str, variables: dict | None = None) -> dict:
     payload = {"query": query, "variables": variables or {}}
-    TMP.write_text(json.dumps(payload), encoding="utf-8")
-    result = subprocess.run(
-        ["gh", "api", "graphql", "--input", str(TMP)],
-        capture_output=True,
-        text=True,
-    )
-    if result.returncode != 0:
-        raise RuntimeError(result.stderr or result.stdout)
-    payload_out = json.loads(result.stdout)
-    if payload_out.get("errors"):
-        raise RuntimeError(json.dumps(payload_out["errors"], indent=2))
-    return payload_out["data"]
+    fd, temp_path = tempfile.mkstemp(prefix="career-gh-graphql-", suffix=".json")
+    try:
+        os.chmod(temp_path, 0o600)
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            json.dump(payload, handle)
+        result = subprocess.run(
+            ["gh", "api", "graphql", "--input", temp_path],
+            capture_output=True,
+            text=True,
+        )
+        if result.returncode != 0:
+            raise RuntimeError(result.stderr or result.stdout)
+        payload_out = json.loads(result.stdout)
+        if payload_out.get("errors"):
+            raise RuntimeError(json.dumps(payload_out["errors"], indent=2))
+        return payload_out["data"]
+    finally:
+        try:
+            os.unlink(temp_path)
+        except FileNotFoundError:
+            pass
 
 
 def existing_field_names() -> set[str]:
