@@ -1030,6 +1030,12 @@
     "processed_at": "2026-09-09T12:29:13+00:00",
     "subject": "Что делать, если вы хотите роста, денег и смысла"
   },
+  "<198207016222590035a1575026@mlsend.com>": {
+    "company": "Стратоплан — Школа менеджмента",
+    "kind": "ignore",
+    "processed_at": "2026-09-10T09:22:37+00:00",
+    "subject": "☕ Сегодня два эфира: про корпоративных зомби и собственную ценность для бизнеса"
+  },
   "<1F.0E.13830.26CD69A6@i-0d355bf65d1872868.mta1vrest.sd.prd.sparkpost>": {
     "company": "Ladders",
     "kind": "replied",
@@ -2610,6 +2616,12 @@
     "processed_at": "2026-08-01T15:16:20+00:00",
     "subject": "New email account login in Spark"
   },
+  "<620328116.1342644.1789028952197@email.apple.com>": {
+    "company": "Maksim Vilchevskiy via TestFlight",
+    "kind": "ignore",
+    "processed_at": "2026-09-10T09:22:37+00:00",
+    "subject": "DriveCheckUA 2.5 (66) for iOS is now available to test."
+  },
   "<621345519.34987439.1786708053732@email.apple.com>": {
     "company": "Maksim Vilchevskiy via TestFlight",
     "kind": "ignore",
@@ -3072,6 +3084,12 @@
     "kind": "ignore",
     "processed_at": "2026-09-10T06:27:53+00:00",
     "subject": "🔴 На канале \"Apple\" началась прямая трансляция \"Apple Event — September 9\""
+  },
+  "<706525469.587335.1789028948190@email.apple.com>": {
+    "company": "Xcode Cloud",
+    "kind": "ignore",
+    "processed_at": "2026-09-10T09:22:37+00:00",
+    "subject": "RegionalCheck -- Build 66 succeeded (main)"
   },
   "<72cc87b2-223f-4eaa-8968-b4c8f41a1dd7@cdg3s51mta0074.xt.local>": {
     "company": "ZEEKR EU",
@@ -4203,6 +4221,12 @@
     "kind": "ignore",
     "processed_at": "2026-08-29T08:23:20+00:00",
     "subject": "🔔 Підтвердіть ваш E-mail"
+  },
+  "<tl50uk-0rxf2p-ra@spsndr.com>": {
+    "company": "N-iX",
+    "kind": "replied",
+    "processed_at": "2026-09-10T09:22:37+00:00",
+    "subject": "Calling Senior React + React Native Engineers"
   },
   "<vJGwozEgQyyeuFQe_lQqDA@geopod-ismtpd-3>": {
     "company": "Steve Kaufmann",
