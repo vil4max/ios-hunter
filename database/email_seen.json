@@ -2099,6 +2099,18 @@
     "processed_at": "2026-09-10T06:27:53+00:00",
     "subject": "App Store submissions now open for the latest OS releases"
   },
+  "<20260910092446.338e0ed78c3d5ab9@mg.zoolatech.com>": {
+    "company": "mailgun",
+    "kind": "rejected_hr",
+    "processed_at": "2026-09-10T12:23:26+00:00",
+    "subject": "Contact from zoolatech.com"
+  },
+  "<202610091006.193kha0t5cjqvj@shared-p100-i7.d.sp1-brevo.net>": {
+    "company": "DOU",
+    "kind": "ignore",
+    "processed_at": "2026-09-10T12:23:26+00:00",
+    "subject": "Яку компанію айтівці вважають найпривабливішою? 🔮"
+  },
   "<202611080850.13di66eco6cw3srj@email3.sketchfab.com>": {
     "company": "Sketchfab",
     "kind": "ignore",
@@ -2254,6 +2266,12 @@
     "kind": "ignore",
     "processed_at": "2026-08-01T15:16:21+00:00",
     "subject": "New email account login in Spark"
+  },
+  "<222148.21100665677.vil4max=gmail.com@abcex.pro>": {
+    "company": "ABCEX",
+    "kind": "ignore",
+    "processed_at": "2026-09-10T12:23:26+00:00",
+    "subject": "Это не просто смело… Это 35% с реферальной программой по ОТС сделкам"
   },
   "<22223994.5533423.1785755349938@lincoln-v1-547d75cfd-nw7gg>": {
     "company": "microcredit",
@@ -3228,6 +3246,12 @@
     "kind": "ignore",
     "processed_at": "2026-07-31T10:09:08+00:00",
     "subject": "Это вы только что выполнили вход на новом устройстве здесь: Kyiv?"
+  },
+  "<89.7C.36844.EA1C1AA6@i-07fc8adbc7dc0e6ae.mta1vrest.sd.prd.sparkpost>": {
+    "company": "Ladders",
+    "kind": "replied",
+    "processed_at": "2026-09-10T12:23:26+00:00",
+    "subject": "New Jobs Posted: Apply before others do"
   },
   "<8HP7EXVpMK4cECK2tMxIrOEzjAGi68K7I3oA8Cb8@localhost.localdomain>": {
     "company": "N-iX",
