@@ -617,6 +617,12 @@
     "processed_at": "2026-08-20T09:16:08+00:00",
     "subject": "Your one-time-passcode"
   },
+  "<1355623619.82564526.1788988104413@email.apple.com>": {
+    "company": "App Store Connect",
+    "kind": "ignore",
+    "processed_at": "2026-09-10T06:27:53+00:00",
+    "subject": "Review of your DriveCheckUA (iOS) submission is complete."
+  },
   "<1395806449.26454462.1787845405572@email.apple.com>": {
     "company": "Анастасия Вильчевская",
     "kind": "ignore",
@@ -1435,6 +1441,12 @@
     "processed_at": "2026-09-09T07:11:25+00:00",
     "subject": "Java Developer (Infrastructure) у Ajax Systems. Ще 10 вакансій iOS"
   },
+  "<1k248b8cek33s801@indeed.com>": {
+    "company": "Indeed",
+    "kind": "ignore",
+    "processed_at": "2026-09-10T06:27:53+00:00",
+    "subject": "Java Developer (Infrastructure) у Ajax Systems. Ще 7 вакансій iOS"
+  },
   "<20.CE.15395.90DD69A6@i-0f1d4a0165b52ae90.mta1vrest.sd.prd.sparkpost>": {
     "company": "Ladders",
     "kind": "replied",
@@ -2068,6 +2080,18 @@
     "kind": "ignore",
     "processed_at": "2026-09-09T16:04:17+00:00",
     "subject": "Recent iOS/Swift publications"
+  },
+  "<20260909211002.9b9a2788cebfa85d@cioeu80164.posthog.com>": {
+    "company": "Sara at PostHog",
+    "kind": "ignore",
+    "processed_at": "2026-09-10T06:27:53+00:00",
+    "subject": "The AI that watches session recordings for you"
+  },
+  "<20260910034531.4ad855cb8aca219e@creator.patreon.com>": {
+    "company": "iOS (Swift) jobs",
+    "kind": "ignore",
+    "processed_at": "2026-09-10T06:27:53+00:00",
+    "subject": "App Store submissions now open for the latest OS releases"
   },
   "<202611080850.13di66eco6cw3srj@email3.sketchfab.com>": {
     "company": "Sketchfab",
@@ -3043,6 +3067,12 @@
     "processed_at": "2026-09-09T16:04:17+00:00",
     "subject": "Career Agent  ·  2026-09-09"
   },
+  "<6aa1907c.834a29a5.399d87.2a0anotifications@youtube.com>": {
+    "company": "YouTube",
+    "kind": "ignore",
+    "processed_at": "2026-09-10T06:27:53+00:00",
+    "subject": "🔴 На канале \"Apple\" началась прямая трансляция \"Apple Event — September 9\""
+  },
   "<72cc87b2-223f-4eaa-8968-b4c8f41a1dd7@cdg3s51mta0074.xt.local>": {
     "company": "ZEEKR EU",
     "kind": "ignore",
@@ -3234,6 +3264,12 @@
     "kind": "ignore",
     "processed_at": "2026-08-14T12:18:51+00:00",
     "subject": "RegionalCheck -- Build 48 succeeded (main)"
+  },
+  "<96.1D.51701.DA501AA6@i-0d27598dd04e0db64.mta1vrest.sd.prd.sparkpost>": {
+    "company": "Ladders",
+    "kind": "replied",
+    "processed_at": "2026-09-10T06:27:53+00:00",
+    "subject": "ION Offering Over $150K for Senior iOS Engineer, New York job"
   },
   "<963316790.12635159.1785664019987@email.apple.com>": {
     "company": "Xcode Cloud",
@@ -3529,6 +3565,12 @@
     "kind": "ignore",
     "processed_at": "2026-08-15T09:16:18+00:00",
     "subject": "You’ve sent vil4max@gmail.com a recovery contact request"
+  },
+  "<IjoTC8uySheXB_wcnfOLcw@geopod-ismtpd-77>": {
+    "company": "LingQ",
+    "kind": "ignore",
+    "processed_at": "2026-09-10T06:27:53+00:00",
+    "subject": "9 years on Duolingo, then this. Plus: a new nav panel, Lynx goes free\r\n on Android, and Steve hits 1.6M subscribers."
   },
   "<Iyj0S_gUvNPWnRmNd_F-zg@notifications.google.com>": {
     "company": "Google",
