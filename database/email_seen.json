@@ -218,6 +218,12 @@
     "processed_at": "2026-09-09T16:04:17+00:00",
     "subject": "You're a few steps from finishing your Kake profile"
   },
+  "<010001a08fa3876b-8c784d6d-2f9b-47b9-8e68-67d66eff6c60-000000@email.amazonses.com>": {
+    "company": "BetterMe",
+    "kind": "rejected_hr",
+    "processed_at": "2026-09-11T11:32:35+00:00",
+    "subject": "BetterMe: AI Engineer opportunity"
+  },
   "<0101019faa3ac02b-d5c9e8e3-ef86-43ea-9392-8ff92655359d-000000@us-west-2.amazonses.com>": {
     "company": "Makeup.ua",
     "kind": "ignore",
@@ -271,6 +277,12 @@
     "kind": "ignore",
     "processed_at": "2026-09-10T15:21:31+00:00",
     "subject": "Нове - Замовлення №‪1789051167-0820‬"
+  },
+  "<010101a08f996f56-bd5addb3-d3b8-4989-a6c5-eb06b788bee0-000000@us-west-2.amazonses.com>": {
+    "company": "Makeup.ua",
+    "kind": "ignore",
+    "processed_at": "2026-09-11T11:32:35+00:00",
+    "subject": "Виконуємо бажання: акції, знижки, товари знову в наявності"
   },
   "<0102019fae41f5e3-dd1e1193-89ff-40dd-90a1-f78779eebea3-000000@eu-west-1.amazonses.com>": {
     "company": "Igor from Hirify",
@@ -616,6 +628,12 @@
     "kind": "ignore",
     "processed_at": "2026-07-31T08:17:55+00:00",
     "subject": "App -- Build 63 failed (main)"
+  },
+  "<1264104456.6755603.1789101605800@email.apple.com>": {
+    "company": "Grammarly",
+    "kind": "ignore",
+    "processed_at": "2026-09-11T11:32:35+00:00",
+    "subject": "Your Subscription is Confirmed"
   },
   "<1266772052.12621382.1785655465146@email.apple.com>": {
     "company": "Apple Developer",
@@ -1066,6 +1084,12 @@
     "processed_at": "2026-09-10T09:22:37+00:00",
     "subject": "☕ Сегодня два эфира: про корпоративных зомби и собственную ценность для бизнеса"
   },
+  "<198310329316279847a1575026@mlsend.com>": {
+    "company": "Стратоплан — Школа менеджмента",
+    "kind": "ignore",
+    "processed_at": "2026-09-11T11:32:35+00:00",
+    "subject": "Как запустить позитивные изменения, которые невозможно будет остановить"
+  },
   "<1F.0E.13830.26CD69A6@i-0d355bf65d1872868.mta1vrest.sd.prd.sparkpost>": {
     "company": "Ladders",
     "kind": "replied",
@@ -1483,11 +1507,22 @@
     "processed_at": "2026-09-10T06:27:53+00:00",
     "subject": "Java Developer (Infrastructure) у Ajax Systems. Ще 7 вакансій iOS"
   },
+  "<1k26qtuk4kp51810@indeed.com>": {
+    "company": "Indeed",
+    "kind": "ignore",
+    "processed_at": "2026-09-11T11:32:35+00:00",
+    "subject": "Junior Automation QA Engineer у Playtech. Ще 2 вакансії iOS"
+  },
   "<20.CE.15395.90DD69A6@i-0f1d4a0165b52ae90.mta1vrest.sd.prd.sparkpost>": {
     "company": "Ladders",
     "kind": "replied",
     "processed_at": "2026-09-02T11:34:07+00:00",
     "subject": "Max, we started your resume review"
+  },
+  "<2007659776.4337969.1789116109191@email-sender-8564dbfcc6-kqqq2>": {
+    "kind": "application_ack",
+    "processed_at": "2026-09-11T11:32:35+00:00",
+    "subject": "Thank you for your interest in Sigma Software"
   },
   "<201821129.32543.1788853017894@ip-10-0-3-65.ec2.internal>": {
     "company": "X Support",
@@ -2141,6 +2176,18 @@
     "processed_at": "2026-09-10T15:21:31+00:00",
     "subject": "What is happening with code reviews? and 3 more"
   },
+  "<20260910155604.9ddfbcfdb40b8391@mg.pointfree.co>": {
+    "company": "Point-Free",
+    "kind": "ignore",
+    "processed_at": "2026-09-11T11:32:35+00:00",
+    "subject": "Our WWDC 26 series is now free"
+  },
+  "<20260911060706.F021B700008B@instance-group-smtp-relay-sinsay-lp34.localdomain>": {
+    "company": "Sinsay.com",
+    "kind": "ignore",
+    "processed_at": "2026-09-11T11:32:35+00:00",
+    "subject": "Підтвердження замовлення № 104511223720."
+  },
   "<202610091006.193kha0t5cjqvj@shared-p100-i7.d.sp1-brevo.net>": {
     "company": "DOU",
     "kind": "ignore",
@@ -2303,6 +2350,12 @@
     "processed_at": "2026-09-10T15:21:31+00:00",
     "subject": "Активируйте MAPLE 🍁- получите до 35 подарочных акций"
   },
+  "<21645-2323725316054322591-d970d55f-1045-454a-aff2-964501cbd293@carrotquest-mail.io>": {
+    "company": "Freedom24",
+    "kind": "ignore",
+    "processed_at": "2026-09-11T11:32:35+00:00",
+    "subject": "Как пополнить счет Freedom24: актуальные способы"
+  },
   "<216afa7e-c003-4e2d-bb4a-627d1233f686@mtasv.net>": {
     "company": "Spark",
     "kind": "ignore",
@@ -2435,12 +2488,24 @@
     "processed_at": "2026-08-14T09:16:35+00:00",
     "subject": "App -- Build 75 succeeded (main)"
   },
+  "<34897725.3039258.1789106775926@payu.pl>": {
+    "company": "PayU",
+    "kind": "ignore",
+    "processed_at": "2026-09-11T11:32:35+00:00",
+    "subject": "Перевірте статус свого платежу (5705834525)"
+  },
   "<349f02c1-0958-412c-bada-fbb249f22ed2@workablemail.com>": {
     "company": "Workana",
     "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg3coXw",
     "kind": "application_ack",
     "processed_at": "2026-08-21T12:16:18+00:00",
     "subject": "Thanks for applying to Workana"
+  },
+  "<34c62613-6829-416d-b276-ad2f4fbe34fb@wayfair.com>": {
+    "company": "Wayfair",
+    "kind": "ignore",
+    "processed_at": "2026-09-11T11:32:35+00:00",
+    "subject": "BLACK OUTDOOR PRIVACY SCREENS 🔎 Find one that's all you →"
   },
   "<3525754b-877c-43a9-a603-69bec5111eb3@Spark>": {
     "company": "vil4max",
@@ -2477,6 +2542,12 @@
     "kind": "ignore",
     "processed_at": "2026-09-09T07:11:25+00:00",
     "subject": "JP Morgan Chase & Co. and Other Companies - Openings"
+  },
+  "<39.9F.32901.ED0F2AA6@i-0981ca7ed7ea10856.mta1vrest.sd.prd.sparkpost>": {
+    "company": "Ladders",
+    "kind": "replied",
+    "processed_at": "2026-09-11T11:32:35+00:00",
+    "subject": "Max, is your resume working hard enough for you?"
   },
   "<3B.03.19461.08F60AA6@i-063a73f5527672d90.mta1vrest.sd.prd.sparkpost>": {
     "company": "Ladders",
@@ -2518,6 +2589,12 @@
     "kind": "ignore",
     "processed_at": "2026-08-18T09:16:20+00:00",
     "subject": "Ваш секретний бонус: -15% на весь асортимент 👀"
+  },
+  "<453274009.5811131.1789062361453@email.apple.com>": {
+    "company": "App Store Connect",
+    "kind": "ignore",
+    "processed_at": "2026-09-11T11:32:35+00:00",
+    "subject": "Review of your DriveCheckUA (iOS) submission is complete."
   },
   "<456333232.33061459.1787566400283@email.apple.com>": {
     "company": "Maksim Vilchevskiy via TestFlight",
@@ -2584,6 +2661,12 @@
     "kind": "ignore",
     "processed_at": "2026-08-15T09:16:18+00:00",
     "subject": "Ваш проверочный код PayPal"
+  },
+  "<509489478.8285965.1789120330849@email.apple.com>": {
+    "company": "Apple",
+    "kind": "ignore",
+    "processed_at": "2026-09-11T11:32:35+00:00",
+    "subject": "Decision on refund request"
   },
   "<526f2215-3b1ef133-1785741335-215475332264787-8938@outbound.intercom.djinni.co>": {
     "company": "Djinni",
@@ -2693,6 +2776,12 @@
     "kind": "replied",
     "processed_at": "2026-09-02T11:34:07+00:00",
     "subject": "Your first job matches are in, Max!"
+  },
+  "<638891948.7113740.1789111665101@lva2-app65703.prod.linkedin.com>": {
+    "company": "LinkedIn Job Alerts",
+    "kind": "ignore",
+    "processed_at": "2026-09-11T11:32:35+00:00",
+    "subject": "Max: your job alert for Software Engineer in Kyiv City, Ukraine has\r\n been created"
   },
   "<64240013.85581.1788328988338@lva2-app68590.prod.linkedin.com>": {
     "company": "LinkedIn",
@@ -3152,6 +3241,18 @@
     "processed_at": "2026-09-10T15:21:31+00:00",
     "subject": "Career Agent  ·  2026-09-10"
   },
+  "<6aa3c82f8b0f7_11211b8179917@sharedworker-7bfcbd569-fdwhv.mail>": {
+    "company": "GitHub",
+    "kind": "ignore",
+    "processed_at": "2026-09-11T11:32:35+00:00",
+    "subject": "[GitHub] A third-party OAuth application has been added to your\r\n account"
+  },
+  "<6aa3cf1b.749e8b8e.9e363.77dbSMTPIN_ADDED_MISSING@mx.google.com>": {
+    "company": "Комуналка",
+    "kind": "ignore",
+    "processed_at": "2026-09-11T11:32:35+00:00",
+    "subject": "Платіж підтверджено КИЇВ, ПЧІЛКИ ОЛЕНИ ВУЛ., Б4, КВ57"
+  },
   "<706525469.587335.1789028948190@email.apple.com>": {
     "company": "Xcode Cloud",
     "kind": "ignore",
@@ -3289,6 +3390,12 @@
     "kind": "ignore",
     "processed_at": "2026-08-07T06:16:46+00:00",
     "subject": "Why AI is a risk to Communist China"
+  },
+  "<851448230.7968488.1789120366103@email.apple.com>": {
+    "company": "Apple",
+    "kind": "ignore",
+    "processed_at": "2026-09-11T11:32:35+00:00",
+    "subject": "Decision on refund request"
   },
   "<860949.109474088.1785911647861@email.apple.com>": {
     "company": "App Store Connect",
@@ -3476,6 +3583,12 @@
     "processed_at": "2026-09-09T07:11:24+00:00",
     "subject": "Make Every Job Application Count with a Custom Cover Letter"
   },
+  "<CADH1vsDJt_e7sD7jA6Y-XYsYcr0Y6VEx2p_OMC++eWATbb=_=A@mail.gmail.com>": {
+    "company": "Adaptiq",
+    "kind": "application_ack",
+    "processed_at": "2026-09-11T11:32:35+00:00",
+    "subject": "Thanks for applying to Adaptiq!"
+  },
   "<CADrPisD5DmcxsDyWpjR4MM8oi=gztxJr07=PzDh9uzwbhfSL0A@mail.gmail.com>": {
     "company": "Kirill Alyoshin",
     "kind": "rejected_hr",
@@ -3572,6 +3685,12 @@
     "processed_at": "2026-07-31T08:17:51+00:00",
     "subject": "CHI Software \"Contacting the CHI Software\""
   },
+  "<DE.18.12176.1E993AA6@i-0d27598dd04e0db64.mta1vrest.sd.prd.sparkpost>": {
+    "company": "Ladders",
+    "kind": "ignore",
+    "processed_at": "2026-09-11T11:32:35+00:00",
+    "subject": "RE: Last Chance, Act Now for a 30% Discount!"
+  },
   "<DU2PR04MB87926B38F6EFC7388BC64A23FBDE2@DU2PR04MB8792.eurprd04.prod.outlook.com>": {
     "company": "Yuliana MYKHAILENKO",
     "kind": "ignore",
@@ -3603,11 +3722,23 @@
     "processed_at": "2026-08-09T12:16:37+00:00",
     "subject": "🔥 Секрет швидкого продажу на OLX"
   },
+  "<EE.32.63913.56683AA6@i-0ef1a37690c913f62.mta1vrest.sd.prd.sparkpost>": {
+    "company": "Grammarly",
+    "kind": "ignore",
+    "processed_at": "2026-09-11T11:32:35+00:00",
+    "subject": "Was it something we said?"
+  },
   "<EfxM2aNeMDnAj-KHQo846A@notifications.google.com>": {
     "company": "Google",
     "kind": "ignore",
     "processed_at": "2026-07-29T16:38:11+00:00",
     "subject": "Security alert"
+  },
+  "<F1.69.34369.4DB42AA6@i-0cc0c9a3fa3ce8bbd.mta1vrest.sd.prd.sparkpost>": {
+    "company": "Ladders",
+    "kind": "replied",
+    "processed_at": "2026-09-11T11:32:35+00:00",
+    "subject": "Your Skills are in High Demand: Job Openings Available"
   },
   "<F1.FD.16792.485EE9A6@i-0eef57af0509905cd.mta3vrest.sd.prd.sparkpost>": {
     "company": "OLX",
@@ -3710,6 +3841,12 @@
     "kind": "ignore",
     "processed_at": "2026-08-08T12:21:34+00:00",
     "subject": "🚨  URGENT: you're missing out!  🚨"
+  },
+  "<NGFmIl44TFe1K2XVae-psQ@geopod-ismtpd-103>": {
+    "company": "ChatGPT",
+    "kind": "ignore",
+    "processed_at": "2026-09-11T11:32:35+00:00",
+    "subject": "How experts use ChatGPT Pro"
   },
   "<PJjfaVQdSfiq2cv2g4jOmQ@geopod-ismtpd-26>": {
     "company": "Brain.fm",
@@ -4360,6 +4497,12 @@
     "kind": "ignore",
     "processed_at": "2026-07-29T13:41:50+00:00",
     "subject": "Ваша электронная подпись скоро перестанет действовать"
+  },
+  "<wXtHGdr7Wg1wfVLSuuXo2AGNvkr61QEt1uCHu88@cks.com.ua>": {
+    "company": "КК «ЦКС»",
+    "kind": "ignore",
+    "processed_at": "2026-09-11T11:32:35+00:00",
+    "subject": "Оновлено електронні рахунки-повідомлення для оплати житлово-комунальних послуг, наданих у серпні"
   },
   "<wmha7lB3SciWBAZqlpsBzA@geopod-ismtpd-3>": {
     "company": "ШЕФ-ПІЦА",
