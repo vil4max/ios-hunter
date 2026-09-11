@@ -1,5 +1,5 @@
-<!-- agents-kit:commit-policy:start -->
-<!-- Generated from agents-kit/rules/conventional-commits.mdc; do not edit this block by hand. -->
+<!-- agent-engineering-kit:commit-policy:start -->
+<!-- Generated from agent-engineering-kit/rules/conventional-commits.mdc; do not edit this block by hand. -->
 # Commit messages
 
 - Write commit messages in English only, without emojis.
@@ -27,9 +27,9 @@ refactor(networking): isolate retry policy from request execution
 docs: clarify release checklist
 ```
 
-Canonical source: `agents-kit/rules/conventional-commits.mdc`. Edit it centrally.
+Canonical source: `agent-engineering-kit/rules/conventional-commits.mdc`. Edit it centrally.
 Repository `.github/copilot-instructions.md` files contain generated delivery
 blocks maintained by `scripts/sync-commit-policy.py`; preserve repository-specific
-instructions outside those blocks. See `agents-kit/docs/commit-policy.md` for
+instructions outside those blocks. See `agent-engineering-kit/docs/commit-policy.md` for
 hook installation, rollout, and the limits of deterministic validation.
-<!-- agents-kit:commit-policy:end -->
+<!-- agent-engineering-kit:commit-policy:end -->

@@ -143,5 +143,10 @@
     "name": "PUMB",
     "slug": "pumb",
     "career_url": "https://career.pumb.ua/vacancy"
+  },
+  {
+    "name": "Adaptiq",
+    "slug": "adaptiq",
+    "career_url": "https://adaptiq.co/careers/"
   }
 ]
