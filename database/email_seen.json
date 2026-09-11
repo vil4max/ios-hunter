@@ -224,6 +224,26 @@
     "processed_at": "2026-09-11T11:32:35+00:00",
     "subject": "BetterMe: AI Engineer opportunity"
   },
+  "<010001a090a02aa0-c0465c62-e07e-451e-8bee-9568eb962ee4-000000@email.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-09-11T16:40:08+00:00",
+    "subject": "Macmillan  Education: Confirm  email address to complete registration"
+  },
+  "<010001a09150828c-b01714d2-0b0f-425e-b194-14db65e1af12-000000@email.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-09-11T16:40:15+00:00",
+    "subject": "Macmillan  Education: Confirm  email address to complete registration"
+  },
+  "<010001a091529e19-cf27297f-5332-4160-be48-6983c7d76410-000000@email.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-09-11T16:40:15+00:00",
+    "subject": "Macmillan  Education: New  subscription activated"
+  },
+  "<010001a09154f128-1c42a393-d71f-459c-9056-a7219bd372a4-000000@email.amazonses.com>": {
+    "kind": "ignore",
+    "processed_at": "2026-09-11T16:40:15+00:00",
+    "subject": "Macmillan  Education: New  subscription activated"
+  },
   "<0101019faa3ac02b-d5c9e8e3-ef86-43ea-9392-8ff92655359d-000000@us-west-2.amazonses.com>": {
     "company": "Makeup.ua",
     "kind": "ignore",
@@ -429,6 +449,12 @@
     "processed_at": "2026-09-02T11:34:07+00:00",
     "subject": "UPD: ваш календар оновлено 🗓️"
   },
+  "<01M286BTC2JSHAPWNX1MVM27MH@klaviyomail.com>": {
+    "company": "robot_dreams",
+    "kind": "ignore",
+    "processed_at": "2026-09-11T16:40:08+00:00",
+    "subject": "Додайте Rust до backend-стеку 🦀"
+  },
   "<0811dc41-651f-4db8-b8a3-290d10392352@facebookmail.com>": {
     "company": "Facebook",
     "kind": "ignore",
@@ -446,6 +472,12 @@
     "kind": "ignore",
     "processed_at": "2026-07-29T16:38:11+00:00",
     "subject": "Security alert"
+  },
+  "<0bO8Cw7BB4OisheGNMAk7w@notifications.google.com>": {
+    "company": "Google",
+    "kind": "ignore",
+    "processed_at": "2026-09-11T16:40:08+00:00",
+    "subject": "Review Варя’s activity on their Google Account"
   },
   "<0c7e1e14-5968-4d80-8f4f-7bb83dcc9657@ms4-b54f48755-zh4tr>": {
     "company": "WOG",
@@ -2188,6 +2220,18 @@
     "processed_at": "2026-09-11T11:32:35+00:00",
     "subject": "Підтвердження замовлення № 104511223720."
   },
+  "<20260911113851.2accf9109d18c006@cio153131.tryexponent.com>": {
+    "company": "Jacob from Exponent",
+    "kind": "screening",
+    "processed_at": "2026-09-11T16:40:08+00:00",
+    "subject": "Companies hiring engineers right now"
+  },
+  "<20260911160104.609EC70000BE@instance-group-smtp-relay-sinsay-3c9r.localdomain>": {
+    "company": "Sinsay.com",
+    "kind": "ignore",
+    "processed_at": "2026-09-11T16:40:15+00:00",
+    "subject": "Ваше замовлення номер 104511223720 знаходиться в процесі комплектації"
+  },
   "<202610091006.193kha0t5cjqvj@shared-p100-i7.d.sp1-brevo.net>": {
     "company": "DOU",
     "kind": "ignore",
@@ -2795,6 +2839,13 @@
     "processed_at": "2026-08-01T06:30:43+00:00",
     "subject": "“Візит до Бакумець І. В.” added to “Семья” calendar."
   },
+  "<67a9eff8062d052b006cbd6509fa6df2@mail.astondevs.ru>": {
+    "company": "career@mail.astondevs.ru",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg6gMlQ",
+    "kind": "screening",
+    "processed_at": "2026-09-11T16:40:15+00:00",
+    "subject": "Подтверждение отклика на вакансию в компанию  Aston"
+  },
   "<68.4A.50591.7B6687A6@i-03ab4ad38ee505750.mta3vrest.sd.prd.sparkpost>": {
     "company": "OLX",
     "kind": "ignore",
@@ -3253,6 +3304,19 @@
     "processed_at": "2026-09-11T11:32:35+00:00",
     "subject": "Платіж підтверджено КИЇВ, ПЧІЛКИ ОЛЕНИ ВУЛ., Б4, КВ57"
   },
+  "<6aa425da.d59b29e5.12c597.2dc9notifications@youtube.com>": {
+    "company": "YouTube",
+    "kind": "ignore",
+    "processed_at": "2026-09-11T16:40:15+00:00",
+    "subject": "🔴 На канале \"Android Broadcast. Все об Андроид разработке\" началась прямая трансляция \"Как попасть в IT в 2027 году. Что учить для начала карьеры. Вместе с @MobileDeveloper\""
+  },
+  "<6aa42ecb.492e23e4.10edfc.5062@mx.google.com>": {
+    "company": "NIX",
+    "item_id": "PVTI_lAHOABVlTc4Bdb8Rzg3TOpM",
+    "kind": "replied",
+    "processed_at": "2026-09-11T16:40:15+00:00",
+    "subject": "Career Agent  ·  2026-09-11"
+  },
   "<706525469.587335.1789028948190@email.apple.com>": {
     "company": "Xcode Cloud",
     "kind": "ignore",
@@ -3678,6 +3742,18 @@
     "kind": "ignore",
     "processed_at": "2026-09-02T11:34:07+00:00",
     "subject": "Job Search Sign-In – Let’s Keep It Simple"
+  },
+  "<D7.62.00516.4B514AA6@i-0616bc1fe817009fc.mta1vrest.sd.prd.sparkpost>": {
+    "company": "Ladders",
+    "kind": "replied",
+    "processed_at": "2026-09-11T16:40:08+00:00",
+    "subject": "Senior iOS Engineer roles are closing fast"
+  },
+  "<DA.97.21946.CE413AA6@i-0f1314759736a6edb.mta1vrest.sd.prd.sparkpost>": {
+    "company": "Ladders",
+    "kind": "replied",
+    "processed_at": "2026-09-11T16:40:08+00:00",
+    "subject": "New Jobs Posted: Apply before others do"
   },
   "<DBAP193MB111600F647BB770CAE16D2ECEFC92@DBAP193MB1116.EURP193.PROD.OUTLOOK.COM>": {
     "company": "Assistant Chisw",
