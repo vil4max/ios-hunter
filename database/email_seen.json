@@ -244,6 +244,12 @@
     "processed_at": "2026-09-11T16:40:15+00:00",
     "subject": "Macmillan  Education: New  subscription activated"
   },
+  "<010001a0945a9ce8-f9ef7ef0-e8af-4a4d-973f-3ab0c4c2aabf-000000@email.amazonses.com>": {
+    "company": "Amazon Appstore",
+    "kind": "ignore",
+    "processed_at": "2026-09-12T10:55:51+00:00",
+    "subject": "[Reminder - Action Required] Verify your Amazon Developer Account"
+  },
   "<0101019faa3ac02b-d5c9e8e3-ef86-43ea-9392-8ff92655359d-000000@us-west-2.amazonses.com>": {
     "company": "Makeup.ua",
     "kind": "ignore",
@@ -302,6 +308,18 @@
     "company": "Makeup.ua",
     "kind": "ignore",
     "processed_at": "2026-09-11T11:32:35+00:00",
+    "subject": "Виконуємо бажання: акції, знижки, товари знову в наявності"
+  },
+  "<010101a092735f85-57011237-2e0a-4cd3-9906-55c425824ddc-000000@us-west-2.amazonses.com>": {
+    "company": "Makeup.ua",
+    "kind": "ignore",
+    "processed_at": "2026-09-12T10:55:51+00:00",
+    "subject": "Виконуємо бажання: акції, знижки, товари знову в наявності"
+  },
+  "<010101a094d2f828-b309ec41-d3f7-47fc-9d6a-e48539e711d9-000000@us-west-2.amazonses.com>": {
+    "company": "Makeup.ua",
+    "kind": "ignore",
+    "processed_at": "2026-09-12T10:55:51+00:00",
     "subject": "Виконуємо бажання: акції, знижки, товари знову в наявності"
   },
   "<0102019fae41f5e3-dd1e1193-89ff-40dd-90a1-f78779eebea3-000000@eu-west-1.amazonses.com>": {
@@ -577,6 +595,12 @@
     "processed_at": "2026-08-21T06:19:53+00:00",
     "subject": "Ваш договір"
   },
+  "<10E4F883A153EC29A6DEC5FDA89A525AFA2EA704@SHARKTS9>": {
+    "company": "MakeUp.ua",
+    "kind": "ignore",
+    "processed_at": "2026-09-12T10:55:51+00:00",
+    "subject": "MakeUp.ua"
+  },
   "<10b03984-ae09-4cac-95f0-f4ec55b5ef69@atl1s07mta0606.xt.local>": {
     "company": "The Economist",
     "kind": "ignore",
@@ -768,6 +792,12 @@
     "kind": "ignore",
     "processed_at": "2026-08-01T15:16:20+00:00",
     "subject": "New email account login in Spark"
+  },
+  "<1504843357.12394794.1789198064677@lva2-app69728.prod.linkedin.com>": {
+    "company": "GlobalLogic",
+    "kind": "ignore",
+    "processed_at": "2026-09-12T10:55:51+00:00",
+    "subject": "“Senior IOS Engineer”: GlobalLogic - Senior Native iOS Developer IRC304120 posted on 9/11/26"
   },
   "<1511089483.73112975.1787064184329@email.apple.com>": {
     "company": "iTunes Store",
@@ -984,6 +1014,12 @@
     "processed_at": "2026-08-02T09:16:18+00:00",
     "subject": "App -- Build 72 succeeded (main)"
   },
+  "<1817603698.15291505.1789205265391@lva2-app68508.prod.linkedin.com>": {
+    "company": "GlobalLogic",
+    "kind": "ignore",
+    "processed_at": "2026-09-12T10:55:51+00:00",
+    "subject": "GlobalLogic is hiring a Senior Native iOS Developer IRC304120"
+  },
   "<1821127468.890037.1787566342586@email.apple.com>": {
     "company": "Xcode Cloud",
     "kind": "ignore",
@@ -1127,6 +1163,12 @@
     "kind": "replied",
     "processed_at": "2026-09-02T11:34:07+00:00",
     "subject": "Max - Welcome"
+  },
+  "<1VwLGAzLT4ex6Oul9zDWiw@geopod-ismtpd-13>": {
+    "company": "Michael from Tangem",
+    "kind": "ignore",
+    "processed_at": "2026-09-12T10:55:51+00:00",
+    "subject": "◼️  Tangible Gems vol 53: Oil on fire & markets on edge."
   },
   "<1juknftnapfud800@indeed.com>": {
     "company": "Indeed Apply",
@@ -1544,6 +1586,12 @@
     "kind": "ignore",
     "processed_at": "2026-09-11T11:32:35+00:00",
     "subject": "Junior Automation QA Engineer у Playtech. Ще 2 вакансії iOS"
+  },
+  "<1k29fg1s1oki8802@indeed.com>": {
+    "company": "Indeed",
+    "kind": "ignore",
+    "processed_at": "2026-09-12T10:55:51+00:00",
+    "subject": "Customer Support Representative у VOKI Games. Ще 3 вакансії iOS"
   },
   "<20.CE.15395.90DD69A6@i-0f1d4a0165b52ae90.mta1vrest.sd.prd.sparkpost>": {
     "company": "Ladders",
@@ -2231,6 +2279,24 @@
     "kind": "ignore",
     "processed_at": "2026-09-11T16:40:15+00:00",
     "subject": "Ваше замовлення номер 104511223720 знаходиться в процесі комплектації"
+  },
+  "<20260911180449.4263870000BA@instance-group-smtp-relay-sinsay-3c9r.localdomain>": {
+    "company": "Sinsay.com",
+    "kind": "ignore",
+    "processed_at": "2026-09-12T10:55:51+00:00",
+    "subject": "Ваш номер замовлення 104511223720 готове до відправки"
+  },
+  "<20260911193508.61d498b5192390fa@cio79999.news.railway.app>": {
+    "company": "Railway",
+    "kind": "ignore",
+    "processed_at": "2026-09-12T10:55:51+00:00",
+    "subject": "One-click Postgres major version upgrades, email forwarding for Railway\r\n domains, Claude Max 20x for Conductors"
+  },
+  "<20260911222248.3.98a6429ccb02de55.h7crue63@mg2.substack.com>": {
+    "company": "Substack",
+    "kind": "ignore",
+    "processed_at": "2026-09-12T10:55:51+00:00",
+    "subject": "If you want to get started with Claude Code, read this and 2 more"
   },
   "<202610091006.193kha0t5cjqvj@shared-p100-i7.d.sp1-brevo.net>": {
     "company": "DOU",
@@ -3786,6 +3852,12 @@
     "processed_at": "2026-08-20T12:39:44+00:00",
     "subject": "Thank you for your application!"
   },
+  "<E1x54Io-000000014uO-3TLZ@relay3.dataart.com>": {
+    "company": "DataArt Inc",
+    "kind": "screening",
+    "processed_at": "2026-09-12T10:55:51+00:00",
+    "subject": "Thanks for the application"
+  },
   "<E8.02.54064.6A3079A6@i-0f1527a7a5c9dfe03.mta1vrest.sd.prd.sparkpost>": {
     "company": "Ladders",
     "kind": "screening",
@@ -4532,6 +4604,12 @@
     "processed_at": "2026-09-10T09:22:37+00:00",
     "subject": "Calling Senior React + React Native Engineers"
   },
+  "<v2UALPFWSUeS_AUgUfrR5A@geopod-ismtpd-22>": {
+    "company": "Brain.fm",
+    "kind": "ignore",
+    "processed_at": "2026-09-12T10:55:51+00:00",
+    "subject": "A couple days left"
+  },
   "<vJGwozEgQyyeuFQe_lQqDA@geopod-ismtpd-3>": {
     "company": "Steve Kaufmann",
     "kind": "ignore",
@@ -4615,5 +4693,11 @@
     "kind": "ignore",
     "processed_at": "2026-09-09T07:11:24+00:00",
     "subject": "Last chance to save 25%"
+  },
+  "<zcb.3zdaa062fb2fbb88983c843dd0de3b366e756c4228cb205cead86ef94bb776df18.11e8a2fde5f58382.1789146272732@mail3.sender.zcmpin.net>": {
+    "company": "Satyabrat From Hirepool",
+    "kind": "ignore",
+    "processed_at": "2026-09-12T10:55:51+00:00",
+    "subject": "Connecting about your job search"
   }
 }
