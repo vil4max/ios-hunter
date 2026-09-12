@@ -3395,6 +3395,18 @@
     "processed_at": "2026-09-11T16:40:15+00:00",
     "subject": "Career Agent  ·  2026-09-11"
   },
+  "<6aa579be6bf0e_10d11b840075@sharedworker-6b74f47d4-xwbfw.mail>": {
+    "company": "GitHub",
+    "kind": "ignore",
+    "processed_at": "2026-09-12T17:18:39+00:00",
+    "subject": "[GitHub] Your fine-grained personal access token is about to expire"
+  },
+  "<6aa58956.beccbaf7.219350.ca78@mx.google.com>": {
+    "company": "NIX",
+    "kind": "ignore",
+    "processed_at": "2026-09-12T17:18:39+00:00",
+    "subject": "Career Agent  ·  2026-09-12"
+  },
   "<706525469.587335.1789028948190@email.apple.com>": {
     "company": "Xcode Cloud",
     "kind": "ignore",
