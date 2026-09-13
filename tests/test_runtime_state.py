@@ -27,8 +27,19 @@ def commit(root, message="test: change"):
     git(root, "push", "origin", "main")
 
 
+def isolate_git(tmp_path, monkeypatch):
+    # Fixture repositories must not inherit the owner's hooks or an enclosing push's repository.
+    for name in git(tmp_path, "rev-parse", "--local-env-vars").splitlines():
+        monkeypatch.delenv(name, raising=False)
+    config = tmp_path / "gitconfig"
+    config.write_text("")
+    monkeypatch.setenv("GIT_CONFIG_GLOBAL", str(config))
+    monkeypatch.setenv("GIT_CONFIG_NOSYSTEM", "1")
+
+
 @pytest.fixture
-def repos(tmp_path):
+def repos(tmp_path, monkeypatch):
+    isolate_git(tmp_path, monkeypatch)
     remote = tmp_path / "remote.git"
     remote.mkdir()
     git(remote, "init", "--bare", "--initial-branch=main")
@@ -45,6 +56,21 @@ def repos(tmp_path):
     git(other, "config", "user.name", "Test")
     git(other, "config", "user.email", "test@example.invalid")
     return work, other, remote
+
+
+def test_git_isolation_ignores_host_config_and_enclosing_push(tmp_path, monkeypatch):
+    host_config = tmp_path / "host-gitconfig"
+    host_config.write_text("[core]\n\thooksPath = /host-only-hooks\n")
+    monkeypatch.setenv("GIT_CONFIG_GLOBAL", str(host_config))
+    monkeypatch.setenv("GIT_DIR", str(tmp_path / "outside.git"))
+    monkeypatch.setenv("GIT_INDEX_FILE", str(tmp_path / "outside-index"))
+    isolate_git(tmp_path, monkeypatch)
+    git(tmp_path, "init", "--bare", "--initial-branch=main")
+    config = git(tmp_path, "config", "--list", "--show-origin")
+    assert "host-gitconfig" not in config
+    assert "core.hookspath" not in config.lower()
+    assert git(tmp_path, "rev-parse", "--absolute-git-dir") == str(tmp_path.resolve())
+    assert host_config.read_text() == "[core]\n\thooksPath = /host-only-hooks\n"
 
 
 def test_remote_source_commit_preserved_and_checkout_untouched(repos, tmp_path):
