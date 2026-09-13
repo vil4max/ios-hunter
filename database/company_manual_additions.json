@@ -148,5 +148,10 @@
     "name": "Adaptiq",
     "slug": "adaptiq",
     "career_url": "https://adaptiq.co/careers/"
+  },
+  {
+    "name": "Devart",
+    "slug": "devart",
+    "career_url": "https://www.devart.com/vacancies/"
   }
 ]

@@ -13,7 +13,7 @@ from bs4 import BeautifulSoup
 
 from collector.results import source_failed, source_ok
 from collector.types import STATUS_DEGRADED, SourceResult
-from integrations.http_client import _get, fetch_impersonated, fetch_json, fetch_text, post_json
+from integrations.http_client import _get, fetch_impersonated, fetch_json, fetch_text, post_form_data, post_json
 from integrations.detail_cache import DetailCache
 from parser.normalize import has_ai_job_details, is_ai_augmented_job, is_ios_job, is_target_job
 
@@ -37,6 +37,11 @@ _VALTECH_API_URL = (
     "https://www.valtech.com/joblist/getjsonresult?id=1571&language=en&limit={limit}&offset={offset}"
 )
 _VALTECH_PAGE_LIMIT = 100
+_ADAPTIQ_PAGE_LIMIT = 20
+_CAREER_CARD_SELECTORS = {
+    "adaptiq.co": ("a.position-card[href]", ".title", ".job-main-description__right p"),
+    "www.devart.com": ("a.vacancies[href]", "h4", ".vacancies-locations__text"),
+}
 
 
 def default_watchlist_path(root: Path | None = None) -> Path:
@@ -195,7 +200,7 @@ def _fetch_ai_detail(url, base_url):
     raise ValueError("AI detail redirect limit reached")
 
 
-def _matching_detail(title, html):
+def _matching_detail(title, html, detail_url=""):
     document = BeautifulSoup(html, "lxml")
     def title_key(text):
         return " ".join(re.findall(r"\w+", text.casefold()))
@@ -203,18 +208,31 @@ def _matching_detail(title, html):
     for entry in _job_postings(document):
         if title_key(str(entry.get("title") or "")) == title_key(title):
             return str(entry.get("description") or ""), _posting_location(entry)
-    content = document.select_one("main, article")
+    host = urlsplit(detail_url).hostname
+    content = document.select_one(".article__wrapper" if host == "adaptiq.co" else "main, article")
     if content is None:
         return "", None
-    heading = content.select_one("h1")
-    if heading is None or title_key(heading.get_text(" ", strip=True)) != title_key(title):
-        return "", None
-    for node in content.select("script, style, nav, footer, form, aside, [class*='related']"):
+    for node in content.select("script, style, nav, footer, form, aside, .form-tabs, [class*='related']"):
         node.decompose()
-    # A detail page must not borrow requirements from another advertised role.
-    if len(content.select("h1")) != 1:
+    heading = content.select_one("h1")
+    if heading is None or len(content.select("h1")) != 1:
         return "", None
-    return str(content), None
+    heading_text = heading.get_text(" ", strip=True)
+    location = None
+    if host == "www.devart.com" and urlsplit(detail_url).path.startswith("/vacancies/"):
+        # Devart adds the business unit to the detail heading, but not the listing title.
+        role = re.sub(r",\s*[^,]+\s+BU$", "", heading_text)
+        breadcrumb = content.select_one(".vacancies-breadcrumb")
+        active = breadcrumb.select_one(".active") if breadcrumb is not None else None
+        if (title_key(role) != title_key(title) or active is None
+                or title_key(active.get_text(" ", strip=True)) != title_key(heading_text)):
+            return "", None
+        location_node = content.select_one(".vacancies-location")
+        location = location_node.get_text(" ", strip=True) if location_node else None
+        content = breadcrumb.parent
+    elif title_key(heading_text) != title_key(title):
+        return "", None
+    return str(content), location
 
 
 def _hydrate_ai_details(jobs, career_url):
@@ -232,7 +250,7 @@ def _hydrate_ai_details(jobs, career_url):
                 raise ValueError("AI detail URL is outside the public career origin")
             cached = cache.get(job["url"], job["title"])
             description, location = cached or _matching_detail(
-                job["title"], _fetch_ai_detail(job["url"], career_url)
+                job["title"], _fetch_ai_detail(job["url"], career_url), job["url"]
             )
             if not has_ai_job_details(job["title"], description):
                 raise ValueError("matching AI requirements unavailable")
@@ -248,6 +266,9 @@ def _hydrate_ai_details(jobs, career_url):
 
 def extract_ios_jobs(company: str, page_url: str, html: str) -> tuple[list[dict[str, Any]], int]:
     document = BeautifulSoup(html, "lxml")
+    selectors = _CAREER_CARD_SELECTORS.get(urlsplit(page_url).hostname)
+    if selectors:
+        return _extract_career_cards(company, page_url, document, selectors)
     candidates: dict[str, tuple[str, str | None, str | None]] = {}
     job_like_links: set[str] = set()
 
@@ -288,6 +309,68 @@ def extract_ios_jobs(company: str, page_url: str, html: str) -> tuple[list[dict[
             job["location"] = location
         jobs.append(job)
     return jobs, len(job_like_links)
+
+
+def _extract_career_cards(company, page_url, document, selectors):
+    card_selector, title_selector, location_selector = selectors
+    jobs = {}
+    scanned = set()
+    for card in document.select(card_selector):
+        title_node = card.select_one(title_selector)
+        title = title_node.get_text(" ", strip=True) if title_node else ""
+        url = urljoin(page_url, card["href"])
+        if not title or not _same_detail_origin(url, page_url) or "/vacancies/" not in urlsplit(url).path:
+            raise ValueError("Unexpected career card title or URL")
+        scanned.add(url)
+        if is_target_job(title):
+            jobs[url] = {
+                "company": company, "title": title, "url": url, "source": "company",
+                "location": " / ".join(node.get_text(" ", strip=True)
+                                        for node in card.select(location_selector)) or None,
+            }
+    return list(jobs.values()), len(scanned)
+
+
+def _collect_adaptiq(company, career_url):
+    if career_url != "https://adaptiq.co/careers/":
+        raise ValueError("Unexpected Adaptiq career URL")
+    html = fetch_text(career_url)
+    jobs, scanned, total, page_size = {}, 0, None, None
+    errors = []
+    for page in range(1, _ADAPTIQ_PAGE_LIMIT + 1):
+        try:
+            if page > 1:
+                html = post_form_data("https://adaptiq.co/wp-admin/admin-ajax.php", {
+                    "action": "vacancy_filter", "isStatic": "false", "pag_num": str(page),
+                    "post_count": str(page_size), "ajax_type": "load_more",
+                }, timeout=15)
+            document = BeautifulSoup(html, "lxml")
+            container = document.select_one(".position-list__container")
+            if container is None:
+                raise ValueError("Adaptiq vacancy container missing")
+            page_total = int(container["data-all-posts-count"])
+            current = int(container["data-current-posts-count"])
+            page_jobs, page_scanned = extract_ios_jobs(company, career_url, str(container))
+            if page == 1:
+                total = page_total
+                listing = document.select_one(".position-list[data-post-count]")
+                page_size = int(listing["data-post-count"]) if listing else 0
+            # Load-more responses repeat earlier cards; their count must advance to the declared total.
+            if (page_total != total or not 0 <= current <= total or current != page_scanned
+                    or not 1 <= page_size <= 100 or (page > 1 and current <= scanned)):
+                raise ValueError("Adaptiq pagination counts are inconsistent")
+            jobs.update((job["url"], job) for job in page_jobs)
+            scanned = current
+            if scanned == total:
+                break
+        except Exception as error:  # noqa: BLE001
+            if page == 1:
+                raise
+            errors.append(f"Adaptiq page {page}: {error}")
+            break
+    else:
+        errors.append(f"Adaptiq pagination limit: scanned {scanned} of {total}")
+    return list(jobs.values()), scanned, errors
 
 
 def _collect_conscensia(company: str) -> tuple[list[dict[str, Any]], int]:
@@ -548,16 +631,19 @@ def collect_watchlist_company(company: dict[str, Any]) -> SourceResult:
         if slug == "valtech":
             jobs, scanned = _collect_valtech(name)
             return source_ok(name, career_url, jobs, started, scanned=scanned, source_id=source_id)
-        fetch_url = career_url
-        try:
-            html = fetch_text(fetch_url)
-        except requests.HTTPError as error:
-            status = error.response.status_code if error.response is not None else 0
-            if status not in {403, 429}:
-                raise
-            html = fetch_impersonated(fetch_url)
-        jobs, scanned = extract_ios_jobs(name, fetch_url, html)
-        errors = _hydrate_ai_details(jobs, career_url)
+        errors = []
+        if slug == "adaptiq":
+            jobs, scanned, errors = _collect_adaptiq(name, career_url)
+        else:
+            try:
+                html = fetch_text(career_url)
+            except requests.HTTPError as error:
+                status = error.response.status_code if error.response is not None else 0
+                if status not in {403, 429}:
+                    raise
+                html = fetch_impersonated(career_url)
+            jobs, scanned = extract_ios_jobs(name, career_url, html)
+        errors.extend(_hydrate_ai_details(jobs, career_url))
         result = source_ok(
             name,
             career_url,
