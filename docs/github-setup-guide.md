@@ -35,14 +35,7 @@ Repo is still **public** — vacancy Issues would be public.
 
 Or ask the agent to run: `gh repo edit vil4max/ios-hunter --visibility private`
 
-### 3. Prefer fine-grained PAT (optional hardening)
-
-`CAREER_AGENT_TOKEN` currently stores the CLI OAuth token (`project` + `repo`). Longer-term:
-
-1. Create fine-grained PAT: Issues R/W on `ios-hunter` + Projects R/W  
-2. `gh secret set CAREER_AGENT_TOKEN --repo vil4max/ios-hunter`
-
-### 4. Seed Archived from `seen.json`
+### 3. Seed Archived from `seen.json`
 
 ```bash
 export CAREER_AGENT_TOKEN="$(gh auth token)"
@@ -54,13 +47,13 @@ python3 scripts/seed_project_from_seen.py --dry-run
 python3 scripts/seed_project_from_seen.py
 ```
 
-### 5. Verify Collect + Daily
+### 4. Verify Collect + Daily
 
 1. Actions → Collect iOS Jobs → Run  
 2. Confirm Inbox Issue + Telegram `Inbox +N`  
 3. Actions → Daily Vacancy Liveness → Run  
 
-### 6. Cutover later
+### 5. Cutover later
 
 After 3–7 stable days: set var `CAREER_AGENT_SEEN_GATE=0`  
 See `docs/migration-plan.md`.

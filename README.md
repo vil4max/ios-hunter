@@ -90,7 +90,7 @@ Then add `TELEGRAM_API_ID`, `TELEGRAM_API_HASH`, and `TELEGRAM_SESSION` as repos
 | `TELEGRAM_API_ID` | for TG chats | MTProto app id from my.telegram.org |
 | `TELEGRAM_API_HASH` | for TG chats | MTProto app hash |
 | `TELEGRAM_SESSION` | for TG chats | StringSession from `scripts/telegram_login.py` |
-| `CAREER_AGENT_TOKEN` | for Sync | Fine-grained PAT: Issues + Projects |
+| `CAREER_AGENT_TOKEN` | for Sync | GitHub token with access to repository Issues and the Career CRM Project |
 | `SMTP_USER` | for daily email + IMAP | Gmail address (e.g. `vil4max@gmail.com`) |
 | `SMTP_PASS` | for daily email + IMAP | [Gmail App Password](https://myaccount.google.com/apppasswords) (16 chars; spaces ok) |
 | `SMTP_FROM` | optional | From address (defaults to `SMTP_USER`) |
